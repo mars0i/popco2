@@ -1,0 +1,4 @@
+emap! doesn't seem faster than emap in vectorz, ndarray, or clatrix,
+even if you don't include the cost of copying a matrix first (which can
+be slow in some of these).  persistent-vector uses ndarray for mutable
+arrays.

@@ -1,0 +1,50 @@
+Mike Anderson wrote earlier that it would be helpful to have benchmarks of core.matrix with real-world examples.  This isn't quite a real-world example, but it uses my first attempt at a routine that I hope to use as part of a Clojure rewrite of a Common Lisp program I wrote doing agent-based simulations (mars0i/popco).
+
+The function benchmarked, next-activns, is a neural network settling routine.  The source code, full set of mean run times (in an Excel file), and transcripts of criterium outputs are available in the mars0i/popco-x github repo under benchmarks/neural-netsOct2013.  I'll illustrate the results here.
+
+If the weight matrix has changed, the algorithm needs to regenerate two NxN matrices containing only positive entries and containing only negative entries (or zeros).  I did tests both with and without this extra step.
+
+Mean execution times from criterium for input vectors of size N=500 and NxN weight matrices on a MacBook Pro, 2.3 GHz Intel Core i7, 8GB RAM, running OS X 10.6.8:
+
+Without regenerating the positive and negative matrices, from fastest to slowest:
+
+vectorz: 0.524436958 ms
+clatrix: 2.890641 ms
+ndarry: 58.081268 ms
+persistent-vector: 116.118927 ms
+
+Including regeneration of the positive and negative matrices, from fastest to slowest:
+
+vectorz: 12.342413 ms
+persistent-vector: 288.921073 ms
+ndarry: 6011.609 ms
+clatrix: 10885.715 ms
+
+Generation of the positive and negative weight matrices, which is obviously very expensive, comes comes from two calls that do approximately the same thing as this:
+(emap #(max 0 %) M)
+where M is an NxN matrix containing both positive and negative entries.
+
+See the Excel file in mars0i/popco-x for times for N=250 and N=1000.
+
+Here's source code for the primary network settling routine.  activns is a vector of length N, Wts, NegWts, and PosWts are NxN matrices.  Any function in the listing that's not part of core.matrix is a very simple scalar operation.  Full source code is in benchmarks/neural-netsOct2013/config at mars0i/popco-x.
+
+(defn next-activns
+  "Calculate a new set of activations for nodes starting from the current
+  activations in vector activns, using network link weights in Wts to
+  update activations from neighbors using the Grossberg (1978) algorithm
+  as described in Holyoak & Thagard (1989).  If three args given, first two
+  are nonnegative and nonpositive versions of Wts, i.e. with negative and
+  positive weights, respectively, replaced by zeros."
+
+  ([Wts activns]
+   (next-activns
+     (emap posify Wts) (emap negify Wts) activns)) ; split nonegative and nonpositive weight matrices
+
+  ([PosWts NegWts activns]
+   (let [pos-activns (emap posify activns)] ; Negative activations are ignored as inputs.
+     (emap clip-to-extrema                  ; Values outside [-1,1] are clipped to -1, 1.
+           (add (emul 0.9 activns)                       ; Sum into decayed activations ...
+                (emul (mmul PosWts pos-activns)          ; positively weighted inputs scaled by
+                      (emap dist-from-max activns))      ;  inputs' distances from 1, and
+                (emul (mmul NegWts pos-activns)          ; negatively weighted inputs scaled by
+                      (emap dist-from-min activns))))))) ;  inputs' distances from -1.
