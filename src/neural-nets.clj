@@ -90,6 +90,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling
 
+;; SHOULD I USE add-product here for the inner addition of emuls?
+
 (defn next-activns 
   "Calculate a new set of activations for nodes starting from the current
   activations in vector activns, using network link weights in Wts to
