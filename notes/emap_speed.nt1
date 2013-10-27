@@ -2,3 +2,13 @@ emap! doesn't seem faster than emap in vectorz, ndarray, or clatrix,
 even if you don't include the cost of copying a matrix first (which can
 be slow in some of these).  persistent-vector uses ndarray for mutable
 arrays.
+
+This is on the order of 50% slower than (emap! posify M):
+
+	(dotimes [i 1000] 
+	  (dotimes [j 1000]
+	    (mset! N i j 
+	      (posify 
+	        (mget N i j)))))
+
+Changing N to M in the final line doesn't change the speed.
