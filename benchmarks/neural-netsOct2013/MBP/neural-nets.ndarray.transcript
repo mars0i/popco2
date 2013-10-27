@@ -1,0 +1,101 @@
+~/docs/src/clojure/core.matrix$ leinr
+nREPL server started on port 49219
+REPL-y 0.2.0
+Clojure 1.5.0
+    Docs: (doc function-name-here)
+          (find-doc "part-of-name-here")
+  Source: (source function-name-here)
+ Javadoc: (javadoc java-object-or-class-here)
+    Exit: Control+D or (exit) or (quit)
+
+user=> (load-file "../popco2/neural-nets.clj")
+#'user/bench-settle
+user=> (set-current-implementation :ndarray)
+:ndarray
+user=> (load-file "../popco2/neural-nets-test.clj")
+
+==============================
+Implementation: :ndarray:
+
+With single weight-matrix: num-nodes: 250, prob-of-link: 0.035:
+
+WARNING: Final GC required 3.9905654892906677 % of runtime
+Evaluation count : 120 in 60 samples of 2 calls.
+             Execution time mean : 856.757839 ms
+    Execution time std-deviation : 3.420238 ms
+   Execution time lower quantile : 851.247498 ms ( 2.5%)
+   Execution time upper quantile : 864.406810 ms (97.5%)
+                   Overhead used : 2.525850 ns
+
+Found 5 outliers in 60 samples (8.3333 %)
+	low-severe	 1 (1.6667 %)
+	low-mild	 4 (6.6667 %)
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+
+With split weight-matrices: num-nodes: 250, prob-of-link: 0.035:
+
+Evaluation count : 3660 in 60 samples of 61 calls.
+             Execution time mean : 16.516205 ms
+    Execution time std-deviation : 67.296483 µs
+   Execution time lower quantile : 16.417489 ms ( 2.5%)
+   Execution time upper quantile : 16.655620 ms (97.5%)
+                   Overhead used : 2.525850 ns
+
+Found 3 outliers in 60 samples (5.0000 %)
+	low-severe	 3 (5.0000 %)
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+
+With single weight-matrix: num-nodes: 500, prob-of-link: 0.035:
+
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 6.011609 sec
+    Execution time std-deviation : 21.238792 ms
+   Execution time lower quantile : 5.984121 sec ( 2.5%)
+   Execution time upper quantile : 6.056901 sec (97.5%)
+                   Overhead used : 2.525850 ns
+
+Found 2 outliers in 60 samples (3.3333 %)
+	low-severe	 2 (3.3333 %)
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+
+With split weight-matrices: num-nodes: 500, prob-of-link: 0.035:
+
+Evaluation count : 1080 in 60 samples of 18 calls.
+             Execution time mean : 58.081268 ms
+    Execution time std-deviation : 198.049537 µs
+   Execution time lower quantile : 57.845331 ms ( 2.5%)
+   Execution time upper quantile : 58.526259 ms (97.5%)
+                   Overhead used : 2.525850 ns
+
+Found 2 outliers in 60 samples (3.3333 %)
+	low-severe	 2 (3.3333 %)
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+
+With single weight-matrix: num-nodes: 1000, prob-of-link: 0.035:
+
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 50.877778 sec
+    Execution time std-deviation : 1.432169 sec
+   Execution time lower quantile : 47.787615 sec ( 2.5%)
+   Execution time upper quantile : 53.652018 sec (97.5%)
+                   Overhead used : 2.525850 ns
+
+Found 10 outliers in 60 samples (16.6667 %)
+	low-severe	 4 (6.6667 %)
+	low-mild	 6 (10.0000 %)
+ Variance from outliers : 15.7537 % Variance is moderately inflated by outliers
+
+With split weight-matrices: num-nodes: 1000, prob-of-link: 0.035:
+
+Evaluation count : 300 in 60 samples of 5 calls.
+             Execution time mean : 216.144588 ms
+    Execution time std-deviation : 673.682897 µs
+   Execution time lower quantile : 215.048998 ms ( 2.5%)
+   Execution time upper quantile : 217.438618 ms (97.5%)
+                   Overhead used : 2.525850 ns
+
+Found 2 outliers in 60 samples (3.3333 %)
+	low-severe	 2 (3.3333 %)
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+nil
+user=> 
