@@ -1,6 +1,10 @@
 Notes on speeding up (emap posify Wts) and (emap negify Wts) in
 10/2013 version of next-activns
 
+. Note emap and emap! are implemented by element-map and element-map!,
+respectively.  You can see this in
+core.matrix/src/main/clojure/clojure/core/matrix.clj.
+
 . emap! doesn't seem faster than emap in vectorz, ndarray, or clatrix,
 even if you don't include the cost of copying a matrix first (which can
 be slow in some of these).  (persistent-vector uses ndarray for mutable
@@ -14,11 +18,8 @@ arrays.)
 	        (mget N i j)))))
 Changing N to M in the final line doesn't change the speed.
 
-. Maybe it would be possible to make vectorz's implementation of emap
-faster?  I think it's element-map, and it involves flattening and then
-reshaping the matrix.  Seems inefficient, but what do I know.
-However, it's designed to handle arbitrary dimensions.  Don't want to
-lose that.
+. Would it be faster to construct the positive and negative matrices
+using compute-matrix?
 
 . Maybe write posify and negify in Java (echh).
 
@@ -30,3 +31,29 @@ put them together by addition.)
 This would be more difficult for the proposition network, but it could
 be done.  Maybe not worth it, though.  , there the network is small, so
 emap'ing shouldn't be a problem.
+
+. Maybe it would be possible to make vectorz's implementation of emap
+faster?  I think it's element-map, and it involves flattening and then
+reshaping the matrix.  Seems inefficient, but what do I know.  However,
+it's designed to handle arbitrary dimensions.  Don't want to lose that.
+Ah, well if you look at element-map! in
+vectorz-clj/src/main/clojure/mikera/vectorz/matrix_api.clj, it doesn't
+do this.  Well not exactly.  It looks like it pulls the data out of the
+matrix into some kind of sequence named 'data', and then sets the value
+of the function into that:
+	(dotimes [i ec] (aset data i (double (f (aget data i)))))
+and then it looks like it stuffs this data back into the matrix (which
+presumably knows its shape):
+	(.setElements m data)
+So this does involve unshaping and shaping the data.  The main
+difference is that in element-map, instead of stuffing the data into
+the old matrix, a new one is created:
+	(Arrayz/createFromVector (Vector/wrap data) sh)
+where sh is the shape.
+
+I guess the question is whether Mike A. did it this way because it's
+fast, or because it's the simplest way to write the code in a way that
+can handle any number of dimensions?
+
+Note that element-map and element-map! have similar speed in my
+experiments.
