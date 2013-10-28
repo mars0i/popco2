@@ -1,0 +1,32 @@
+Notes on speeding up (emap posify Wts) and (emap negify Wts) in
+10/2013 version of next-activns
+
+. emap! doesn't seem faster than emap in vectorz, ndarray, or clatrix,
+even if you don't include the cost of copying a matrix first (which can
+be slow in some of these).  (persistent-vector uses ndarray for mutable
+arrays.)
+
+. This is on the order of 50% slower than (emap! posify M):
+	(dotimes [i 1000] 
+	  (dotimes [j 1000]
+	    (mset! N i j 
+	      (posify 
+	        (mget N i j)))))
+Changing N to M in the final line doesn't change the speed.
+
+. Maybe it would be possible to make vectorz's implementation of emap
+faster?  I think it's element-map, and it involves flattening and then
+reshaping the matrix.  Seems inefficient, but what do I know.
+However, it's designed to handle arbitrary dimensions.  Don't want to
+lose that.
+
+. Maybe write posify and negify in Java (echh).
+
+. Easy way: Don't split the matrices.  Just make them separate from
+the start.  When the ACME process creates the link weights, just put
+positive and negative weights in separate matrices.  (And it's easy to
+put them together by addition.)
+
+This would be more difficult for the proposition network, but it could
+be done.  Maybe not worth it, though.  , there the network is small, so
+emap'ing shouldn't be a problem.
