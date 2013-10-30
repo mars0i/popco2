@@ -5,3 +5,5 @@ pom.xml
 /targets/
 .lein-deps-sum
 .*.swp
+.lein-repl-history
+.gitignore
