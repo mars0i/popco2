@@ -1,3 +1,4 @@
+(ns popco)
 
 (defrecord Propn [pred args id])
 ;; pred: predicate - should be keyword with initial uppercase

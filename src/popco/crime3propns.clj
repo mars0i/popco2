@@ -1,3 +1,4 @@
+(ns popco)
 
 (def virus-propns
   [
