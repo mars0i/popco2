@@ -3,7 +3,7 @@
         popco.core.acme
         popco.core.neuralnets
         popco.core.neuralnets-testtools]
-  [:import popco.core.acme.Propn]
+  [:import [popco.core.acme Propn Obj]]
   (:gen-class))
 
 ;; cf. https://kotka.de/blog/2010/02/gen-class_how_it_works_and_how_to_use_it.html
