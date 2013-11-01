@@ -65,3 +65,7 @@
     (->Propn :Danger-to [:ob-cpers] :CB-dtp)                     ; 10. Non-criminal is subject to danger.
     (->Propn :Causal-if [:CB-cpc :CB-dtp] :CB-cpc->cb-dtp)        ; 11. Non-criminal capturing criminal is dangerous to non-criminal. [HO1]
    ])
+
+(def living-propns (concat virus-propns beast-propns))
+(def crime-propns (concat viral-crime-propns beastly-crime-propns))
+(def all-propns (concat living-propns crime-propns))
