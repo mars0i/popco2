@@ -9,15 +9,22 @@
   id:   Name for proposition, which should start with all uppercase
         domain id, then dash (e.g. :CV-blah-blah)." )
 
-(defn match-propn
+(defrecord Obj [id])
+
+(defn propns-match?
   [p1 p2]
-  (println "match-propn is broken!")
-  [p1 p2]) 
+  (let [args1 (:args p1)
+        args2 (:args p2)]
+  (and (= (count args1) (count args2))
+       (or (
+            
+            )))))
+
 
 (defn match-propns 
   [pset1 pset2]
 
   (for [p1 pset1
         p2 pset2
-        :when (match-propn p1 p2)]
+        :when (propns-match? p1 p2)]
     [p1 p2]))
