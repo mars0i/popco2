@@ -1,4 +1,4 @@
-(ns sims)
+(ns popco.sims.crime.crime3propns)
 
 (def virus-propns
   [

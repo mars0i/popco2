@@ -1,17 +1,16 @@
-;;;; neural-nets.clj
+;;;; neuralnets.clj
 ;;;; Initial exploration of matrix-based constraint satisfaction
 ;;;; network for a new version of POPCO.
 
+(ns popco.core.neuralnets
+  [:use clojure.core.matrix])
+
+(set-current-implementation :vectorz)
 ;; use one of these:
 ;(set-current-implementation :persistent-vector)
 ;(set-current-implementation :ndarray)
 ;(set-current-implementation :vectorz)
 ;(set-current-implementation :clatrix)
-
-(ns popco
-  [:use clojure.core.matrix])
-
-(set-current-implementation :vectorz)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NOTES

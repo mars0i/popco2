@@ -1,8 +1,8 @@
-;;; clojure-utils.clj
+;;; utils/general.clj
 ;;; Utility functions handy for any Clojure program
 ;;; Marshall Abrams
 
-(ns utils)
+(ns utils.general)
 
 (defn set-pprint-width 
   "Sets width for pretty-printing with pprint and pp."

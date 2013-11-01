@@ -1,8 +1,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tools for testing
 
-(ns popco
-  [:use criterium.core])
+(ns popco.core.neuralnets-testtools
+  [:use clojure.core.matrix
+        popco.core.neuralnets])
 
 (defn make-random-activn-vec
   "Generate a vector of random activations of num-nodes nodes."
@@ -23,20 +24,6 @@
   (matrix 
     (repeatedly num-nodes 
                 #(repeatedly num-nodes (fn [] (rand-rand-1+1 prob-of-link))))))
-
-
-(defn bench-settle [num-nodes prob-of-link]
-  (let [a (make-random-activn-vec num-nodes)
-        M (make-sparse-random-net-mat num-nodes prob-of-link)
-        Mp (emap posify M)
-        Mn (emap negify M)]
-    ;; jit/etc burn-in
-    (dotimes [i 5] (def _ (next-activns M a)))
-    ;; tests
-    (print (format "%nWith single weight-matrix: num-nodes: %s, prob-of-link: %s:%n%n" num-nodes prob-of-link))
-    (bench (def _ (next-activns M a)))
-    (print (format "%nWith split weight-matrices: num-nodes: %s, prob-of-link: %s:%n%n" num-nodes prob-of-link))
-    (bench (def _ (next-activns Mp Mn a))) ))
 
 ;;;;;;;;;;;;;;;;;;;;
 

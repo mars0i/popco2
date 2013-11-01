@@ -1,4 +1,4 @@
-(ns popco)
+(ns popco.core.acme)
 
 (defrecord Propn [pred args id])
 ;; Add doc-string for class to the constructor function:
