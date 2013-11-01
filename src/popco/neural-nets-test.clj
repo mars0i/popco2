@@ -1,3 +1,4 @@
+(ns popco)
 
 ;(use 'criterium.core)
 ;(use 'clojure.core.matrix)

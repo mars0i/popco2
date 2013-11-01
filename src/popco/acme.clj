@@ -21,7 +21,7 @@
             )))))
 
 
-(defn match-propns 
+(defn matched-propn-pairs
   [pset1 pset2]
 
   (for [p1 pset1
