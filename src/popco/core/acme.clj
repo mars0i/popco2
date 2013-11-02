@@ -5,14 +5,13 @@
 (ug/add-to-docstr ->Propn
   "\n  pred: Predicate - should be keyword with initial uppercase.
   args: Array of argments, which could either be objects (keyword 
-        starting with 'ob-') or names of other propositions.
+        starting with 'ob-' [OBSOLETE?]) or names of other propositions.
   id:   Name for proposition, which should start with all uppercase
         domain id, then dash (e.g. :CV-blah-blah)." )
 
 (defrecord Obj [id])
 (ug/add-to-docstr ->Obj
-  "\n  id: Name for proposition, which should start with all uppercase
-      domain id, then dash (e.g. :CV-blah-blah)." )
+  "\n  id: Name for proposition, which should start with 'ob-' [OBSOLETE?]."
 
 (defn propns-match?
   [p1 p2]
