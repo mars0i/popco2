@@ -11,7 +11,7 @@
 
 (defrecord Obj [id])
 (ug/add-to-docstr ->Obj
-  "\n  id: Name for proposition, which should start with 'ob-' [OBSOLETE?]."
+  "\n  id: Name for proposition, which should start with 'ob-' [OBSOLETE?].")
 
 (defn propns-match?
   [p1 p2]
