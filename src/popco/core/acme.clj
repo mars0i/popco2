@@ -35,3 +35,13 @@
         p2 pset2
         :when (propns-match? p1 p2)]
     [p1 p2]))
+
+;; Handy for displaying output of matched-propn-pairs:
+(defn pair-ids
+  "Return sequence of pairs of :id fields of objects from sequence prs of pairs."
+  [prs]
+  (map 
+    (fn [[p1 p2]] 
+      [(:id p1) (:id p2)])
+    prs))
+
