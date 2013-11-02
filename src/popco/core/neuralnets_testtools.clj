@@ -1,6 +1,3 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tools for testing
-
 (ns popco.core.neuralnets-testtools
   [:use clojure.core.matrix
         popco.core.neuralnets])

@@ -1,7 +1,3 @@
-;;;; neuralnets.clj
-;;;; Initial exploration of matrix-based constraint satisfaction
-;;;; network for a new version of POPCO.
-
 (ns popco.core.neuralnets
   [:use clojure.core.matrix])
 

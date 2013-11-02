@@ -1,8 +1,6 @@
-;;; utils/general.clj
-;;; Utility functions handy for any Clojure program
-;;; Marshall Abrams
+(ns utils.general ; Utility functions handy for any Clojure program
+  (:require [clojure.pprint :only [*print-right-margin*]]))
 
-(ns utils.general)
 
 (defn set-pprint-width 
   "Sets width for pretty-printing with pprint and pp."
@@ -13,6 +11,6 @@
 
 (defmacro add-to-docstr
   "Appends string addlstr onto end of existing docstring for symbol sym.
-  (Tip: Consider beginning addlstr with \"\\n\".)"
+  (Tip: Consider beginning addlstr with \"\\n  \".)"
   [sym addlstr] 
   `(alter-meta! #'~sym update-in [:doc] str ~addlstr))

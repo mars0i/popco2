@@ -1,8 +1,8 @@
-(ns popco.core.acme)
+(ns popco.core.acme
+  (:require [utils.general :as ug]))
 
 (defrecord Propn [pred args id])
-;; Add doc-string for class to the constructor function:
-(alter-meta! #'->Propn update-in [:doc] str 
+(ug/add-to-docstr ->Propn
   "\n  pred: Predicate - should be keyword with initial uppercase.
   args: Array of argments, which could either be objects (keyword 
         starting with 'ob-') or names of other propositions.
@@ -10,6 +10,9 @@
         domain id, then dash (e.g. :CV-blah-blah)." )
 
 (defrecord Obj [id])
+(ug/add-to-docstr ->Obj
+  "\n  id: Name for proposition, which should start with all uppercase
+      domain id, then dash (e.g. :CV-blah-blah)." )
 
 (defn propns-match?
   [p1 p2]

@@ -9,4 +9,5 @@
                                   [net.mikera/core.matrix "0.13.1"]
                                   [net.mikera/vectorz-clj "0.14.0"]]
                    ;:source-paths ["src/popco/core" "src/popco/sims" "src/utils"] ; where load will look for source files
+                   :source-paths ["src"] ; where load will look for source files
                    }})

@@ -1,4 +1,6 @@
-(ns popco.sims.crime.crime3propns)
+(ns popco.sims.crime.crime3propns
+  [:use popco.core.acme]
+  [:import [popco.core.acme Propn Obj]])
 
 (def virus-propns
   [
