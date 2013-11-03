@@ -13,6 +13,11 @@
 (ug/add-to-docstr ->Obj
   "\n  id: Name for proposition, which should start with 'ob-' [OBSOLETE?].")
 
+(defmacro defpropn
+  [nm pred args]
+  `(def ~nm (->Propn ~pred ~args (keyword '~nm)))
+  nm)
+
 (declare propns-match? args-match?)
 
 (defn propns-match?
