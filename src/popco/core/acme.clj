@@ -9,14 +9,26 @@
   id:   Name for proposition, which should start with all uppercase
         domain id, then dash (e.g. :CV-blah-blah)." )
 
+(defmacro defpropn
+  "Creates a Propn with pred as :pred, args as :args, and (keyword nm)--i.e.
+  : + value of nm--as :id.  Then defines nm to have this Propn as its value,
+  and returns the Propn."
+  [nm pred args]
+  `(do 
+     (def ~nm (->Propn ~pred ~args (keyword '~nm)))
+     ~nm))
+
 (defrecord Obj [id])
 (ug/add-to-docstr ->Obj
   "\n  id: Name for proposition, which should start with 'ob-' [OBSOLETE?].")
 
-(defmacro defpropn
-  [nm pred args]
-  `(def ~nm (->Propn ~pred ~args (keyword '~nm)))
-  nm)
+(defmacro defobj
+  "Creates an Obj with (keyword nm)--i.e. : + value of nm--as :id.  Then 
+  defines nm to have this Obj as its value, and returns the Obj."
+  [nm]
+  `(do 
+     (def ~nm (->Obj (keyword '~nm)))
+     ~nm))
 
 (declare propns-match? args-match?)
 
@@ -27,6 +39,7 @@
   (and (= (count args1) (count args2))
        (every? identity (map args-match? args1 args2)))))
 
+;; write as single conditional?
 (defmulti args-match? (fn [x y] [(class x) (class y)]) )
 (defmethod args-match? [Obj Propn] [_ _] false)
 (defmethod args-match? [Propn Obj] [_ _] false)
