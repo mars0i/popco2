@@ -32,6 +32,13 @@
 
 (declare propns-match? args-match?)
 
+(defn matched-propn-pairs
+  [pset1 pset2]
+  (for [p1 pset1
+        p2 pset2
+        :when (propns-match? p1 p2)]
+    [p1 p2]))
+
 (defn propns-match?
   [p1 p2]
   (let [args1 (:args p1)
@@ -45,13 +52,6 @@
 (defmethod args-match? [Propn Obj] [_ _] false)
 (defmethod args-match? [Obj Obj] [_ _] true)
 (defmethod args-match? [Propn Propn] [p1 p2] (propns-match? p1 p2))
-
-(defn matched-propn-pairs
-  [pset1 pset2]
-  (for [p1 pset1
-        p2 pset2
-        :when (propns-match? p1 p2)]
-    [p1 p2]))
 
 ;; Handy for displaying output of matched-propn-pairs:
 (defn pair-ids
