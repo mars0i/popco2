@@ -44,8 +44,7 @@
 (defmethod args-match? [Obj Propn] [_ _] false)
 (defmethod args-match? [Propn Obj] [_ _] false)
 (defmethod args-match? [Obj Obj] [_ _] true)
-(defmethod args-match? [Propn Propn] [p1 p2]
-  (every? identity (map propns-match? (:args p1) (:args p2))))
+(defmethod args-match? [Propn Propn] [p1 p2] (propns-match? p1 p2))
 
 (defn matched-propn-pairs
   [pset1 pset2]
