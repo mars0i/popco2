@@ -1,15 +1,14 @@
 (ns utils.general ; Utility functions handy for any Clojure program
   (:require [clojure.pprint :only [*print-right-margin*]]))
 
-(defn pathify [s]
-  (clojure.string/replace s \. \/))
-
-(defn nsify [nms]
-  (clojure.string/replace (str nms) \/ \.))
-
-(defn unlocknload [path-or-ns]
-  (load-file (str "src/" (pathify path-or-ns)))
-  (use (nsify path-or-ns)))
+(defn unlocknload 
+  "Given a symbol representing a namespace, converts the symbol
+  into the corresponding path + clojure source fileanem, tries to 
+  load the file, and then uses (\"unlocks\") the namespace."
+  [nssym]
+  (load-file 
+    (str "src/" (clojure.string/replace nssym \. \/) ".clj"))
+  (use nssym))
 
 (defn set-pprint-width 
   "Sets width for pretty-printing with pprint and pp."
