@@ -57,8 +57,7 @@
 (defn pair-ids
   "Return sequence of pairs of :id fields of objects from sequence prs of pairs."
   [prs]
-  (map 
-    (fn [[p1 p2]] 
-      [(:id p1) (:id p2)])
-    prs))
-
+  (sort  ; does the right thing with pairs of keywords
+    (map (fn [[p1 p2]] 
+           [(:id p1) (:id p2)])
+         prs)))
