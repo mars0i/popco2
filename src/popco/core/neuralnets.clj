@@ -55,6 +55,11 @@
     (rand-1+1)
     0))
 
+(defn rand-0-or-1
+  "Returns either 0 or 1, with probability prob."
+  [prob]
+  (if (< (rand) prob) 1 0))
+
 (defn posify 
   "Return the non-negative number closest to x, i.e. 0 if x < 0, else x."
   [x]
