@@ -7,8 +7,10 @@
   load the file, and then uses (\"unlocks\") the namespace."
   [nssym]
   (load-file 
-    (str "src/" (clojure.string/replace nssym \. \/) ".clj"))
-  (use nssym))
+    (str "src/" 
+         (clojure.string/replace (clojure.string/replace nssym \. \/) \- \_) 
+         ".clj"))
+    (use nssym))
 
 (defn set-pprint-width 
   "Sets width for pretty-printing with pprint and pp."
