@@ -40,7 +40,7 @@
   (for [p1 pset1
         p2 pset2
         :when (propns-match? p1 p2)]
-    [p1 p2]))
+    (hash-set p1 p2))) ; doesn't need to be sorted, but sorted-set is smaller than a hash-set for two elements
 
 (defn propns-match?
   [p1 p2]
