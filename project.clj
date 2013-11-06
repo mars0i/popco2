@@ -10,4 +10,7 @@
                                   [net.mikera/vectorz-clj "0.14.0"]]
                    ;:source-paths ["src/popco/core" "src/popco/sims" "src/utils"] ; where load will look for source files
                    :source-paths ["src"] ; where load will look for source files
-                   }})
+                   }}
+   ;:jvm-opts ["-XX:TieredStopAtLevel=4"]
+   ;:jvm-opts ["-server"]
+)
