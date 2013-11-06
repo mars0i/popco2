@@ -18,6 +18,13 @@
 
 (def ntimes 10000000)
 
+;; Test how long it takes to do what's common to all of the other tests
+(defn test-control []
+    (print "=============================\ntest-control:\n")
+    (bench
+      (dotimes [_ ntimes]
+        (def _ (rand-nth [:a :b])))))
+
 (defn test-list []
   (let [data '(:a :b)] 
     (print "=============================\ntest-list:\n")
@@ -61,6 +68,7 @@
         (def _ (contains? data (rand-nth [:a :b])))))))
 
 (defn test-all []
+  (test-control)
   (test-list)
   (test-vec)
   (test-hashset)

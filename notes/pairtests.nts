@@ -1,5 +1,25 @@
 using pair_tests.clj:
 
+popco.core.popco=> (test-control)
+=============================
+test-control:
+WARNING: JVM argument TieredStopAtLevel=1 is active, and may lead to unexpected results as JIT C2 compiler may not be active. See http://www.slideshare.net/CharlesNutter/javaone-2012-jvm-jit-for-dummies.
+WARNING: Final GC required 3.868222649376612 % of runtime
+WARNING: JVM argument TieredStopAtLevel=1 is active, and may lead to unexpected results as JIT C2 compiler may not be active. See http://www.slideshare.net/CharlesNutter/javaone-2012-jvm-jit-for-dummies.
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 5.571284 sec
+    Execution time std-deviation : 15.441116 ms
+   Execution time lower quantile : 5.553109 sec ( 2.5%)
+   Execution time upper quantile : 5.604505 sec (97.5%)
+                   Overhead used : 9.851862 ns
+
+Found 3 outliers in 60 samples (5.0000 %)
+	low-severe	 1 (1.6667 %)
+	low-mild	 2 (3.3333 %)
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+nil
+popco.core.popco=> 
+
 popco.core.popco=> (test-all)
 =============================
 test-list:
