@@ -1,5 +1,8 @@
 (ns something
-  [:use criterium.core])
+  [:use criterium.core
+        clojure.core.matrix
+        popco.core.neuralnets
+        popco.core.neuralnets-testtools])
 
 ;(use 'criterium.core)
 ;(use 'clojure.core.matrix)
