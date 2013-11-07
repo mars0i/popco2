@@ -62,7 +62,6 @@
   [nodes-info]
   (zipmap nodes-info (range (count nodes-info))))
 
-;; SHOULDN"T THIS BE A core.matrix vector?
 (defn index-to-node-vec
   "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
   Objs, etc.), returns a vector allowing indexing node info entries."
