@@ -50,11 +50,33 @@
        (every? identity (map args-match? args1 args2)))))
 
 ;; write as single conditional?
-(defmulti args-match? (fn [x y] [(class x) (class y)]) )
+(defmulti  args-match? (fn [x y] [(class x) (class y)]) )
 (defmethod args-match? [Obj Propn] [_ _] false)
 (defmethod args-match? [Propn Obj] [_ _] false)
 (defmethod args-match? [Obj Obj] [_ _] true)
 (defmethod args-match? [Propn Propn] [p1 p2] (propns-match? p1 p2))
+
+
+(declare match-args match-propn-pair-components)
+
+(defn match-propn-pairs
+  "Return vector of matched Propns, predicates, and Objs from sequence 
+  of pairs of Propns."
+  [pairs]
+  (mapcat match-propn-pair-components pairs))
+
+(defn match-propn-pair-components
+  [[p1 p2]]
+  [#{p1 p2}
+   #{(:pred p1) (:pred p2)}
+   (mapcat match-args (:args p1) (:args p2))])
+
+(defmulti  match-args (fn [x y] [(class x) (class y)]))
+(defmethod match-args [Obj Obj] [o1 o2] [o1 o2])
+(defmethod match-args [Propn Propn] [p1 p2] (match-propn-pair-components p1 p2))
+; not right--doesn't handle dupe propn matchs right.  That needs to be
+; in weights.
+
 
 (defn node-to-index-map
   "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
@@ -67,6 +89,10 @@
   Objs, etc.), returns a vector allowing indexing node info entries."
   [nodes-info]
   (vec nodes-info))
+
+
+
+
 
 ;; Handy for displaying output of matched-propn-pairs:
 (defn pair-ids
