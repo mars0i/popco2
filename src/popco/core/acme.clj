@@ -72,7 +72,7 @@
    (mapcat match-args (:args p1) (:args p2))])
 
 (defmulti  match-args (fn [x y] [(class x) (class y)]))
-(defmethod match-args [Obj Obj] [o1 o2] [o1 o2])
+(defmethod match-args [Obj Obj] [o1 o2] #{o1 o2})
 (defmethod match-args [Propn Propn] [p1 p2] (match-propn-pair-components p1 p2))
 ; not right--doesn't handle dupe propn matchs right.  That needs to be
 ; in weights.
