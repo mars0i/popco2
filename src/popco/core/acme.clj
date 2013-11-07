@@ -63,6 +63,18 @@
 (defmethod args-match? [Obj Obj] [_ _] true)
 (defmethod args-match? [Propn Propn] [p1 p2] (propns-match? p1 p2))
 
+(defn node-to-index-map
+  "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
+  Objs, etc.), returns a hashmap from node info entries to indexes."
+  [nodes-info]
+  (zipmap nodes-info (range (count nodes-info))))
+
+(defn index-to-node-map
+  "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
+  Objs, etc.), returns a hashmap from indexes to node info entries."
+  [nodes-info]
+  (zipmap (range (count nodes-info)) nodes-info))
+
 ;; Handy for displaying output of matched-propn-pairs:
 (defn pair-ids
   "Return sequence of pairs of :id fields of objects from sequence prs of pairs."
