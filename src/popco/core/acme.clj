@@ -33,21 +33,14 @@
 (declare propns-match? args-match?)
 
 (defn matched-propn-pairs
-  "Returns a lazy sequence of vector pairs, each containing two propositions
+  "Returns a vector of 2-element sets, each containing two propositions
   that match according to propns-match?.  These are propositions that are
-  isomorphic in the ACME sense and can be used to construct map nodes."
+  isomorphic in the ACME sense and that can be used to construct map nodes."
   [pset1 pset2]
-  (for [p1 pset1
+  (vec (for [p1 pset1
         p2 pset2
         :when (propns-match? p1 p2)]
-    [p1 p2]))
-;; options for representing matched pairs: 
-;; [p1 p2]
-;; (p1 p2)
-;; (hash-set p1 p2)
-;; (sorted-set p1 p2)
-;; (array-map p1 p1 p2 p2)))
-;; (array-map p1 p2 p1 p2)))
+    [p1 p2])))
 
 (defn propns-match?
   [p1 p2]
@@ -69,11 +62,12 @@
   [nodes-info]
   (zipmap nodes-info (range (count nodes-info))))
 
-(defn index-to-node-map
+;; SHOULDN"T THIS BE A core.matrix vector?
+(defn index-to-node-vec
   "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
-  Objs, etc.), returns a hashmap from indexes to node info entries."
+  Objs, etc.), returns a vector allowing indexing node info entries."
   [nodes-info]
-  (zipmap (range (count nodes-info)) nodes-info))
+  (vec nodes-info))
 
 ;; Handy for displaying output of matched-propn-pairs:
 (defn pair-ids
