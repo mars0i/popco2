@@ -40,7 +40,7 @@
   Recursively checks propositions given as arguments of propositions.
   Returns true if they're isomorphic, false otherwise."
   [p1 p2]
-  (let [args1 (:args p1)
+  (let [args1 (:args p1)   ; predicates always match, so we only check args
         args2 (:args p2)]
   (and (= (count args1) (count args2))
        (every? identity (map args-match? args1 args2)))))
@@ -49,7 +49,7 @@
 (defmulti  args-match? (fn [x y] [(class x) (class y)]) )
 (defmethod args-match? [Obj Propn] [_ _] false)
 (defmethod args-match? [Propn Obj] [_ _] false)
-(defmethod args-match? [Obj Obj] [_ _] true)
+(defmethod args-match? [Obj Obj] [_ _] true)   ; objects always match
 (defmethod args-match? [Propn Propn] [p1 p2] (propns-match? p1 p2))
 
 
