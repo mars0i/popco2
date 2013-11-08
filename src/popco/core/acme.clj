@@ -1,34 +1,11 @@
+;; ACME: an implementation of Holyoak & Thagard's (1989) ACME method
+;; of constructing a constraint satisfaction network from two sets
+;; of simple representations of entertained propositions.
+
 (ns popco.core.acme
+  (:use popco.core.lot)
+  (:import [popco.core.lot Propn Pred Obj])
   (:require [utils.general :as ug]))
-
-(defrecord Propn [pred args id])
-(ug/add-to-docstr ->Propn
-  "\n  pred: Predicate - should be keyword with initial uppercase.
-  args: Array of argments, which could either be objects (keyword 
-        starting with 'ob-' [OBSOLETE?]) or names of other propositions.
-  id:   Name for proposition, which should start with all uppercase
-        domain id, then dash (e.g. :CV-blah-blah)." )
-
-(defmacro defpropn
-  "Creates a Propn with pred as :pred, args as :args, and (keyword nm)--i.e.
-  : + value of nm--as :id.  Then defines nm to have this Propn as its value,
-  and returns the Propn."
-  [nm pred args]
-  `(do 
-     (def ~nm (->Propn ~pred ~args (keyword '~nm)))
-     ~nm))
-
-(defrecord Obj [id])
-(ug/add-to-docstr ->Obj
-  "\n  id: Name for proposition, which should start with 'ob-' [OBSOLETE?].")
-
-(defmacro defobj
-  "Creates an Obj with (keyword nm)--i.e. : + value of nm--as :id.  Then 
-  defines nm to have this Obj as its value, and returns the Obj."
-  [nm]
-  `(do 
-     (def ~nm (->Obj (keyword '~nm)))
-     ~nm))
 
 (declare propns-match? args-match?)
 

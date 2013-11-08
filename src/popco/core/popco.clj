@@ -4,11 +4,9 @@
         popco.core.neuralnets
         popco.core.neuralnets-testtools
         utils.general]
-  [:import [popco.core.acme Propn Obj]]
+  [:import [popco.core.lot Propn Pred Obj]]
   (:gen-class))
 ;; cf. https://kotka.de/blog/2010/02/gen-class_how_it_works_and_how_to_use_it.html
-
-;(println "Yow. Gettin' it all loaded!")
 
 (defn -main
   "I don't do a whole lot ... yet."
