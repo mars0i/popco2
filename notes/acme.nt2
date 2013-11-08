@@ -37,6 +37,8 @@ in the same row.
 There should be negative links between any pairings represented by 1's
 in the same column.
 
+So if the row sum or column sum is > 1, then we need negative links.
+
 
 For any 1 in the map-node matrix, there will be a node in the
 analogy-net vector.
