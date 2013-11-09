@@ -18,16 +18,17 @@
 ;;; so a link matrix is needed.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; First step: Find out which propositions can be paired up because they're isomorphic:
+;; First step: Find out which propositions can be paired up because
+;; they're isomorphic:
 
 (declare propns-match? args-match?)
 
-;; Note that order within pairs matters.  It preserves the distinction
+;; Note that order within pairs matters:  It preserves the distinction
 ;; between the two analogue structures.
 (defn match-propns
-  "Returns a (lazy) sequence of 2-element sequences, each containing two propositions
-  that match according to propns-match?.  These are propositions that are
-  isomorphic in the ACME sense, and that can be used to construct map nodes."
+  "Returns a (lazy) sequence of 2-element sequences, each containing two 
+  propositions that match according to propns-match?.  These are propositions 
+  that are isomorphic in the ACME sense, and can be used to construct map nodes."
   [pset1 pset2]
   (for [p1 pset1
         p2 pset2
@@ -67,24 +68,25 @@
 ;; TODO: BROKEN
 ;; Note that order within pairs matters.  It preserves the distinction
 ;; between the two analogue structures, and allows predicates and objects
-;; to have the same names in different analogue structures (sets don't allow).
+;; to have the same names in different analogue structures (sets don't allow that).
 (defn match-propn-components-too
-  "Return a (lazy) sequence of unique pairs of matched Propns, predicates, and Objs 
-  from a sequence of of pairs of Propns.  The resulting pairs represent the 'sides' 
-  of map nodes."
+  "Return a (lazy) sequence of unique pairs of matched Propns, predicates, 
+  and Objs from a sequence of of pairs of Propns.  The resulting pairs 
+  represent the 'sides' of map nodes."
   [pairs]
-  (distinct
+  (distinct 
     (mapcat match-propn-components pairs)))
 
 (defn match-propn-components
   [[p1 p2]]
+  ;; return a vector of matched pairs, to be concatted by match-propn-components-too
   [[p1 p2]
    [(:pred p1) (:pred p2)] ; predicates always match if the proposition matched
    (mapcat match-args (:args p1) (:args p2))]) ; args match if they're objects, propns require further checking
 
 (defmulti  match-args (fn [x y] [(class x) (class y)]))
 (defmethod match-args [Obj Obj] [o1 o2] [o1 o2])
-(defmethod match-args [Propn Propn] [p1 p2] (match-propn-components p1 p2))
+(defmethod match-args [Propn Propn] [p1 p2] (match-propn-components [p1 p2]))
 
 ;; NEXT TWO WILL WORK FOR THE PROPN NET, TOO, SO THEY MIGHT BE MOVED LATER.
 
