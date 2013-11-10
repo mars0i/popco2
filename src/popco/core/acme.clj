@@ -86,7 +86,7 @@
 
 (defmulti  match-args (fn [x y] [(class x) (class y)]))
 (defmethod match-args [Obj Obj] [o1 o2] [o1 o2])
-(defmethod match-args [Propn Propn] [p1 p2] (match-propn-components [p1 p2]))
+(defmethod match-args [Propn Propn] [p1 p2] (match-propn-components-too [p1 p2]))
 
 ;; NEXT TWO WILL WORK FOR THE PROPN NET, TOO, SO THEY MIGHT BE MOVED LATER.
 
