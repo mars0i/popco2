@@ -28,7 +28,7 @@
 (defn match-propns
   "Returns a (lazy) sequence of 2-element sequences, each containing two 
   propositions that match according to propns-match?.  These are propositions 
-  that are isomorphic in the ACME sense, and can be used to construct map nodes."
+  that are isomorphic and can be used to construct map nodes."
   [pset1 pset2]
   (for [p1 pset1
         p2 pset2
