@@ -7,9 +7,6 @@
 ;; of constructing a constraint satisfaction network from two sets
 ;; of simple representations of entertained propositions.
 
-
-;;; TODO match-components-too is broken--it runs, but isn't behaving correctly.
-
 ;;; TODO construct link matrix and weight matrix with positive weights
 ;;; TODO add negative weights to weight matrix
 ;;; NOTE for the analogy net we probably don't really need the link
