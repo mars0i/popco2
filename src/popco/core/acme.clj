@@ -112,9 +112,11 @@
 
 (defn fmt-pair-map
   "Format a pair-map represented by a Clojure map, or a collection of them.
-  Pair-maps are displayed as 1-element Clojure maps (just for display!),
-  Propn-families of pair-maps are displayed as sequences, and argument
-  lists are displayed as vectors."
+  Pair-maps are displayed as 1-element Clojure maps.  Propn-families of
+  pair-maps are displayed as sequences, and argument lists are displayed as
+  vectors.  (Note: Representing pair-maps as Clojure maps from one item to the
+  other has no meaning; t's just a convenient way to get curly braces rather
+  than parens or square braces.)"
   [pair-or-pairs]
   (cond (seq? pair-or-pairs)         (fmt-pair-maps pair-or-pairs) ; it's a family of pairs from one Propn
         (vector? pair-or-pairs) (vec (fmt-pair-maps pair-or-pairs)) ; it's an arglist--return in vec to flag that
