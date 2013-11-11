@@ -30,7 +30,7 @@
   (for [p1 pset1
         p2 pset2
         :when (propns-match? p1 p2)]
-    [p1 p2]))
+    `(~p1 ~p2)))
 
 ;; similar to deep-isomorphic-arglists in popco 1
 (defn propns-match?
@@ -66,30 +66,34 @@
 ;; between the two analogue structures, and allows predicates and objects
 ;; to have the same names in different analogue structures (sets don't allow that).
 (defn match-propn-components
-  "Returns a (lazy) sequence of vectors (families) of mapped-pairs of matched 
-  Propns, Preds, or Objs from a sequence of of pairs of Propns.  Each pair is 
-  a map with keys :alog1 and :alog2 (analog 1 & 2).  The resulting pairs 
+  "Returns a (lazy) sequence of sequences (families) of mapped-pairs of matched
+  Propns, Preds, or Objs from a sequence of of pairs of Propns.  Each pair is a
+  map with keys :alog1 and :alog2 (analog 1 & 2).  The resulting pairs
   represent the 'sides' of map nodes.  Each subsequence contains the pairs from
-  one proposition.  If a Propn has one or more Propns as arguments, then there
-  will be similar vectors embedded.  Each family vector consists of a Clojure
-  map representing a pair of Propns, a clojure map representing a pair of
-  Preds, and a vector containing representations of paired arguments.  The
-  contents of this vector are Clojure maps where the corresponding arguments
-  are Objs, and family-vectors where the corresponding args are Propns."
+  one proposition.  Each Propn family sequence consists of a Clojure map
+  representing a pair of Propns, a clojure map representing a pair of Preds,
+  and a vector containing representations of paired arguments.  The contents of
+  this vector are Clojure maps where the corresponding arguments are Objs, and
+  family sequences where the corresponding args are Propns.  i.e. Propns'
+  arguments are embedded in a vector so you can tell whether you're looking at
+  a collection of pairs from two Propns or pairs from arguments by testing with
+  seq? and vec?."
   [pairs]
   (map match-components-of-propn-pair pairs))
 
 (defn match-components-of-propn-pair
   [[p1 p2]]
-  ;; return a vector of matched pairs:
-  [{:alog1 p1 :alog2 p2}                 ; we already know the propns match
-   {:alog1 (:pred p1) :alog2 (:pred p2)} ; predicates always match if the propns matched
-   (vec (map match-args (:args p1) (:args p2)))]) ; args match if objs, propns need more work
+  ;; return a seq of matched pairs:
+  (list
+    {:alog1 p1 :alog2 p2}                 ; we already know the propns match
+    {:alog1 (:pred p1) :alog2 (:pred p2)} ; predicates always match if the propns matched
+    (vec (map match-args (:args p1) (:args p2))))) ; args match if objs, propns need more work
 
 (defmulti  match-args (fn [x y] [(class x) (class y)]))
 (defmethod match-args [Obj Obj] [o1 o2] {:alog1 o1 :alog2 o2})
 (defmethod match-args [Propn Propn] [p1 p2] (match-components-of-propn-pair [p1 p2]))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; utilities for displaying above pair-map trees
 (declare fmt-pair-map-families fmt-pair-map-vec fmt-pair-map)
@@ -114,6 +118,8 @@
   (if (vector? pairmap)
     (fmt-pair-map-vec pairmap) ; it's an arglist
     [(:id (:alog1 pairmap)) (:id (:alog2 pairmap))])) ; it's a pairmap
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; NEXT TWO WILL WORK FOR THE PROPN NET, TOO, SO THEY MIGHT BE MOVED LATER.
 
