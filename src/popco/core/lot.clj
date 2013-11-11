@@ -4,6 +4,16 @@
 (ns popco.core.lot
   (:require [utils.general :as ug]))
 
+;; CONVENTIONS:
+;; The value of all fields are keywords.
+;; Propn id's start with initial all-upper analog domain identifier,
+;; then dash, then rest of propn id.
+;; Predicate id's start with initial upper, then the rest lowercase.
+;; Obj ids start with "ob-".
+;; Disobeying these conventions should not cause anything to break,
+;; but adhering to them makes it easier to understand what's happening
+;; in the program, especially when displaying id's only.
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Propn's represent what's believed, entertained, or communicated.
 
@@ -13,7 +23,7 @@
   args: Array of argments, which could either be objects (keyword 
         starting with 'ob-' [OBSOLETE?]) or names of other propositions.
   id:   Name for proposition, which should start with all uppercase
-        domain id, then dash (e.g. :CV-blah-blah)." )
+        analog domain id, then dash (e.g. :CV-blah-blah)." )
 
 (defmacro defpropn
   "Creates a Propn with pred as :pred, args as :args, and (keyword nm)--i.e.
@@ -29,7 +39,7 @@
 
 (defrecord Pred [id])
 (ug/add-to-docstr ->Pred
-  "\n  id: Name for proposition, which should start with 'ob-' [OBSOLETE?].")
+  "\n  id: Name for proposition, which have initial cap and rest lowercase.")
 
 (defmacro defpred
   "Creates a Pred with (keyword nm)--i.e. : + value of nm--as :id.  Then 
@@ -44,7 +54,7 @@
 
 (defrecord Obj [id])
 (ug/add-to-docstr ->Obj
-  "\n  id: Name for proposition, which should start with 'ob-' [OBSOLETE?].")
+  "\n  id: Name for proposition, which should start with 'ob-'.")
 
 (defmacro defobj
   "Creates an Obj with (keyword nm)--i.e. : + value of nm--as :id.  Then 
