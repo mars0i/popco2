@@ -96,28 +96,29 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; utilities for displaying above pair-map trees
-(declare fmt-pair-map-families fmt-pair-map-vec fmt-pair-map)
+(declare fmt-pair-map-families fmt-pair-maps fmt-pair-map)
 
 (defn fmt-pair-map-families
-  "Format a sequence of pair-map families into a tree of vector pairs of :id's."
+  "Format a sequence of pair-map families into a tree of pairs of :id's."
   [fams]
-  (map fmt-pair-map-vec fams))
+  (map fmt-pair-maps fams))
 
-(defn fmt-pair-map-vec
-  "Format a vector of pair-maps into a tree of vector pairs of :id's.
-  The vector might represent the family of pair-maps from a proposition,
+(defn fmt-pair-maps
+  "Format a sequence of pair-maps into a tree of pairs of :id's.
+  The sequence might represent the family of pair-maps from a proposition,
   or it might represent the vector of mapped arguments of the proposition."
-  [pairvec] ; could be family, or could be mapped args
-  (vec (map fmt-pair-map pairvec)))
+  [pairs] ; could be family, or could be mapped args
+  (map fmt-pair-map pairs))
 
 (defn fmt-pair-map
-  "Format a pair-map represented by a Clojure map, after testing to see whether
-  instead we we passed a vector.  If it's a vector, then it contains pairings
-  of args from two Propns.  In that case call fmt-pair-map-vec on it."
-  [pairmap]
-  (if (vector? pairmap)
-    (fmt-pair-map-vec pairmap) ; it's an arglist
-    [(:id (:alog1 pairmap)) (:id (:alog2 pairmap))])) ; it's a pairmap
+  "Format a pair-map represented by a Clojure map, or a collection of them.
+  Pair-maps are displayed as 1-element Clojure maps (just for display!),
+  Propn-families of pair-maps are displayed as sequences, and argument
+  lists are displayed as vectors."
+  [pair-or-pairs]
+  (cond (seq? pair-or-pairs)         (fmt-pair-maps pair-or-pairs) ; it's a family of pairs from one Propn
+        (vector? pair-or-pairs) (vec (fmt-pair-maps pair-or-pairs)) ; it's an arglist--return in vec to flag that
+        :else (array-map (:id (:alog1 pair-or-pairs)) (:id (:alog2 pair-or-pairs))))) ; it's a pair
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
