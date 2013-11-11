@@ -60,7 +60,7 @@
 ;; i.e. we feed the return value of match-propns, above, to 
 ;; match-propn-components-too, below.
 
-(declare match-args match-propn-components)
+(declare match-args match-components-of-propn-pair match-propn-components)
 
 ;; Note that order within pairs matters.  It preserves the distinction
 ;; between the two analogue structures, and allows predicates and objects
@@ -92,7 +92,7 @@
 
 
 ;;; utilities for displaying above pair-map trees
-(declare fmt-pair-map-families fmt-pair-map fmt-pair-map-family)
+(declare fmt-pair-map-families fmt-pair-map-vec fmt-pair-map)
 
 (defn fmt-pair-map-families
   "Format a sequence of pair-map families into a tree of vector pairs of :id's."
