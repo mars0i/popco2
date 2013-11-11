@@ -65,28 +65,58 @@
 
 (declare match-args match-propn-components)
 
-;; TODO: BROKEN
 ;; Note that order within pairs matters.  It preserves the distinction
 ;; between the two analogue structures, and allows predicates and objects
 ;; to have the same names in different analogue structures (sets don't allow that).
 (defn match-propn-components-too
-  "Return a (lazy) sequence of unique pairs of matched Propns, predicates, 
-  and Objs from a sequence of of pairs of Propns.  The resulting pairs 
-  represent the 'sides' of map nodes."
+  "Return a sequence of vectors (families) of mapped-pairs of matched Propns, 
+  Preds, or Objs from a sequence of of pairs of Propns.  Each pair is a map 
+  with keys :alog1 and :alog2 (analog 1 & 2).  The resulting pairs represent
+  the 'sides' of map nodes.  Each subsequence contains the pairs from one
+  proposition.  If a Propn has one or more Propns as arguments, then there
+  will be similar vectors embedded.  Each family vector consists of a Clojure
+  map representing a pair of Propns, a clojure map representing a pair of
+  Preds, and a vector containing representations of paired arguments.  The
+  contents of this vector are Clojure maps where the corresponding arguments
+  are Objs, and family-vectors where the corresponding args are Propns."
   [pairs]
-  (distinct 
-    (mapcat match-propn-components pairs)))
+  (map match-propn-components pairs))
 
 (defn match-propn-components
   [[p1 p2]]
-  ;; return a vector of matched pairs, to be concatted by match-propn-components-too
-  [[p1 p2]
-   [(:pred p1) (:pred p2)] ; predicates always match if the proposition matched
-   (mapcat match-args (:args p1) (:args p2))]) ; args match if they're objects, propns require further checking
+  ;; return a vector of matched pairs:
+  [{:alog1 p1 :alog2 p2}                 ; we already know the propns match
+   {:alog1 (:pred p1) :alog2 (:pred p2)} ; predicates always match if the propns matched
+   (vec (map match-args (:args p1) (:args p2)))]) ; args match if objs, propns need more work
 
 (defmulti  match-args (fn [x y] [(class x) (class y)]))
-(defmethod match-args [Obj Obj] [o1 o2] [o1 o2])
-(defmethod match-args [Propn Propn] [p1 p2] (match-propn-components-too [p1 p2]))
+(defmethod match-args [Obj Obj] [o1 o2] {:alog1 o1 :alog2 o2})
+(defmethod match-args [Propn Propn] [p1 p2] (match-propn-components [p1 p2]))
+
+
+;;; utilities for displaying above pair-map trees
+(declare fmt-pair-map-families fmt-pair-map fmt-pair-map-family)
+
+(defn fmt-pair-map-families
+  "Format a sequence of pair-map families into a tree of vector pairs of :id's."
+  [fams]
+  (map fmt-pair-map-vec fams))
+
+(defn fmt-pair-map-vec
+  "Format a vector of pair-maps into a tree of vector pairs of :id's.
+  The vector might represent the family of pair-maps from a proposition,
+  or it might represent the vector of mapped arguments of the proposition."
+  [pairvec] ; could be family, or could be mapped args
+  (vec (map fmt-pair-map pairvec)))
+
+(defn fmt-pair-map
+  "Format a pair-map represented by a Clojure map, after testing to see whether
+  instead we we passed a vector.  If it's a vector, then it contains pairings
+  of args from two Propns.  In that case call fmt-pair-map-vec on it."
+  [pairmap]
+  (if (vector? pairmap)
+    (fmt-pair-map-vec pairmap) ; it's an arglist
+    [(:id (:alog1 pairmap)) (:id (:alog2 pairmap))])) ; it's a pairmap
 
 ;; NEXT TWO WILL WORK FOR THE PROPN NET, TOO, SO THEY MIGHT BE MOVED LATER.
 
