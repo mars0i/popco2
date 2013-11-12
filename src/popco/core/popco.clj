@@ -1,8 +1,8 @@
 (ns popco.core.popco
   [:use clojure.core.matrix
         popco.core.acme
-        popco.core.neuralnets
-        popco.core.neuralnets-testtools
+        popco.core.nnsettle
+        popco.core.nntesttools
         utils.general]
   [:import [popco.core.lot Propn Pred Obj]]
   (:gen-class))

@@ -1,4 +1,4 @@
-(ns popco.core.neuralnets-testtools
+(ns popco.core.nntesttools
   [:use clojure.core.matrix
         popco.core.neuralnets])
 

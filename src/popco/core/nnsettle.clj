@@ -1,4 +1,4 @@
-(ns popco.core.neuralnets
+(ns popco.core.nnsettle
   [:use clojure.core.matrix])
 
 (set-current-implementation :vectorz)
