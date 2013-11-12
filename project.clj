@@ -6,8 +6,8 @@
   :main popco.core.popco ; this is what lein run will look for -main in
   :profiles {:dev {:dependencies [;[criterium/criterium "0.4.2"] ; benchmarking
                                   [org.clojure/tools.macro "0.1.5"]
-                                  [net.mikera/core.matrix "0.13.1"]
-                                  [net.mikera/vectorz-clj "0.14.0"]]
+                                  [net.mikera/core.matrix "0.15.0"]
+                                  [net.mikera/vectorz-clj "0.17.0"]]
                    ;:source-paths ["src/popco/core" "src/popco/sims" "src/utils"] ; where load will look for source files
                    :source-paths ["src"] ; where load will look for source files
                    }}
