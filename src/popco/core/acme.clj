@@ -103,8 +103,7 @@
 ;; NOTE these functions will probably be abstracted out into a separate file 
 ;; and ns later, since they'll be used for the proposition network, too.
 
-;; MOVE TO SEPARATE FILE/NS
-(defn make-node-vec
+(defn make-acme-node-vec
   "Given a tree of node info entries (e.g. Propns, pairs of Propns or 
   Objs, etc.), returns a Clojure vector of unique node info entries 
   allowing indexing particular node info entries.  This node vector is
@@ -150,14 +149,14 @@
   "Given a sequence of data on individual nodes, returns a clojure map with 
   three entries:
   :nodes -   A Clojure vector of data providing information about the meaning
-  of particular neural net nodes.  The indexes of the data items
-  correspond to indexes into activation vectors and rows/columns
-  of weight matrices.  This vector may be identical to the sequence
-  of nodes passed in.
+             of particular neural net nodes.  The indexes of the data items
+             correspond to indexes into activation vectors and rows/columns
+             of weight matrices.  This vector may be identical to the sequence
+             of nodes passed in.
   :indexes - A Clojure map from the same data items to integers, allowing
-  lookup of a node's index from its data.
+             lookup of a node's index from its data.
   :wt-mat -  A core.matrix square matrix with dimensions equal to the number of
-  nodes, with all elements initialized to 0.0."
+             nodes, with all elements initialized to 0.0."
   [node-seq]
   (let [node-vec (vec node-seq)
         node-index-map (make-node-index-map node-vec)
@@ -168,12 +167,11 @@
 ;; NEED TO ADD NODE INDEX LOOKUP BY LOT-ELEMENT :id KEYWORD
 
 (defn make-acme-nn-strus
-  ;; add docstring
+  ;; ADD DOCSTRING
   [pset1 pset2]
-  (make-nn-strus 
-    (make-node-vec 
-      (match-propn-components 
-        (match-propns pset1 pset2)))))
+  (let [pair-tree (match-propn-components (match-propns pset1 pset2))]
+    (make-nn-strus 
+      (make-acme-node-vec pair-tree))))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
