@@ -1,7 +1,8 @@
 (ns popco.core.acme
   (:use popco.core.lot)
   (:import [popco.core.lot Propn Pred Obj])
-  (:require [utils.general :as ug]))
+  (:require [utils.general :as ug]
+            [clojure.core.matrix :as mx]))
 
 ;; ACME: an implementation of Holyoak & Thagard's (1989) ACME method
 ;; of constructing a constraint satisfaction network from two sets
@@ -15,8 +16,8 @@
 ;;; so a link matrix is needed.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; First step: Find out which propositions can be paired up because
-;; they're isomorphic:
+;; First step: 
+;; Find out which propositions can be paired up, i.e. the isomorphic ones.
 
 (declare propns-match? args-match?)
 
@@ -52,10 +53,11 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Second step: For all isomporphic propositions, pair up their components
-;; By separating step 1 and step 2, we do some redundant work, but it makes
+;; Second step: 
+;; For all isomporphic propositions, pair up their components
+;; (By separating step 1 and step 2, we do some redundant work, but it makes
 ;; the logic a bit simpler, for now, and we'll only be doing this once for the
-;; whole population at the beginning of each simulation.
+;; whole population at the beginning of each simulation.)
 
 ;; i.e. we feed the return value of match-propns, above, to 
 ;; match-propn-components-too, below.
@@ -94,8 +96,8 @@
 (defmethod match-args [Propn Propn] [p1 p2] (match-components-of-propn-pair [p1 p2]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;;; utilities for displaying above pair-map trees
+
 (declare fmt-pair-map-families fmt-pair-maps fmt-pair-map)
 
 (defn fmt-pair-map-families
@@ -122,28 +124,6 @@
         (vector? pair-or-pairs) (vec (fmt-pair-maps pair-or-pairs)) ; it's an arglist--return in vec to flag that
         :else (array-map (:id (:alog1 pair-or-pairs)) (:id (:alog2 pair-or-pairs))))) ; it's a pair
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; NEXT TWO WILL WORK FOR THE PROPN NET, TOO, SO THEY MIGHT BE MOVED LATER.
-
-(defn index-to-node-vec
-  "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
-  Objs, etc.), returns a vector allowing indexing node info entries."
-  [nodes-info]
-  (vec nodes-info))
-
-;; match-propn-components gives us a sequence of node info pairs which can be turned into
-;; a vector of some kind, and then we can index into it.  It's also useful
-;; to be able to look up the pairs from their indexes.  This function generates
-;; a hashmap that gives us that.  We can also use it with the belief network.
-
-(defn node-to-index-map
-  "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
-  Objs, etc.), returns a hashmap from node info entries to indexes.  Allows
-  reverse lookup of the node entries' indexes."
-  [nodes-info]
-  (zipmap nodes-info (range (count nodes-info))))
-
 ;; Handy for displaying output of match-propns:
 (defn pair-ids
   "Return sequence of pairs of :id fields of objects from sequence prs of pairs."
@@ -152,3 +132,45 @@
     (map (fn [[p1 p2]] 
            [(:id p1) (:id p2)])
          prs)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Third step: 
+;; Make a flat sequence of unique pairs.
+;; This specifies nodes, and the meaning of elements in activation vectors
+;; and of rows and columns of matrices.  Define vectors and matrices.
+
+;; NOTE these functions will probably be abstracted out into a separate file 
+;; and ns later, since they'll be used for the proposition network, too.
+
+(defn node-vec
+  "Given a tree of node info entries (e.g. Propns, pairs of Propns or 
+  Objs, etc.), returns a Clojure vector of unique node info entries 
+  allowing indexing particular node info entries."
+  [node-tree]
+  (vec (distinct (flatten node-tree))))
+
+(defn node-index-map
+  "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
+  Objs, etc.), returns a map from node info entries to indexes.  Allows
+  reverse lookup of the node entries' indexes."
+  [node-vec]
+  (zipmap node-vec (range (count node-vec))))
+
+(defn new-activn-vec
+  "Returns a core.matrix vector of length len, filled with zeros."
+  [len]
+  (mx/new-vector len))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Fourth step: 
+;; Make weight matrix representing link weights
+
+(defn new-wt-mat
+  "Returns a core.matrix square matrix with dimension dim, filled with zeros."
+  [dim]
+  (mx/new-matrix dim dim))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Put it all together
+;; ...
+
