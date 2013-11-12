@@ -94,9 +94,94 @@
 (defmulti  match-args (fn [x y] [(class x) (class y)]))
 (defmethod match-args [Obj Obj] [o1 o2] {:alog1 o1 :alog2 o2})
 (defmethod match-args [Propn Propn] [p1 p2] (match-components-of-propn-pair [p1 p2]))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Third step: 
+;; Make a flat sequence of unique pairs.
+;; This specifies nodes, and the meaning of elements in activation vectors
+;; and of rows and columns of matrices.  Define vectors and matrices.
+
+;; NOTE these functions will probably be abstracted out into a separate file 
+;; and ns later, since they'll be used for the proposition network, too.
+
+;; MOVE TO SEPARATE FILE/NS
+(defn make-node-vec
+  "Given a tree of node info entries (e.g. Propns, pairs of Propns or 
+  Objs, etc.), returns a Clojure vector of unique node info entries 
+  allowing indexing particular node info entries.  This node vector is
+  typically shared by all members of a population; it merely provides
+  information about nodes that a person might have.."
+  [node-tree]
+  (vec (distinct (flatten node-tree))))
+
+;; MOVE TO SEPARATE FILE/NS
+(defn make-node-index-map
+  "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
+  Objs, etc.), returns a map from node info entries to indexes.  Allows
+  reverse lookup of the node entries' indexes.  This map is typically
+  shared by all members of a population; it merely provides information
+  about notes that a person might have."
+  [node-vec]
+  (zipmap node-vec (range (count node-vec))))
+
+;; MOVE TO SEPARATE FILE/NS
+(defn make-activn-vec
+  "Returns a core.matrix vector of length len, filled with zeros,
+  to represent activation values of nodes.  Each person has its own 
+  activation vector."
+  [len]
+  (mx/new-vector len))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Fourth step: 
+;; Make weight matrix representing link weights
+
+;; MOVE TO SEPARATE FILE/NS
+(defn make-wt-mat
+  "Returns a core.matrix square matrix with dimension dim, filled with zeros."
+  [dim]
+  (mx/new-matrix dim dim))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; utilities for displaying above pair-map trees
+;; Put it all together
+;; ...
+
+;; MOVE TO SEPARATE FILE/NS
+(defn make-nn-strus
+  "Given a sequence of data on individual nodes, returns a clojure map with 
+  three entries:
+  :nodes -   A Clojure vector of data providing information about the meaning
+  of particular neural net nodes.  The indexes of the data items
+  correspond to indexes into activation vectors and rows/columns
+  of weight matrices.  This vector may be identical to the sequence
+  of nodes passed in.
+  :indexes - A Clojure map from the same data items to integers, allowing
+  lookup of a node's index from its data.
+  :wt-mat -  A core.matrix square matrix with dimensions equal to the number of
+  nodes, with all elements initialized to 0.0."
+  [node-seq]
+  (let [node-vec (vec node-seq)
+        node-index-map (make-node-index-map node-vec)
+        wt-mat (make-wt-mat (count node-vec))]
+    {:nodes node-vec
+     :indexes node-index-map
+     :wt-mat wt-mat}))
+;; NEED TO ADD NODE INDEX LOOKUP BY LOT-ELEMENT :id KEYWORD
+
+(defn make-acme-nn-strus
+  ;; add docstring
+  [pset1 pset2]
+  (make-nn-strus 
+    (make-node-vec 
+      (match-propn-components 
+        (match-propns pset1 pset2)))))
+
+;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
+;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
+;; THE MATRIX.  THEN AN UN-distinct-ED NODE SEQ TO CONSTRUCT NEGATIVE
+;; WEIGHTS AND FILL THOSE INTO THE MATRIX.  See acme.nt4 for more.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
 
 (declare fmt-pair-map-families fmt-pair-maps fmt-pair-map)
 
@@ -132,45 +217,4 @@
     (map (fn [[p1 p2]] 
            [(:id p1) (:id p2)])
          prs)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Third step: 
-;; Make a flat sequence of unique pairs.
-;; This specifies nodes, and the meaning of elements in activation vectors
-;; and of rows and columns of matrices.  Define vectors and matrices.
-
-;; NOTE these functions will probably be abstracted out into a separate file 
-;; and ns later, since they'll be used for the proposition network, too.
-
-(defn node-vec
-  "Given a tree of node info entries (e.g. Propns, pairs of Propns or 
-  Objs, etc.), returns a Clojure vector of unique node info entries 
-  allowing indexing particular node info entries."
-  [node-tree]
-  (vec (distinct (flatten node-tree))))
-
-(defn node-index-map
-  "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
-  Objs, etc.), returns a map from node info entries to indexes.  Allows
-  reverse lookup of the node entries' indexes."
-  [node-vec]
-  (zipmap node-vec (range (count node-vec))))
-
-(defn new-activn-vec
-  "Returns a core.matrix vector of length len, filled with zeros."
-  [len]
-  (mx/new-vector len))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Fourth step: 
-;; Make weight matrix representing link weights
-
-(defn new-wt-mat
-  "Returns a core.matrix square matrix with dimension dim, filled with zeros."
-  [dim]
-  (mx/new-matrix dim dim))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Put it all together
-;; ...
 
