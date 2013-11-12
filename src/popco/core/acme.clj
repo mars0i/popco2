@@ -113,8 +113,8 @@
   (vec (distinct (flatten node-tree))))
 
 ;; MOVE TO SEPARATE FILE/NS
-(defn make-node-index-map
-  "Given a sequence of node info entries (e.g. Propns, pairs of Propns or 
+(defn make-index-map
+  "Given a sequence of items (e.g. Propns, pairs of Propns or 
   Objs, etc.), returns a map from node info entries to indexes.  Allows
   reverse lookup of the node entries' indexes.  This map is typically
   shared by all members of a population; it merely provides information
@@ -165,6 +165,8 @@
      :indexes node-index-map
      :wt-mat wt-mat}))
 ;; NEED TO ADD NODE INDEX LOOKUP BY LOT-ELEMENT :id KEYWORD
+;; OH BUT MAP NODES DON'T YET HAVE ID'S OR NAMES.  MAYBE I OUGHT
+;; TO CONSTRUCT THEM FROM THE TWO ID'S AND "=", E.G.
 
 (defn make-acme-nn-strus
   ;; ADD DOCSTRING
