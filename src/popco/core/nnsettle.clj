@@ -1,5 +1,6 @@
 (ns popco.core.nnsettle
-  [:use clojure.core.matrix])
+  [:use clojure.core.matrix]
+  (:gen-class))
 
 (set-current-implementation :vectorz)
 ;; use one of these:

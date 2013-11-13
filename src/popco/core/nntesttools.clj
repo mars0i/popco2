@@ -1,6 +1,7 @@
 (ns popco.core.nntesttools
   [:use clojure.core.matrix
-        popco.core.nnsettle])
+        popco.core.nnsettle]
+  (:gen-class))
 
 (defn make-random-activn-vec
   "Generate a vector of random activations of num-nodes nodes."

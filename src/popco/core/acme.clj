@@ -2,7 +2,8 @@
   (:use popco.core.lot)
   (:import [popco.core.lot Propn Pred Obj])
   (:require [utils.general :as ug]
-            [clojure.core.matrix :as mx]))
+            [clojure.core.matrix :as mx])
+  (:gen-class))
 
 ;; ACME: an implementation of Holyoak & Thagard's (1989) ACME method
 ;; of constructing a constraint satisfaction network from two sets
