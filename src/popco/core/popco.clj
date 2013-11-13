@@ -11,17 +11,10 @@
 ;; set pretty-print width to terminal width
 (set-pprint-width (Integer/valueOf (System/getenv "COLUMNS"))) ; or read-string
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
-
 (defn yo [n] 
-  (if (= n 15) 
-    (throw (Exception. (format "Yow! n = %s" n))) 
-    (if (<= n 0) 
-      "Done!" 
-      (yo (dec n)))))
+  (cond (= n 15) (throw (Exception. (format "Yow!"))) 
+        (<= n 0) "All done." 
+        :else (yo (dec n))))
 
 (defn ya [n]
   (let [a0 n
@@ -3028,3 +3021,8 @@
         a3001 (inc a3000)]
      (println (list a0 a1 a3001))
      (throw (Exception. "yow."))))
+
+(defn -main
+  "I don't do a whole lot ... yet."
+  [& args]
+  (println "Hello, World!"))
