@@ -159,7 +159,7 @@
              nodes, with all elements initialized to 0.0."
   [node-seq]
   (let [node-vec (vec node-seq)
-        node-index-map (make-node-index-map node-vec)
+        node-index-map (make-index-map node-vec)
         wt-mat (make-wt-mat (count node-vec))]
     {:nodes node-vec
      :indexes node-index-map
