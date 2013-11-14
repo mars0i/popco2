@@ -8,6 +8,7 @@ A description of the requirements for the process implemented
 here can be found in the following publication.  See especially
 pages 10-11:
 
+```
 @Article{Abrams:ModerateRole,
   author =	{Abrams, Marshall},
   title =    {A Moderate Role for Cognitive Models in Agent-Based
@@ -21,6 +22,7 @@ pages 10-11:
   url =	{http://www.casmodeling.com/content/1/1/16},
   doi =	{10.1186/2194-3206-1-16},
 }
+```
 
 The original procedure on which this one is based can be found in
 the following publication.  See especially page 314.
@@ -71,15 +73,15 @@ STEPS:
    that will be used to settle the "analogy network" of the map
    nodes:
 
-A. Assign positive weights between all map nodes resulting from
-   each paired proposition.  Where there are multiple pairings
-   (due to propositions appearing as arguments to propositions),
-   there will be additional weight assigned.  (Here we use the
-   clustering of map nodes by proposition embedded in the result of 
-   step 2.)
-
-B. Assign negative weights between any two map nodes that share
-   a "side", i.e. that share a LOT element that's paired in each.  Again,
-   it can occur that there are multiple instances of competition in
-   this sense, creating a weight whose value is farther from zero.
+    A. Assign positive weights between all map nodes resulting from
+       each paired proposition.  Where there are multiple pairings
+       (due to propositions appearing as arguments to propositions),
+       there will be additional weight assigned.  (Here we use the
+       clustering of map nodes by proposition embedded in the result of 
+       step 2.)
+    
+    B. Assign negative weights between any two map nodes that share
+       a "side", i.e. that share a LOT element that's paired in each.  Again,
+       it can occur that there are multiple instances of competition in
+       this sense, creating a weight whose value is farther from zero.
 
