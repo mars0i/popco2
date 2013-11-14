@@ -5,9 +5,7 @@
             [clojure.core.matrix :as mx])
   (:gen-class))
 
-;; ACME: an implementation of Holyoak & Thagard's (1989) ACME method
-;; of constructing a constraint satisfaction network from two sets
-;; of simple representations of entertained propositions.
+;; SEE acme.md for an overview of what's going on in this file.
 
 ;;; TODO construct link matrix and weight matrix with positive weights
 ;;; TODO add negative weights to weight matrix
