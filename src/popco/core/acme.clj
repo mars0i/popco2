@@ -181,7 +181,7 @@
         node-vec (make-acme-node-vec pair-tree)]
     (make-nn-strus 
       node-vec
-      (mapnode-pair-maps-to-mapnode-ids node-seq))))
+      (mapnode-pair-maps-to-mapnode-ids node-vec))))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
