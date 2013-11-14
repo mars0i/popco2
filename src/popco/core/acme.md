@@ -27,7 +27,7 @@ pages 10-11:
 The original procedure on which this one is based can be found in
 the following publication.  See especially page 314.
 
-```bibtex
+```latex
 @Article{HolyoakThagard:AnalogMapConstraintSat,
   author =	{Holyoak, Keith J. and Thagard, Paul},
   title =	{Analogical Mapping by Constraint Satisfaction},
