@@ -127,7 +127,7 @@
 ;; assume that this behavior won't change.  The most thorough and authoritative statement
 ;; I've found so far (11/2013) about order of (vals x) for sorted-maps is:
 ;; https://groups.google.com/d/msg/clojure/2AyndHfeigk/zaD9T5mT6WkJ 
-;;
+
 (defn pair-map-to-id-pair
   "Given a map containing two LOT items, returns a 2-element sequence of their ids,
   in order of keys, i.e. in :alog1, :alog2 order if the map is a sorted-map."
@@ -184,12 +184,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Put it all together
 ;; ...
-
-(defn mapnode-pair-maps-to-mapnode-ids
-  [pairmaps]
-  (map id-pair-to-mapnode-id   ; turn id pairs into mapnode ids
-       (map (partial map :id)      ; make id pairs from LOT-item pairs
-            (map vals pairmaps)))) ; rets pairs of LOT-items (Propns, etc.)
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-nn-strus
