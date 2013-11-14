@@ -173,6 +173,11 @@
 ;; Fourth step: 
 ;; Make weight matrix representing link weights
 
+(defn raise-propn-families
+  [pair-tree]
+  ;; TODO
+  )
+
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-wt-mat
   "Returns a core.matrix square matrix with dimension dim, filled with zeros."
