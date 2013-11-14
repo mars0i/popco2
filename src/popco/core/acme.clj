@@ -113,7 +113,7 @@
   [pairmap]
   (map :id (vals pairmap)))
 
-(def pair-map-to-mapnode-id 
+(def pair-map-to-mapnode-id
   (comp id-pair-to-mapnode-id pair-map-to-id-pair))
 
 (defn add-mapnode-id-to-pair-map
@@ -128,16 +128,13 @@
   information about nodes that a person might have.."
   [node-tree]
   (vec 
-    (map add-acme-id-to-pair-map
+    (map add-mapnode-id-to-pair-map
          (distinct (flatten node-tree)))))
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-index-map
-  "Given a sequence of ids of items (e.g. Propns, pairs of Propns or 
-  Objs, etc.), returns a map from ids to indexes.  Allows reverse
-  lookup of the nodes indexes.  This map is typically shared by
-  all members of a population; it merely provides information about
-  nodes that a person might have."
+  "Given a sequence of things, returns a map from things to indexes.  
+  Allows reverse lookup of indexes from the things."
   [ids]
   (zipmap ids (range (count ids))))
 
@@ -182,9 +179,9 @@
              allowing lookup of a node's index from its id.
   :wt-mat -  A core.matrix square matrix with dimensions equal to the number of
              nodes, with all elements initialized to 0.0."
-  [node-seq ids]
+  [node-seq]
   {:nodes (vec node-seq)
-   :indexes (make-index-map ids)
+   :indexes (make-index-map (map :id node-seq))
    :wt-mat (make-wt-mat (count node-seq))})
 
 (defn make-acme-nn-strus
@@ -192,9 +189,7 @@
   [pset1 pset2]
   (let [pair-tree (match-propn-components (match-propns pset1 pset2))
         node-vec (make-acme-node-vec pair-tree)]
-    (make-nn-strus 
-      node-vec
-      (mapnode-pair-maps-to-mapnode-ids node-vec))))
+    (make-nn-strus node-vec)))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
