@@ -6,7 +6,7 @@ of constructing a constraint satisfaction network from two sets
 of simple representations of entertained propositions.
 A description of the requirements for the process implemented
 here can be found in the following publication.  See especially
-pages 10-11:
+pages 10--11.
 
 ```latex
 @Article{Abrams:ModerateRole,
