@@ -115,13 +115,13 @@
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-index-map
-  "Given a sequence of items (e.g. Propns, pairs of Propns or 
-  Objs, etc.), returns a map from node info entries to indexes.  Allows
-  reverse lookup of the node entries' indexes.  This map is typically
-  shared by all members of a population; it merely provides information
-  about notes that a person might have."
-  [node-vec]
-  (zipmap node-vec (range (count node-vec))))
+  "Given a sequence of ids of items (e.g. Propns, pairs of Propns or 
+  Objs, etc.), returns a map from ids to indexes.  Allows reverse
+  lookup of the nodes indexes.  This map is typically shared by
+  all members of a population; it merely provides information about
+  nodes that a person might have."
+  [ids]
+  (zipmap ids (range (count ids))))
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-activn-vec
@@ -145,6 +145,17 @@
 ;; Put it all together
 ;; ...
 
+(defn lot-id-pair-to-mapnode-id
+  [[id1 id2]]
+  (keyword 
+    (str (name id1) "=" (name id2))))
+
+(defn mapnode-pair-maps-to-mapnode-ids
+  [pairmaps]
+  (map lot-id-pair-to-mapnode-id   ; turn id pairs into mapnode ids
+       (map (partial map :id)      ; make id pairs from LOT-item pairs
+            (map vals pairmaps)))) ; rets pairs of LOT-items (Propns, etc.)
+
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-nn-strus
   "Given a sequence of data on individual nodes, returns a clojure map with 
@@ -154,27 +165,23 @@
              correspond to indexes into activation vectors and rows/columns
              of weight matrices.  This vector may be identical to the sequence
              of nodes passed in.
-  :indexes - A Clojure map from the same data items to integers, allowing
-             lookup of a node's index from its data.
+  :indexes - A Clojure map from ids of the same data items to integers, 
+             allowing lookup of a node's index from its id.
   :wt-mat -  A core.matrix square matrix with dimensions equal to the number of
              nodes, with all elements initialized to 0.0."
-  [node-seq]
-  (let [node-vec (vec node-seq)
-        node-index-map (make-index-map node-vec)
-        wt-mat (make-wt-mat (count node-vec))]
-    {:nodes node-vec
-     :indexes node-index-map
-     :wt-mat wt-mat}))
-;; NEED TO ADD NODE INDEX LOOKUP BY LOT-ELEMENT :id KEYWORD
-;; OH BUT MAP NODES DON'T YET HAVE ID'S OR NAMES.  MAYBE I OUGHT
-;; TO CONSTRUCT THEM FROM THE TWO ID'S AND "=", E.G.
+  [node-seq ids]
+  {:nodes (vec node-seq)
+   :indexes (make-index-map ids)
+   :wt-mat (make-wt-mat (count node-seq))})
 
 (defn make-acme-nn-strus
   ;; ADD DOCSTRING
   [pset1 pset2]
-  (let [pair-tree (match-propn-components (match-propns pset1 pset2))]
+  (let [pair-tree (match-propn-components (match-propns pset1 pset2))
+        node-vec (make-acme-node-vec pair-tree)]
     (make-nn-strus 
-      (make-acme-node-vec pair-tree))))
+      node-vec
+      (mapnode-pair-maps-to-mapnode-ids node-seq))))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
