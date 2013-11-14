@@ -6,7 +6,7 @@ of constructing a constraint satisfaction network from two sets
 of simple representations of entertained propositions.
 A description of the requirements for the process implemented
 here can be found in the following publication.  See especially
-pages 10--11.
+pages 10-11.
 
 ```latex
 @Article{Abrams:ModerateRole,
@@ -87,3 +87,26 @@ STEPS:
        it can occur that there are multiple instances of competition in
        this sense, creating a weight whose value is farther from zero.
 
+
+The function `make-acme-nn-strus` wraps up all of these steps, returning
+the result in a Clojure map with three elements: 
+
+* A standard Clojure vector of maps, each containing information about
+  the two LOT elements that are paired in an ACME map node.  These maps
+  also contain an id for the map node.  The order of this information
+  will correspond to the order of activation values in a
+  clojure.core.matrix vector representing node activation values.  The
+  order will also, therefore, correspond to the order of rows and
+  columns in the weight matrix.
+
+* A Clojure map from ids of each of the map nodes to their indexes in
+  the vector just mentioned, allowing reverse lookup of indexes from
+  map node ids.
+
+* A clojure.core.matrix weight matrix representing link weights in the
+  analogy network.
+
+(This function might also return a matrix of 1's and 0's representing
+the presence or absence of a link.  This isn't essential for the analogy
+network, which has no weights of value zero, but will be needed for
+the proposition network, which can have zero-valued weights.)
