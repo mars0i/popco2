@@ -27,6 +27,7 @@ pages 10-11:
 The original procedure on which this one is based can be found in
 the following publication.  See especially page 314.
 
+```bibtex
 @Article{HolyoakThagard:AnalogMapConstraintSat,
   author =	{Holyoak, Keith J. and Thagard, Paul},
   title =	{Analogical Mapping by Constraint Satisfaction},
@@ -35,6 +36,7 @@ the following publication.  See especially page 314.
   volume =	{13},
   pages =	{295-355},
 }
+```
 
 Note that the current way in which the network's weight matrix and 
 associated linear data structures are constructed is not designed
