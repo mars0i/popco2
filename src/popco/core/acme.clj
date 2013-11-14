@@ -105,18 +105,26 @@
 ;; and ns later, since they'll be used for the proposition network, too.
 
 (defn id-pair-to-mapnode-id
+  "Given a 2-element sequence of id keywords, constructs and returns 
+  a corresponding mapnode id."
   [[id1 id2]]
   (keyword 
     (str (name id1) "=" (name id2))))
 
+; TODO POSSIBLE BUG: Will vals always come out in the same order?
 (defn pair-map-to-id-pair
+  "Given a map containing two LOT items, returns a 2-element sequence of its ids."
   [pairmap]
   (map :id (vals pairmap)))
 
 (def pair-map-to-mapnode-id
   (comp id-pair-to-mapnode-id pair-map-to-id-pair))
+(ug/add-to-docstr pair-map-to-mapnode-id
+  "Given a map containing two LOT items, constructs and returns a corresponding
+  mapnode id.")
 
 (defn add-mapnode-id-to-pair-map
+  "Given a map containing two LOT items, adds an id field with a mapnode id."
   [pairmap]
   (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
 
