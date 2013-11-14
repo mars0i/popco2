@@ -104,6 +104,22 @@
 ;; NOTE these functions will probably be abstracted out into a separate file 
 ;; and ns later, since they'll be used for the proposition network, too.
 
+(defn id-pair-to-mapnode-id
+  [[id1 id2]]
+  (keyword 
+    (str (name id1) "=" (name id2))))
+
+(defn pair-map-to-id-pair
+  [pairmap]
+  (map :id (vals pairmap)))
+
+(def pair-map-to-mapnode-id 
+  (comp id-pair-to-mapnode-id pair-map-to-id-pair))
+
+(defn add-mapnode-id-to-pair-map
+  [pairmap]
+  (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
+
 (defn make-acme-node-vec
   "Given a tree of node info entries (e.g. Propns, pairs of Propns or 
   Objs, etc.), returns a Clojure vector of unique node info entries 
@@ -111,7 +127,9 @@
   typically shared by all members of a population; it merely provides
   information about nodes that a person might have.."
   [node-tree]
-  (vec (distinct (flatten node-tree))))
+  (vec 
+    (map add-acme-id-to-pair-map
+         (distinct (flatten node-tree)))))
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-index-map
@@ -145,14 +163,9 @@
 ;; Put it all together
 ;; ...
 
-(defn lot-id-pair-to-mapnode-id
-  [[id1 id2]]
-  (keyword 
-    (str (name id1) "=" (name id2))))
-
 (defn mapnode-pair-maps-to-mapnode-ids
   [pairmaps]
-  (map lot-id-pair-to-mapnode-id   ; turn id pairs into mapnode ids
+  (map id-pair-to-mapnode-id   ; turn id pairs into mapnode ids
        (map (partial map :id)      ; make id pairs from LOT-item pairs
             (map vals pairmaps)))) ; rets pairs of LOT-items (Propns, etc.)
 
