@@ -8,7 +8,7 @@ A description of the requirements for the process implemented
 here can be found in the following publication.  See especially
 pages 10-11:
 
-```
+```latex
 @Article{Abrams:ModerateRole,
   author =	{Abrams, Marshall},
   title =    {A Moderate Role for Cognitive Models in Agent-Based
