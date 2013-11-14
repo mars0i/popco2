@@ -84,16 +84,21 @@
   [pairs]
   (map match-components-of-propn-pair pairs))
 
+;; NOTE we use sorted-maps here because when we construct mapnode ids,
+;; we need it to be the case that (vals clojure-map) always returns these
+;; vals in the same order :alog1, :alog2:
+;;
 (defn match-components-of-propn-pair
+  ;; ADD DOCSTRING
   [[p1 p2]]
   ;; return a seq of matched pairs:
   (list
-    {:alog1 p1 :alog2 p2}                 ; we already know the propns match
-    {:alog1 (:pred p1) :alog2 (:pred p2)} ; predicates always match if the propns matched
+    (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
+    (sorted-map :alog1 (:pred p1) :alog2 (:pred p2)) ; predicates always match if the propns matched
     (vec (map match-args (:args p1) (:args p2))))) ; args match if objs, propns need more work
 
 (defmulti  match-args (fn [x y] [(class x) (class y)]))
-(defmethod match-args [Obj Obj] [o1 o2] {:alog1 o1 :alog2 o2})
+(defmethod match-args [Obj Obj] [o1 o2] (sorted-map :alog1 o1 :alog2 o2))
 (defmethod match-args [Propn Propn] [p1 p2] (match-components-of-propn-pair [p1 p2]))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Third step: 
@@ -111,11 +116,23 @@
   (keyword 
     (str (name id1) "=" (name id2))))
 
-; TODO POSSIBLE BUG: Will vals always come out in the same order?
+;; NOTE: According to several remarks on the Internet from 2010 into 2013, (keys x)
+;; and (vals x) return keys and vals in the same corresponding order.  Moreover,
+;; other remarks say that for sorted-maps, (vals x) always returns values according
+;; to the sort-order of keys.  So if pairmap is a sorted map, the ids should always
+;; come out in the order of :alog1, :alog2.  This is important, because otherwise
+;; the mapnode ids we construct from these pairs might arbitrarily swap the parts of
+;; the name on either side of "=".  This point about order seems to be guaranteed
+;; nowhere as of 10/2013, but the sentiment seems to be that it's reasonable to
+;; assume that this behavior won't change.  The most thorough and authoritative statement
+;; I've found so far (11/2013) about order of (vals x) for sorted-maps is:
+;; https://groups.google.com/d/msg/clojure/2AyndHfeigk/zaD9T5mT6WkJ 
+;;
 (defn pair-map-to-id-pair
-  "Given a map containing two LOT items, returns a 2-element sequence of its ids."
+  "Given a map containing two LOT items, returns a 2-element sequence of their ids,
+  in order of keys, i.e. in :alog1, :alog2 order if the map is a sorted-map."
   [pairmap]
-  (map :id (vals pairmap)))
+  (map :id (vals pairmap))) ; See note above about order of vals.
 
 (def pair-map-to-mapnode-id
   (comp id-pair-to-mapnode-id pair-map-to-id-pair))
