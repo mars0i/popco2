@@ -35,6 +35,10 @@
      (def ~nm (->Propn ~pred ~args (keyword '~nm)))
      ~nm))
 
+(defn propn?
+  [x]
+  (= (class x) popco.core.lot.Propn))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Pred's represent the main property or predicate of a Propn
 
@@ -49,6 +53,10 @@
   `(do 
      (def ~nm (->Pred (keyword '~nm)))
      ~nm))
+
+(defn pred?
+  [x]
+  (= (class x) popco.core.lot.Pred))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Obj's represent arguments which may satisfy a pred
@@ -65,3 +73,6 @@
      (def ~nm (->Obj (keyword '~nm)))
      ~nm))
 
+(defn obj?
+  [x]
+  (= (class x) popco.core.lot.Obj))
