@@ -173,10 +173,34 @@
 ;; Fourth step: 
 ;; Make weight matrix representing link weights
 
+(defn remove-empty-seqs
+  [coll]
+  (filter #(not (and (seq? %) (empty? %)))  ; can't use seq: needs to work with non-seqs, too
+          coll))
+
+;; TODO: THIS IS SURELY WRONG.  (And nasty, regardless.)
 (defn raise-propn-families
+  "Return a seq of all propn-families in pair-tree."
   [pair-tree]
-  ;; TODO
-  )
+  (letfn [(f [out in]
+            (let [out- (remove-empty-seqs out) ; remove-empty-seqs is just papering over a problem? shouldn't be needed?
+                  thisone (first in)
+                  therest (rest in)]
+              (if (empty? in)
+                out-
+                (cond (seq? thisone) (f (concat (conj out- thisone) (map (partial f ()) thisone))
+                                        therest)
+                      (propn? thisone) (f (concat out- 
+                                                  (mapcat (partial f ()) 
+                                                          (:args thisone))) 
+                                          therest)
+                      (map? thisone) (f (concat (f () (:alog1 thisone))
+                                                (f () (:alog2 thisone))
+                                                out-) 
+                                        therest)
+                      :else (f out- therest)))))]
+    (f () (vec pair-tree))))
+
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-wt-mat
@@ -255,4 +279,3 @@
     (map (fn [[p1 p2]] 
            [(:id p1) (:id p2)])
          prs)))
-
