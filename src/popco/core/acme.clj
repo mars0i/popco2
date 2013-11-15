@@ -97,9 +97,11 @@
     (sorted-map :alog1 (:pred p1) :alog2 (:pred p2)) ; predicates always match if the propns matched
     (vec (map match-args (:args p1) (:args p2)))))   ; args match if objs, propns need more work.  vec means these pairs are from two arglists
 
+;; ADD DOCSTRING
 (defmulti  match-args (fn [x y] [(class x) (class y)]))
 (defmethod match-args [Obj Obj] [o1 o2] (sorted-map :alog1 o1 :alog2 o2))
 (defmethod match-args [Propn Propn] [p1 p2] (match-components-of-propn-pair [p1 p2]))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 3
 ;; Make a flat sequence of unique pairs.  Define vectors and matrices with it.
@@ -184,9 +186,26 @@
   (filter #(not (and (seq? %) (empty? %)))  ; can't use seq: needs to work with non-seqs, too
           coll))
 
-;; TODO: THIS IS SURELY WRONG.  (And nasty, regardless.)
+(defn list-propn-families
+  "Given a pair-tree produced by match-propn-components, return a seq of
+  all propn-families in pair-tree at any level."
+  [pair-tree]
+  (filter seq?   ; get rid of vectors, lot-items, pair maps, since the seqs represent proposition-proposition pair-map families
+          (rest  ; drop first element, which is the original pair-tree
+            ; pull all sublists, vectors, maps, whatever into a single sequence:
+            (tree-seq #(or (seq? %) (vector? %) (map? %))
+                      #(cond (seq? %) %
+                             (vector? %) %
+                             (propn? %) (:args %) ; must precede 'map?' since records are maps
+                             (map? %) (list (:alog1 %) (:alog2 %)))
+                      pair-tree))))
+
+
+;; TODO
+;; OBSOLETE (?)  DELETE ME
+;; THIS IS SURELY WRONG.  (And nasty, regardless.)
 ;; Also, we really only need :ids in the result.
-(defn raise-propn-families
+(defn funky-butt-raise-propn-families
   "Return a seq of all propn-families in pair-tree."
   [pair-tree]
   (letfn [(f [out in]
