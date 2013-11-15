@@ -76,3 +76,16 @@
 (defn obj?
   [x]
   (= (class x) popco.core.lot.Obj))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Give all of the above a common predicate:
+
+;(derive Propn ::LOTelt)
+;(derive Pred  ::LOTelt)
+;(derive Obj  ::LOTelt)
+
+(defn lot-item? [x]
+  (or (instance? Propn x)
+      (instance? Pred x)
+      (instance? Obj x)))
