@@ -197,6 +197,7 @@
                       #(cond (seq? %) %
                              (vector? %) %
                              (propn? %) (:args %) ; must precede 'map?' since records are maps
+  ; TODO: What happens when it encounters an Obj?
                              (map? %) (list (:alog1 %) (:alog2 %)))
                       pair-tree))))
 
