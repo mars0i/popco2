@@ -179,6 +179,7 @@
           coll))
 
 ;; TODO: THIS IS SURELY WRONG.  (And nasty, regardless.)
+;; Also, we really only need :ids in the result.
 (defn raise-propn-families
   "Return a seq of all propn-families in pair-tree."
   [pair-tree]
