@@ -193,39 +193,38 @@
   (filter seq?   ; get rid of vectors, lot-items, pair maps, since the seqs represent proposition-proposition pair-map families
           (rest  ; drop first element, which is the original pair-tree
             ; pull all sublists, vectors, maps, whatever into a single sequence:
-            (tree-seq #(or (seq? %) (vector? %) (map? %))
+            (tree-seq #(or (seq? %) (vector? %) (map? %)) ; records are maps
                       #(cond (seq? %) %
                              (vector? %) %
                              (propn? %) (:args %) ; must precede 'map?' since records are maps
                              (map? %) (list (:alog1 %) (:alog2 %)))
                       pair-tree))))
 
-
 ;; TODO
 ;; OBSOLETE (?)  DELETE ME
 ;; THIS IS SURELY WRONG.  (And nasty, regardless.)
 ;; Also, we really only need :ids in the result.
-(defn funky-butt-raise-propn-families
-  "Return a seq of all propn-families in pair-tree."
-  [pair-tree]
-  (letfn [(f [out in]
-            (let [out- (remove-empty-seqs out) ; remove-empty-seqs is just papering over a problem? shouldn't be needed?
-                  thisone (first in)
-                  therest (rest in)]
-              (if (empty? in)
-                out-
-                (cond (seq? thisone) (f (concat (conj out- thisone) (map (partial f ()) thisone))
-                                        therest)
-                      (propn? thisone) (f (concat out- 
-                                                  (mapcat (partial f ()) 
-                                                          (:args thisone))) 
-                                          therest)
-                      (map? thisone) (f (concat (f () (:alog1 thisone))
-                                                (f () (:alog2 thisone))
-                                                out-) 
-                                        therest)
-                      :else (f out- therest)))))]
-    (f () (vec pair-tree))))
+;(defn funky-butt-raise-propn-families
+;  "Return a seq of all propn-families in pair-tree."
+;  [pair-tree]
+;  (letfn [(f [out in]
+;            (let [out- (remove-empty-seqs out) ; remove-empty-seqs is just papering over a problem? shouldn't be needed?
+;                  thisone (first in)
+;                  therest (rest in)]
+;              (if (empty? in)
+;                out-
+;                (cond (seq? thisone) (f (concat (conj out- thisone) (map (partial f ()) thisone))
+;                                        therest)
+;                      (propn? thisone) (f (concat out- 
+;                                                  (mapcat (partial f ()) 
+;                                                          (:args thisone))) 
+;                                          therest)
+;                      (map? thisone) (f (concat (f () (:alog1 thisone))
+;                                                (f () (:alog2 thisone))
+;                                                out-) 
+;                                        therest)
+;                      :else (f out- therest)))))]
+;    (f () (vec pair-tree))))
 
 
 ;; MOVE TO SEPARATE FILE/NS
