@@ -40,8 +40,8 @@
   [p1 p2]
   (let [args1 (:args p1)   ; predicates always match, so we only check args
         args2 (:args p2)]
-  (and (= (count args1) (count args2))
-       (every? identity (map args-match? args1 args2)))))
+    (and (= (count args1) (count args2))
+         (every? identity (map args-match? args1 args2)))))
 
 ;; similar to isomorphic-args in popco 1
 (defmulti  args-match? (fn [x y] [(class x) (class y)]) )
