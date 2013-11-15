@@ -15,7 +15,7 @@
 ;;; so a link matrix is needed.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; First step: 
+;; STEP 1
 ;; Find out which propositions can be paired up, i.e. the isomorphic ones.
 
 (declare propns-match? args-match?)
@@ -52,11 +52,13 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Second step: 
+;; STEP 2
 ;; For all isomporphic propositions, pair up their components
 ;; (By separating step 1 and step 2, we do some redundant work, but it makes
 ;; the logic a bit simpler, for now, and we'll only be doing this once for the
-;; whole population at the beginning of each simulation.)
+;; whole population at the beginning of each simulation.  By separating step 2
+;; and step 3--which merely flattens what we produce here, we preserve structure
+;; of relationships between map nodes for use in step 4.)
 
 ;; i.e. we feed the return value of match-propns, above, to 
 ;; match-propn-components-too, below.
@@ -90,21 +92,22 @@
   ;; ADD DOCSTRING
   [[p1 p2]]
   ;; return a seq of matched pairs:
-  (list
+  (list    ; that this is a list (not vec) flags that this is a family of map-pairs from the same proposition
     (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
     (sorted-map :alog1 (:pred p1) :alog2 (:pred p2)) ; predicates always match if the propns matched
-    (vec (map match-args (:args p1) (:args p2))))) ; args match if objs, propns need more work
+    (vec (map match-args (:args p1) (:args p2)))))   ; args match if objs, propns need more work.  vec means these pairs are from two arglists
 
 (defmulti  match-args (fn [x y] [(class x) (class y)]))
 (defmethod match-args [Obj Obj] [o1 o2] (sorted-map :alog1 o1 :alog2 o2))
 (defmethod match-args [Propn Propn] [p1 p2] (match-components-of-propn-pair [p1 p2]))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Third step: 
-;; Make a flat sequence of unique pairs.
-;; This specifies nodes, and the meaning of elements in activation vectors
-;; and of rows and columns of matrices.  Define vectors and matrices.
+;; STEP 3
+;; Make a flat sequence of unique pairs.  Define vectors and matrices with it.
+;; Also define ids for map nodes.
+;; The sequence specifies what the analogy network nodes are, i.e. specifies 
+;; the meaning of elements in activation vectors and meaning of matrix rows and cols.
 
-;; NOTE these functions will probably be abstracted out into a separate file 
+;; NOTE some of these functions will probably be abstracted out into a separate file 
 ;; and ns later, since they'll be used for the proposition network, too.
 
 (defn id-pair-to-mapnode-id
@@ -120,11 +123,12 @@
 ;; to the sort-order of keys.  So if pairmap is a sorted map, the ids should always
 ;; come out in the order of :alog1, :alog2.  This is important, because otherwise
 ;; the mapnode ids we construct from these pairs might arbitrarily swap the parts of
-;; the name on either side of "=".  This point about order seems to be guaranteed
-;; nowhere as of 10/2013, but the sentiment seems to be that it's reasonable to
-;; assume that this behavior won't change.  The most thorough and authoritative statement
-;; I've found so far (11/2013) about order of (vals x) for sorted-maps is:
-;; https://groups.google.com/d/msg/clojure/2AyndHfeigk/zaD9T5mT6WkJ 
+;; the name on either side of "="; thus id's of map nodes would be unstable.  
+;; This point about order seems not to be guaranteed by any explicit documentation,
+;; as of 10/2013, but the sentiment on the net seems to be that it's reasonable to
+;; assume that this behavior won't change.  The most thorough and authoritative 
+;; statement that I've found so far (11/2013) about order of (vals x) for sorted-maps
+;; is here: https://groups.google.com/d/msg/clojure/2AyndHfeigk/zaD9T5mT6WkJ 
 
 (defn pair-map-to-id-pair
   "Given a map containing two LOT items, returns a 2-element sequence of their ids,
@@ -143,6 +147,8 @@
   [pairmap]
   (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
 
+;; The use of flatten in this function depends on the fact that (a) map-pairs 
+;; are not sequences, and (b) all larger groupings of data are sequences.
 (defn make-acme-node-vec
   "Given a tree of node info entries (e.g. Propns, pairs of Propns or 
   Objs, etc.), returns a Clojure vector of unique node info entries 
@@ -170,7 +176,7 @@
   (mx/new-vector len))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Fourth step: 
+;; STEP 4
 ;; Make weight matrix representing link weights
 
 (defn remove-empty-seqs
@@ -210,7 +216,7 @@
   (mx/new-matrix dim dim))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Put it all together
+;; ALL STEPS - put it all together
 ;; ...
 
 ;; MOVE TO SEPARATE FILE/NS
