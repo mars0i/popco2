@@ -196,6 +196,14 @@
                      :else (throw (Exception. (format "list-propn-families encounted unknown object: %s"))))
               pair-tree))))
 
+(defn flatten-propn-families
+  "Families of pair-maps of components of a proposition can include 
+  propn families embedded in argument lists.  This flattens all lot-items
+  associated with each family in a sequence into a single flat sequence,
+  producing a sequence of such family sequences."
+  [fams]
+  (map flatten fams))
+
 ;; TODO OBSOLETE (?)  DELETE ME
 ;(defn remove-empty-seqs
 ;  [coll]
