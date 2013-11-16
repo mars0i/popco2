@@ -181,28 +181,28 @@
 ;; STEP 4
 ;; Make weight matrix representing link weights
 
-(defn remove-empty-seqs
-  [coll]
-  (filter #(not (and (seq? %) (empty? %)))  ; can't use seq: needs to work with non-seqs, too
-          coll))
-
 (defn list-propn-families
   "Given a pair-tree produced by match-propn-components, return a seq of
   all propn-families in pair-tree at any level."
   [pair-tree]
   (filter seq?   ; get rid of vectors, lot-items, pair maps, since the seqs represent proposition-proposition pair-map families
-          (rest  ; drop first element, which is the original pair-tree
-            ; pull all sublists, vectors, maps, whatever into a single sequence:
-            (tree-seq #(or (seq? %) (vector? %) (map? %)) ; records are maps
-                      #(cond (seq? %) %
-                             (vector? %) %
-                             (propn? %) (:args %) ; must precede 'map?' since records are maps
-  ; TODO: What happens when it encounters an Obj?
-                             (map? %) (list (:alog1 %) (:alog2 %)))
-                      pair-tree))))
+          (rest  ; drop first element, the original pair-tree
+            (tree-seq 
+              #(not (or (pred? %) (obj? %))) ; pair-tree contains seqs, vectors, sorted-maps, and lot-items
+              #(cond (seq? %)  %
+                     (vector? %)  %
+                     (propn? %)  (:args %) ; must precede 'map?' since records are maps
+                     (and (sorted? %) (map? %))  (vector (:alog1 %) (:alog2 %)) ; in case the %'s are Propns
+                     :else (throw (Exception. (format "list-propn-families encounted unknown object: %s"))))
+              pair-tree))))
 
-;; TODO
-;; OBSOLETE (?)  DELETE ME
+;; TODO OBSOLETE (?)  DELETE ME
+;(defn remove-empty-seqs
+;  [coll]
+;  (filter #(not (and (seq? %) (empty? %)))  ; can't use seq: needs to work with non-seqs, too
+;          coll))
+
+;; TODO OBSOLETE (?)  DELETE ME
 ;; THIS IS SURELY WRONG.  (And nasty, regardless.)
 ;; Also, we really only need :ids in the result.
 ;(defn funky-butt-raise-propn-families
