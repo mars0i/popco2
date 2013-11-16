@@ -305,6 +305,13 @@
         (vector? pair-or-pairs) (vec (fmt-pair-maps pair-or-pairs)) ; it's an arglist--return in vec to flag that
         :else (array-map (:id (:alog1 pair-or-pairs)) (:id (:alog2 pair-or-pairs))))) ; it's a pair
 
+(defn ppause
+  "pprint each element of a sequence in turn, pausing until user hits Enter."
+  [sq]
+  (doseq [x sq]
+    (clojure.pprint/pprint x)
+    (read-line)))
+
 ;; Handy for displaying output of match-propns:
 (defn pair-ids
   "Return sequence of pairs of :id fields of objects from sequence prs of pairs."
