@@ -181,6 +181,19 @@
 ;; STEP 4
 ;; Make weight matrix representing link weights
 
+;; NOTE this is returning propn families in arg lists when args are propns.
+;; This is not really what I need.  I can work with it, but maybe this function
+;; could be modified to do something different.  Note that what I really
+;; need, in the end, are only ids.  For each propn family at the top level,
+;; I need ids for its propn pair, its pred pair, and all its arg pairs, 
+;; whether they are for objs or propns.  I don't need any info about the
+;; embedded arg-propn-pair's other family members.  I also don't actually
+;; need the args to be set off in a vector.  The whole family list here
+;; could just be completely flat.  (Note that means that at this stage,
+;; in these lists, there's actually no distinction between the propn
+;; whose family it is, and the propns that are args to it.  The linking
+;; behavior is exactly the same.  (Hmm though conceivably that could
+;; someday change.  But that's just a distant possibility.)
 (defn list-propn-families
   "Given a pair-tree produced by match-propn-components, return a seq of
   all propn-families in pair-tree at any level."
@@ -195,14 +208,6 @@
                      (and (sorted? %) (map? %))  (vector (:alog1 %) (:alog2 %)) ; in case the %'s are Propns
                      :else (throw (Exception. (format "list-propn-families encounted unknown object: %s"))))
               pair-tree))))
-
-(defn flatten-propn-families
-  "Families of pair-maps of components of a proposition can include 
-  propn families embedded in argument lists.  This flattens all lot-items
-  associated with each family in a sequence into a single flat sequence,
-  producing a sequence of such family sequences."
-  [fams]
-  (map flatten fams))
 
 ;; TODO OBSOLETE (?)  DELETE ME
 ;(defn remove-empty-seqs
