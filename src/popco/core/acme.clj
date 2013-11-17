@@ -209,6 +209,30 @@
                      :else (throw (Exception. (format "list-propn-families encounted unknown object: %s"))))
               pair-tree))))
 
+(defn make-propn-families-shallow
+  "ADD DOCSTRING"
+  [fams]
+  (map (fn [fam] (concat 
+                   (take 2 fam) 
+                   (map (fn [arg-elt] 
+                          (if (seq? arg-elt) 
+                            (first arg-elt) 
+                            arg-elt)) 
+                        (nth fam 2))))
+         fams))
+
+(def list-shallow-propn-families 
+  (comp make-propn-families-shallow list-propn-families))
+(ug/add-to-docstr list-shallow-propn-families
+   "ADD DOCSTRING")
+
+;; TODO NOT RIGHT
+(defn list-ids-in-propn-families 
+  "ADD DOCSTRING"
+  [pair-tree]
+  (map #(map id-pair-to-mapnode-id [(:alog1 %) (:alog2 %)])
+       (list-shallow-propn-families pair-tree)))
+
 ;; TODO OBSOLETE (?)  DELETE ME
 ;(defn remove-empty-seqs
 ;  [coll]

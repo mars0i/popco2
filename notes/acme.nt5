@@ -1,0 +1,41 @@
+acme.nt5
+
+Question: What is the proper way to handle positive links between a
+propn, its pred, objs which are its args, propns which are its args, and
+those propns components?
+
+Answer: Both H&T1989 p. 314, item 1, and Abrams "Moderate Role" p. 11,
+item 3, imply (but don't make explicit) that propn args should be
+treated just like obj args: they get links to the propn, the pred, and
+other args.  There is nothing about links down into components of the
+argument propns.  acme.lisp does in fact implement this behavior (see
+below).
+
+..........
+
+In acme.lisp in POPCO, it looks like this is handled in the same kind of
+implicit way.  make-hyp-unit calls make-obj-units to create obj map
+nodes for arguments.  
+
+	(t (setf object-units (make-obj-units (get-args msg1) ; Vanilla get-args
+	                                                         (get-args msg2) ; is correct here.
+	                                                         *init-activ*))
+
+This creates the map nodes if they don't exist yet.  Then links are
+created to these map nodes. Note *link-concepts-objects?* is true, and
+new-conc-unit is the predicate map node:
+
+                    (make-excit-links new-propn-unit  ; make-excit-links in echo.lisp just iterates make-symlink
+                                      object-units
+                                      *excit-weight*)
+		   (if *link-concepts-objects?*
+	                      (make-excit-links new-conc-unit  ; see comment immediately above
+	                                        object-units
+	                                        *excit-weight*)))) ; end cond 3
+
+Note make-obj-units calls make-obj-unit, which will do exactly the same
+thing whether the arguments passed to it are objs or propns: It creates
+a map node if none exists, records relationships, etc.  The *only*
+special handling for propns is in a line that I added (3/30/12) that
+records the new node in the person's propn-map-units field iff the node
+is a propn map node.
