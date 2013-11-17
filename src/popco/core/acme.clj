@@ -63,12 +63,66 @@
 ;; i.e. we feed the return value of match-propns, above, to 
 ;; match-propn-components-too, below.
 
+;; NOTE The function match-args differs from an earlier version (now called 
+;; deep-match-args) in that it
+;; doesn't try to perform matching on args of propns that appear as args
+;; of propns.  Rather, we *just* match the propns themselves when they appear
+;; in argument place.  (We *did* need to recurse on args to decide what propns
+;; match what propns--that was the desired behavior in H&T1989, but not the
+;; actual behavior in ACME, nor what was described in the p. 314 specification,
+;; but it was what happened in POPCO 1 and what "Moderate Role" described.)
+;; However, at this stage we should assume that we are only looking
+;; at propn pairs that match in this deep way.  That doesn't mean that weights
+;; get calculated from matchings that have to do with what's inside the propns
+;; that are args.  The H&T1989 algorithm does *not* do this, nor did POPCO 1.
+
 (declare match-args match-components-of-propn-pair match-propn-components)
 
 ;; Note that order within pairs matters.  It preserves the distinction
 ;; between the two analogue structures, and allows predicates and objects
 ;; to have the same names in different analogue structures (sets don't allow that).
 (defn match-propn-components
+  "Returns a (lazy) sequence of sequences (families) of mapped-pairs of matched
+  Propns, Preds, or Objs from a sequence of of pairs of Propns.  Each pair is a
+  map with keys :alog1 and :alog2 (analog 1 & 2).  The resulting pairs
+  represent the 'sides' of map nodes.  Each subsequence contains the pairs from
+  one proposition.  Each Propn family sequence consists of a Clojure map
+  representing a pair of Propns, a clojure map representing a pair of Preds,
+  and clojure maps representing paired arguments (whether Objs or Propns).  
+  Note that although Propns that are args of Propns are matched, there's
+  no deeper matching on the Preds and arguments of these embedded Propns."
+  [pairs]
+  (map match-components-of-propn-pair pairs))
+
+;; NOTE we use sorted-maps here because when we construct mapnode ids,
+;; we need it to be the case that (vals clojure-map) always returns these
+;; vals in the same order :alog1, :alog2:
+;;
+(defn match-components-of-propn-pair
+  "ADD DOCSTRING"
+  [[p1 p2]]
+  ;; return a seq of matched pairs:
+  (concat 
+    (list    ; that this is a list (not vec) flags that this is a family of map-pairs from the same proposition
+          (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
+          (sorted-map :alog1 (:pred p1) :alog2 (:pred p2))) ; predicates always match if the propns matched
+    (map match-args (:args p1) (:args p2))))
+
+(defn match-args 
+  "ADD DOCSTRING"
+  [x1 x2] 
+  (sorted-map :alog1 x1 :alog2 x2))
+
+;;;;;;;;;;;;
+;; 
+;; MAY BE OBSOLETE AND UNUSEFUL (earlier versions of preceding functions):
+
+(declare deep-match-args deep-match-components-of-propn-pair deep-match-propn-components)
+
+;; Note that order within pairs matters.  It preserves the distinction
+;; between the two analogue structures, and allows predicates and objects
+;; to have the same names in different analogue structures (sets don't allow that).
+(defn deep-match-propn-components
   "Returns a (lazy) sequence of sequences (families) of mapped-pairs of matched
   Propns, Preds, or Objs from a sequence of of pairs of Propns.  Each pair is a
   map with keys :alog1 and :alog2 (analog 1 & 2).  The resulting pairs
@@ -82,25 +136,25 @@
   a collection of pairs from two Propns or pairs from arguments by testing with
   seq? and vec?."
   [pairs]
-  (map match-components-of-propn-pair pairs))
+  (map deep-match-components-of-propn-pair pairs))
 
 ;; NOTE we use sorted-maps here because when we construct mapnode ids,
 ;; we need it to be the case that (vals clojure-map) always returns these
 ;; vals in the same order :alog1, :alog2:
 ;;
-(defn match-components-of-propn-pair
+(defn deep-match-components-of-propn-pair
   ;; ADD DOCSTRING
   [[p1 p2]]
   ;; return a seq of matched pairs:
   (list    ; that this is a list (not vec) flags that this is a family of map-pairs from the same proposition
     (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
     (sorted-map :alog1 (:pred p1) :alog2 (:pred p2)) ; predicates always match if the propns matched
-    (vec (map match-args (:args p1) (:args p2)))))   ; args match if objs, propns need more work.  vec means these pairs are from two arglists
+    (vec (map deep-match-args (:args p1) (:args p2)))))   ; args deep-match if objs, propns need more work.  vec means these pairs are from two arglists
 
 ;; ADD DOCSTRING
-(defmulti  match-args (fn [x y] [(class x) (class y)]))
-(defmethod match-args [Obj Obj] [o1 o2] (sorted-map :alog1 o1 :alog2 o2))
-(defmethod match-args [Propn Propn] [p1 p2] (match-components-of-propn-pair [p1 p2]))
+(defmulti  deep-match-args (fn [x y] [(class x) (class y)]))
+(defmethod deep-match-args [Obj Obj] [o1 o2] (sorted-map :alog1 o1 :alog2 o2))
+(defmethod deep-match-args [Propn Propn] [p1 p2] (deep-match-components-of-propn-pair [p1 p2]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 3
@@ -180,6 +234,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 4
 ;; Make weight matrix representing link weights
+
+(defn turn-propn-pair-families-into-id-families
+  [fams]
+  (map 
+    #(map pair-map-to-mapnode-id %) 
+    fams))
+
+;; MOVE TO SEPARATE FILE/NS
+(defn make-wt-mat
+  "Returns a core.matrix square matrix with dimension dim, filled with zeros."
+  [dim]
+  (mx/new-matrix dim dim))
+
+;; REST OF THIS SECTION MAY BE OBSOLETE
+;; REST OF THIS SECTION MAY BE OBSOLETE
 
 ;; NOTE this is returning propn families in arg lists when args are propns.
 ;; This is not really what I need.  I can work with it, but maybe this function
@@ -263,13 +332,6 @@
 ;                                        therest)
 ;                      :else (f out- therest)))))]
 ;    (f () (vec pair-tree))))
-
-
-;; MOVE TO SEPARATE FILE/NS
-(defn make-wt-mat
-  "Returns a core.matrix square matrix with dimension dim, filled with zeros."
-  [dim]
-  (mx/new-matrix dim dim))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
