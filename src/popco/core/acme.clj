@@ -263,9 +263,11 @@
 ;; cf.  http://stackoverflow.com/questions/4053845/idomatic-way-to-iterate-through-all-pairs-of-a-collection-in-clojure 
 (defn add-families-wts-to-mat!
   "ADD DOCSTRING"
-  [mat fams indexes increment]
-  (map #(doseq [[i1 i2] (comb/combinations %)]
-          (mx/mset! mat (indexes (:id i1)) (indexes (:id :i2)) increment))
+  [mat fams index-map increment]
+  (map #(doseq [[itm1 itm2] (comb/combinations %)]
+          (let [i (index-map (:id itm1)) 
+                j (index-map (:id itm2))]
+            (mx/mset! mat i j (+ increment (mx/mget mat i j)))))
        fams)
   mat)
 
