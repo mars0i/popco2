@@ -2,6 +2,7 @@
   (:use popco.core.lot)
   (:import [popco.core.lot Propn Pred Obj])
   (:require [utils.general :as ug]
+            [clojure.math.combinatorics :as comb]
             [clojure.core.matrix :as mx])
   (:gen-class))
 
@@ -258,12 +259,12 @@
   (mx/new-matrix dim dim))
 
 ;; NOT SURE if this is the best strategy.
-;; 'for' is simple, but creates list unnecess, and means have to divide inc by 2.  maybe just use dotimes or something.
+;; means have to divide inc by 2--we only need half as many connections
+;; cf.  http://stackoverflow.com/questions/4053845/idomatic-way-to-iterate-through-all-pairs-of-a-collection-in-clojure 
 (defn add-families-wts-to-mat!
   "ADD DOCSTRING"
   [mat fams indexes increment]
-  (map #(for [i1 %
-              i2 %] ; now we are doing it twice .... not right. maybe send in increment 1/2 as large
+  (map #(doseq [[i1 i2] (comb/combinations %)]
           (mx/mset! mat (indexes (:id i1)) (indexes (:id :i2)) increment))
        fams)
   mat)

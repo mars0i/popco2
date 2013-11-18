@@ -5,6 +5,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]]
   :main popco.core.popco ; this is what lein run will look for -main in
   :profiles {:dev {:dependencies [;[criterium/criterium "0.4.2"] ; benchmarking
+                                  [org.clojure/math.combinatorics "0.0.7"]
                                   [org.clojure/tools.macro "0.1.5"]
                                   [net.mikera/core.matrix "0.15.0"]
                                   [net.mikera/vectorz-clj "0.17.0"]]
