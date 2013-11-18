@@ -14,6 +14,8 @@
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix is needed.
 
+(def pos-link-increment 0.1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 1
 ;; Find out which propositions can be paired up, i.e. the isomorphic ones.
@@ -198,7 +200,7 @@
   "Given a map containing two LOT items, constructs and returns a corresponding
   mapnode id.")
 
-(defn add-mapnode-id-to-pair-map
+(defn add-id-to-pair-map
   "Given a map containing two LOT items, adds an id field with a mapnode id."
   [pairmap]
   (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
@@ -213,7 +215,7 @@
   information about nodes that a person might have.."
   [node-tree]
   (vec 
-    (map add-mapnode-id-to-pair-map
+    (map add-id-to-pair-map
          (distinct (flatten node-tree)))))
 
 ;; MOVE TO SEPARATE FILE/NS
