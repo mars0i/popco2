@@ -78,7 +78,7 @@
 ;; get calculated from matchings that have to do with what's inside the propns
 ;; that are args.  The H&T1989 algorithm does *not* do this, nor did POPCO 1.
 
-(declare match-args match-components-of-propn-pair match-propn-components add-id-to-pair-map)
+(declare mapnode-map match-components-of-propn-pair match-propn-components ids-to-mapnode-id)
 
 ;; Note that order within pairs matters.  It preserves the distinction
 ;; between the two analogue structures, and allows predicates and objects
@@ -96,25 +96,27 @@
   [pairs]
   (map match-components-of-propn-pair pairs))
 
-;; NOTE we use sorted-maps here because when we construct mapnode ids,
-;; we need it to be the case that (vals clojure-map) always returns these
+;; NOTE we use sorted-maps here, returned by mapnode-map because when we construct 
+;; mapnode ids, we need it to be the case that (vals clojure-map) always returns these
 ;; vals in the same order :alog1, :alog2:
-;;
 (defn match-components-of-propn-pair
   "ADD DOCSTRING"
   [[p1 p2]]
-  ;; return a seq of matched pairs:
-  (map add-id-to-pair-map
-       (concat 
-         (list    ; that this is a list (not vec) flags that this is a family of map-pairs from the same proposition
-               (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
-               (sorted-map :alog1 (:pred p1) :alog2 (:pred p2))) ; predicates always match if the propns matched
-         (map match-args (:args p1) (:args p2)))))
+  ;; that the following is a seq, not vec, flags that it's a family of map-pairs from the same propn
+  (cons (mapnode-map p1 p2)                 ; we already know the propns match
+        (cons (mapnode-map (:pred p1) (:pred p2)) ; predicates always match if the propns matched
+              (map mapnode-map (:args p1) (:args p2)))))
 
-(defn match-args 
-  "ADD DOCSTRING"
-  [x1 x2] 
-  (sorted-map :alog1 x1 :alog2 x2))
+;; NOTE we use sorted-maps here because when we construct 
+;; mapnode ids, we need it to be the case that (vals clojure-map) always returns these
+;; vals in the same order :alog1, :alog2:
+(defn mapnode-map
+  "Given two lot-items, return a map representing an ACME map-node between them,
+  with the first and second lot-items as :alog1, :alog2, respectively, and with
+  an id constructed by id-pair-to-mapnode-id from the id's of the two lot-items."
+  [alog1 alog2] 
+  (sorted-map :alog1 alog1 :alog2 alog2 
+              :id (ids-to-mapnode-id (:id alog1) (:id alog2))))
 
 ;;;;;;;;;;;;
 ;; 
@@ -169,12 +171,17 @@
 ;; NOTE some of these functions will probably be abstracted out into a separate file 
 ;; and ns later, since they'll be used for the proposition network, too.
 
+(defn ids-to-mapnode-id
+  "Given two id keywords, constructs and returns a corresponding mapnode id."
+  [id1 id2]
+  (keyword 
+    (str (name id1) "=" (name id2))))
+
 (defn id-pair-to-mapnode-id
   "Given a 2-element sequence of id keywords, constructs and returns 
   a corresponding mapnode id."
   [[id1 id2]]
-  (keyword 
-    (str (name id1) "=" (name id2))))
+  (ids-to-mapnode-id id1 id2))
 
 ;; NOTE: According to several remarks on the Internet from 2010 into 2013, (keys x)
 ;; and (vals x) return keys and vals in the same corresponding order.  Moreover,
