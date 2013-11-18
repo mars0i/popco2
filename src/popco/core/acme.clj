@@ -78,7 +78,7 @@
 ;; get calculated from matchings that have to do with what's inside the propns
 ;; that are args.  The H&T1989 algorithm does *not* do this, nor did POPCO 1.
 
-(declare match-args match-components-of-propn-pair match-propn-components)
+(declare match-args match-components-of-propn-pair match-propn-components add-id-to-pair-map)
 
 ;; Note that order within pairs matters.  It preserves the distinction
 ;; between the two analogue structures, and allows predicates and objects
@@ -104,11 +104,12 @@
   "ADD DOCSTRING"
   [[p1 p2]]
   ;; return a seq of matched pairs:
-  (concat 
-    (list    ; that this is a list (not vec) flags that this is a family of map-pairs from the same proposition
-          (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
-          (sorted-map :alog1 (:pred p1) :alog2 (:pred p2))) ; predicates always match if the propns matched
-    (map match-args (:args p1) (:args p2))))
+  (map add-id-to-pair-map
+       (concat 
+         (list    ; that this is a list (not vec) flags that this is a family of map-pairs from the same proposition
+               (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
+               (sorted-map :alog1 (:pred p1) :alog2 (:pred p2))) ; predicates always match if the propns matched
+         (map match-args (:args p1) (:args p2)))))
 
 (defn match-args 
   "ADD DOCSTRING"
