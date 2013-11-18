@@ -259,8 +259,10 @@
   (mx/new-matrix dim dim))
 
 ;; NOT SURE if this is the best strategy.
-;; means have to divide inc by 2--we only need half as many connections
 ;; cf.  http://stackoverflow.com/questions/4053845/idomatic-way-to-iterate-through-all-pairs-of-a-collection-in-clojure 
+;; TODO ?:
+;; BUT WAIT: DON'T I IN FACT NEED TO GO OVER THE WEIGHTS IN BOTH DIRECTIONS?
+;; AFTER ALL, THEY ARE TWO-WAY LINKS, NOT ONE-WAY.
 (defn add-families-wts-to-mat!
   "ADD DOCSTRING"
   [mat fams index-map increment]
