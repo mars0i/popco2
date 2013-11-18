@@ -238,17 +238,27 @@
 ;; STEP 4
 ;; Make weight matrix representing link weights
 
-(defn propn-families-to-id-families
-  [fams]
-  (map 
-    #(map pair-map-to-mapnode-id %) 
-    fams))
+;(defn propn-families-to-id-families
+;  [fams]
+;  (map 
+;    #(map pair-map-to-mapnode-id %) 
+;    fams))
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-wt-mat
   "Returns a core.matrix square matrix with dimension dim, filled with zeros."
   [dim]
   (mx/new-matrix dim dim))
+
+;; NOT SURE if this is the best strategy.
+;; 'for' is simple, but creates list unnecess, and means have to divide inc by 2.  maybe just use dotimes or something.
+(defn add-families-wts-to-mat
+  [mat fams indexes increment]
+  (map #(for [i1 %
+              i2 %] ; now we are doing it twice .... not right. maybe send in increment 1/2 as large
+          (mx/mset! mat (indexes (:id i1)) (indexes (:id :i2)) increment))
+       fams)
+  mat)
 
 ;; REST OF THIS SECTION MAY BE OBSOLETE
 ;; REST OF THIS SECTION MAY BE OBSOLETE
