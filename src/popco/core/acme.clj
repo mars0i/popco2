@@ -117,44 +117,44 @@
 ;; 
 ;; MAY BE OBSOLETE AND UNUSEFUL (earlier versions of preceding functions):
 
-(declare deep-match-args deep-match-components-of-propn-pair deep-match-propn-components)
-
-;; Note that order within pairs matters.  It preserves the distinction
-;; between the two analogue structures, and allows predicates and objects
-;; to have the same names in different analogue structures (sets don't allow that).
-(defn deep-match-propn-components
-  "Returns a (lazy) sequence of sequences (families) of mapped-pairs of matched
-  Propns, Preds, or Objs from a sequence of of pairs of Propns.  Each pair is a
-  map with keys :alog1 and :alog2 (analog 1 & 2).  The resulting pairs
-  represent the 'sides' of map nodes.  Each subsequence contains the pairs from
-  one proposition.  Each Propn family sequence consists of a Clojure map
-  representing a pair of Propns, a clojure map representing a pair of Preds,
-  and a vector containing representations of paired arguments.  The contents of
-  this vector are Clojure maps where the corresponding arguments are Objs, and
-  family sequences where the corresponding args are Propns.  i.e. Propns'
-  arguments are embedded in a vector so you can tell whether you're looking at
-  a collection of pairs from two Propns or pairs from arguments by testing with
-  seq? and vec?."
-  [pairs]
-  (map deep-match-components-of-propn-pair pairs))
-
-;; NOTE we use sorted-maps here because when we construct mapnode ids,
-;; we need it to be the case that (vals clojure-map) always returns these
-;; vals in the same order :alog1, :alog2:
-;;
-(defn deep-match-components-of-propn-pair
-  ;; ADD DOCSTRING
-  [[p1 p2]]
-  ;; return a seq of matched pairs:
-  (list    ; that this is a list (not vec) flags that this is a family of map-pairs from the same proposition
-    (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
-    (sorted-map :alog1 (:pred p1) :alog2 (:pred p2)) ; predicates always match if the propns matched
-    (vec (map deep-match-args (:args p1) (:args p2)))))   ; args deep-match if objs, propns need more work.  vec means these pairs are from two arglists
-
-;; ADD DOCSTRING
-(defmulti  deep-match-args (fn [x y] [(class x) (class y)]))
-(defmethod deep-match-args [Obj Obj] [o1 o2] (sorted-map :alog1 o1 :alog2 o2))
-(defmethod deep-match-args [Propn Propn] [p1 p2] (deep-match-components-of-propn-pair [p1 p2]))
+; (declare deep-match-args deep-match-components-of-propn-pair deep-match-propn-components)
+; 
+; ;; Note that order within pairs matters.  It preserves the distinction
+; ;; between the two analogue structures, and allows predicates and objects
+; ;; to have the same names in different analogue structures (sets don't allow that).
+; (defn deep-match-propn-components
+;   "Returns a (lazy) sequence of sequences (families) of mapped-pairs of matched
+;   Propns, Preds, or Objs from a sequence of of pairs of Propns.  Each pair is a
+;   map with keys :alog1 and :alog2 (analog 1 & 2).  The resulting pairs
+;   represent the 'sides' of map nodes.  Each subsequence contains the pairs from
+;   one proposition.  Each Propn family sequence consists of a Clojure map
+;   representing a pair of Propns, a clojure map representing a pair of Preds,
+;   and a vector containing representations of paired arguments.  The contents of
+;   this vector are Clojure maps where the corresponding arguments are Objs, and
+;   family sequences where the corresponding args are Propns.  i.e. Propns'
+;   arguments are embedded in a vector so you can tell whether you're looking at
+;   a collection of pairs from two Propns or pairs from arguments by testing with
+;   seq? and vec?."
+;   [pairs]
+;   (map deep-match-components-of-propn-pair pairs))
+; 
+; ;; NOTE we use sorted-maps here because when we construct mapnode ids,
+; ;; we need it to be the case that (vals clojure-map) always returns these
+; ;; vals in the same order :alog1, :alog2:
+; ;;
+; (defn deep-match-components-of-propn-pair
+;   ;; ADD DOCSTRING
+;   [[p1 p2]]
+;   ;; return a seq of matched pairs:
+;   (list    ; that this is a list (not vec) flags that this is a family of map-pairs from the same proposition
+;     (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
+;     (sorted-map :alog1 (:pred p1) :alog2 (:pred p2)) ; predicates always match if the propns matched
+;     (vec (map deep-match-args (:args p1) (:args p2)))))   ; args deep-match if objs, propns need more work.  vec means these pairs are from two arglists
+; 
+; ;; ADD DOCSTRING
+; (defmulti  deep-match-args (fn [x y] [(class x) (class y)]))
+; (defmethod deep-match-args [Obj Obj] [o1 o2] (sorted-map :alog1 o1 :alog2 o2))
+; (defmethod deep-match-args [Propn Propn] [p1 p2] (deep-match-components-of-propn-pair [p1 p2]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 3
@@ -235,7 +235,7 @@
 ;; STEP 4
 ;; Make weight matrix representing link weights
 
-(defn turn-propn-pair-families-into-id-families
+(defn propn-families-to-id-families
   [fams]
   (map 
     #(map pair-map-to-mapnode-id %) 
