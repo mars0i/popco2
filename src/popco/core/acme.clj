@@ -253,88 +253,88 @@
 ;; REST OF THIS SECTION MAY BE OBSOLETE
 ;; REST OF THIS SECTION MAY BE OBSOLETE
 
-;; NOTE this is returning propn families in arg lists when args are propns.
-;; This is not really what I need.  I can work with it, but maybe this function
-;; could be modified to do something different.  Note that what I really
-;; need, in the end, are only ids.  For each propn family at the top level,
-;; I need ids for its propn pair, its pred pair, and all its arg pairs, 
-;; whether they are for objs or propns.  I don't need any info about the
-;; embedded arg-propn-pair's other family members.  I also don't actually
-;; need the args to be set off in a vector.  The whole family list here
-;; could just be completely flat.  (Note that means that at this stage,
-;; in these lists, there's actually no distinction between the propn
-;; whose family it is, and the propns that are args to it.  The linking
-;; behavior is exactly the same.  (Hmm though conceivably that could
-;; someday change.  But that's just a distant possibility.)
-(defn list-propn-families
-  "Given a pair-tree produced by match-propn-components, return a seq of
-  all propn-families in pair-tree at any level."
-  [pair-tree]
-  (filter seq?   ; get rid of vectors, lot-items, pair maps, since the seqs represent proposition-proposition pair-map families
-          (rest  ; drop first element, the original pair-tree
-            (tree-seq 
-              #(not (or (pred? %) (obj? %))) ; pair-tree contains seqs, vectors, sorted-maps, and lot-items
-              #(cond (seq? %)  %
-                     (vector? %)  %
-                     (propn? %)  (:args %) ; must precede 'map?' since records are maps
-                     (and (sorted? %) (map? %))  (vector (:alog1 %) (:alog2 %)) ; in case the %'s are Propns
-                     :else (throw (Exception. (format "list-propn-families encounted unknown object: %s"))))
-              pair-tree))))
-
-(defn make-propn-families-shallow
-  "ADD DOCSTRING"
-  [fams]
-  (map (fn [fam] (concat 
-                   (take 2 fam) 
-                   (map (fn [arg-elt] 
-                          (if (seq? arg-elt) 
-                            (first arg-elt) 
-                            arg-elt)) 
-                        (nth fam 2))))
-         fams))
-
-(def list-shallow-propn-families 
-  (comp make-propn-families-shallow list-propn-families))
-(ug/add-to-docstr list-shallow-propn-families
-   "ADD DOCSTRING")
-
-;; TODO NOT RIGHT
-(defn list-ids-in-propn-families 
-  "ADD DOCSTRING"
-  [pair-tree]
-  (map #(map id-pair-to-mapnode-id [(:alog1 %) (:alog2 %)])
-       (list-shallow-propn-families pair-tree)))
-
-;; TODO OBSOLETE (?)  DELETE ME
-;(defn remove-empty-seqs
-;  [coll]
-;  (filter #(not (and (seq? %) (empty? %)))  ; can't use seq: needs to work with non-seqs, too
-;          coll))
-
-;; TODO OBSOLETE (?)  DELETE ME
-;; THIS IS SURELY WRONG.  (And nasty, regardless.)
-;; Also, we really only need :ids in the result.
-;(defn funky-butt-raise-propn-families
-;  "Return a seq of all propn-families in pair-tree."
-;  [pair-tree]
-;  (letfn [(f [out in]
-;            (let [out- (remove-empty-seqs out) ; remove-empty-seqs is just papering over a problem? shouldn't be needed?
-;                  thisone (first in)
-;                  therest (rest in)]
-;              (if (empty? in)
-;                out-
-;                (cond (seq? thisone) (f (concat (conj out- thisone) (map (partial f ()) thisone))
-;                                        therest)
-;                      (propn? thisone) (f (concat out- 
-;                                                  (mapcat (partial f ()) 
-;                                                          (:args thisone))) 
-;                                          therest)
-;                      (map? thisone) (f (concat (f () (:alog1 thisone))
-;                                                (f () (:alog2 thisone))
-;                                                out-) 
-;                                        therest)
-;                      :else (f out- therest)))))]
-;    (f () (vec pair-tree))))
+; ;; NOTE this is returning propn families in arg lists when args are propns.
+; ;; This is not really what I need.  I can work with it, but maybe this function
+; ;; could be modified to do something different.  Note that what I really
+; ;; need, in the end, are only ids.  For each propn family at the top level,
+; ;; I need ids for its propn pair, its pred pair, and all its arg pairs, 
+; ;; whether they are for objs or propns.  I don't need any info about the
+; ;; embedded arg-propn-pair's other family members.  I also don't actually
+; ;; need the args to be set off in a vector.  The whole family list here
+; ;; could just be completely flat.  (Note that means that at this stage,
+; ;; in these lists, there's actually no distinction between the propn
+; ;; whose family it is, and the propns that are args to it.  The linking
+; ;; behavior is exactly the same.  (Hmm though conceivably that could
+; ;; someday change.  But that's just a distant possibility.)
+; (defn list-propn-families
+;   "Given a pair-tree produced by match-propn-components, return a seq of
+;   all propn-families in pair-tree at any level."
+;   [pair-tree]
+;   (filter seq?   ; get rid of vectors, lot-items, pair maps, since the seqs represent proposition-proposition pair-map families
+;           (rest  ; drop first element, the original pair-tree
+;             (tree-seq 
+;               #(not (or (pred? %) (obj? %))) ; pair-tree contains seqs, vectors, sorted-maps, and lot-items
+;               #(cond (seq? %)  %
+;                      (vector? %)  %
+;                      (propn? %)  (:args %) ; must precede 'map?' since records are maps
+;                      (and (sorted? %) (map? %))  (vector (:alog1 %) (:alog2 %)) ; in case the %'s are Propns
+;                      :else (throw (Exception. (format "list-propn-families encounted unknown object: %s"))))
+;               pair-tree))))
+; 
+; (defn make-propn-families-shallow
+;   "ADD DOCSTRING"
+;   [fams]
+;   (map (fn [fam] (concat 
+;                    (take 2 fam) 
+;                    (map (fn [arg-elt] 
+;                           (if (seq? arg-elt) 
+;                             (first arg-elt) 
+;                             arg-elt)) 
+;                         (nth fam 2))))
+;          fams))
+; 
+; (def list-shallow-propn-families 
+;   (comp make-propn-families-shallow list-propn-families))
+; (ug/add-to-docstr list-shallow-propn-families
+;    "ADD DOCSTRING")
+; 
+; ;; TODO NOT RIGHT
+; (defn list-ids-in-propn-families 
+;   "ADD DOCSTRING"
+;   [pair-tree]
+;   (map #(map id-pair-to-mapnode-id [(:alog1 %) (:alog2 %)])
+;        (list-shallow-propn-families pair-tree)))
+; 
+; ;; TODO OBSOLETE (?)  DELETE ME
+; ;(defn remove-empty-seqs
+; ;  [coll]
+; ;  (filter #(not (and (seq? %) (empty? %)))  ; can't use seq: needs to work with non-seqs, too
+; ;          coll))
+; 
+; ;; TODO OBSOLETE (?)  DELETE ME
+; ;; THIS IS SURELY WRONG.  (And nasty, regardless.)
+; ;; Also, we really only need :ids in the result.
+; ;(defn funky-butt-raise-propn-families
+; ;  "Return a seq of all propn-families in pair-tree."
+; ;  [pair-tree]
+; ;  (letfn [(f [out in]
+; ;            (let [out- (remove-empty-seqs out) ; remove-empty-seqs is just papering over a problem? shouldn't be needed?
+; ;                  thisone (first in)
+; ;                  therest (rest in)]
+; ;              (if (empty? in)
+; ;                out-
+; ;                (cond (seq? thisone) (f (concat (conj out- thisone) (map (partial f ()) thisone))
+; ;                                        therest)
+; ;                      (propn? thisone) (f (concat out- 
+; ;                                                  (mapcat (partial f ()) 
+; ;                                                          (:args thisone))) 
+; ;                                          therest)
+; ;                      (map? thisone) (f (concat (f () (:alog1 thisone))
+; ;                                                (f () (:alog2 thisone))
+; ;                                                out-) 
+; ;                                        therest)
+; ;                      :else (f out- therest)))))]
+; ;    (f () (vec pair-tree))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
