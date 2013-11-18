@@ -252,7 +252,8 @@
 
 ;; NOT SURE if this is the best strategy.
 ;; 'for' is simple, but creates list unnecess, and means have to divide inc by 2.  maybe just use dotimes or something.
-(defn add-families-wts-to-mat
+(defn add-families-wts-to-mat!
+  "ADD DOCSTRING"
   [mat fams indexes increment]
   (map #(for [i1 %
               i2 %] ; now we are doing it twice .... not right. maybe send in increment 1/2 as large
