@@ -266,11 +266,11 @@
 (defn add-families-wts-to-mat!
   "ADD DOCSTRING"
   [mat fams index-map increment]
-  (map #(doseq [[itm1 itm2] (comb/combinations %)]
-          (let [i (index-map (:id itm1)) 
-                j (index-map (:id itm2))]
-            (mx/mset! mat i j (+ increment (mx/mget mat i j)))))
-       fams)
+  (doseq [fam fams]
+    (doseq [[itm1 itm2] (comb/combinations fam 2)]
+      (let [i (index-map (:id itm1)) 
+            j (index-map (:id itm2))]
+        (mx/mset! mat i j (+ increment (mx/mget mat i j))))))
   mat)
 
 ;; REST OF THIS SECTION MAY BE OBSOLETE
@@ -378,15 +378,19 @@
              nodes, with all elements initialized to 0.0."
   [node-seq]
   {:nodes (vec node-seq)
-   :indexes (make-index-map (map :id node-seq))
+   :index-map (make-index-map (map :id node-seq))
    :wt-mat (make-wt-mat (count node-seq))})
 
 (defn make-acme-nn-strus
   ;; ADD DOCSTRING
-  [pset1 pset2]
-  (let [pair-tree (match-propn-components (match-propns pset1 pset2))
-        node-vec (make-acme-node-vec pair-tree)]
-    (make-nn-strus node-vec)))
+  [pset1 pset2 pos-increment]
+  (let [pairs (match-propn-components (match-propns pset1 pset2))
+        node-vec (make-acme-node-vec pairs)
+        nn-strus (make-nn-strus node-vec)
+        wt-mat (:wt-mat nn-strus)
+        index-map (:index-map nn-strus)]
+    (add-families-wts-to-mat! wt-mat pairs index-map pos-increment)
+    nn-strus))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
