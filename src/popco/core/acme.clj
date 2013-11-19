@@ -79,7 +79,7 @@
 ;; get calculated from matchings that have to do with what's inside the propns
 ;; that are args.  The H&T1989 algorithm does *not* do this, nor did POPCO 1.
 
-(declare mapnode-map match-components-of-propn-pair match-propn-components ids-to-mapnode-id)
+(declare make-mapnode-map match-components-of-propn-pair match-propn-components ids-to-mapnode-id)
 
 ;; Note that order within pairs matters.  It preserves the distinction
 ;; between the two analogue structures, and allows predicates and objects
@@ -97,21 +97,21 @@
   [pairs]
   (map match-components-of-propn-pair pairs))
 
-;; NOTE we use sorted-maps here, returned by mapnode-map because when we construct 
+;; NOTE we use sorted-maps here, returned by make-mapnode-map because when we construct 
 ;; mapnode ids, we need it to be the case that (vals clojure-map) always returns these
 ;; vals in the same order :alog1, :alog2:
 (defn match-components-of-propn-pair
   "ADD DOCSTRING"
   [[p1 p2]]
   ;; that the following is a seq, not vec, flags that it's a family of map-pairs from the same propn
-  (cons (mapnode-map p1 p2)                 ; we already know the propns match
-        (cons (mapnode-map (:pred p1) (:pred p2)) ; predicates always match if the propns matched
-              (map mapnode-map (:args p1) (:args p2)))))
+  (cons (make-mapnode-map p1 p2)                 ; we already know the propns match
+        (cons (make-mapnode-map (:pred p1) (:pred p2)) ; predicates always match if the propns matched
+              (map make-mapnode-map (:args p1) (:args p2)))))
 
 ;; NOTE we use sorted-maps here because when we construct 
 ;; mapnode ids, we need it to be the case that (vals clojure-map) always returns these
 ;; vals in the same order :alog1, :alog2:
-(defn mapnode-map
+(defn make-mapnode-map
   "Given two lot-items, return a map representing an ACME map-node between them,
   with the first and second lot-items as :alog1, :alog2, respectively, and with
   an id constructed by id-pair-to-mapnode-id from the id's of the two lot-items."
@@ -172,47 +172,7 @@
 ;; NOTE some of these functions will probably be abstracted out into a separate file 
 ;; and ns later, since they'll be used for the proposition network, too.
 
-(defn ids-to-mapnode-id
-  "Given two id keywords, constructs and returns a corresponding mapnode id."
-  [id1 id2]
-  (keyword 
-    (str (name id1) "=" (name id2))))
-
-(defn id-pair-to-mapnode-id
-  "Given a 2-element sequence of id keywords, constructs and returns 
-  a corresponding mapnode id."
-  [[id1 id2]]
-  (ids-to-mapnode-id id1 id2))
-
-;; NOTE: According to several remarks on the Internet from 2010 into 2013, (keys x)
-;; and (vals x) return keys and vals in the same corresponding order.  Moreover,
-;; other remarks say that for sorted-maps, (vals x) always returns values according
-;; to the sort-order of keys.  So if pairmap is a sorted map, the ids should always
-;; come out in the order of :alog1, :alog2.  This is important, because otherwise
-;; the mapnode ids we construct from these pairs might arbitrarily swap the parts of
-;; the name on either side of "="; thus id's of map nodes would be unstable.  
-;; This point about order seems not to be guaranteed by any explicit documentation,
-;; as of 10/2013, but the sentiment on the net seems to be that it's reasonable to
-;; assume that this behavior won't change.  The most thorough and authoritative 
-;; statement that I've found so far (11/2013) about order of (vals x) for sorted-maps
-;; is here: https://groups.google.com/d/msg/clojure/2AyndHfeigk/zaD9T5mT6WkJ 
-
-(defn pair-map-to-id-pair
-  "Given a map containing two LOT items, returns a 2-element sequence of their ids,
-  in order of keys, i.e. in :alog1, :alog2 order if the map is a sorted-map."
-  [pairmap]
-  (map :id (vals pairmap))) ; See note above about order of vals.
-
-(def pair-map-to-mapnode-id
-  (comp id-pair-to-mapnode-id pair-map-to-id-pair))
-(ug/add-to-docstr pair-map-to-mapnode-id
-  "Given a map containing two LOT items, constructs and returns a corresponding
-  mapnode id.")
-
-(defn add-id-to-pair-map
-  "Given a map containing two LOT items, adds an id field with a mapnode id."
-  [pairmap]
-  (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
+(declare add-id-to-pair-map)
 
 ;; The use of flatten in this function depends on the fact that (a) map-pairs 
 ;; are not sequences, and (b) all larger groupings of data are sequences.
@@ -242,6 +202,51 @@
   [len]
   (mx/new-vector len))
 
+;; functions for constructing ids of mapnodes:
+
+(defn ids-to-mapnode-id
+  "Given two id keywords, constructs and returns a corresponding mapnode id."
+  [id1 id2]
+  (keyword 
+    (str (name id1) "=" (name id2))))
+
+(defn id-pair-to-mapnode-id
+  "Given a 2-element sequence of id keywords, constructs and returns 
+  a corresponding mapnode id."
+  [[id1 id2]]
+  (ids-to-mapnode-id id1 id2))
+
+;; See note below on order of keys and vals
+(defn pair-map-to-id-pair
+  "Given a map containing two LOT items, returns a 2-element sequence of their ids,
+  in order of keys, i.e. in :alog1, :alog2 order if the map is a sorted-map."
+  [pairmap]
+  (map :id (vals pairmap))) ; See note above about order of vals.
+
+(def pair-map-to-mapnode-id
+  (comp id-pair-to-mapnode-id pair-map-to-id-pair))
+(ug/add-to-docstr pair-map-to-mapnode-id
+  "Given a map containing two LOT items, constructs and returns a corresponding
+  mapnode id.")
+
+(defn add-id-to-pair-map
+  "Given a map containing two LOT items, adds an id field with a mapnode id."
+  [pairmap]
+  (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
+
+;; NOTE: According to several remarks on the Internet from 2010 into 2013, (keys x)
+;; and (vals x) return keys and vals in the same corresponding order.  Moreover,
+;; other remarks say that for sorted-maps, (vals x) always returns values according
+;; to the sort-order of keys.  So if pairmap is a sorted map, the ids should always
+;; come out in the order of :alog1, :alog2.  This is important, because otherwise
+;; the mapnode ids we construct from these pairs might arbitrarily swap the parts of
+;; the name on either side of "="; thus id's of map nodes would be unstable.  
+;; This point about order seems not to be guaranteed by any explicit documentation,
+;; as of 10/2013, but the sentiment on the net seems to be that it's reasonable to
+;; assume that this behavior won't change.  The most thorough and authoritative 
+;; statement that I've found so far (11/2013) about order of (vals x) for sorted-maps
+;; is here: https://groups.google.com/d/msg/clojure/2AyndHfeigk/zaD9T5mT6WkJ 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 4
 ;; Make weight matrix representing link weights
@@ -258,19 +263,16 @@
   [dim]
   (mx/new-matrix dim dim))
 
-;; NOT SURE if this is the best strategy.
-;; cf.  http://stackoverflow.com/questions/4053845/idomatic-way-to-iterate-through-all-pairs-of-a-collection-in-clojure 
-;; TODO ?:
-;; BUT WAIT: DON'T I IN FACT NEED TO GO OVER THE WEIGHTS IN BOTH DIRECTIONS?
-;; AFTER ALL, THEY ARE TWO-WAY LINKS, NOT ONE-WAY.
 (defn add-families-wts-to-mat!
   "ADD DOCSTRING"
   [mat fams index-map increment]
   (doseq [fam fams]
-    (doseq [[itm1 itm2] (comb/combinations fam 2)]
-      (let [i (index-map (:id itm1)) 
-            j (index-map (:id itm2))]
-        (mx/mset! mat i j (+ increment (mx/mget mat i j))))))
+    (doseq [itm1 fam           ; fam is a list of map-pairs
+            itm2 fam]          ; we want all poss ordered pairs
+      (when-not (= itm1 itm2)  ; except duplicates
+        (let [i (index-map (:id itm1)) 
+              j (index-map (:id itm2))]
+          (mx/mset! mat i j (+ increment (mx/mget mat i j)))))))
   mat)
 
 ;; REST OF THIS SECTION MAY BE OBSOLETE
