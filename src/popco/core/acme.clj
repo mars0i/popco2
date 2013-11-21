@@ -2,7 +2,6 @@
   (:use popco.core.lot)
   (:import [popco.core.lot Propn Pred Obj])
   (:require [utils.general :as ug]
-            [clojure.math.combinatorics :as comb]
             [clojure.core.matrix :as mx])
   (:gen-class))
 
