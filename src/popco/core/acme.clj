@@ -366,7 +366,7 @@
 ;; ...
 
 ;; MOVE TO SEPARATE FILE/NS
-(defn make-nn-strus
+(defn make-nn-stru
   "Given a sequence of data on individual nodes, returns a clojure map with 
   three entries:
   :nodes -   A Clojure vector of data providing information about the meaning
@@ -383,33 +383,40 @@
    :indexes (make-index-map (map :id node-seq))
    :weights (make-wt-mat (count node-seq))})
 
-(defn make-acme-nn-strus
+(defn make-acme-nn-stru
   ;; ADD DOCSTRING
   [pset1 pset2 pos-increment]
   (let [pairs (match-propn-components (match-propns pset1 pset2))
         node-vec (make-acme-node-vec pairs)
-        nn-strus (make-nn-strus node-vec)
-        weights (:weights nn-strus)
-        indexes (:indexes nn-strus)]
+        nn-stru (make-nn-stru node-vec)
+        weights (:weights nn-stru)
+        indexes (:indexes nn-stru)]
     (add-families-wts-to-mat! weights pairs indexes pos-increment)
-    nn-strus))
+    nn-stru))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
 ;; THE MATRIX.  THEN AN UN-distinct-ED NODE SEQ TO CONSTRUCT NEGATIVE
 ;; WEIGHTS AND FILL THOSE INTO THE MATRIX.  See acme.nt4 for more.
 
-(defn pprint-nn-strus
-  "Pretty print the matrix in nn-strus with associated row, col info
+(defn pprint-nn-stru
+  "Pretty print the matrix in nn-stru with associated row, col info
   (incomplete)."
-  [nn-strus]
-  (clojure.pprint/pprint 
-    (let [indexes-to-ids (clojure.set/map-invert (:indexes nn-strus))
-          pv-weights (mx/matrix :persistent-vector (:weights nn-strus))] ; "cast" the matrix to a seq of seqs
-      (map (fn [row index] (cons (keyword (str (indexes-to-ids index) "\t")) row))  ; making a keyword with a tab in it is ... wrong
-           pv-weights
-           (range (count indexes-to-ids))))))
-           
+  [nn-stru]
+  (print
+    (apply str
+      (let [ids-to-indexes (:indexes nn-stru)
+            ids (keys ids-to-indexes)
+            max-keylen (apply max (map (comp count name) ids))
+            indexes-to-ids (clojure.set/map-invert ids-to-indexes) ; should this be permanent in nn-stru?
+            pv-weights (mx/matrix :persistent-vector (:weights nn-stru))] ; "cast" the matrix to a seq of seqs
+        (map (fn [row index] 
+               (format (str "%-" (inc max-keylen) "s %s%n")
+                       (indexes-to-ids index) 
+                       row))
+             pv-weights
+             (range (count ids)))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
 
