@@ -264,13 +264,13 @@
 
 (defn add-families-wts-to-mat!
   "ADD DOCSTRING"
-  [mat fams index-map increment]
+  [mat fams indexes increment]
   (doseq [fam fams]
     (doseq [itm1 fam           ; fam is a list of map-pairs
             itm2 fam]          ; we want all poss ordered pairs
       (when-not (= itm1 itm2)  ; except duplicates
-        (let [i (index-map (:id itm1)) 
-              j (index-map (:id itm2))]
+        (let [i (indexes (:id itm1)) 
+              j (indexes (:id itm2))]
           (mx/mset! mat i j (+ increment (mx/mget mat i j)))))))
   mat)
 
@@ -375,12 +375,12 @@
              of nodes passed in.
   :indexes - A Clojure map from ids of the same data items to integers, 
              allowing lookup of a node's index from its id.
-  :wt-mat -  A core.matrix square matrix with dimensions equal to the number of
+  :weights -  A core.matrix square matrix with dimensions equal to the number of
              nodes, with all elements initialized to 0.0."
   [node-seq]
   {:nodes (vec node-seq)
-   :index-map (make-index-map (map :id node-seq))
-   :wt-mat (make-wt-mat (count node-seq))})
+   :indexes (make-index-map (map :id node-seq))
+   :weights (make-wt-mat (count node-seq))})
 
 (defn make-acme-nn-strus
   ;; ADD DOCSTRING
@@ -388,9 +388,9 @@
   (let [pairs (match-propn-components (match-propns pset1 pset2))
         node-vec (make-acme-node-vec pairs)
         nn-strus (make-nn-strus node-vec)
-        wt-mat (:wt-mat nn-strus)
-        index-map (:index-map nn-strus)]
-    (add-families-wts-to-mat! wt-mat pairs index-map pos-increment)
+        weights (:weights nn-strus)
+        indexes (:indexes nn-strus)]
+    (add-families-wts-to-mat! weights pairs indexes pos-increment)
     nn-strus))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
