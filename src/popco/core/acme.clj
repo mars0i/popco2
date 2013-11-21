@@ -2,7 +2,8 @@
   (:use popco.core.lot)
   (:import [popco.core.lot Propn Pred Obj])
   (:require [utils.general :as ug]
-            [clojure.core.matrix :as mx])
+            [clojure.core.matrix :as mx]
+            [clojure.set])
   (:gen-class))
 
 ;; SEE acme.md for an overview of what's going on in this file.
@@ -398,6 +399,17 @@
 ;; THE MATRIX.  THEN AN UN-distinct-ED NODE SEQ TO CONSTRUCT NEGATIVE
 ;; WEIGHTS AND FILL THOSE INTO THE MATRIX.  See acme.nt4 for more.
 
+(defn pprint-nn-strus
+  "Pretty print the matrix in nn-strus with associated row, col info
+  (incomplete)."
+  [nn-strus]
+  (clojure.pprint/pprint 
+    (let [indexes-to-ids (clojure.set/map-invert (:indexes nn-strus))
+          pv-weights (mx/matrix :persistent-vector (:weights nn-strus))] ; "cast" the matrix to a seq of seqs
+      (map (fn [row index] (cons (keyword (str (indexes-to-ids index) "\t")) row))  ; making a keyword with a tab in it is ... wrong
+           pv-weights
+           (range (count indexes-to-ids))))))
+           
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
 
