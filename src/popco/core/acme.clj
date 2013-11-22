@@ -403,19 +403,37 @@
   "Pretty print the matrix in nn-stru with associated row, col info
   (incomplete)."
   [nn-stru]
+  (pprint-matrix-with-labels (map name (keys (:indexes nn-stru)))
+                             (:weights nn-stru)))
+
+(defn pprint-matrix-with-labels
+  [mat labels]
   (print
     (apply str
-      (let [ids-to-indexes (:indexes nn-stru)
-            ids (keys ids-to-indexes)
-            max-keylen (apply max (map (comp count name) ids))
-            indexes-to-ids (clojure.set/map-invert ids-to-indexes) ; should this be permanent in nn-stru?
-            pv-weights (mx/matrix :persistent-vector (:weights nn-stru))] ; "cast" the matrix to a seq of seqs
-        (map (fn [row index] 
-               (format (str "%-" (inc max-keylen) "s %s%n")
-                       (indexes-to-ids index) 
-                       row))
-             pv-weights
-             (range (count ids)))))))
+           (let [labels-width (inc (apply max (map count labels)))
+                 pv-mat (mx/matrix :persistent-vector mat)]
+             (for [row pv-mat
+                   label labels]
+               (format (str "%-" labels-width "s %s%n") label row))))))
+
+;(defn old-pprint-nn-stru
+;  "Pretty print the matrix in nn-stru with associated row, col info
+;  (incomplete)."
+;  [nn-stru]
+;  (print
+;    (apply str
+;      (let [ids-to-indexes (:indexes nn-stru)
+;            ids (keys ids-to-indexes)
+;            max-keylen (apply max (map (comp count name) ids))
+;            indexes-to-ids (clojure.set/map-invert ids-to-indexes) ; should this be permanent in nn-stru?
+;            pv-weights (mx/matrix :persistent-vector (:weights nn-stru))] ; "cast" the matrix to a seq of seqs
+;        (map (fn [row index] 
+;               (format (str "%-" (inc max-keylen) "s %s%n")
+;                       (indexes-to-ids index) 
+;                       row))
+;             pv-weights
+;             (range (count ids)))))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
