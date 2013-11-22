@@ -403,18 +403,35 @@
   "Pretty print the matrix in nn-stru with associated row, col info
   (incomplete)."
   [nn-stru]
-  (pprint-matrix-with-labels (map name (keys (:indexes nn-stru)))
-                             (:weights nn-stru)))
+  (let [labels (map name (keys (:indexes nn-stru)))]
+    (pprint-matrix-with-labels (:weights nn-stru) labels labels)))
+
+(defn max-strlen
+  [strings]
+  (apply max (map count strings)))
+
+(defn rotate-strings-90-degrees
+  [labels]
+  (let [width (max-strlen labels)]
+    (apply str 
+           (interpose "\n" 
+                      (map #(apply str %)                   ; concat each subvec of chars into a string
+                           (mx/transpose
+                                         (vec 
+                                           (map #(vec       ; make vec so we can use mx/transpose
+                                                      (format (str "%" width "s") %)) ; make labels same width 
+                                                labels))))))))
 
 (defn pprint-matrix-with-labels
-  [mat labels]
+  [mat row-labels col-labels]
   (print
     (apply str
-           (let [labels-width (inc (apply max (map count labels)))
-                 pv-mat (mx/matrix :persistent-vector mat)]
-             (for [row pv-mat
-                   label labels]
-               (format (str "%-" labels-width "s %s%n") label row))))))
+           (let [pv-mat (mx/matrix :persistent-vector mat)
+                 row-labels-width (max-strlen row-labels)
+                 col-labels-height (max-strlen col-labels)]
+             (map (fn [row row-label]
+                    (format (str "%-" row-labels-width "s %s%n") row-label row))
+                  pv-mat row-labels)))))
 
 ;(defn old-pprint-nn-stru
 ;  "Pretty print the matrix in nn-stru with associated row, col info
