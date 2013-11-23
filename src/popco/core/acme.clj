@@ -1,9 +1,9 @@
 (ns popco.core.acme
-  (:use popco.core.lot)
+  (:use popco.core.lot
+        [clojure.pprint :only [cl-format]])
   (:import [popco.core.lot Propn Pred Obj])
   (:require [utils.general :as ug]
-            [clojure.core.matrix :as mx]
-            [clojure.set])
+            [clojure.core.matrix :as mx])
   (:gen-class))
 
 ;; SEE acme.md for an overview of what's going on in this file.
@@ -402,22 +402,41 @@
   [strings]
   (apply max (map count strings)))
 
-(defn coll-of-colls-to-vec-of-vecs
+(defn collcolls-to-vecvecs
   [coll]
   (vec (map #(vec %) coll)))
 
 (defn rotate-strings-90-degrees
+  [labels]
+  (let [label-height (max-strlen labels)
+        col-width 3]
+    (apply str 
+           (map #(cl-format nil "~{~3s~}~%" %)
+                (mx/transpose               ; cheating to use a numeric op, but convenient
+                              (collcolls-to-vecvecs     ; Clojure vector of vector is understood by core.matrix
+                                                    (map #(format (str "%" label-height "s") %) ; make labels same width (transposed: height)
+                                                         labels)))))))
+
+(defn old-rotate-strings-90-degrees
   [labels]
   (let [width (max-strlen labels)]
     (apply str 
            (interpose \newline
                       (map #(apply str %)                   ; concat each subvec of chars into a string
                            (map #(interpose "  " %)
-                                (mx/transpose
-                                  (coll-of-colls-to-vec-of-vecs
-                                    (map #(format (str "%" width "s") %) ; make labels same width (height)
+                                (mx/transpose               ; I suppose it's cheating to use a numeric op, but convenient
+                                  (collcolls-to-vecvecs     ; Clojure vector of vector is understood by core.matrix
+                                    (map #(format (str "%" width "s") %) ; make labels same width (i.e. height)
                                          labels))))))
            "\n"))) ; final newline
+
+(defn format-mat-with-row-labels
+  [mat row-labels]
+  (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
+        row-labels-width (max-strlen row-labels)]
+    (map (fn [row row-label]
+           (format (str "%-" row-labels-width "s %s%n") row-label row))
+         pv-mat row-labels)))
 
 (defn pprint-matrix-with-labels
   [mat row-labels col-labels]
@@ -425,11 +444,7 @@
     (apply str
            (concat
              (rotate-strings-90-degrees col-labels)
-             (let [pv-mat (mx/matrix :persistent-vector mat)
-                   row-labels-width (max-strlen row-labels)]
-               (map (fn [row row-label]
-                      (format (str "%-" row-labels-width "s %s%n") row-label row))
-                    pv-mat row-labels))))))
+             (format-mat-with-row-labels mat row-labels)))))
 
 (defn pprint-nn-stru
   "Pretty print the matrix in nn-stru with associated row, col info
