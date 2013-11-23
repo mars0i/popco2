@@ -8,7 +8,6 @@
 
 ;; SEE acme.md for an overview of what's going on in this file.
 
-;;; TODO construct link matrix and weight matrix with positive weights
 ;;; TODO add negative weights to weight matrix
 ;;; NOTE for the analogy net we probably don't really need the link
 ;;; matrix, strictly speaking, because there are no zero-weight links.
@@ -399,39 +398,45 @@
 ;; THE MATRIX.  THEN AN UN-distinct-ED NODE SEQ TO CONSTRUCT NEGATIVE
 ;; WEIGHTS AND FILL THOSE INTO THE MATRIX.  See acme.nt4 for more.
 
+(defn max-strlen
+  [strings]
+  (apply max (map count strings)))
+
+(defn coll-of-colls-to-vec-of-vecs
+  [coll]
+  (vec (map #(vec %) coll)))
+
+(defn rotate-strings-90-degrees
+  [labels]
+  (let [width (max-strlen labels)]
+    (apply str 
+           (interpose \newline
+                      (map #(apply str %)                   ; concat each subvec of chars into a string
+                           (map #(interpose "  " %)
+                                (mx/transpose
+                                  (coll-of-colls-to-vec-of-vecs
+                                    (map #(format (str "%" width "s") %) ; make labels same width (height)
+                                         labels))))))
+           "\n"))) ; final newline
+
+(defn pprint-matrix-with-labels
+  [mat row-labels col-labels]
+  (print
+    (apply str
+           (concat
+             (rotate-strings-90-degrees col-labels)
+             (let [pv-mat (mx/matrix :persistent-vector mat)
+                   row-labels-width (max-strlen row-labels)]
+               (map (fn [row row-label]
+                      (format (str "%-" row-labels-width "s %s%n") row-label row))
+                    pv-mat row-labels))))))
+
 (defn pprint-nn-stru
   "Pretty print the matrix in nn-stru with associated row, col info
   (incomplete)."
   [nn-stru]
   (let [labels (map name (keys (:indexes nn-stru)))]
     (pprint-matrix-with-labels (:weights nn-stru) labels labels)))
-
-(defn max-strlen
-  [strings]
-  (apply max (map count strings)))
-
-(defn rotate-strings-90-degrees
-  [labels]
-  (let [width (max-strlen labels)]
-    (apply str 
-           (interpose "\n" 
-                      (map #(apply str %)                   ; concat each subvec of chars into a string
-                           (mx/transpose
-                                         (vec 
-                                           (map #(vec       ; make vec so we can use mx/transpose
-                                                      (format (str "%" width "s") %)) ; make labels same width 
-                                                labels))))))))
-
-(defn pprint-matrix-with-labels
-  [mat row-labels col-labels]
-  (print
-    (apply str
-           (let [pv-mat (mx/matrix :persistent-vector mat)
-                 row-labels-width (max-strlen row-labels)
-                 col-labels-height (max-strlen col-labels)]
-             (map (fn [row row-label]
-                    (format (str "%-" row-labels-width "s %s%n") row-label row))
-                  pv-mat row-labels)))))
 
 ;(defn old-pprint-nn-stru
 ;  "Pretty print the matrix in nn-stru with associated row, col info
