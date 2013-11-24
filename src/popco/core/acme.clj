@@ -449,6 +449,7 @@
     (apply str
            (concat
              (rotate-strings-90-degrees col-labels)
+             ["\n"]
              (format-mat-with-row-labels mat row-labels)))))
 
 (defn pprint-nn-stru
