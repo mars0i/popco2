@@ -413,13 +413,14 @@
   (let [label-height (max-strlen labels)
         col-width 3]
     (apply str
-    (interpose "\n"
-                (map #(apply str %)
-                     (mx/transpose               ; cheating to use a numeric op, but convenient
-                                   (collcolls-to-vecvecs     ; Clojure vector of vector is understood by core.matrix
-                                                         (map seq
-                                                              (map #(format (str "%" label-height "s") %) ; make labels same width (transposed: height)
-                                                                   labels)))))))))
+           (interpose "\n"
+                      (map #(apply str %)
+                           (map #(interpose "  " %)
+                                (mx/transpose               ; cheating to use a numeric op, but convenient
+                                              (collcolls-to-vecvecs     ; Clojure vector of vector is understood by core.matrix
+                                                                    (map seq
+                                                                         (map #(format (str "%" label-height "s") %) ; make labels same width (transposed: height)
+                                                                              labels))))))))))
 
 (defn old-rotate-strings-90-degrees
   [labels]
