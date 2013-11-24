@@ -406,16 +406,20 @@
   [coll]
   (vec (map #(vec %) coll)))
 
+;    (apply str 
+;          (map #(cl-format nil "~{~3s~}~%" %)
 (defn rotate-strings-90-degrees
   [labels]
   (let [label-height (max-strlen labels)
         col-width 3]
-    (apply str 
-           (map #(cl-format nil "~{~3s~}~%" %)
-                (mx/transpose               ; cheating to use a numeric op, but convenient
-                              (collcolls-to-vecvecs     ; Clojure vector of vector is understood by core.matrix
-                                                    (map #(format (str "%" label-height "s") %) ; make labels same width (transposed: height)
-                                                         labels)))))))
+    (apply str
+    (interpose "\n"
+                (map #(apply str %)
+                     (mx/transpose               ; cheating to use a numeric op, but convenient
+                                   (collcolls-to-vecvecs     ; Clojure vector of vector is understood by core.matrix
+                                                         (map seq
+                                                              (map #(format (str "%" label-height "s") %) ; make labels same width (transposed: height)
+                                                                   labels)))))))))
 
 (defn old-rotate-strings-90-degrees
   [labels]
