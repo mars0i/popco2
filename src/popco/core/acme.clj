@@ -442,9 +442,11 @@
 (defn format-mat-with-row-labels
   [mat row-labels]
   (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
-        row-labels-width (max-strlen row-labels)]
+        row-labels-width (max-strlen row-labels)
+        num-width (max-strlen (map #(format "%s" %) (apply concat pv-mat)))]
+    ;; NUM-WIDTH NOT WORKING
     (map (fn [row row-label]
-           (format (str "%-" row-labels-width "s %s%n") row-label row))
+           (format (str "%-" row-labels-width "s %" num-width "s%n") row-label row))
          pv-mat row-labels)))
 
 (defn pprint-matrix-with-labels
