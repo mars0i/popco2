@@ -419,37 +419,45 @@
 ;;   may be preceded by row labels.
 ;; - Add the same padding to the first line, without newline, and add a final newline.
 ;; - Convert the whole outer vector of strings to one large string.
+;; (Maybe there's a way to do more of this with cl-format.)
 ;; Note: In cl-format, @ says to insert padding on left, v says to replace
 ;; the v with the next argument before processing the one after it.
 (defn format-top-labels
+  "ADD DOCSTRING"
   [labels intercolumn-width left-pad-width]
   (let [label-height (max-strlen labels)
         initial-pad (cl-format nil "~V@a" left-pad-width "")
         interline-pad (cl-format nil "~%~a" initial-pad)
         intercolumn-pad (cl-format nil "~va" intercolumn-width "")]
-    (apply str
-           (conj (vec
-                   (cons initial-pad
-                         (interpose interline-pad
-                                    (map #(apply str %)
+    (apply str                                           ; make the whole thing into a big string
+           (conj (vec                                    ; add final newline
+                   (cons initial-pad                     ; add initial spaces to first line
+                         (interpose interline-pad        ; add newlines and initial spaces to each line except the first
+                                    (map #(apply str %)  ; concatenate each inner vector to a string
                                          (map #(interpose intercolumn-pad %)  ; add spaces between chars from each column
                                               (mx/transpose                   ; (cheating by using a numeric matrix op, but convenient)
-                                                            (collcolls-to-vecvecs     ; convert to Clojure vector of vector, which will be understood by core.matrix
+                                                            (collcolls-to-vecvecs    ; convert to Clojure vector of vector, which will be understood by core.matrix
                                                                                   (map #(cl-format nil "~v@a" label-height %) ; make labels same width (transposed: height)
                                                                                        labels)))))))) 
                  "\n"))))
 
 (defn format-mat-with-row-labels
+  "ADD DOCSTRING"
   [mat row-labels]
   (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
         row-labels-width (max-strlen row-labels)
-        num-width (max-strlen (map #(format "%s" %) (apply concat pv-mat)))]
+        nums-width (max-strlen (map #(cl-format nil "~a" %) (apply concat pv-mat)))] ; get max print-width of all numbers in mat
     ;; NUM-WIDTH NOT WORKING
+    (cl-format true "~%nums-width: ~d~%" nums-width)
     (map (fn [row row-label]
-           (format (str "%-" row-labels-width "s %" num-width "s%n") row-label row))
+           ;; BUG: The D directive is processing the entire vector of row activns at once.
+           ;; Need to use the cl-format iteration facility.
+           (cl-format nil "~v@a ~vd~%" row-labels-width row-label nums-width row)
+           )
          pv-mat row-labels)))
 
 (defn pprint-matrix-with-labels
+  "ADD DOCSTRING"
   [mat row-labels col-labels]
   (print
     (apply str
