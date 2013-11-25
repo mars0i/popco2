@@ -439,37 +439,6 @@
                                                                                        labels)))))))) 
                  "\n"))))
 
-(defn old-format-top-labels
-  [labels intercolumn-width left-pad-width]
-  (let [label-height (max-strlen labels)
-        initial-pad (format (str "%" left-pad-width "s") "")
-        interline-pad (str "\n" initial-pad)
-        intercolumn-pad (format (str "%" intercolumn-width "s") "")]
-    (apply str
-           (conj (vec
-                   (cons initial-pad
-                         (interpose interline-pad
-                                    (map #(apply str %)
-                                         (map #(interpose intercolumn-pad %)
-                                              (mx/transpose               ; cheating to use a numeric op, but convenient
-                                                            (collcolls-to-vecvecs     ; Clojure vector of vector will be understood by core.matrix
-                                                                                  (map #(format (str "%" label-height "s") %) ; make labels same width (transposed: height)
-                                                                                       labels)))))))) 
-                 "\n"))))
-
-;(defn really-old-format-top-labels
-;  [labels]
-;  (let [width (max-strlen labels)]
-;    (apply str 
-;           (interpose \newline
-;                      (map #(apply str %)                   ; concat each subvec of chars into a string
-;                           (map #(interpose "  " %)
-;                                (mx/transpose               ; I suppose it's cheating to use a numeric op, but convenient
-;                                  (collcolls-to-vecvecs     ; Clojure vector of vector is understood by core.matrix
-;                                    (map #(format (str "%" width "s") %) ; make labels same width (i.e. height)
-;                                         labels))))))
-;           "\n"))) ; final newline
-
 (defn format-mat-with-row-labels
   [mat row-labels]
   (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
