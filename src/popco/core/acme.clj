@@ -408,7 +408,7 @@
 
 ;    (apply str 
 ;          (map #(cl-format nil "~{~3s~}~%" %)
-(defn rotate-strings-90-degrees
+(defn format-top-labels
   [labels intercolumn-width left-pad-width]
   (let [label-height (max-strlen labels)
         initial-pad (format (str "%" left-pad-width "s") "")
@@ -426,7 +426,7 @@
                                                                                        labels)))))))) 
                  "\n"))))
 
-;(defn old-rotate-strings-90-degrees
+;(defn old-format-top-labels
 ;  [labels]
 ;  (let [width (max-strlen labels)]
 ;    (apply str 
@@ -452,7 +452,7 @@
   (print
     (apply str
            (concat
-             (rotate-strings-90-degrees col-labels 3 (+ 3 (max-strlen row-labels))) ; need row-label width for left padding
+             (format-top-labels col-labels 3 (+ 3 (max-strlen row-labels))) ; need row-label width for left padding
              (format-mat-with-row-labels mat row-labels)))))
 
 (defn pprint-nn-stru
