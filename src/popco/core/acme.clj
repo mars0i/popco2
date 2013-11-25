@@ -406,9 +406,40 @@
   [coll]
   (vec (map #(vec %) coll)))
 
-;    (apply str 
-;          (map #(cl-format nil "~{~3s~}~%" %)
+;; Code notes:
+;; This function does the following:
+;; - Add spaces to beginning of labels so they're all the same length.
+;; - Convert each string to a vector of characters, and then use a matrix
+;;   transpose operation to produce inner vectors of characters each of which
+;;   is from the same position in different label.
+;; - Interpose spaces between these characters, so label columns will line up with
+;;   numeric matrix columns in the end.
+;; - Convert each inner vector to a single string--a row of characters in the output.
+;; - Interpose newlines and left padding on each such string, because the matrix output
+;;   may be preceded by row labels.
+;; - Add the same padding to the first line, without newline, and add a final newline.
+;; - Convert the whole outer vector of strings to one large string.
+;; Note: In cl-format, @ says to insert padding on left, v says to replace
+;; the v with the next argument before processing the one after it.
 (defn format-top-labels
+  [labels intercolumn-width left-pad-width]
+  (let [label-height (max-strlen labels)
+        initial-pad (cl-format nil "~V@a" left-pad-width "")
+        interline-pad (cl-format nil "~%~a" initial-pad)
+        intercolumn-pad (cl-format nil "~va" intercolumn-width "")]
+    (apply str
+           (conj (vec
+                   (cons initial-pad
+                         (interpose interline-pad
+                                    (map #(apply str %)
+                                         (map #(interpose intercolumn-pad %)  ; add spaces between chars from each column
+                                              (mx/transpose                   ; (cheating by using a numeric matrix op, but convenient)
+                                                            (collcolls-to-vecvecs     ; convert to Clojure vector of vector, which will be understood by core.matrix
+                                                                                  (map #(cl-format nil "~v@a" label-height %) ; make labels same width (transposed: height)
+                                                                                       labels)))))))) 
+                 "\n"))))
+
+(defn old-format-top-labels
   [labels intercolumn-width left-pad-width]
   (let [label-height (max-strlen labels)
         initial-pad (format (str "%" left-pad-width "s") "")
@@ -426,7 +457,7 @@
                                                                                        labels)))))))) 
                  "\n"))))
 
-;(defn old-format-top-labels
+;(defn really-old-format-top-labels
 ;  [labels]
 ;  (let [width (max-strlen labels)]
 ;    (apply str 
