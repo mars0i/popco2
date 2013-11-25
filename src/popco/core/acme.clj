@@ -426,18 +426,18 @@
                                                                                        labels)))))))) 
                  "\n"))))
 
-(defn old-rotate-strings-90-degrees
-  [labels]
-  (let [width (max-strlen labels)]
-    (apply str 
-           (interpose \newline
-                      (map #(apply str %)                   ; concat each subvec of chars into a string
-                           (map #(interpose "  " %)
-                                (mx/transpose               ; I suppose it's cheating to use a numeric op, but convenient
-                                  (collcolls-to-vecvecs     ; Clojure vector of vector is understood by core.matrix
-                                    (map #(format (str "%" width "s") %) ; make labels same width (i.e. height)
-                                         labels))))))
-           "\n"))) ; final newline
+;(defn old-rotate-strings-90-degrees
+;  [labels]
+;  (let [width (max-strlen labels)]
+;    (apply str 
+;           (interpose \newline
+;                      (map #(apply str %)                   ; concat each subvec of chars into a string
+;                           (map #(interpose "  " %)
+;                                (mx/transpose               ; I suppose it's cheating to use a numeric op, but convenient
+;                                  (collcolls-to-vecvecs     ; Clojure vector of vector is understood by core.matrix
+;                                    (map #(format (str "%" width "s") %) ; make labels same width (i.e. height)
+;                                         labels))))))
+;           "\n"))) ; final newline
 
 (defn format-mat-with-row-labels
   [mat row-labels]
@@ -452,8 +452,7 @@
   (print
     (apply str
            (concat
-             (rotate-strings-90-degrees col-labels)
-             ["\n"]
+             (rotate-strings-90-degrees col-labels 3 (+ 3 (max-strlen row-labels))) ; need row-label width for left padding
              (format-mat-with-row-labels mat row-labels)))))
 
 (defn pprint-nn-stru
