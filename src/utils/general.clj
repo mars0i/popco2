@@ -25,3 +25,10 @@
   (Tip: Consider beginning addlstr with \"\\n  \".)"
   [sym addlstr] 
   `(alter-meta! #'~sym update-in [:doc] str ~addlstr))
+
+(defn println-and-ret
+  "Print a single argument with println, then return that argument.
+  Useful for debugging."
+  [arg]
+  (println arg)
+  arg)
