@@ -534,3 +534,18 @@
     (map (fn [[p1 p2]] 
            [(:id p1) (:id p2)])
          prs)))
+
+;; MOVE TO SEPARATE FILE/NS
+(defn symmetric?
+  "Returns true if matrix is symmetric, false otherwise."
+  [mat]
+  (and (mx/square? mat)
+       (every?  (fn [[i j]] (= (mx/mget mat i j) (mx/mget mat j i)))
+         (let [dim (first (mx/shape mat))]
+           (for [i (range dim)
+                 j (range dim)
+                 :when (> j i)] ; no need to test both i,j and j,i since we do both at once. always true for (= j i).
+             [i j])))))
+
+
+
