@@ -478,6 +478,9 @@
   [nn-stru]
   (print (format-nn-stru nn-stru)))
 
+;; Trying to do this with cl-format was too difficult.
+;; The crude strategy of simply doing a regex replace on a formatted
+;; string works well enough, assuming that numbers satsify certain constraints.
 (defn dotprint-nn-stru
   "Pretty-print the matrix in nn-stru with associated row, col info,
   replacing zeros with dots, so that it's easy to distinguish zeros
