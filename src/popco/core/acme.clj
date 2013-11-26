@@ -3,7 +3,8 @@
         [clojure.pprint :only [cl-format]])
   (:import [popco.core.lot Propn Pred Obj])
   (:require [utils.general :as ug]
-            [clojure.core.matrix :as mx])
+            [clojure.core.matrix :as mx]
+            [clojure.string :as string])
   (:gen-class))
 
 ;; SEE acme.md for an overview of what's going on in this file.
@@ -452,45 +453,39 @@
                       (interleave nums-widths row))) ; Using v to set width inside iteration directive ~{~} requires repeating the v arg
          pv-mat labels)))
 
-(defn pprint-matrix-with-labels
+(defn format-matrix-with-labels
   "ADD DOCSTRING"
   [pv-mat row-labels col-labels]
   (let [nums-width (+ 0 (max-strlen 
                           (map #(cl-format nil "~f" %) 
                                (apply concat pv-mat))))
         left-pad-width (+ nums-width (max-strlen row-labels))]
-    (print
       (apply str
              (concat
                (format-top-labels col-labels nums-width left-pad-width)
-               (format-mat-with-row-labels pv-mat row-labels nums-width))))))
+               (format-mat-with-row-labels pv-mat row-labels nums-width)))))
 
-(defn pprint-nn-stru
-  "Pretty print the matrix in nn-stru with associated row, col info
-  (incomplete)."
+(defn format-nn-stru
+  "Format the matrix in nn-stru with associated row, col info into a string
+  that would be printed prettily."
   [nn-stru]
   (let [labels (map name (keys (:indexes nn-stru)))
         pv-mat (mx/matrix :persistent-vector (:weights nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
-    (pprint-matrix-with-labels pv-mat labels labels)))
+    (format-matrix-with-labels pv-mat labels labels)))
 
-;(defn old-pprint-nn-stru
-;  "Pretty print the matrix in nn-stru with associated row, col info
-;  (incomplete)."
-;  [nn-stru]
-;  (print
-;    (apply str
-;      (let [ids-to-indexes (:indexes nn-stru)
-;            ids (keys ids-to-indexes)
-;            max-keylen (apply max (map (comp count name) ids))
-;            indexes-to-ids (clojure.set/map-invert ids-to-indexes) ; should this be permanent in nn-stru?
-;            pv-weights (mx/matrix :persistent-vector (:weights nn-stru))] ; "cast" the matrix to a seq of seqs
-;        (map (fn [row index] 
-;               (format (str "%-" (inc max-keylen) "s %s%n")
-;                       (indexes-to-ids index) 
-;                       row))
-;             pv-weights
-;             (range (count ids)))))))
+(defn pprint-nn-stru
+  "Pretty-print the matrix in nn-stru with associated row, col info."
+  [nn-stru]
+  (print (format-nn-stru nn-stru)))
 
+(defn dotprint-nn-stru
+  "Pretty-print the matrix in nn-stru with associated row, col info,
+  replacing zeros with dots, so that it's easy to distinguish zeros
+  from other values."
+  [nn-stru]
+  (print 
+    (clojure.string/replace (format-nn-stru nn-stru) 
+                            #"0.0 *" " .  ")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
