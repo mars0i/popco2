@@ -449,23 +449,8 @@
     (map (fn [row label]
            (cl-format nil "~v@a ~{~vf~}~%" 
                       labels-width label 
-                      (interleave nums-widths row)))
+                      (interleave nums-widths row))) ; Using v to set width inside iteration directive ~{~} requires repeating the v arg
          pv-mat labels)))
-
-;(defn new-old-format-mat-with-row-labels
-;  "ADD DOCSTRING"
-;  [mat row-labels]
-;  (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
-;        row-labels-width (max-strlen row-labels)
-;        nums-width (max-strlen (map #(cl-format nil "~a" %) (apply concat pv-mat)))] ; get max print-width of all numbers in mat
-;    ;; NUM-WIDTH NOT WORKING
-;    (cl-format true "~%nums-width: ~d~%" nums-width)
-;    (map (fn [row row-label]
-;           ;; BUG: The D directive is processing the entire vector of row activns at once.
-;           ;; Need to use the cl-format iteration facility.
-;           (cl-format nil "~v@a ~vd~%" row-labels-width row-label nums-width row)
-;           )
-;         pv-mat row-labels)))
 
 (defn pprint-matrix-with-labels
   "ADD DOCSTRING"
