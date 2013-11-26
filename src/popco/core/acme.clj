@@ -443,34 +443,50 @@
 
 (defn format-mat-with-row-labels
   "ADD DOCSTRING"
-  [mat row-labels]
-  (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
-        row-labels-width (max-strlen row-labels)
-        nums-width (max-strlen (map #(cl-format nil "~a" %) (apply concat pv-mat)))] ; get max print-width of all numbers in mat
-    ;; NUM-WIDTH NOT WORKING
-    (cl-format true "~%nums-width: ~d~%" nums-width)
-    (map (fn [row row-label]
-           ;; BUG: The D directive is processing the entire vector of row activns at once.
-           ;; Need to use the cl-format iteration facility.
-           (cl-format nil "~v@a ~vd~%" row-labels-width row-label nums-width row)
-           )
-         pv-mat row-labels)))
+  [pv-mat labels nums-width]
+  (let [labels-width (max-strlen labels)
+        nums-widths (repeat (count labels) (+ 1 nums-width))] ; we'll need a list of repeated instances of nums-width
+    (map (fn [row label]
+           (cl-format nil "~v@a ~{~vf~}~%" 
+                      labels-width label 
+                      (interleave nums-widths row)))
+         pv-mat labels)))
+
+;(defn new-old-format-mat-with-row-labels
+;  "ADD DOCSTRING"
+;  [mat row-labels]
+;  (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
+;        row-labels-width (max-strlen row-labels)
+;        nums-width (max-strlen (map #(cl-format nil "~a" %) (apply concat pv-mat)))] ; get max print-width of all numbers in mat
+;    ;; NUM-WIDTH NOT WORKING
+;    (cl-format true "~%nums-width: ~d~%" nums-width)
+;    (map (fn [row row-label]
+;           ;; BUG: The D directive is processing the entire vector of row activns at once.
+;           ;; Need to use the cl-format iteration facility.
+;           (cl-format nil "~v@a ~vd~%" row-labels-width row-label nums-width row)
+;           )
+;         pv-mat row-labels)))
 
 (defn pprint-matrix-with-labels
   "ADD DOCSTRING"
-  [mat row-labels col-labels]
-  (print
-    (apply str
-           (concat
-             (format-top-labels col-labels 3 (+ 3 (max-strlen row-labels))) ; need row-label width for left padding
-             (format-mat-with-row-labels mat row-labels)))))
+  [pv-mat row-labels col-labels]
+  (let [nums-width (+ 0 (max-strlen 
+                          (map #(cl-format nil "~f" %) 
+                               (apply concat pv-mat))))
+        left-pad-width (+ nums-width (max-strlen row-labels))]
+    (print
+      (apply str
+             (concat
+               (format-top-labels col-labels nums-width left-pad-width)
+               (format-mat-with-row-labels pv-mat row-labels nums-width))))))
 
 (defn pprint-nn-stru
   "Pretty print the matrix in nn-stru with associated row, col info
   (incomplete)."
   [nn-stru]
-  (let [labels (map name (keys (:indexes nn-stru)))]
-    (pprint-matrix-with-labels (:weights nn-stru) labels labels)))
+  (let [labels (map name (keys (:indexes nn-stru)))
+        pv-mat (mx/matrix :persistent-vector (:weights nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
+    (pprint-matrix-with-labels pv-mat labels labels)))
 
 ;(defn old-pprint-nn-stru
 ;  "Pretty print the matrix in nn-stru with associated row, col info
