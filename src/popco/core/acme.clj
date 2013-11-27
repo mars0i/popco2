@@ -13,7 +13,12 @@
 ;;; NOTE for the analogy net we probably don't really need the link
 ;;; matrix, strictly speaking, because there are no zero-weight links.
 ;;; For the belief network, however, we need to allow zero-weight links,
-;;; so a link matrix is needed.
+;;; so a link matrix will be needed.
+
+;; TODO BUG (?): Preliminary examination of the weight matrix for nns8
+;; defined in test/popco/acme_test.clj looks like it is f'ed up.
+;; Either dotprint-nn-stru is displaying the labels incorrectly, or
+;; something is very wrong somewhere behind make-acme-nn-stru .
 
 (def pos-link-increment 0.1)
 
@@ -546,6 +551,3 @@
                  j (range dim)
                  :when (> j i)] ; no need to test both i,j and j,i since we do both at once. always true for (= j i).
              [i j])))))
-
-
-
