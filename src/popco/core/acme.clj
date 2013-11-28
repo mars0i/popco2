@@ -186,7 +186,7 @@
   Objs, etc.), returns a Clojure vector of unique node info entries 
   allowing indexing particular node info entries.  This node vector is
   typically shared by all members of a population; it merely provides
-  information about nodes that a person might have.."
+  information about nodes that a person might have."
   [node-tree]
   (vec 
     (map add-id-to-pair-map
@@ -268,6 +268,7 @@
   [dim]
   (mx/new-matrix dim dim))
 
+;; TODO: QUESTION: in what order are elements in pairs treated?  How should they be?
 (defn add-families-wts-to-mat!
   "ADD DOCSTRING"
   [mat fams indexes increment]
@@ -371,6 +372,18 @@
 ;; ...
 
 ;; MOVE TO SEPARATE FILE/NS
+;; Both analogy nets and proposition nets have nodes and links between them.
+;; That means that both have (1) information on the meaning of each node,
+;; (2) a matrix representing link weights (actually this will probably turn
+;; into two or three matrices later), and (3) a mapping from nodes to row or
+;; column indexes, and back, to keep track of the relationship between nodes 
+;; and their links.  This function initializes (A) a vector of node info, 
+;; which are maps containing, at least, an :id, so that node info can be looked 
+;; up from indexes; (B) a map from node ids to indexes, so that indexes can
+;; be looked up from nodes, and (C), a matrix which will contain link weights.
+;; The matrix is initialized by this function to contain all zeros, since setting
+;; the link weights is a more complicated operation that depends on the purpose
+;; of the constrain network.
 (defn make-nn-stru
   "Given a sequence of data on individual nodes, returns a clojure map with 
   three entries:
@@ -385,17 +398,20 @@
              nodes, with all elements initialized to 0.0."
   [node-seq]
   {:nodes (vec node-seq)
-   :indexes (make-index-map (map :id node-seq))
+   :indexes (make-index-map (map :id node-seq)) ; index order will be same as node-seq's order
    :weights (make-wt-mat (count node-seq))})
 
 (defn make-acme-nn-stru
   ;; ADD DOCSTRING
   [pset1 pset2 pos-increment]
   (let [pairs (match-propn-components (match-propns pset1 pset2))
-        node-vec (make-acme-node-vec pairs)
+        node-vec (make-acme-node-vec pairs) ; TODO: QUESTION: In what sense is pair order same as node-vec?
         nn-stru (make-nn-stru node-vec)
         weights (:weights nn-stru)
-        indexes (:indexes nn-stru)]
+        indexes (:indexes nn-stru)] ; index order will be same as node-vec order
+    ;; TODO: QUESTION: In next line, do we need to sort pairs as well as indexes to cause order
+    ;; of rows/columns in weights to be treated as in same order as node-vec and index order?
+    ;; Or what?  ANSWER(?): I think the problem is only with how pairs is handled in add-fams! .
     (add-families-wts-to-mat! weights pairs indexes pos-increment)
     nn-stru))
 
@@ -404,11 +420,17 @@
 ;; THE MATRIX.  THEN AN UN-distinct-ED NODE SEQ TO CONSTRUCT NEGATIVE
 ;; WEIGHTS AND FILL THOSE INTO THE MATRIX.  See acme.nt4 for more.
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; FUNCTIONS FOR DISPLAYING MATRIX WITH LABELS
+
 (defn max-strlen
+  "Returns the maximum length of the strings contained in its argument."
   [strings]
   (apply max (map count strings)))
 
 (defn collcolls-to-vecvecs
+  "Converts a collection of collections to a vector of vectors."
   [coll]
   (vec (map #(vec %) coll)))
 
@@ -493,10 +515,10 @@
   [nn-stru]
   (print 
     (clojure.string/replace (format-nn-stru nn-stru) 
-                            #"0.0 *" " .  ")))
+                            #"[^1-9]0.0 *" " .  ")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
+;;; OTHER UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
 
 (declare fmt-pair-map-families fmt-pair-maps fmt-pair-map)
 
