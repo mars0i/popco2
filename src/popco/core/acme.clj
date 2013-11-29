@@ -268,7 +268,6 @@
   [dim]
   (mx/new-matrix dim dim))
 
-;; TODO: QUESTION: in what order are elements in pairs treated?  How should they be?
 (defn add-families-wts-to-mat!
   "ADD DOCSTRING"
   [mat fams indexes increment]
@@ -278,6 +277,7 @@
       (when-not (= itm1 itm2)  ; except duplicates
         (let [i (indexes (:id itm1)) 
               j (indexes (:id itm2))]
+          ;(cl-format true "setting link between ~s, ~s at ~s ~s~%" (:id itm1) (:id itm2) i j) ; DEBUG
           (mx/mset! mat i j (+ increment (mx/mget mat i j)))))))
   mat)
 
@@ -405,13 +405,10 @@
   ;; ADD DOCSTRING
   [pset1 pset2 pos-increment]
   (let [pairs (match-propn-components (match-propns pset1 pset2))
-        node-vec (make-acme-node-vec pairs) ; TODO: QUESTION: In what sense is pair order same as node-vec?
+        node-vec (make-acme-node-vec pairs)
         nn-stru (make-nn-stru node-vec)
         weights (:weights nn-stru)
         indexes (:indexes nn-stru)] ; index order will be same as node-vec order
-    ;; TODO: QUESTION: In next line, do we need to sort pairs as well as indexes to cause order
-    ;; of rows/columns in weights to be treated as in same order as node-vec and index order?
-    ;; Or what?  ANSWER(?): I think the problem is only with how pairs is handled in add-fams! .
     (add-families-wts-to-mat! weights pairs indexes pos-increment)
     nn-stru))
 
@@ -481,9 +478,12 @@
          pv-mat labels)))
 
 (defn format-matrix-with-labels
-  "ADD DOCSTRING"
-  [pv-mat row-labels col-labels]
-  (let [nums-width (+ 0 (max-strlen 
+  "Format a matrix mat with associated row and column labels into a string
+  that could be printed prettily.  row-labels and col-labels must be sequences
+  of strings in index order, corresponding to indexes from 0 to n."
+  [mat row-labels col-labels]
+  (let [pv-mat (mx/matrix :persistent-vector mat)
+        nums-width (+ 0 (max-strlen 
                           (map #(cl-format nil "~f" %) 
                                (apply concat pv-mat))))
         left-pad-width (+ nums-width (max-strlen row-labels))]
@@ -496,7 +496,7 @@
   "Format the matrix in nn-stru with associated row, col info into a string
   that would be printed prettily."
   [nn-stru]
-  (let [labels (map name (keys (:indexes nn-stru)))
+  (let [labels (map name (map :id (:nodes nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:indexes nn-stru))]
         pv-mat (mx/matrix :persistent-vector (:weights nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
     (format-matrix-with-labels pv-mat labels labels)))
 
