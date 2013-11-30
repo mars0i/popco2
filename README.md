@@ -1,7 +1,7 @@
 popco-x
 =======
 
-Repo for experiments in support of a rewrite of POPCO
+Repo for experiments in support of a rewrite of [POPCO](https://github.com/mars0i/popco).
 
 All of this code is copyright (c) 2013 by Marshall Abrams.  All rights
 reserved.  That means that the code is not really free for anyone else's
