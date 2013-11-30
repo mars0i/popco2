@@ -516,7 +516,7 @@
   [nn-stru]
   (print 
     (clojure.string/replace (format-nn-stru nn-stru) 
-                            #"[^1-9]0.0 *" " .  ")))
+                            #"\b0\.0\b"  " . "))) ; \b matches word border. Dot escaped so only matches dots.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; OTHER UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
