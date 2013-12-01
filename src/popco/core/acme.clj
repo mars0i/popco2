@@ -15,11 +15,6 @@
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix will be needed.
 
-;; TODO BUG (?): Preliminary examination of the weight matrix for nns8
-;; defined in test/popco/acme_test.clj looks like it is f'ed up.
-;; Either dotprint-nn-stru is displaying the labels incorrectly, or
-;; something is very wrong somewhere behind make-acme-nn-stru .
-
 (def pos-link-increment 0.1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -505,14 +500,19 @@
   [nn-stru]
   (print (format-nn-stru nn-stru)))
 
+(defn dotformat-nn-stru
+  "Format matrix in nn-stru with associated row, col info, like
+  the output of format-nn-stru, but with '0.0' replaced by dot."
+  [nn-stru]
+  (clojure.string/replace (format-nn-stru nn-stru) 
+                          #"\b0\.0\b"  " . ")) ; \b matches word border. Dot escaped so only matches dots.
+
 (defn dotprint-nn-stru
   "Pretty-print the matrix in nn-stru with associated row, col info,
   replacing zeros with dots, so that it's easy to distinguish zeros
   from other values."
   [nn-stru]
-  (print 
-    (clojure.string/replace (format-nn-stru nn-stru) 
-                            #"\b0\.0\b"  " . "))) ; \b matches word border. Dot escaped so only matches dots.
+  (print (dotformat-nn-stru nn-stru)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; OTHER UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
