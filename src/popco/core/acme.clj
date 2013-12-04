@@ -132,39 +132,18 @@
 
 (declare add-id-to-pair-map)
 
-;; The use of flatten in this function depends on the fact that (a) map-pairs 
-;; are not sequences, and (b) all larger groupings of data are sequences.
-(defn make-acme-node-vec
-  "Given a tree of node info entries (e.g. Propns, pairs of Propns or 
-  Objs, etc.), returns a Clojure vector of unique node info entries 
-  allowing indexing particular node info entries.  This node vector is
-  typically shared by all members of a population; it merely provides
-  information about nodes that a person might have."
-  [node-tree]
-  (vec 
-    (map add-id-to-pair-map
-         (distinct (flatten node-tree)))))
-
-(defn pair-ids
-  "Given a mapnode-pair, return a sequence of the two analogs' ids, in order."
-  [pair] 
-  [(:id (:alog1 pair)) 
-   (:id (:alog2 pair))])
-
-;; TODO
-;; things that might be useful for constructing the negative links:
-; (sort-by (comp first keys) (map #(apply hash-map (pair-ids %)) (:nodes nn)))
-; (sort-by (comp first keys) (map #(apply hash-map (reverse (pair-ids %))) (:nodes nn)))
-; (sort-by first (map pair-ids (:nodes nn)))
-; (sort-by second (map pair-ids (:nodes nn)))
-; group-by
-; partition-by
-
-;(defn make-acme-node-ids-seq
-;  "Given a seq of mapnode-pairs, return a seq of pair seqs each pair's analogs' 
-;  ids, in order."
-;  [mapnode-seq]
-;  (map pair-ids mapnode-seq))
+;; ;; The use of flatten in this function depends on the fact that (a) map-pairs 
+;; ;; are not sequences, and (b) all larger groupings of data are sequences.
+;; (defn make-acme-node-vec
+;;   "Given a 'families' node info entries (seqs of Propns, pairs of Propns or 
+;;   Objs, etc.), returns a Clojure vector of unique node info entries 
+;;   allowing indexing particular node info entries.  This node vector is
+;;   typically shared by all members of a population; it merely provides
+;;   information about nodes that a person might have."
+;;   [fams]
+;;   (vec 
+;;     (map add-id-to-pair-map
+;;         (distinct (flatten fams)))))
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-index-map
@@ -213,7 +192,8 @@
   [pairmap]
   (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
 
-;; NOTE: According to several remarks on the Internet from 2010 into 2013, (keys x)
+;; NOTE re pair-map-to-id-pair, etc.:
+;; According to several remarks on the Internet from 2010 into 2013, (keys x)
 ;; and (vals x) return keys and vals in the same corresponding order.  Moreover,
 ;; other remarks say that for sorted-maps, (vals x) always returns values according
 ;; to the sort-order of keys.  So if pairmap is a sorted map, the ids should always
@@ -228,13 +208,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 4
-;; Make weight matrix representing link weights
-
-;(defn propn-families-to-id-families
-;  [fams]
-;  (map 
-;    #(map pair-map-to-mapnode-id %) 
-;    fams))
+;; Make weight matrix representing positive link weights
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-wt-mat
@@ -242,7 +216,7 @@
   [dim]
   (mx/new-matrix dim dim))
 
-(defn add-families-wts-to-mat!
+(defn add-pos-wts-to-mat!
   "ADD DOCSTRING"
   [mat fams indexes increment]
   (doseq [fam fams]
@@ -254,6 +228,31 @@
           ;(cl-format true "setting link between ~s, ~s at ~s ~s~%" (:id itm1) (:id itm2) i j) ; DEBUG
           (mx/mset! mat i j (+ increment (mx/mget mat i j)))))))
   mat)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; STEP 5
+;; Make weight matrix representing negative link weights
+
+(defn pair-ids
+  "Given a mapnode-pair, return a sequence of the two analogs' ids, in order."
+  [pair] 
+  [(:id (:alog1 pair)) 
+   (:id (:alog2 pair))])
+
+;; TODO
+;; things that might be useful for constructing the negative links:
+; (sort-by (comp first keys) (map #(apply hash-map (pair-ids %)) (:nodes nn)))
+; (sort-by (comp first keys) (map #(apply hash-map (reverse (pair-ids %))) (:nodes nn)))
+; (sort-by first (map pair-ids (:nodes nn)))
+; (sort-by second (map pair-ids (:nodes nn)))
+; group-by
+; partition-by
+
+;(defn make-acme-node-ids-seq
+;  "Given a seq of mapnode-pairs, return a seq of pair seqs each pair's analogs' 
+;  ids, in order."
+;  [mapnode-seq]
+;  (map pair-ids mapnode-seq))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -292,12 +291,14 @@
 (defn make-acme-nn-stru
   ;; ADD DOCSTRING
   [pset1 pset2 pos-increment]
-  (let [pairs (match-propn-components (match-propns pset1 pset2))
-        node-vec (make-acme-node-vec pairs)
+  (let [fams (match-propn-components (match-propns pset1 pset2))
+        pairs (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
+        node-vec (vec (map add-id-to-pair-map pairs))
         nn-stru (make-nn-stru node-vec)
         weights (:weights nn-stru)
         indexes (:indexes nn-stru)] ; index order will be same as node-vec order
-    (add-families-wts-to-mat! weights pairs indexes pos-increment)
+    (add-pos-wts-to-mat! weights pairs indexes pos-increment)
+    ;indexes-by-two-ids (make-index-by-two-ids-map pairs indexes)
     nn-stru))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
