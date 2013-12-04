@@ -15,8 +15,8 @@
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix will be needed.
 
-(def *pos-link-increment* 0.1)
-(def *neg-link-increment* -0.2)
+(def pos-link-increment 0.1)
+(def neg-link-increment -0.2)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 1
@@ -144,6 +144,27 @@
   (vec 
     (map add-id-to-pair-map
          (distinct (flatten node-tree)))))
+
+(defn pair-ids
+  "Given a mapnode-pair, return a sequence of the two analogs' ids, in order."
+  [pair] 
+  [(:id (:alog1 pair)) 
+   (:id (:alog2 pair))])
+
+;; TODO
+;; things that might be useful for constructing the negative links:
+; (sort-by (comp first keys) (map #(apply hash-map (pair-ids %)) (:nodes nn)))
+; (sort-by (comp first keys) (map #(apply hash-map (reverse (pair-ids %))) (:nodes nn)))
+; (sort-by first (map pair-ids (:nodes nn)))
+; (sort-by second (map pair-ids (:nodes nn)))
+; group-by
+; partition-by
+
+;(defn make-acme-node-ids-seq
+;  "Given a seq of mapnode-pairs, return a seq of pair seqs each pair's analogs' 
+;  ids, in order."
+;  [mapnode-seq]
+;  (map pair-ids mapnode-seq))
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-index-map
@@ -423,13 +444,13 @@
     (read-line)))
 
 ;; Handy for displaying output of match-propns:
-(defn pair-ids
-  "Return sequence of pairs of :id fields of objects from sequence prs of pairs."
-  [prs]
-  (sort  ; does the right thing with pairs of keywords
-    (map (fn [[p1 p2]] 
-           [(:id p1) (:id p2)])
-         prs)))
+;(defn alt-pair-ids
+;  "Return sequence of pairs of :id fields of objects from sequence prs of pairs."
+;  [prs]
+;  (sort  ; does the right thing with pairs of keywords
+;    (map (fn [[p1 p2]] 
+;           [(:id p1) (:id p2)])
+;         prs)))
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn symmetric?
