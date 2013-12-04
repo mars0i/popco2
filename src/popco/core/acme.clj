@@ -15,7 +15,8 @@
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix will be needed.
 
-(def pos-link-increment 0.1)
+(def *pos-link-increment* 0.1)
+(def *neg-link-increment* -0.2)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 1
@@ -118,49 +119,6 @@
   [alog1 alog2] 
   (sorted-map :alog1 alog1 :alog2 alog2 
               :id (ids-to-mapnode-id (:id alog1) (:id alog2))))
-
-;;;;;;;;;;;;
-;; 
-;; MAY BE OBSOLETE AND UNUSEFUL (earlier versions of preceding functions):
-
-; (declare deep-match-args deep-match-components-of-propn-pair deep-match-propn-components)
-; 
-; ;; Note that order within pairs matters.  It preserves the distinction
-; ;; between the two analogue structures, and allows predicates and objects
-; ;; to have the same names in different analogue structures (sets don't allow that).
-; (defn deep-match-propn-components
-;   "Returns a (lazy) sequence of sequences (families) of mapped-pairs of matched
-;   Propns, Preds, or Objs from a sequence of of pairs of Propns.  Each pair is a
-;   map with keys :alog1 and :alog2 (analog 1 & 2).  The resulting pairs
-;   represent the 'sides' of map nodes.  Each subsequence contains the pairs from
-;   one proposition.  Each Propn family sequence consists of a Clojure map
-;   representing a pair of Propns, a clojure map representing a pair of Preds,
-;   and a vector containing representations of paired arguments.  The contents of
-;   this vector are Clojure maps where the corresponding arguments are Objs, and
-;   family sequences where the corresponding args are Propns.  i.e. Propns'
-;   arguments are embedded in a vector so you can tell whether you're looking at
-;   a collection of pairs from two Propns or pairs from arguments by testing with
-;   seq? and vec?."
-;   [pairs]
-;   (map deep-match-components-of-propn-pair pairs))
-; 
-; ;; NOTE we use sorted-maps here because when we construct mapnode ids,
-; ;; we need it to be the case that (vals clojure-map) always returns these
-; ;; vals in the same order :alog1, :alog2:
-; ;;
-; (defn deep-match-components-of-propn-pair
-;   ;; ADD DOCSTRING
-;   [[p1 p2]]
-;   ;; return a seq of matched pairs:
-;   (list    ; that this is a list (not vec) flags that this is a family of map-pairs from the same proposition
-;     (sorted-map :alog1 p1 :alog2 p2)                 ; we already know the propns match
-;     (sorted-map :alog1 (:pred p1) :alog2 (:pred p2)) ; predicates always match if the propns matched
-;     (vec (map deep-match-args (:args p1) (:args p2)))))   ; args deep-match if objs, propns need more work.  vec means these pairs are from two arglists
-; 
-; ;; ADD DOCSTRING
-; (defmulti  deep-match-args (fn [x y] [(class x) (class y)]))
-; (defmethod deep-match-args [Obj Obj] [o1 o2] (sorted-map :alog1 o1 :alog2 o2))
-; (defmethod deep-match-args [Propn Propn] [p1 p2] (deep-match-components-of-propn-pair [p1 p2]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 3
@@ -275,92 +233,6 @@
           ;(cl-format true "setting link between ~s, ~s at ~s ~s~%" (:id itm1) (:id itm2) i j) ; DEBUG
           (mx/mset! mat i j (+ increment (mx/mget mat i j)))))))
   mat)
-
-;; REST OF THIS SECTION MAY BE OBSOLETE
-;; REST OF THIS SECTION MAY BE OBSOLETE
-
-; ;; NOTE this is returning propn families in arg lists when args are propns.
-; ;; This is not really what I need.  I can work with it, but maybe this function
-; ;; could be modified to do something different.  Note that what I really
-; ;; need, in the end, are only ids.  For each propn family at the top level,
-; ;; I need ids for its propn pair, its pred pair, and all its arg pairs, 
-; ;; whether they are for objs or propns.  I don't need any info about the
-; ;; embedded arg-propn-pair's other family members.  I also don't actually
-; ;; need the args to be set off in a vector.  The whole family list here
-; ;; could just be completely flat.  (Note that means that at this stage,
-; ;; in these lists, there's actually no distinction between the propn
-; ;; whose family it is, and the propns that are args to it.  The linking
-; ;; behavior is exactly the same.  (Hmm though conceivably that could
-; ;; someday change.  But that's just a distant possibility.)
-; (defn list-propn-families
-;   "Given a pair-tree produced by match-propn-components, return a seq of
-;   all propn-families in pair-tree at any level."
-;   [pair-tree]
-;   (filter seq?   ; get rid of vectors, lot-items, pair maps, since the seqs represent proposition-proposition pair-map families
-;           (rest  ; drop first element, the original pair-tree
-;             (tree-seq 
-;               #(not (or (pred? %) (obj? %))) ; pair-tree contains seqs, vectors, sorted-maps, and lot-items
-;               #(cond (seq? %)  %
-;                      (vector? %)  %
-;                      (propn? %)  (:args %) ; must precede 'map?' since records are maps
-;                      (and (sorted? %) (map? %))  (vector (:alog1 %) (:alog2 %)) ; in case the %'s are Propns
-;                      :else (throw (Exception. (format "list-propn-families encounted unknown object: %s"))))
-;               pair-tree))))
-; 
-; (defn make-propn-families-shallow
-;   "ADD DOCSTRING"
-;   [fams]
-;   (map (fn [fam] (concat 
-;                    (take 2 fam) 
-;                    (map (fn [arg-elt] 
-;                           (if (seq? arg-elt) 
-;                             (first arg-elt) 
-;                             arg-elt)) 
-;                         (nth fam 2))))
-;          fams))
-; 
-; (def list-shallow-propn-families 
-;   (comp make-propn-families-shallow list-propn-families))
-; (ug/add-to-docstr list-shallow-propn-families
-;    "ADD DOCSTRING")
-; 
-; ;; TODO NOT RIGHT
-; (defn list-ids-in-propn-families 
-;   "ADD DOCSTRING"
-;   [pair-tree]
-;   (map #(map id-pair-to-mapnode-id [(:alog1 %) (:alog2 %)])
-;        (list-shallow-propn-families pair-tree)))
-; 
-; ;; TODO OBSOLETE (?)  DELETE ME
-; ;(defn remove-empty-seqs
-; ;  [coll]
-; ;  (filter #(not (and (seq? %) (empty? %)))  ; can't use seq: needs to work with non-seqs, too
-; ;          coll))
-; 
-; ;; TODO OBSOLETE (?)  DELETE ME
-; ;; THIS IS SURELY WRONG.  (And nasty, regardless.)
-; ;; Also, we really only need :ids in the result.
-; ;(defn funky-butt-raise-propn-families
-; ;  "Return a seq of all propn-families in pair-tree."
-; ;  [pair-tree]
-; ;  (letfn [(f [out in]
-; ;            (let [out- (remove-empty-seqs out) ; remove-empty-seqs is just papering over a problem? shouldn't be needed?
-; ;                  thisone (first in)
-; ;                  therest (rest in)]
-; ;              (if (empty? in)
-; ;                out-
-; ;                (cond (seq? thisone) (f (concat (conj out- thisone) (map (partial f ()) thisone))
-; ;                                        therest)
-; ;                      (propn? thisone) (f (concat out- 
-; ;                                                  (mapcat (partial f ()) 
-; ;                                                          (:args thisone))) 
-; ;                                          therest)
-; ;                      (map? thisone) (f (concat (f () (:alog1 thisone))
-; ;                                                (f () (:alog2 thisone))
-; ;                                                out-) 
-; ;                                        therest)
-; ;                      :else (f out- therest)))))]
-; ;    (f () (vec pair-tree))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
