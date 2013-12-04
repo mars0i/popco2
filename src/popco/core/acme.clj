@@ -225,7 +225,7 @@
       (when-not (= itm1 itm2)  ; except duplicates
         (let [i (indexes (:id itm1)) 
               j (indexes (:id itm2))]
-          ;(cl-format true "setting link between ~s, ~s at ~s ~s~%" (:id itm1) (:id itm2) i j) ; DEBUG
+          ;(cl-format true "~%setting link between ~s, ~s at ~s ~s~%" (:id itm1) (:id itm2) i j) ; DEBUG
           (mx/mset! mat i j (+ increment (mx/mget mat i j)))))))
   mat)
 
@@ -288,21 +288,23 @@
    :indexes (make-index-map (map :id node-seq)) ; index order will be same as node-seq's order
    :weights (make-wt-mat (count node-seq))})
 
-;; TODO
+;; TODO NOT RIGHT
 (defn make-index-by-two-ids-map 
   [pairs indexes]
-  {:no-op nil})
+  (zipmap
+    (map (comp set pair-map-to-id-pair) pairs) ; TODO: ERROR HERE? make the sets that'll be keys
+    (map :id pairs))) ; get indexes corresponding to each pair
 
 (defn make-acme-nn-stru
   ;; ADD DOCSTRING
   [pset1 pset2 pos-increment]
   (let [fams (match-propn-components (match-propns pset1 pset2))
         pairs (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
-        node-vec (vec (map add-id-to-pair-map pairs))
+        node-vec (vec pairs) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map pairs))
         nn-stru (make-nn-stru node-vec)
         weights (:weights nn-stru)
         indexes (:indexes nn-stru)] ; index order will be same as node-vec order
-    (add-pos-wts-to-mat! weights pairs indexes pos-increment)
+    (add-pos-wts-to-mat! weights fams indexes pos-increment)
     (assoc nn-stru :indexes-by-two-ids (make-index-by-two-ids-map pairs indexes))))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
@@ -312,7 +314,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; FUNCTIONS FOR DISPLAYING MATRIX WITH LABELS
+;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS
 
 (defn max-strlen
   "Returns the maximum length of the strings contained in its argument."
@@ -413,7 +415,7 @@
   (print (dotformat-nn-stru nn-stru)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; OTHER UTILITIES FOR DISPLAYING DATA STRUCTURES DEFINED ABOVE
+;;; OTHER UTILITIES FOR DATA STRUCTURES DEFINED ABOVE
 
 (declare fmt-pair-map-families fmt-pair-maps fmt-pair-map)
 
