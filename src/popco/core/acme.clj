@@ -288,6 +288,11 @@
    :indexes (make-index-map (map :id node-seq)) ; index order will be same as node-seq's order
    :weights (make-wt-mat (count node-seq))})
 
+;; TODO
+(defn make-index-by-two-ids-map 
+  [pairs indexes]
+  {:no-op nil})
+
 (defn make-acme-nn-stru
   ;; ADD DOCSTRING
   [pset1 pset2 pos-increment]
@@ -298,8 +303,7 @@
         weights (:weights nn-stru)
         indexes (:indexes nn-stru)] ; index order will be same as node-vec order
     (add-pos-wts-to-mat! weights pairs indexes pos-increment)
-    ;indexes-by-two-ids (make-index-by-two-ids-map pairs indexes)
-    nn-stru))
+    (assoc nn-stru :indexes-by-two-ids (make-index-by-two-ids-map pairs indexes))))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
