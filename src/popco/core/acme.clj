@@ -241,10 +241,10 @@
 
 ;; TODO
 ;; things that might be useful for constructing the negative links:
-; (sort-by (comp first keys) (map #(apply hash-map (pair-ids %)) (:nodes nn)))
-; (sort-by (comp first keys) (map #(apply hash-map (reverse (pair-ids %))) (:nodes nn)))
-; (sort-by first (map pair-ids (:nodes nn)))
-; (sort-by second (map pair-ids (:nodes nn)))
+; (sort-by (comp first keys) (map #(apply hash-map (pair-ids %)) (:node-vec nn)))
+; (sort-by (comp first keys) (map #(apply hash-map (reverse (pair-ids %))) (:node-vec nn)))
+; (sort-by first (map pair-ids (:node-vec nn)))
+; (sort-by second (map pair-ids (:node-vec nn)))
 ; group-by
 ; partition-by
 
@@ -274,7 +274,7 @@
 (defn make-nn-stru
   "Given a sequence of data on individual nodes, returns a clojure map with 
   three entries:
-  :nodes -   A Clojure vector of data providing information about the meaning
+  :node-vec -   A Clojure vector of data providing information about the meaning
              of particular neural net nodes.  The indexes of the data items
              correspond to indexes into activation vectors and rows/columns
              of weight matrices.  This vector may be identical to the sequence
@@ -284,7 +284,7 @@
   :wt-mat -  A core.matrix square matrix with dimensions equal to the number of
              nodes, with all elements initialized to 0.0."
   [node-seq]
-  {:nodes (vec node-seq)
+  {:node-vec (vec node-seq)
    :idxs-by-id (make-index-map (map :id node-seq)) ; index order will be same as node-seq's order
    :wt-mat (make-wt-mat (count node-seq))})
 
@@ -305,7 +305,7 @@
         weights (:wt-mat nn-stru)
         indexes (:idxs-by-id nn-stru)] ; index order will be same as node-vec order
     (add-pos-wts-to-mat! weights fams indexes pos-increment)
-    (assoc nn-stru :idxs-by-two-ids (make-index-by-two-ids-map pairs indexes))))
+    (assoc nn-stru :idxs-by-2-ids (make-index-by-two-ids-map pairs indexes))))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
@@ -391,7 +391,7 @@
   "Format the matrix in nn-stru with associated row, col info into a string
   that would be printed prettily."
   [nn-stru]
-  (let [labels (map name (map :id (:nodes nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:idxs-by-id nn-stru))]
+  (let [labels (map name (map :id (:node-vec nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:idxs-by-id nn-stru))]
         pv-mat (mx/matrix :persistent-vector (:wt-mat nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
     (format-matrix-with-labels pv-mat labels labels)))
 
