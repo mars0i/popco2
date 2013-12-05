@@ -279,14 +279,14 @@
              correspond to indexes into activation vectors and rows/columns
              of weight matrices.  This vector may be identical to the sequence
              of nodes passed in.
-  :indexes - A Clojure map from ids of the same data items to integers, 
+  :idxs-by-id - A Clojure map from ids of the same data items to integers, 
              allowing lookup of a node's index from its id.
-  :weights -  A core.matrix square matrix with dimensions equal to the number of
+  :wt-mat -  A core.matrix square matrix with dimensions equal to the number of
              nodes, with all elements initialized to 0.0."
   [node-seq]
   {:nodes (vec node-seq)
-   :indexes (make-index-map (map :id node-seq)) ; index order will be same as node-seq's order
-   :weights (make-wt-mat (count node-seq))})
+   :idxs-by-id (make-index-map (map :id node-seq)) ; index order will be same as node-seq's order
+   :wt-mat (make-wt-mat (count node-seq))})
 
 ;; TODO NOT RIGHT
 (defn make-index-by-two-ids-map 
@@ -302,10 +302,10 @@
         pairs (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
         node-vec (vec pairs) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map pairs))
         nn-stru (make-nn-stru node-vec)
-        weights (:weights nn-stru)
-        indexes (:indexes nn-stru)] ; index order will be same as node-vec order
+        weights (:wt-mat nn-stru)
+        indexes (:idxs-by-id nn-stru)] ; index order will be same as node-vec order
     (add-pos-wts-to-mat! weights fams indexes pos-increment)
-    (assoc nn-stru :indexes-by-two-ids (make-index-by-two-ids-map pairs indexes))))
+    (assoc nn-stru :idxs-by-two-ids (make-index-by-two-ids-map pairs indexes))))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
@@ -391,8 +391,8 @@
   "Format the matrix in nn-stru with associated row, col info into a string
   that would be printed prettily."
   [nn-stru]
-  (let [labels (map name (map :id (:nodes nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:indexes nn-stru))]
-        pv-mat (mx/matrix :persistent-vector (:weights nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
+  (let [labels (map name (map :id (:nodes nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:idxs-by-id nn-stru))]
+        pv-mat (mx/matrix :persistent-vector (:wt-mat nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
     (format-matrix-with-labels pv-mat labels labels)))
 
 (defn pprint-nn-stru
