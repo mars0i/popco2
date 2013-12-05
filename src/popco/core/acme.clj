@@ -146,7 +146,7 @@
 ;;         (distinct (flatten fams)))))
 
 ;; MOVE TO SEPARATE FILE/NS
-(defn make-index-map
+(defn make-id-to-idx-map
   "Given a sequence of things, returns a map from things to indexes.  
   Allows reverse lookup of indexes from the things."
   [ids]
@@ -168,29 +168,29 @@
   (keyword 
     (str (name id1) "=" (name id2))))
 
-(defn id-pair-to-mapnode-id
-  "Given a 2-element sequence of id keywords, constructs and returns 
-  a corresponding mapnode id."
-  [[id1 id2]]
-  (ids-to-mapnode-id id1 id2))
-
-;; See note below on order of keys and vals
-(defn pair-map-to-id-pair
-  "Given a map containing two LOT items, returns a 2-element sequence of their ids,
-  in order of keys, i.e. in :alog1, :alog2 order if the map is a sorted-map."
-  [pairmap]
-  (map :id (vals pairmap))) ; See note above about order of vals.
-
-(def pair-map-to-mapnode-id
-  (comp id-pair-to-mapnode-id pair-map-to-id-pair))
-(ug/add-to-docstr pair-map-to-mapnode-id
-  "Given a map containing two LOT items, constructs and returns a corresponding
-  mapnode id.")
-
-(defn add-id-to-pair-map
-  "Given a map containing two LOT items, adds an id field with a mapnode id."
-  [pairmap]
-  (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
+; (defn id-pair-to-mapnode-id
+;   "Given a 2-element sequence of id keywords, constructs and returns 
+;   a corresponding mapnode id."
+;   [[id1 id2]]
+;   (ids-to-mapnode-id id1 id2))
+; 
+; ;; See note below on order of keys and vals
+; (defn pair-map-to-id-pair
+;   "Given a map containing two LOT items, returns a 2-element sequence of their ids,
+;   in order of keys, i.e. in :alog1, :alog2 order if the map is a sorted-map."
+;   [pairmap]
+;   (map :id (vals pairmap))) ; See note above about order of vals.
+; 
+; (def pair-map-to-mapnode-id
+;   (comp id-pair-to-mapnode-id pair-map-to-id-pair))
+; (ug/add-to-docstr pair-map-to-mapnode-id
+;   "Given a map containing two LOT items, constructs and returns a corresponding
+;   mapnode id.")
+; 
+; (defn add-id-to-pair-map
+;   "Given a map containing two LOT items, adds an id field with a mapnode id."
+;   [pairmap]
+;   (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
 
 ;; NOTE re pair-map-to-id-pair, etc.:
 ;; According to several remarks on the Internet from 2010 into 2013, (keys x)
@@ -285,15 +285,30 @@
              nodes, with all elements initialized to 0.0."
   [node-seq]
   {:node-vec (vec node-seq)
-   :id-to-idx (make-index-map (map :id node-seq)) ; index order will be same as node-seq's order
+   :id-to-idx (make-id-to-idx-map (map :id node-seq)) ; index order will be same as node-seq's order
    :wt-mat (make-wt-mat (count node-seq))})
 
+;; MOVE ABOVE?
+(defn make-alogid-set
+  "Given a mapnode, returns a set containing the ids of the two 'sides'."
+  [mapnode]
+  (hash-set (:id (:alog1 mapnode)) 
+            (:id (:alog2 mapnode))))
+
 ;; TODO NOT RIGHT
-(defn make-index-by-two-ids-map 
+;; Each of the (map blahblah pairs) statements is producing the right number of elements,
+;; i.e. 262 for the full crime setup.  But the resulting zipmap only has 255 elements,
+;; because the sets are not all distinct.  (map distinct (map make-alogid-set pairs))
+;; returns 255 rather than 256.  This seems wrong.  Of course sets ignore order, but the
+;; the "sides" come from different analogs  OOPS but not the predicates.  They are not
+;; analog-specific.  So it's possible to get duplicate sets of pred sides.
+;; QUESTION: IS THIS ACTUALLY A BUG IN THE OTHER PARTS OF NN-STRU?
+;; MOVE ABOVE?
+(defn make-two-ids-to-idx-map 
   [pairs indexes]
   (zipmap
-    (map (comp set pair-map-to-id-pair) pairs) ; TODO: ERROR HERE? make the sets that'll be keys
-    (map :id pairs))) ; get indexes corresponding to each pair
+    (map make-alogid-set pairs)
+    (map #(indexes (:id %)) pairs))) ; get indexes corresponding to each pair
 
 (defn make-acme-nn-stru
   ;; ADD DOCSTRING
@@ -305,7 +320,7 @@
         weights (:wt-mat nn-stru)
         indexes (:id-to-idx nn-stru)] ; index order will be same as node-vec order
     (add-pos-wts-to-mat! weights fams indexes pos-increment)
-    (assoc nn-stru :ids-to-idx (make-index-by-two-ids-map pairs indexes))))
+    (assoc nn-stru :ids-to-idx (make-two-ids-to-idx-map pairs indexes))))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
