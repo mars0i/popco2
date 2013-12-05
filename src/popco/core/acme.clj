@@ -130,7 +130,7 @@
 ;; NOTE some of these functions will probably be abstracted out into a separate file 
 ;; and ns later, since they'll be used for the proposition network, too.
 
-(declare add-id-to-pair-map)
+;(declare add-id-to-pair-map)
 
 ;; ;; The use of flatten in this function depends on the fact that (a) map-pairs 
 ;; ;; are not sequences, and (b) all larger groupings of data are sequences.
@@ -151,6 +151,27 @@
   Allows reverse lookup of indexes from the things."
   [ids]
   (zipmap ids (range (count ids))))
+
+(defn alog-ids
+  "Given a mapnode, return a sequence of the two analogs' ids, in order."
+  [mapnode] 
+  [(:id (:alog1 mapnode)) 
+   (:id (:alog2 mapnode))])
+
+;; (cf. notes/ShouldReversedPredMapNodesBeTheSame)
+(defn make-two-ids-to-idx-map 
+  "Given a seq of mapnodes and a map from mapnode ids to indexes, returns a map from
+  seq pairs of ids of the 'sides' from two analogs, to the corresponding indexes.
+  i.e. generates a map that does the same thing as the indexes parameter, using 
+  what's a seq of what's on either side of the '=' character in the mapnode id, rather
+  than the mapnode id.  This makes it easier to look up indexes directly from a pair
+  of proposition, predicate, or object ids.  Note the key is a seq, so [:A :B] is
+  not the same as [:B :A] (preserving distinct within-analog relations).  (You can
+  use any kind of pair seq as a key, it appears.)"
+  [mapnodes indexes]
+  (zipmap
+    (map alog-ids mapnodes)
+    (map #(indexes (:id %)) mapnodes))) ; get indexes corresponding to each pair
 
 ;; MOVE TO SEPARATE FILE/NS
 (defn make-activn-vec
@@ -233,12 +254,6 @@
 ;; STEP 5
 ;; Make weight matrix representing negative link weights
 
-(defn pair-ids
-  "Given a mapnode-pair, return a sequence of the two analogs' ids, in order."
-  [pair] 
-  [(:id (:alog1 pair)) 
-   (:id (:alog2 pair))])
-
 ;; TODO
 ;; things that might be useful for constructing the negative links:
 ; (sort-by (comp first keys) (map #(apply hash-map (pair-ids %)) (:node-vec nn)))
@@ -288,39 +303,17 @@
    :id-to-idx (make-id-to-idx-map (map :id node-seq)) ; index order will be same as node-seq's order
    :wt-mat (make-wt-mat (count node-seq))})
 
-;; MOVE ABOVE?
-(defn make-alogid-set
-  "Given a mapnode, returns a set containing the ids of the two 'sides'."
-  [mapnode]
-  (hash-set (:id (:alog1 mapnode)) 
-            (:id (:alog2 mapnode))))
-
-;; TODO NOT RIGHT
-;; Each of the (map blahblah pairs) statements is producing the right number of elements,
-;; i.e. 262 for the full crime setup.  But the resulting zipmap only has 255 elements,
-;; because the sets are not all distinct.  (map distinct (map make-alogid-set pairs))
-;; returns 255 rather than 262.  This seems wrong.  Of course sets ignore order, but the
-;; the "sides" come from different analogs OOPS but not the predicates.  They are not
-;; analog-specific.  So it's possible to get duplicate sets of pred sides.
-;; Note that this presumably doesn't happen when you have the same pred on both sides?
-;; (cf. notes/ShouldReversedPredMapNodesBeTheSame)
-(defn make-two-ids-to-idx-map 
-  [pairs indexes]
-  (zipmap
-    (map make-alogid-set pairs)
-    (map #(indexes (:id %)) pairs))) ; get indexes corresponding to each pair
-
 (defn make-acme-nn-stru
   ;; ADD DOCSTRING
   [pset1 pset2 pos-increment]
   (let [fams (match-propn-components (match-propns pset1 pset2))
-        pairs (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
-        node-vec (vec pairs) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map pairs))
+        mapnodes (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
+        node-vec (vec mapnodes) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map mapnodes))
         nn-stru (make-nn-stru node-vec)
         weights (:wt-mat nn-stru)
         indexes (:id-to-idx nn-stru)] ; index order will be same as node-vec order
     (add-pos-wts-to-mat! weights fams indexes pos-increment)
-    (assoc nn-stru :ids-to-idx (make-two-ids-to-idx-map pairs indexes))))
+    (assoc nn-stru :ids-to-idx (make-two-ids-to-idx-map mapnodes indexes))))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
