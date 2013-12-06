@@ -254,20 +254,44 @@
 ;; STEP 5
 ;; Make weight matrix representing negative link weights
 
-;; TODO
-;; things that might be useful for constructing the negative links:
-; (sort-by (comp first keys) (map #(apply hash-map (pair-ids %)) (:node-vec nn)))
-; (sort-by (comp first keys) (map #(apply hash-map (reverse (pair-ids %))) (:node-vec nn)))
-; (sort-by first (map pair-ids (:node-vec nn)))
-; (sort-by second (map pair-ids (:node-vec nn)))
-; group-by
-; partition-by
+;; MOVE ELSEWHERE
+(defn partition-sortby
+  "Return a function that will sort a collection by keyfn and then 
+  partition by the same function."
+  [keyfn coll]
+  (partition-by keyfn (sort-by keyfn coll)))
 
-;(defn make-acme-node-ids-seq
-;  "Given a seq of mapnode-pairs, return a seq of pair seqs each pair's analogs' 
-;  ids, in order."
-;  [mapnode-seq]
-;  (map pair-ids mapnode-seq))
+;; TODO: DOES IT WORK??
+;; AND ARE THERE TWO MANY?  i.e. DUPES IN EFFECT? [cf. HT1989]
+(defn competing-mapnode-fams
+  "Return a seq of seqs, where each inner seq contains paired lot-elts
+  corresponding to mapnodes that are in competion with others in the
+  same inner seq."
+  [mapnode-pairs]
+  (concat
+    (partition-sortby first mapnode-pairs)
+    (partition-sortby second mapnode-pairs)))
+
+;; TODO: DOES IT WORK??
+;; AND ARE THERE TWO MANY?  i.e. DUPES IN EFFECT? [cf. HT1989]
+(defn competing-mapnode-idx-fams
+  "Return a seq of seqs, where each inner seq contains paired indexes
+  corresponding to mapnodes that are in competion with others in the
+  same inner seq."
+  [ids-to-idx]
+  (map #(map ids-to-idx %)
+       (competing-mapnode-fams (keys ids-to-idx))))
+
+;; IF THIS WORKS, CONSIDER REWRITING ADD-POSS-WTS-TO-MAT! AROUND IT (THIS IS MORE ABSTRACT)
+(defn add-neg-wts-to-mat!
+  "ADD DOCSTRING"
+  [mat fams increment]
+  (doseq [fam fams]
+    (doseq [i fam           ; TODO fam is a list of map-pairs
+            j fam]          ; TODO we want all poss ordered pairs
+      (when-not (= i j)  ; except duplicates TODO IS THIS RIGHT?
+          (mx/mset! mat i j (+ increment (mx/mget mat i j))))))
+  mat)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
