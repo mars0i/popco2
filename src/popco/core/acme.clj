@@ -254,13 +254,6 @@
 ;; STEP 5
 ;; Make weight matrix representing negative link weights
 
-;; MOVE ELSEWHERE
-(defn partition-sortby
-  "Return a function that will sort a collection by keyfn and then 
-  partition by the same function."
-  [keyfn coll]
-  (partition-by keyfn (sort-by keyfn coll)))
-
 ;; TODO: DOES IT WORK??
 ;; AND ARE THERE TWO MANY?  i.e. DUPES IN EFFECT? [cf. HT1989]
 (defn competing-mapnode-fams
@@ -269,8 +262,8 @@
   same inner seq."
   [mapnode-pairs]
   (concat
-    (partition-sortby first mapnode-pairs)
-    (partition-sortby second mapnode-pairs)))
+    (ug/partition-sort-by first mapnode-pairs)
+    (ug/partition-sort-by second mapnode-pairs)))
 
 ;; TODO: DOES IT WORK??
 ;; AND ARE THERE TWO MANY?  i.e. DUPES IN EFFECT? [cf. HT1989]
