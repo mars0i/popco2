@@ -44,3 +44,26 @@ cases, inhibit-multiple-mappings actually looks at both sides for
 competition, calling make-inhib-links on each.  make-inhib-links is
 defined in echo.lisp, and in turn calls make-inhib-links-for-unit.
 
+-----------------------------------------------------------
+
+12/7/2013: I believe the current rule I've implemented (as of 12/5/2013
+I think) is correct, at least ignoring higher-order propositions:
+
+I sort map-pairs on one side--i.e. one analog--and then group into
+subsequences with the same element on that side.  Then I do the same
+thing with respect to the other side.  Then within each group of
+mapnodes, every pair of mapnodes is linked.
+
+This produces no duplicate links (ignoring H-O propositions for the
+moment) because the groups from each side are like little n-leaf 1-level
+trees from a common root, and there are no roots common to both sides.
+Well no that's not true in the case of predicates.  e.g. you could have
+both [causal-if preventative-if] and [preventative-if causal-if].  But,
+on each side, those will be in distinct groups.  On the alog1 side,
+[causal-if preventative-if] will be in a group [causal-if *], and
+[preventative-if causal-if] will be in a group [preventative-if *].  On
+the the alog2 side, [causal-if preventative-if] will be in a group 
+[* preventative-if], while [preventative-if causal-if] will be in a group
+[* causal-if].
+
+??
