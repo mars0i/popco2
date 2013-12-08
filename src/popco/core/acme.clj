@@ -254,20 +254,36 @@
 ;; STEP 5
 ;; Make weight matrix representing negative link weights
 
-;; TODO
-;; things that might be useful for constructing the negative links:
-; (sort-by (comp first keys) (map #(apply hash-map (pair-ids %)) (:node-vec nn)))
-; (sort-by (comp first keys) (map #(apply hash-map (reverse (pair-ids %))) (:node-vec nn)))
-; (sort-by first (map pair-ids (:node-vec nn)))
-; (sort-by second (map pair-ids (:node-vec nn)))
-; group-by
-; partition-by
+(defn competing-mapnode-fams
+  "Return a seq of seqs, where each inner seq contains paired lot-elts
+  corresponding to mapnodes that are in competion with others in the
+  same inner seq."
+  [mapnode-pairs]
+  (concat
+    (ug/partition-sort-by first mapnode-pairs)
+    (ug/partition-sort-by second mapnode-pairs)))
 
-;(defn make-acme-node-ids-seq
-;  "Given a seq of mapnode-pairs, return a seq of pair seqs each pair's analogs' 
-;  ids, in order."
-;  [mapnode-seq]
-;  (map pair-ids mapnode-seq))
+(defn competing-mapnode-idx-fams
+  "Return a seq of seqs, where each inner seq contains paired indexes
+  corresponding to mapnodes that are in competion with others in the
+  same inner seq."
+  [ids-to-idx]
+  (map #(map ids-to-idx %)
+       (competing-mapnode-fams (keys ids-to-idx))))
+
+;; IF THIS WORKS, CONSIDER REWRITING ADD-POSS-WTS-TO-MAT! AROUND IT (THIS IS MORE ABSTRACT)
+;; TODO: Check that there should be no summing.
+;; Check whether there could be summing, even.
+;; Revise this as necessary, since at present, it sums.
+(defn add-neg-wts-to-mat!
+  "ADD DOCSTRING"
+  [mat idx-fams increment]
+  (doseq [fam idx-fams]
+    (doseq [i fam           ; TODO fam is a list of map-pairs
+            j fam]          ; TODO we want all poss ordered pairs
+      (when-not (= i j)  ; except duplicates TODO IS THIS RIGHT?
+          (mx/mset! mat i j (+ increment (mx/mget mat i j))))))
+  mat)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -296,24 +312,29 @@
              of nodes passed in.
   :id-to-idx - A Clojure map from ids of the same data items to integers, 
              allowing lookup of a node's index from its id.
-  :wt-mat -  A core.matrix square matrix with dimensions equal to the number of
+  :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
              nodes, with all elements initialized to 0.0."
   [node-seq]
   {:node-vec (vec node-seq)
    :id-to-idx (make-id-to-idx-map (map :id node-seq)) ; index order will be same as node-seq's order
-   :wt-mat (make-wt-mat (count node-seq))})
+   :pos-wt-mat (make-wt-mat (count node-seq))
+   :neg-wt-mat (make-wt-mat (count node-seq))})
 
 (defn make-acme-nn-stru
   ;; ADD DOCSTRING
-  [pset1 pset2 pos-increment]
+  [pset1 pset2 pos-increment neg-increment]
   (let [fams (match-propn-components (match-propns pset1 pset2))
         mapnodes (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
         node-vec (vec mapnodes) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map mapnodes))
-        nn-stru (make-nn-stru node-vec)
-        weights (:wt-mat nn-stru)
-        indexes (:id-to-idx nn-stru)] ; index order will be same as node-vec order
-    (add-pos-wts-to-mat! weights fams indexes pos-increment)
-    (assoc nn-stru :ids-to-idx (make-two-ids-to-idx-map mapnodes indexes))))
+        temp-nn-stru (make-nn-stru node-vec)
+        id-to-idx (:id-to-idx temp-nn-stru) ; index order will be same as node-vec order
+        nn-stru (assoc temp-nn-stru 
+                       :ids-to-idx (make-two-ids-to-idx-map mapnodes id-to-idx))]
+    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) fams id-to-idx pos-increment)
+    (add-neg-wts-to-mat! (:neg-wt-mat nn-stru)
+                         (competing-mapnode-idx-fams (:ids-to-idx nn-stru))
+                         neg-increment)
+    nn-stru))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
@@ -398,29 +419,29 @@
 (defn format-nn-stru
   "Format the matrix in nn-stru with associated row, col info into a string
   that would be printed prettily."
-  [nn-stru]
+  [nn-stru mat-key]
   (let [labels (map name (map :id (:node-vec nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nn-stru))]
-        pv-mat (mx/matrix :persistent-vector (:wt-mat nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
+        pv-mat (mx/matrix :persistent-vector (mat-key nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
     (format-matrix-with-labels pv-mat labels labels)))
 
 (defn pprint-nn-stru
   "Pretty-print the matrix in nn-stru with associated row, col info."
-  [nn-stru]
-  (print (format-nn-stru nn-stru)))
+  [nn-stru mat-key]
+  (print (format-nn-stru nn-stru mat-key)))
 
 (defn dotformat-nn-stru
   "Format matrix in nn-stru with associated row, col info, like
   the output of format-nn-stru, but with '0.0' replaced by dot."
-  [nn-stru]
-  (clojure.string/replace (format-nn-stru nn-stru) 
+  [nn-stru mat-key]
+  (clojure.string/replace (format-nn-stru nn-stru mat-key) 
                           #"\b0\.0\b"  " . ")) ; \b matches word border. Dot escaped so only matches dots.
 
 (defn dotprint-nn-stru
   "Pretty-print the matrix in nn-stru with associated row, col info,
   replacing zeros with dots, so that it's easy to distinguish zeros
   from other values."
-  [nn-stru]
-  (print (dotformat-nn-stru nn-stru)))
+  [nn-stru mat-key]
+  (print (dotformat-nn-stru nn-stru mat-key)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; OTHER UTILITIES FOR DATA STRUCTURES DEFINED ABOVE

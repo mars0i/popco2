@@ -32,3 +32,9 @@
   [arg]
   (println arg)
   arg)
+
+(defn partition-sort-by
+  "Return a function that will sort a collection by keyfn and then 
+  partition by the same function."
+  [keyfn coll]
+  (partition-by keyfn (sort-by keyfn coll)))
