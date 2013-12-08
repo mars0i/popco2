@@ -9,14 +9,64 @@
 
 ;; SEE acme.md for an overview of what's going on in this file.
 
-;;; TODO add negative weight matrix
 ;;; NOTE for the analogy net we probably don't really need the link
 ;;; matrix, strictly speaking, because there are no zero-weight links.
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix will be needed.
 
 (def pos-link-increment 0.1)
-(def neg-link-increment -0.2)
+(def neg-link-value -0.2)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; FUNCTIONS TO BE MOVED TO ONE OR MORE SEPARATE FILES/NSes
+
+(defn make-id-to-idx-map
+  "Given a sequence of things, returns a map from things to indexes.  
+  Allows reverse lookup of indexes from the things."
+  [ids]
+  (zipmap ids (range (count ids))))
+
+(defn make-activn-vec
+  "Returns a core.matrix vector of length len, filled with zeros,
+  to represent activation values of nodes.  Each person has its own 
+  activation vector."
+  [len]
+  (mx/new-vector len))
+
+(defn make-wt-mat
+  "Returns a core.matrix square matrix with dimension dim, filled with zeros."
+  [dim]
+  (mx/new-matrix dim dim))
+
+;; Both analogy nets and proposition nets have nodes and links between them.
+;; That means that both have (1) information on the meaning of each node,
+;; (2) a matrix representing link weights (actually this will probably turn
+;; into two or three matrices later), and (3) a mapping from nodes to row or
+;; column indexes, and back, to keep track of the relationship between nodes 
+;; and their links.  This function initializes (A) a vector of node info, 
+;; which are maps containing, at least, an :id, so that node info can be looked 
+;; up from indexes; (B) a map from node ids to indexes, so that indexes can
+;; be looked up from nodes, and (C), a matrix which will contain link weights.
+;; The matrix is initialized by this function to contain all zeros, since setting
+;; the link weights is a more complicated operation that depends on the purpose
+;; of the constrain network.
+(defn make-nn-stru
+  "Given a sequence of data on individual nodes, returns a clojure map with 
+  three entries:
+  :node-vec -   A Clojure vector of data providing information about the meaning
+             of particular neural net nodes.  The indexes of the data items
+             correspond to indexes into activation vectors and rows/columns
+             of weight matrices.  This vector may be identical to the sequence
+             of nodes passed in.
+  :id-to-idx - A Clojure map from ids of the same data items to integers, 
+             allowing lookup of a node's index from its id.
+  :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
+             nodes, with all elements initialized to 0.0."
+  [node-seq]
+  {:node-vec (vec node-seq)
+   :id-to-idx (make-id-to-idx-map (map :id node-seq)) ; index order will be same as node-seq's order
+   :pos-wt-mat (make-wt-mat (count node-seq))
+   :neg-wt-mat (make-wt-mat (count node-seq))})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 1
@@ -67,19 +117,6 @@
 ;; i.e. we feed the return value of match-propns, above, to 
 ;; match-propn-components-too, below.
 
-;; NOTE The function match-args differs from an earlier version (now called 
-;; deep-match-args) in that it
-;; doesn't try to perform matching on args of propns that appear as args
-;; of propns.  Rather, we *just* match the propns themselves when they appear
-;; in argument place.  (We *did* need to recurse on args to decide what propns
-;; match what propns--that was the desired behavior in H&T1989, but not the
-;; actual behavior in ACME, nor what was described in the p. 314 specification,
-;; but it was what happened in POPCO 1 and what "Moderate Role" described.)
-;; However, at this stage we should assume that we are only looking
-;; at propn pairs that match in this deep way.  That doesn't mean that weights
-;; get calculated from matchings that have to do with what's inside the propns
-;; that are args.  The H&T1989 algorithm does *not* do this, nor did POPCO 1.
-
 (declare make-mapnode-map match-components-of-propn-pair match-propn-components ids-to-mapnode-id)
 
 ;; Note that order within pairs matters.  It preserves the distinction
@@ -127,31 +164,6 @@
 ;; The sequence specifies what the analogy network nodes are, i.e. specifies 
 ;; the meaning of elements in activation vectors and meaning of matrix rows and cols.
 
-;; NOTE some of these functions will probably be abstracted out into a separate file 
-;; and ns later, since they'll be used for the proposition network, too.
-
-;(declare add-id-to-pair-map)
-
-;; ;; The use of flatten in this function depends on the fact that (a) map-pairs 
-;; ;; are not sequences, and (b) all larger groupings of data are sequences.
-;; (defn make-acme-node-vec
-;;   "Given a 'families' node info entries (seqs of Propns, pairs of Propns or 
-;;   Objs, etc.), returns a Clojure vector of unique node info entries 
-;;   allowing indexing particular node info entries.  This node vector is
-;;   typically shared by all members of a population; it merely provides
-;;   information about nodes that a person might have."
-;;   [fams]
-;;   (vec 
-;;     (map add-id-to-pair-map
-;;         (distinct (flatten fams)))))
-
-;; MOVE TO SEPARATE FILE/NS
-(defn make-id-to-idx-map
-  "Given a sequence of things, returns a map from things to indexes.  
-  Allows reverse lookup of indexes from the things."
-  [ids]
-  (zipmap ids (range (count ids))))
-
 (defn alog-ids
   "Given a mapnode, return a sequence of the two analogs' ids, in order."
   [mapnode] 
@@ -172,14 +184,6 @@
   (zipmap
     (map alog-ids mapnodes)
     (map #(indexes (:id %)) mapnodes))) ; get indexes corresponding to each pair
-
-;; MOVE TO SEPARATE FILE/NS
-(defn make-activn-vec
-  "Returns a core.matrix vector of length len, filled with zeros,
-  to represent activation values of nodes.  Each person has its own 
-  activation vector."
-  [len]
-  (mx/new-vector len))
 
 ;; functions for constructing ids of mapnodes:
 
@@ -230,12 +234,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 4
 ;; Make weight matrix representing positive link weights
-
-;; MOVE TO SEPARATE FILE/NS
-(defn make-wt-mat
-  "Returns a core.matrix square matrix with dimension dim, filled with zeros."
-  [dim]
-  (mx/new-matrix dim dim))
 
 (defn add-pos-wts-to-mat!
   "ADD DOCSTRING"
@@ -289,37 +287,6 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
-;; MOVE TO SEPARATE FILE/NS
-;; Both analogy nets and proposition nets have nodes and links between them.
-;; That means that both have (1) information on the meaning of each node,
-;; (2) a matrix representing link weights (actually this will probably turn
-;; into two or three matrices later), and (3) a mapping from nodes to row or
-;; column indexes, and back, to keep track of the relationship between nodes 
-;; and their links.  This function initializes (A) a vector of node info, 
-;; which are maps containing, at least, an :id, so that node info can be looked 
-;; up from indexes; (B) a map from node ids to indexes, so that indexes can
-;; be looked up from nodes, and (C), a matrix which will contain link weights.
-;; The matrix is initialized by this function to contain all zeros, since setting
-;; the link weights is a more complicated operation that depends on the purpose
-;; of the constrain network.
-(defn make-nn-stru
-  "Given a sequence of data on individual nodes, returns a clojure map with 
-  three entries:
-  :node-vec -   A Clojure vector of data providing information about the meaning
-             of particular neural net nodes.  The indexes of the data items
-             correspond to indexes into activation vectors and rows/columns
-             of weight matrices.  This vector may be identical to the sequence
-             of nodes passed in.
-  :id-to-idx - A Clojure map from ids of the same data items to integers, 
-             allowing lookup of a node's index from its id.
-  :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
-             nodes, with all elements initialized to 0.0."
-  [node-seq]
-  {:node-vec (vec node-seq)
-   :id-to-idx (make-id-to-idx-map (map :id node-seq)) ; index order will be same as node-seq's order
-   :pos-wt-mat (make-wt-mat (count node-seq))
-   :neg-wt-mat (make-wt-mat (count node-seq))})
-
 (defn make-acme-nn-stru
   ;; ADD DOCSTRING
   [pset1 pset2 pos-increment neg-increment]
@@ -335,12 +302,6 @@
                          (competing-mapnode-idx-fams (:ids-to-idx nn-stru))
                          neg-increment)
     nn-stru))
-
-;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
-;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
-;; THE MATRIX.  THEN AN UN-distinct-ED NODE SEQ TO CONSTRUCT NEGATIVE
-;; WEIGHTS AND FILL THOSE INTO THE MATRIX.  See acme.nt4 for more.
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS

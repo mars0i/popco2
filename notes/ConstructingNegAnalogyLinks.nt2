@@ -1,0 +1,41 @@
+ConstructingNegAnalogyLinks.nt2
+notes on constructing negative analogy links for acme, i.e. links that
+represent constraints against competing mappings
+
+1. One has to group nodes into competing groups based on both analog
+sides.
+
+2. This won't create a problem.
+
+3. I don't think there's any special issue with propns as arguments.
+They only match propns, and only when isomorphic.
+
+Well note this: In the early 12/2013 versions of construction of
+negative acme links, I'm getting the list of mapnodes to compare from
+the already-constructed unique list of mapnodes.  So ... any duplication
+due to propn-args has already been filtered out.  There is really no
+possible issue due to propns as args.
+
+4. In POPCO 1 (and Thagard's original code) giving a positive weight to
+a positively weighted link via make-symlink can cause the new weight to be summed into
+the old weight.
+
+However, once a link weight is negative, nothing can ever be summed into
+it via make-symlink.  This function enforces that.
+
+This can be avoided, in POPCO, by calling raw-make-symlink instead.  As
+of Fall 2013, this function was only used (a) to set links to SALIENT,
+(b) to set links due to semantic-iffs, and (c) to implement the new code
+that added special links in the propn net between arguments of causal
+propositions (if *do-update-propn-nets-from-propn-nets*, which is nil by
+default, is set to t).
+
+However, I don't actually think that it's possible, via my current neg
+link creation algorithm (12/8/2013) to get duplicate calls to set a link
+between two neg nodes.  If that's correct, then I don't need to test for
+an activation being < 0 in this process.  Dunno, maybe I should add a
+separate test that throws an exception if I'm wrong.
+
+In any event, I don't think that I want to have a low-level,
+general-purpose link-setting interface that imposes this no-sum rule.
+It should be case-specific.
