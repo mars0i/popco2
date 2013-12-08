@@ -277,8 +277,8 @@
 ;; Revise this as necessary, since at present, it sums.
 (defn add-neg-wts-to-mat!
   "ADD DOCSTRING"
-  [mat fams increment]
-  (doseq [fam fams]
+  [mat idx-fams increment]
+  (doseq [fam idx-fams]
     (doseq [i fam           ; TODO fam is a list of map-pairs
             j fam]          ; TODO we want all poss ordered pairs
       (when-not (= i j)  ; except duplicates TODO IS THIS RIGHT?
@@ -326,13 +326,15 @@
   (let [fams (match-propn-components (match-propns pset1 pset2))
         mapnodes (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
         node-vec (vec mapnodes) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map mapnodes))
-        nn-stru (make-nn-stru node-vec)
-        indexes (:id-to-idx nn-stru)] ; index order will be same as node-vec order
-    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) fams indexes pos-increment)
+        temp-nn-stru (make-nn-stru node-vec)
+        id-to-idx (:id-to-idx temp-nn-stru) ; index order will be same as node-vec order
+        nn-stru (assoc temp-nn-stru 
+                       :ids-to-idx (make-two-ids-to-idx-map mapnodes id-to-idx))]
+    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) fams id-to-idx pos-increment)
     (add-neg-wts-to-mat! (:neg-wt-mat nn-stru)
                          (competing-mapnode-idx-fams (:ids-to-idx nn-stru))
                          neg-increment)
-    (assoc nn-stru :ids-to-idx (make-two-ids-to-idx-map mapnodes indexes))))
+    nn-stru))
 
 ;; NOW REARRANGE THE PRECEDING OR ADD TO IT TO USE THE TREE RETURNED
 ;; BY match-propn-components TO CONSTRUCT POSITIVE WEIGHTS AND FILL
