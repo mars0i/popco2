@@ -262,6 +262,51 @@
 ;; STEP 5
 ;; Make weight matrix representing negative link weights
 
+;; IF THIS WORKS, CONSIDER REWRITING ADD-POSS-WTS-TO-MAT! AROUND IT (THIS IS MORE ABSTRACT)
+;; TODO: Check that there should be no summing.
+;; Check whether there could be summing, even.
+;; Revise this as necessary, since at present, it sums.
+(defn add-neg-wts-to-mat!
+  "ADD DOCSTRING"
+  [mat idx-fams wt-val]
+  (doseq [fam idx-fams]
+    (doseq [i fam           ; TODO fam is a list of map-pairs
+            j fam]          ; TODO we want all poss ordered pairs
+      (when-not (= i j)  ; except duplicates TODO IS THIS RIGHT?
+        (mx/mset! mat i j (+ wt-val (mx/mget mat i j))))))
+  mat)
+
+;; TODO TEST ME
+;; generic version
+(defn add-wts-to-mat!
+  [mat idx-fams wt-val op]
+  (doseq [fam idx-fams]
+    (doseq [i fam
+            j fam]
+      (when-not (= i j)
+        (mx/mset! mat i j (op wt-val (mx/mget mat i j))))))
+  mat)
+
+;; TODO TEST ME
+(defn set-wt
+  [new-val old-val]
+  (if (zero? old-val)
+    (throw (Exception. 
+             (format "Trying to overwrite nonzero weight at indexes %s %s" i j)))
+    new-val))
+
+;; TODO TEST ME
+;; new replacement using generic version
+(defn new-add-neg-wts-to-mat!
+  [mat idx-fams wt-val]
+  (add-wts-to-mat! mat idx-fams set-wt))
+
+;; TODO TEST ME
+;; new replacement using generic version - note needs to be passed idx fams
+(defn new-add-pos-wts-to-mat!
+  [mat idx-fams wt-val]
+  (add-wts-to-mat! mat idx-fams +))
+
 (defn competing-mapnode-fams
   "Return a seq of seqs, where each inner seq contains paired lot-elts
   corresponding to mapnodes that are in competion with others in the
@@ -278,20 +323,6 @@
   [ids-to-idx]
   (map #(map ids-to-idx %)
        (competing-mapnode-fams (keys ids-to-idx))))
-
-;; IF THIS WORKS, CONSIDER REWRITING ADD-POSS-WTS-TO-MAT! AROUND IT (THIS IS MORE ABSTRACT)
-;; TODO: Check that there should be no summing.
-;; Check whether there could be summing, even.
-;; Revise this as necessary, since at present, it sums.
-(defn add-neg-wts-to-mat!
-  "ADD DOCSTRING"
-  [mat idx-fams increment]
-  (doseq [fam idx-fams]
-    (doseq [i fam           ; TODO fam is a list of map-pairs
-            j fam]          ; TODO we want all poss ordered pairs
-      (when-not (= i j)  ; except duplicates TODO IS THIS RIGHT?
-          (mx/mset! mat i j (+ increment (mx/mget mat i j))))))
-  mat)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
