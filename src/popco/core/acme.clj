@@ -21,6 +21,7 @@
 ;;   if the previous weight isn't zero.
 ;; - Reorganize the add-weights-* functions to abstract out what's common 
 ;;   to them, and give them the same syntax.
+;;   HAVE ADDED PRELIMINARY VERSION OF THIS - NEED TO TEST
 ;; - Clean up/abstractout/whatever make-acme-nn-stru.  The let has gotten 
 ;;   out of hand.
 
