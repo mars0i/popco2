@@ -280,6 +280,7 @@
 ;; TODO TEST ME
 ;; generic version
 (defn add-wts-to-mat!
+  "ADD DOCSTRING"
   [mat idx-fams wt-val op]
   (doseq [fam idx-fams]
     (doseq [i fam
@@ -289,24 +290,28 @@
   mat)
 
 ;; TODO TEST ME
-(defn set-wt
+(defn identity-if-zero-old
+  "ADD DOCSTRING"
   [new-val old-val]
   (if (zero? old-val)
     (throw (Exception. 
-             (format "Trying to overwrite nonzero weight at indexes %s %s" i j)))
+             (format "Trying to overwrite nonzero weight at indexes."))) ; TODO maybe I should pass in the indexes?
     new-val))
 
-;; TODO TEST ME
-;; new replacement using generic version
+;; TODO: Check that there should be no summing.
+;; Check whether there could be summing, even.
+;; Revise this as necessary, since at present, it sums.
 (defn new-add-neg-wts-to-mat!
+  "ADD DOCSTRING"
   [mat idx-fams wt-val]
-  (add-wts-to-mat! mat idx-fams set-wt))
+  (add-wts-to-mat! mat idx-fams wt-val identity-if-zero-old))
 
 ;; TODO TEST ME
 ;; new replacement using generic version - note needs to be passed idx fams
 (defn new-add-pos-wts-to-mat!
+  "ADD DOCSTRING"
   [mat idx-fams wt-val]
-  (add-wts-to-mat! mat idx-fams +))
+  (add-wts-to-mat! mat idx-fams wt-val +))
 
 (defn competing-mapnode-fams
   "Return a seq of seqs, where each inner seq contains paired lot-elts
