@@ -14,6 +14,16 @@
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix will be needed.
 
+;; TODO
+;; - Hand-spot-check whether the new neg weights are coming out right
+;; - Decide how to revise (or not) code to handle fact that neg weights
+;;   don't sum.  possibly just throw an exception, for the analogy net,
+;;   if the previous weight isn't zero.
+;; - Reorganize the add-weights-* functions to abstract out what's common 
+;;   to them, and give them the same syntax.
+;; - Clean up/abstractout/whatever make-acme-nn-stru.  The let has gotten 
+;;   out of hand.
+
 (def pos-link-increment 0.1)
 (def neg-link-value -0.2)
 
