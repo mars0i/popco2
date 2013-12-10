@@ -16,14 +16,9 @@
 
 ;; TODO
 ;; - Hand-spot-check whether the new neg weights are coming out right
-;; - Decide how to revise (or not) code to handle fact that neg weights
-;;   don't sum.  possibly just throw an exception, for the analogy net,
-;;   if the previous weight isn't zero.
-;; - Reorganize the add-weights-* functions to abstract out what's common 
-;;   to them, and give them the same syntax.
-;;   HAVE ADDED PRELIMINARY VERSION OF THIS - NEED TO TEST
 ;; - Clean up/abstractout/whatever make-acme-nn-stru.  The let has gotten 
-;;   out of hand.
+;;   out of hand.  This might involve reorganizing
+;;   competing-mapnode-idx fams and/or matched-idx-fams.
 
 (def pos-link-increment 0.1)
 (def neg-link-value -0.2)
@@ -244,41 +239,35 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 4
-;; Make weight matrix representing positive link weights
+;; Make weight matrix representing positive and negative link weights
 
-(defn add-pos-wts-to-mat!
-  "ADD DOCSTRING"
-  [mat fams indexes increment]
-  (doseq [fam fams]
-    (doseq [itm1 fam           ; fam is a list of map-pairs
-            itm2 fam]          ; we want all poss ordered pairs
-      (when-not (= itm1 itm2)  ; except duplicates
-        (let [i (indexes (:id itm1)) 
-              j (indexes (:id itm2))]
-          ;(cl-format true "~%setting link between ~s, ~s at ~s ~s~%" (:id itm1) (:id itm2) i j) ; DEBUG
-          (mx/mset! mat i j (+ increment (mx/mget mat i j)))))))
-  mat)
+; (defn add-pos-wts-to-mat!
+;   "ADD DOCSTRING"
+;   [mat fams indexes increment]
+;   (doseq [fam fams]
+;     (doseq [itm1 fam           ; fam is a list of map-pairs
+;             itm2 fam]          ; we want all poss ordered pairs
+;       (when-not (= itm1 itm2)  ; except duplicates
+;         (let [i (indexes (:id itm1)) 
+;               j (indexes (:id itm2))]
+;           ;(cl-format true "~%setting link between ~s, ~s at ~s ~s~%" (:id itm1) (:id itm2) i j) ; DEBUG
+;           (mx/mset! mat i j (+ increment (mx/mget mat i j)))))))
+;   mat)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; STEP 5
-;; Make weight matrix representing negative link weights
+; ;; IF THIS WORKS, CONSIDER REWRITING ADD-POSS-WTS-TO-MAT! AROUND IT (THIS IS MORE ABSTRACT)
+; ;; TODO: Check that there should be no summing.
+; ;; Check whether there could be summing, even.
+; ;; Revise this as necessary, since at present, it sums.
+; (defn add-neg-wts-to-mat!
+;   "ADD DOCSTRING"
+;   [mat idx-fams wt-val]
+;   (doseq [fam idx-fams]
+;     (doseq [i fam           ; TODO fam is a list of map-pairs
+;             j fam]          ; TODO we want all poss ordered pairs
+;       (when-not (= i j)  ; except duplicates TODO IS THIS RIGHT?
+;         (mx/mset! mat i j (+ wt-val (mx/mget mat i j))))))
+;   mat)
 
-;; IF THIS WORKS, CONSIDER REWRITING ADD-POSS-WTS-TO-MAT! AROUND IT (THIS IS MORE ABSTRACT)
-;; TODO: Check that there should be no summing.
-;; Check whether there could be summing, even.
-;; Revise this as necessary, since at present, it sums.
-(defn add-neg-wts-to-mat!
-  "ADD DOCSTRING"
-  [mat idx-fams wt-val]
-  (doseq [fam idx-fams]
-    (doseq [i fam           ; TODO fam is a list of map-pairs
-            j fam]          ; TODO we want all poss ordered pairs
-      (when-not (= i j)  ; except duplicates TODO IS THIS RIGHT?
-        (mx/mset! mat i j (+ wt-val (mx/mget mat i j))))))
-  mat)
-
-;; TODO TEST ME
-;; generic version
 (defn add-wts-to-mat!
   "ADD DOCSTRING"
   [mat idx-fams wt-val op]
@@ -289,29 +278,36 @@
         (mx/mset! mat i j (op wt-val (mx/mget mat i j))))))
   mat)
 
-;; TODO TEST ME
-(defn identity-if-zero-old
-  "ADD DOCSTRING"
-  [new-val old-val]
-  (if (zero? old-val)
-    (throw (Exception. 
-             (format "Trying to overwrite nonzero weight at indexes."))) ; TODO maybe I should pass in the indexes?
-    new-val))
-
-;; TODO: Check that there should be no summing.
-;; Check whether there could be summing, even.
-;; Revise this as necessary, since at present, it sums.
-(defn new-add-neg-wts-to-mat!
-  "ADD DOCSTRING"
-  [mat idx-fams wt-val]
-  (add-wts-to-mat! mat idx-fams wt-val identity-if-zero-old))
-
-;; TODO TEST ME
-;; new replacement using generic version - note needs to be passed idx fams
-(defn new-add-pos-wts-to-mat!
-  "ADD DOCSTRING"
+(defn add-pos-wts-to-mat!
+  "Add weights of value wt-val to matrix mat between all nodes with indexes in the same
+  subseq of idx-fams.  idx-fams should be a seq of seqs of indexes from mapnodes related via
+  language-of-thought relationships.  This procedure implements ACME's rule that weights
+  on such links sum--i.e. if two nodes are linked multiple times, their link weight will
+  be a multiple of wt-val."
   [mat idx-fams wt-val]
   (add-wts-to-mat! mat idx-fams wt-val +))
+
+(defn- identity-if-zero
+  "Returns new-val unchanged if old-val is zero.  If old-val is non-zero, throws an exception."
+  [new-val old-val]
+  (if (zero? old-val)
+    new-val
+    (throw (Exception. (format "Trying to overwrite nonzero weight.")))))
+
+;; TODO: TEST ME - is result correct?
+(defn add-neg-wts-to-mat!
+  "Add weights of value wt-val to matrix mat between all nodes with indexes in the same
+  subseq of idx-fams.  idx-fams should be a seq of seqs of indexes from mapnodes that are 
+  competing because they all share a 'side'.  This procedure implements ACME's rule that negative
+  on such links do not sum:  This function will not set the value of a weight that has already 
+  been set to something other than zero (an exception will be thrown)."
+  [mat idx-fams wt-val]
+  (add-wts-to-mat! mat idx-fams wt-val identity-if-zero))
+
+(defn matched-idx-fams
+  [fams id-to-idx]
+  (let [f (comp id-to-idx :id)]
+    (map #(map f %) fams)))
 
 (defn competing-mapnode-fams
   "Return a seq of seqs, where each inner seq contains paired lot-elts
@@ -342,12 +338,10 @@
         node-vec (vec mapnodes) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map mapnodes))
         temp-nn-stru (make-nn-stru node-vec)
         id-to-idx (:id-to-idx temp-nn-stru) ; index order will be same as node-vec order
-        nn-stru (assoc temp-nn-stru 
-                       :ids-to-idx (make-two-ids-to-idx-map mapnodes id-to-idx))]
-    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) fams id-to-idx pos-increment)
-    (add-neg-wts-to-mat! (:neg-wt-mat nn-stru)
-                         (competing-mapnode-idx-fams (:ids-to-idx nn-stru))
-                         neg-increment)
+        ids-to-idx (make-two-ids-to-idx-map mapnodes id-to-idx)
+        nn-stru (assoc temp-nn-stru :ids-to-idx ids-to-idx) ]
+    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) (matched-idx-fams fams id-to-idx) pos-increment)
+    (add-neg-wts-to-mat! (:neg-wt-mat nn-stru) (competing-mapnode-idx-fams ids-to-idx) neg-increment)
     nn-stru))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -429,8 +423,16 @@
   that would be printed prettily."
   [nn-stru mat-key]
   (let [labels (map name (map :id (:node-vec nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nn-stru))]
-        pv-mat (mx/matrix :persistent-vector (mat-key nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
+        pv-mat (mx/matrix :persistent-vector (get nn-stru mat-key))] ; "coerce" to Clojure vector of Clojure (row) vectors
     (format-matrix-with-labels pv-mat labels labels)))
+
+; (defn old-format-nn-stru
+;   "Format the matrix in nn-stru with associated row, col info into a string
+;   that would be printed prettily."
+;   [nn-stru mat-key]
+;   (let [labels (map name (map :id (:node-vec nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nn-stru))]
+;         pv-mat (mx/matrix :persistent-vector (mat-key nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
+;     (format-matrix-with-labels pv-mat labels labels)))
 
 (defn pprint-nn-stru
   "Pretty-print the matrix in nn-stru with associated row, col info."
