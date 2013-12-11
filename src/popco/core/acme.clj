@@ -340,14 +340,15 @@
 (defn make-acme-nn-stru
   "Make an ACME neural-net structure, i.e. a structure that represents an ACME analogy constraint
   satisfaction network.  This is a standard neural-net structure produced by make-nn-stru (q.v.)
-  with these changes:
+  with these changes that are specific to an analogy network:
   - Field :ids-to-idx is added.  This does roughly the same thing as :id-to-idx. The latter
     maps mapnode ids to indexes into the node vector (or rows, or columns of the matrices).
     :ids-to-idx, by contrast, maps vector pairs containing the ids of the two sides (from
     which the mapnode id is constructed).  This is redundant information, but convenient.
   - The :pos-wt-mat and :neg-wt-mat matrices, which are initialized with zeros by make-nn-stru, 
     are now given some nonzero weights--positive weights in the first, negative weights in the 
-    second.  This is an imperative operationon on these matrices."
+    second.  These weights follow ACME's rules for analogy networks.  Note that this is an 
+    imperative operation using core.matrix functions; no new matrices are created."
   [pset1 pset2 pos-increment neg-increment]
   (let [fams (match-propn-components (match-propns pset1 pset2))
         nn-stru (assoc-ids-to-idx-nn-stru 
@@ -361,19 +362,19 @@
                          neg-increment)
     nn-stru))
 
-(defn old-make-acme-nn-stru
-  ;; ADD DOCSTRING
-  [pset1 pset2 pos-increment neg-increment]
-  (let [fams (match-propn-components (match-propns pset1 pset2))
-        mapnodes (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
-        node-vec (vec mapnodes) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map mapnodes))
-        temp-nn-stru (make-nn-stru node-vec)
-        id-to-idx (:id-to-idx temp-nn-stru) ; index order will be same as node-vec order
-        ids-to-idx (make-two-ids-to-idx-map mapnodes id-to-idx)
-        nn-stru (assoc temp-nn-stru :ids-to-idx ids-to-idx) ]
-    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) (matched-idx-fams fams id-to-idx) pos-increment)
-    (add-neg-wts-to-mat! (:neg-wt-mat nn-stru) (competing-mapnode-idx-fams ids-to-idx) neg-increment)
-    nn-stru))
+;(defn old-make-acme-nn-stru
+;  ;; ADD DOCSTRING
+;  [pset1 pset2 pos-increment neg-increment]
+;  (let [fams (match-propn-components (match-propns pset1 pset2))
+;        mapnodes (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
+;        node-vec (vec mapnodes) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map mapnodes))
+;        temp-nn-stru (make-nn-stru node-vec)
+;        id-to-idx (:id-to-idx temp-nn-stru) ; index order will be same as node-vec order
+;        ids-to-idx (make-two-ids-to-idx-map mapnodes id-to-idx)
+;        nn-stru (assoc temp-nn-stru :ids-to-idx ids-to-idx) ]
+;    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) (matched-idx-fams fams id-to-idx) pos-increment)
+;    (add-neg-wts-to-mat! (:neg-wt-mat nn-stru) (competing-mapnode-idx-fams ids-to-idx) neg-increment)
+;    nn-stru))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS
