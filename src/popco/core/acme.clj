@@ -23,6 +23,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS TO BE MOVED TO ONE OR MORE SEPARATE FILES/NSes
 
+(defn symmetric?
+  "Returns true if matrix is symmetric, false otherwise."
+  [mat]
+  (and (mx/square? mat)
+       (every?  (fn [[i j]] (= (mx/mget mat i j) (mx/mget mat j i)))
+         (let [dim (first (mx/shape mat))]
+           (for [i (range dim)
+                 j (range dim)
+                 :when (> j i)] ; no need to test both i,j and j,i since we do both at once. always true for (= j i).
+             [i j])))))
+
 (defn make-id-to-idx-map
   "Given a sequence of things, returns a map from things to indexes.  
   Allows reverse lookup of indexes from the things."
@@ -435,12 +446,13 @@
                       (interleave nums-widths row))) ; Using v to set width inside iteration directive ~{~} requires repeating the v arg
          pv-mat labels)))
 
+; This is rather slow, but fine if you don't need to run it very often.
 (defn format-matrix-with-labels
   "Format a matrix mat with associated row and column labels into a string
   that could be printed prettily.  row-labels and col-labels must be sequences
   of strings in index order, corresponding to indexes from 0 to n."
   [mat row-labels col-labels]
-  (let [pv-mat (mx/matrix :persistent-vector mat)
+  (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
         nums-width (+ 0 (max-strlen 
                           (map #(cl-format nil "~f" %) 
                                (apply concat pv-mat))))
@@ -452,31 +464,30 @@
 
 (defn format-nn-stru
   "Format the matrix in nn-stru with associated row, col info into a string
-  that would be printed prettily."
+  that would be printed prettily.  Display fields are fixed width, so this
+  can also be used to output a matrix to a file for use in other programs."
   [nn-stru mat-key]
   (let [labels (map name (map :id (:node-vec nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nn-stru))]
-        pv-mat (mx/matrix :persistent-vector (get nn-stru mat-key))] ; "coerce" to Clojure vector of Clojure (row) vectors
-    (format-matrix-with-labels pv-mat labels labels)))
-
-; (defn old-format-nn-stru
-;   "Format the matrix in nn-stru with associated row, col info into a string
-;   that would be printed prettily."
-;   [nn-stru mat-key]
-;   (let [labels (map name (map :id (:node-vec nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nn-stru))]
-;         pv-mat (mx/matrix :persistent-vector (mat-key nn-stru))] ; "coerce" to Clojure vector of Clojure (row) vectors
-;     (format-matrix-with-labels pv-mat labels labels)))
+        mat (get nn-stru mat-key)]
+    (format-matrix-with-labels mat labels labels)))
 
 (defn pprint-nn-stru
   "Pretty-print the matrix in nn-stru with associated row, col info."
   [nn-stru mat-key]
   (print (format-nn-stru nn-stru mat-key)))
 
+(defn dotformat
+  [matstring]
+  (clojure.string/replace matstring
+                          #"\b0\.0\b"  " . ")) ; \b matches word border. Dot escaped so only matches dots.
+
 (defn dotformat-nn-stru
   "Format matrix in nn-stru with associated row, col info, like
-  the output of format-nn-stru, but with '0.0' replaced by dot."
+  the output of format-nn-stru, but with '0.0' replaced by dot.
+  Display fields are fixed width, so this can also be used to output
+  a matrix to a file for use in other programs."
   [nn-stru mat-key]
-  (clojure.string/replace (format-nn-stru nn-stru mat-key) 
-                          #"\b0\.0\b"  " . ")) ; \b matches word border. Dot escaped so only matches dots.
+  (dotformat (format-nn-stru nn-stru mat-key)))
 
 (defn dotprint-nn-stru
   "Pretty-print the matrix in nn-stru with associated row, col info,
@@ -529,15 +540,3 @@
 ;    (map (fn [[p1 p2]] 
 ;           [(:id p1) (:id p2)])
 ;         prs)))
-
-;; MOVE TO SEPARATE FILE/NS
-(defn symmetric?
-  "Returns true if matrix is symmetric, false otherwise."
-  [mat]
-  (and (mx/square? mat)
-       (every?  (fn [[i j]] (= (mx/mget mat i j) (mx/mget mat j i)))
-         (let [dim (first (mx/shape mat))]
-           (for [i (range dim)
-                 j (range dim)
-                 :when (> j i)] ; no need to test both i,j and j,i since we do both at once. always true for (= j i).
-             [i j])))))
