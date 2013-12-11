@@ -16,9 +16,6 @@
 
 ;; TODO
 ;; - Hand-spot-check whether the new neg weights are coming out right
-;; - Clean up/abstractout/whatever make-acme-nn-stru.  The let has gotten 
-;;   out of hand.  This might involve reorganizing
-;;   competing-mapnode-idx fams and/or matched-idx-fams.
 
 (def pos-link-increment 0.1)
 (def neg-link-value -0.2)
@@ -59,15 +56,19 @@
 (defn make-nn-stru
   "Given a sequence of data on individual nodes, returns a clojure map with 
   three entries:
-  :node-vec -   A Clojure vector of data providing information about the meaning
-             of particular neural net nodes.  The indexes of the data items
-             correspond to indexes into activation vectors and rows/columns
-             of weight matrices.  This vector may be identical to the sequence
-             of nodes passed in.
-  :id-to-idx - A Clojure map from ids of the same data items to integers, 
-             allowing lookup of a node's index from its id.
+  :node-vec -    A Clojure vector of data providing information about the meaning
+                 of particular neural net nodes.  The indexes of the data items
+                 correspond to indexes into activation vectors and rows/columns
+                 of weight matrices.  This vector may be identical to the sequence
+                 of nodes passed in.
+  :id-to-idx -   A Clojure map from ids of the same data items to integers, 
+                 allowing lookup of a node's index from its id.
   :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
-             nodes, with all elements initialized to 0.0."
+                 nodes, with all elements initialized to 0.0.  This will represent
+                 positively weighted links.
+  :neg-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
+                 nodes, with all elements initialized to 0.0.  This will represent
+                 negatively weighted links."
   [node-seq]
   {:node-vec (vec node-seq)
    :id-to-idx (make-id-to-idx-map (map :id node-seq)) ; index order will be same as node-seq's order
@@ -330,7 +331,37 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
+(defn assoc-ids-to-idx-nn-stru
+  [nn-stru]
+  (assoc nn-stru 
+         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-stru) 
+                                              (:id-to-idx nn-stru))))
+
 (defn make-acme-nn-stru
+  "Make an ACME neural-net structure, i.e. a structure that represents an ACME analogy constraint
+  satisfaction network.  This is a standard neural-net structure produced by make-nn-stru (q.v.)
+  with these changes:
+  - Field :ids-to-idx is added.  This does roughly the same thing as :id-to-idx. The latter
+    maps mapnode ids to indexes into the node vector (or rows, or columns of the matrices).
+    :ids-to-idx, by contrast, maps vector pairs containing the ids of the two sides (from
+    which the mapnode id is constructed).  This is redundant information, but convenient.
+  - The :pos-wt-mat and :neg-wt-mat matrices, which are initialized with zeros by make-nn-stru, 
+    are now given some nonzero weights--positive weights in the first, negative weights in the 
+    second.  This is an imperative operationon on these matrices."
+  [pset1 pset2 pos-increment neg-increment]
+  (let [fams (match-propn-components (match-propns pset1 pset2))
+        nn-stru (assoc-ids-to-idx-nn-stru 
+                  (make-nn-stru 
+                    (distinct (flatten fams)))) ] ; flatten here assumes map-pairs aren't seqs
+    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) 
+                         (matched-idx-fams fams (:id-to-idx nn-stru)) 
+                         pos-increment)
+    (add-neg-wts-to-mat! (:neg-wt-mat nn-stru) 
+                         (competing-mapnode-idx-fams (:ids-to-idx nn-stru)) 
+                         neg-increment)
+    nn-stru))
+
+(defn old-make-acme-nn-stru
   ;; ADD DOCSTRING
   [pset1 pset2 pos-increment neg-increment]
   (let [fams (match-propn-components (match-propns pset1 pset2))
