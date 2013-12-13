@@ -23,7 +23,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS TO BE MOVED TO ONE OR MORE SEPARATE FILES/NSes
 
-(defn symmetric?
+(defn my-symmetric?
   "Returns true if matrix is symmetric, false otherwise."
   [mat]
   (and (mx/square? mat)
