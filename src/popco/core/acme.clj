@@ -23,16 +23,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS TO BE MOVED TO ONE OR MORE SEPARATE FILES/NSes
 
-(defn my-symmetric?
-  "Returns true if matrix is symmetric, false otherwise."
-  [mat]
-  (and (mx/square? mat)
-       (every?  (fn [[i j]] (= (mx/mget mat i j) (mx/mget mat j i)))
-         (let [dim (first (mx/shape mat))]
-           (for [i (range dim)
-                 j (range dim)
-                 :when (> j i)] ; no need to test both i,j and j,i since we do both at once. always true for (= j i).
-             [i j])))))
+;; Moved to my personal versions of core.matrix, vectorz-clj:
+;(defn symmetric?
+;  "Returns true if matrix is symmetric, false otherwise."
+;  [mat]
+;  (and (mx/square? mat)
+;       (every?  (fn [[i j]] (= (mx/mget mat i j) (mx/mget mat j i)))
+;         (let [dim (first (mx/shape mat))]
+;           (for [i (range dim)
+;                 j (range dim)
+;                 :when (> j i)] ; no need to test both i,j and j,i since we do both at once. always true for (= j i).
+;             [i j])))))
 
 (defn make-id-to-idx-map
   "Given a sequence of things, returns a map from things to indexes.  
