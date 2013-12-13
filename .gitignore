@@ -1,14 +1,5 @@
-.gitignore
-pom.xml
-*jar
-/lib/
-/classes/
-/targets/
-.lein-deps-sum
-.*.swp
+.DS_Store
 .lein-repl-history
-.gitignore
-.nrepl-port
-target
 notes/AbramsModerateRolePublished.pdf
 notes/HolyoakThagard1989AnalogicalMapping.pdf
+target/
