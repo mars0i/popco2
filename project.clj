@@ -8,10 +8,10 @@
                                   [slingshot "0.10.3"][org.jblas/jblas "1.2.3"][clatrix "0.3.0"]
                                   ;[org.clojure/math.combinatorics "0.0.7"]
                                   [org.clojure/tools.macro "0.1.5"]
-                                  ;[net.mikera/core.matrix "0.15.0"]
-                                  [mars0i/core.matrix "0.16.1-SNAPSHOT"]
-                                  ;[net.mikera/vectorz-clj "0.17.0"]
-                                  [mars0i/vectorz-clj "0.17.0-SNAPSHOT"]
+                                  [net.mikera/core.matrix "0.15.0"]
+                                  ;[mars0i/core.matrix "0.16.1-SNAPSHOT"]
+                                  [net.mikera/vectorz-clj "0.17.0"]
+                                  ;[mars0i/vectorz-clj "0.17.0-SNAPSHOT"]
                                  ]
                    :source-paths ["src"] ; where load will look for source files
                    }}
