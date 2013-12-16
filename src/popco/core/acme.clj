@@ -40,11 +40,11 @@
   (let [dim (first (mx/shape m))] ; 1 past the last valid index
     (letfn [(f [m i j]
               (cond 
-                (>= i dim) true  ; if we got all the way through the matrix, it's symmetric
-                (>= j dim) (recur m (+ 1 i) (+ 2 i)) ; if we get through the j's, start again with new i, and the j above it
+                (>= i dim) true  ; got all the way through--it's symmetric
+                (>= j dim) (recur m (+ 1 i) (+ 2 i)) ; got through j's--start again with new i
                 (= (mx/mget m i j) 
-                   (mx/mget m j i)) (recur m i (inc j)) ; if they're equal, go check the next j with the same i
-                :else false))] ; if not equal, we're done
+                   (mx/mget m j i)) (recur m i (inc j)) ; same, so check next pair
+                :else false))] ; not same, not symmetric. we're done.  
       (f m 0 0))))
 
 (defn make-id-to-idx-map
