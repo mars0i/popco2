@@ -9,8 +9,9 @@
 
 ;; SEE acme.md for an overview of what's going on in this file.
 
-;;; NOTE for the analogy net we probably don't really need the link
-;;; matrix, strictly speaking, because there are no zero-weight links.
+;;; NOTE for the analogy net we probably don't really need a link
+;;; matrix that just represents the existence of links, strictly speaking, 
+;;; because there are no zero-weight links.
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix will be needed.
 
