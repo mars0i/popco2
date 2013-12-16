@@ -3,3 +3,5 @@
 notes/AbramsModerateRolePublished.pdf
 notes/HolyoakThagard1989AnalogicalMapping.pdf
 target/
+*.swp
+.nrepl-port
