@@ -24,28 +24,28 @@
 ;; FUNCTIONS TO BE MOVED TO ONE OR MORE SEPARATE FILES/NSes
 
 ;; Moved to my personal versions of core.matrix, vectorz-clj:
-(defn comp-sym?
-  "Returns true if matrix is symmetric, false otherwise."
-  [m]
-  (and (mx/square? m)
-       (every? (fn [[i j]] (= (mx/mget m i j) (mx/mget m j i)))
-               (let [dim (first (mx/shape m))]
-                 (for [i (range dim)
-                       j (range dim)
-                       :when (> j i)] ; no need to test both i,j and j,i since we do both at once. always true for (= j i).
-                   [i j])))))
-
-(defn rec-sym?
-  [m]
-  (let [dim (first (mx/shape m))] ; 1 past the last valid index
-    (letfn [(f [m i j]
-              (cond 
-                (>= i dim) true  ; got all the way through--it's symmetric
-                (>= j dim) (recur m (+ 1 i) (+ 2 i)) ; got through j's--start again with new i
-                (= (mx/mget m i j) 
-                   (mx/mget m j i)) (recur m i (inc j)) ; same, so check next pair
-                :else false))] ; not same, not symmetric. we're done.  
-      (f m 0 0))))
+;(defn comp-sym?
+;  "Returns true if matrix is symmetric, false otherwise."
+;  [m]
+;  (and (mx/square? m)
+;       (every? (fn [[i j]] (= (mx/mget m i j) (mx/mget m j i)))
+;               (let [dim (first (mx/shape m))]
+;                 (for [i (range dim)
+;                       j (range dim)
+;                       :when (> j i)] ; no need to test both i,j and j,i since we do both at once. always true for (= j i).
+;                   [i j])))))
+;
+;(defn rec-sym?
+;  [m]
+;  (let [dim (first (mx/shape m))] ; 1 past the last valid index
+;    (letfn [(f [m i j]
+;              (cond 
+;                (>= i dim) true  ; got all the way through--it's symmetric
+;                (>= j dim) (recur m (+ 1 i) (+ 2 i)) ; got through j's--start again with new i
+;                (= (mx/mget m i j) 
+;                   (mx/mget m j i)) (recur m i (inc j)) ; same, so check next pair
+;                :else false))] ; not same, not symmetric. we're done.  
+;      (f m 0 0))))
 
 (defn make-id-to-idx-map
   "Given a sequence of things, returns a map from things to indexes.  
