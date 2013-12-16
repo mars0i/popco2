@@ -1,13 +1,17 @@
-(ns something
-  [:use criterium.core
-        clojure.core.matrix
-        popco.core.acme])
+(ns tst
+  (:use criterium.core
+        popco.core.acme)
+  (:require [clojure.core.matrix :as mx]))
 
+;           (print (format "%s %s%n" i j))
+
+;; On my MacBook Air, this is much slower--3X to 4X than the other versions that don't create a seq of indexes.
 (defn comp-sym?
   "Returns true if matrix is symmetric, false otherwise."
   [m]
   (and (mx/square? m)
-       (every? (fn [[i j]] (= (mx/mget m i j) (mx/mget m j i)))
+       (every? (fn [[i j]] 
+                 (= (mx/mget m i j) (mx/mget m j i)))
                (let [dim (first (mx/shape m))]
                  (for [i (range dim)
                        j (range dim)
@@ -16,73 +20,88 @@
 
 (defn rec-sym?
   [m]
-  (let [dim (first (mx/shape m))] ; 1 past the last valid index
-    (letfn [(f [m i j]
-              (cond 
-                (>= i dim) true  ; got all the way through--it's symmetric
-                (>= j dim) (recur m (+ 1 i) (+ 2 i)) ; got through j's--start again with new i
-                (= (mx/mget m i j) 
-                   (mx/mget m j i)) (recur m i (inc j)) ; same, so check next pair
-                :else false))] ; not same, not symmetric. we're done.  
-      (f m 0 0))))
+  (and (mx/square? m)
+       (let [dim (first (mx/shape m))] ; 1 past the last valid index
+         (letfn [(f [i j]
+                   (cond 
+                     (>= i dim) true  ; got all the way through--it's symmetric
+                     (>= j dim) (recur (+ 1 i) (+ 2 i)) ; got through j's--start again with new i
+                     (= (mx/mget m i j) 
+                        (mx/mget m j i)) (recur i (inc j)) ; same, so check next pair
+                     :else false))] ; not same, not symmetric. we're done.  
+           (f 0 1)))))
+
+;; On my MacBook Air, this is about 20% slower than rec-sym.  Why?
+(defn loop-sym?
+  [m]
+  (and (mx/square? m)
+       (let [dim (first (mx/shape m))]
+         (loop [i 0 j 1]
+           (cond 
+             (>= i dim) true                    ; checked all i's, j's
+             (>= j dim) (recur (+ 1 i) (+ 2 i)) ; checked j's: restart with new i
+             (= (mx/mget m i j) 
+                (mx/mget m j i))  (recur i (inc j)) ; i,j = j,i: try next j
+             :else false))))) ; not equal: matrix isn't symmetric
+
 
 (defn bench-mat 
   [m]
-  (let [mv (matrix :vectorz m)
-        mn (matrix :ndarray m)
-        mp (matrix :persistent-vector m)
+  (let [mv (mx/matrix :vectorz m)
+        mn (mx/matrix :ndarray m)
+        mp (mx/matrix :persistent-vector m)
         ; mc (matrix :clatrix m)
        ]
 
-    (println "*** supplied matrix ***")
+    (println "\n*** supplied matrix ***")
 
-    (println "vectorz comp-sym?:")
+    (println "\nvectorz comp-sym?:")
     (bench (def _ (comp-sym? mv)))
-    (println "vectorz rec-sym?:")
+    (println "\nvectorz rec-sym?:")
     (bench (def _ (rec-sym? mv)))
 
-    (println "ndarray comp-sym?:")
+    (println "\nndarray comp-sym?:")
     (bench (def _ (comp-sym? mn)))
-    (println "ndarray rec-sym?:")
+    (println "\nndarray rec-sym?:")
     (bench (def _ (rec-sym? mn)))
 
-    (println "persistent-vector comp-sym?:")
+    (println "\npersistent-vector comp-sym?:")
     (bench (def _ (comp-sym? mp)))
-    (println "persistent-vector rec-sym?:")
+    (println "\npersistent-vector rec-sym?:")
     (bench (def _ (rec-sym? mp)))
 
-    ;(println "clatrix comp-sym?:")
+    ;(println "\nclatrix comp-sym?:")
     ;(bench (def _ (comp-sym? mc)))
-    ;(println "clatrix rec-sym?:")
+    ;(println "\nclatrix rec-sym?:")
     ;(bench (def _ (rec-sym? mc)))
   ))
 
 (defn bench-zero
   [dim]
-  (let [mv (new-matrix :vectorz dim dim)
-        mn (new-matrix :ndarray dim dim)
-        mp (new-matrix :persistent-vector dim dim)
+  (let [mv (mx/new-matrix :vectorz dim dim)
+        mn (mx/new-matrix :ndarray dim dim)
+        mp (mx/new-matrix :persistent-vector dim dim)
         ; mc (new-matrix :clatrix dim dim)
        ]
-    (println "*** zero matrices ***")
+    (println "\n*** zero matrices ***")
 
-    (println "vectorz comp-sym?:")
+    (println "\nvectorz comp-sym?:")
     (bench (def _ (comp-sym? mv)))
-    (println "vectorz rec-sym?:")
+    (println "\nvectorz rec-sym?:")
     (bench (def _ (rec-sym? mv)))
 
-    (println "ndarray comp-sym?:")
+    (println "\nndarray comp-sym?:")
     (bench (def _ (comp-sym? mn)))
-    (println "ndarray rec-sym?:")
+    (println "\nndarray rec-sym?:")
     (bench (def _ (rec-sym? mn)))
 
-    (println "persistent-vector comp-sym?:")
+    (println "\npersistent-vector comp-sym?:")
     (bench (def _ (comp-sym? mp)))
-    (println "persistent-vector rec-sym?:")
+    (println "\npersistent-vector rec-sym?:")
     (bench (def _ (rec-sym? mp)))
 
-    ;(println "clatrix comp-sym?:")
+    ;(println "\nclatrix comp-sym?:")
     ;(bench (def _ (comp-sym? mc)))
-    ;(println "clatrix rec-sym?:")
+    ;(println "\nclatrix rec-sym?:")
     ;(bench (def _ (rec-sym? mc)))
   ))
