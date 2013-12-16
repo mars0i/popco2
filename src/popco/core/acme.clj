@@ -474,7 +474,7 @@
   ([mat row-labels col-labels sep]
    (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
          nums-width (+ 0 (max-strlen 
-                           (map #(cl-format nil "~f" %) 
+                           (map #(cl-format nil "~f" %)   ; REWRITE WITH mx/longest-nums
                                 (apply concat pv-mat))))
          left-pad-width (max-strlen row-labels)]
      (apply str
