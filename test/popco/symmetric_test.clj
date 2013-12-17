@@ -36,12 +36,13 @@
   [m]
   (and (mx/square? m)
        (let [dim (first (mx/shape m))]
-         (loop [i 0 j 1]
+         (loop [i 0 
+                j 1]
            (cond 
              (>= i dim) true                    ; checked all i's, j's
              (>= j dim) (recur (+ 1 i) (+ 2 i)) ; checked j's: restart with new i
              (= (mx/mget m i j) 
-                (mx/mget m j i))  (recur i (inc j)) ; i,j = j,i: try next j
+                (mx/mget m j i)) (recur i (inc j)) ; i,j = j,i: try next j
              :else false))))) ; not equal: matrix isn't symmetric
 
 
@@ -59,21 +60,29 @@
     (bench (def _ (comp-sym? mv)))
     (println "\nvectorz rec-sym?:")
     (bench (def _ (rec-sym? mv)))
+    (println "\nvectorz loop-sym?:")
+    (bench (def _ (loop-sym? mv)))
 
     (println "\nndarray comp-sym?:")
     (bench (def _ (comp-sym? mn)))
     (println "\nndarray rec-sym?:")
     (bench (def _ (rec-sym? mn)))
+    (println "\nndarray loop-sym?:")
+    (bench (def _ (loop-sym? mn)))
 
     (println "\npersistent-vector comp-sym?:")
     (bench (def _ (comp-sym? mp)))
     (println "\npersistent-vector rec-sym?:")
     (bench (def _ (rec-sym? mp)))
+    (println "\npersistent-vector loop-sym?:")
+    (bench (def _ (loop-sym? mp)))
 
     ;(println "\nclatrix comp-sym?:")
     ;(bench (def _ (comp-sym? mc)))
     ;(println "\nclatrix rec-sym?:")
     ;(bench (def _ (rec-sym? mc)))
+    ;(println "\nclatrix loop-sym?:")
+    ;(bench (def _ (loop-sym? mc)))
   ))
 
 (defn bench-zero
