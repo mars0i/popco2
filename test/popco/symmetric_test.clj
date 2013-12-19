@@ -56,22 +56,22 @@
 
     (println "\n*** supplied matrix ***")
 
-    (println "\nvectorz comp-sym?:")
-    (bench (def _ (comp-sym? mv)))
+    ;(println "\nvectorz comp-sym?:")
+    ;(bench (def _ (comp-sym? mv)))
     (println "\nvectorz rec-sym?:")
     (bench (def _ (rec-sym? mv)))
     (println "\nvectorz loop-sym?:")
     (bench (def _ (loop-sym? mv)))
 
-    (println "\nndarray comp-sym?:")
-    (bench (def _ (comp-sym? mn)))
+    ;(println "\nndarray comp-sym?:")
+    ;(bench (def _ (comp-sym? mn)))
     (println "\nndarray rec-sym?:")
     (bench (def _ (rec-sym? mn)))
     (println "\nndarray loop-sym?:")
     (bench (def _ (loop-sym? mn)))
 
-    (println "\npersistent-vector comp-sym?:")
-    (bench (def _ (comp-sym? mp)))
+    ;(println "\npersistent-vector comp-sym?:")
+    ;(bench (def _ (comp-sym? mp)))
     (println "\npersistent-vector rec-sym?:")
     (bench (def _ (rec-sym? mp)))
     (println "\npersistent-vector loop-sym?:")
@@ -90,24 +90,24 @@
   (println "\n*** zero matrices ***")
 
   (let [m (mx/new-matrix :vectorz dim dim)]
-    (println "\nvectorz comp-sym?:")
-    (bench (def _ (comp-sym? m)))
+    ;(println "\nvectorz comp-sym?:")
+    ;(bench (def _ (comp-sym? m)))
     (println "\nvectorz rec-sym?:")
     (bench (def _ (rec-sym? m)))
     (println "\nvectorz loop-sym?:")
     (bench (def _ (loop-sym? m))))
 
   (let [m (mx/new-matrix :ndarray dim dim)]
-    (println "\nndarray comp-sym?:")
-    (bench (def _ (comp-sym? m)))
+    ;(println "\nndarray comp-sym?:")
+    ;(bench (def _ (comp-sym? m)))
     (println "\nndarray rec-sym?:")
     (bench (def _ (rec-sym? m)))
     (println "\nndarray loop-sym?:")
     (bench (def _ (loop-sym? m))))
 
   (let [m (mx/new-matrix :persistent-vector dim dim)]
-    (println "\npersistent-vector comp-sym?:")
-    (bench (def _ (comp-sym? m)))
+    ;(println "\npersistent-vector comp-sym?:")
+    ;(bench (def _ (comp-sym? m)))
     (println "\npersistent-vector rec-sym?:")
     (bench (def _ (rec-sym? m)))
     (println "\npersistent-vector loop-sym?:")
