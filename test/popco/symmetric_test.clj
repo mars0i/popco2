@@ -87,38 +87,37 @@
 
 (defn bench-zero
   [dim]
-  (let [mv (mx/new-matrix :vectorz dim dim)
-        mn (mx/new-matrix :ndarray dim dim)
-        mp (mx/new-matrix :persistent-vector dim dim)
-        ; mc (new-matrix :clatrix dim dim)
-       ]
-    (println "\n*** zero matrices ***")
+  (println "\n*** zero matrices ***")
 
-;    (println "\nvectorz comp-sym?:")
-;    (bench (def _ (comp-sym? mv)))
+  (let [m (mx/new-matrix :vectorz dim dim)]
+    (println "\nvectorz comp-sym?:")
+    (bench (def _ (comp-sym? m)))
     (println "\nvectorz rec-sym?:")
-    (bench (def _ (rec-sym? mv)))
+    (bench (def _ (rec-sym? m)))
     (println "\nvectorz loop-sym?:")
-    (bench (def _ (loop-sym? mv)))
+    (bench (def _ (loop-sym? m))))
 
-;    (println "\nndarray comp-sym?:")
-;    (bench (def _ (comp-sym? mn)))
+  (let [m (mx/new-matrix :ndarray dim dim)]
+    (println "\nndarray comp-sym?:")
+    (bench (def _ (comp-sym? m)))
     (println "\nndarray rec-sym?:")
-    (bench (def _ (rec-sym? mn)))
+    (bench (def _ (rec-sym? m)))
     (println "\nndarray loop-sym?:")
-    (bench (def _ (loop-sym? mn)))
+    (bench (def _ (loop-sym? m))))
 
-;    (println "\npersistent-vector comp-sym?:")
-;    (bench (def _ (comp-sym? mp)))
+  (let [m (mx/new-matrix :persistent-vector dim dim)]
+    (println "\npersistent-vector comp-sym?:")
+    (bench (def _ (comp-sym? m)))
     (println "\npersistent-vector rec-sym?:")
-    (bench (def _ (rec-sym? mp)))
+    (bench (def _ (rec-sym? m)))
     (println "\npersistent-vector loop-sym?:")
-    (bench (def _ (loop-sym? mp)))
+    (bench (def _ (loop-sym? m))))
 
-    ;(println "\nclatrix comp-sym?:")
-    ;(bench (def _ (comp-sym? mc)))
-    ;(println "\nclatrix rec-sym?:")
-    ;(bench (def _ (rec-sym? mc)))
-    ;(println "\nclatrix loop-sym?:")
-    ;(bench (def _ (loop-sym? mc)))
-  ))
+;  (let [m (mx/new-matrix :clatrix dim dim)]
+;    (println "\nclatrix comp-sym?:")
+;    (bench (def _ (comp-sym? m)))
+;    (println "\nclatrix rec-sym?:")
+;    (bench (def _ (rec-sym? m)))
+;    (println "\nclatrix loop-sym?:")
+;    (bench (def _ (loop-sym? m))))
+  )
