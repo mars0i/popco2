@@ -51,7 +51,7 @@
   (let [mv (mx/matrix :vectorz m)
         mn (mx/matrix :ndarray m)
         mp (mx/matrix :persistent-vector m)
-        ; mc (matrix :clatrix m)
+        mc (mx/matrix :clatrix m)
        ]
 
     (println "\n*** supplied matrix ***")
@@ -62,6 +62,8 @@
     (bench (def _ (rec-sym? mv)))
     (println "\nvectorz loop-sym?:")
     (bench (def _ (loop-sym? mv)))
+    (println "\nvectorz symmetric?:")
+    (bench (def _ (mx/symmetric? mv)))
 
     ;(println "\nndarray comp-sym?:")
     ;(bench (def _ (comp-sym? mn)))
@@ -69,6 +71,8 @@
     (bench (def _ (rec-sym? mn)))
     (println "\nndarray loop-sym?:")
     (bench (def _ (loop-sym? mn)))
+    (println "\nndarray symmetric?:")
+    (bench (def _ (mx/symmetric? mn)))
 
     ;(println "\npersistent-vector comp-sym?:")
     ;(bench (def _ (comp-sym? mp)))
@@ -76,13 +80,17 @@
     (bench (def _ (rec-sym? mp)))
     (println "\npersistent-vector loop-sym?:")
     (bench (def _ (loop-sym? mp)))
+    (println "\npersistent-vector symmetric?:")
+    (bench (def _ (mx/symmetric? mp)))
 
     ;(println "\nclatrix comp-sym?:")
     ;(bench (def _ (comp-sym? mc)))
-    ;(println "\nclatrix rec-sym?:")
-    ;(bench (def _ (rec-sym? mc)))
-    ;(println "\nclatrix loop-sym?:")
-    ;(bench (def _ (loop-sym? mc)))
+    (println "\nclatrix rec-sym?:")
+    (bench (def _ (rec-sym? mc)))
+    (println "\nclatrix loop-sym?:")
+    (bench (def _ (loop-sym? mc)))
+    (println "\nclatrix symmetric?:")
+    (bench (def _ (mx/symmetric? mc)))
   ))
 
 (defn bench-zero
@@ -95,7 +103,10 @@
     (println "\nvectorz rec-sym?:")
     (bench (def _ (rec-sym? m)))
     (println "\nvectorz loop-sym?:")
-    (bench (def _ (loop-sym? m))))
+    (bench (def _ (loop-sym? m)))
+    (println "\nvectorz symmetric?:")
+    (bench (def _ (mx/symmetric? m)))
+    )
 
   (let [m (mx/new-matrix :ndarray dim dim)]
     ;(println "\nndarray comp-sym?:")
@@ -103,7 +114,10 @@
     (println "\nndarray rec-sym?:")
     (bench (def _ (rec-sym? m)))
     (println "\nndarray loop-sym?:")
-    (bench (def _ (loop-sym? m))))
+    (bench (def _ (loop-sym? m)))
+    (println "\nndarray symmetric?:")
+    (bench (def _ (mx/symmetric? m)))
+    )
 
   (let [m (mx/new-matrix :persistent-vector dim dim)]
     ;(println "\npersistent-vector comp-sym?:")
@@ -111,13 +125,18 @@
     (println "\npersistent-vector rec-sym?:")
     (bench (def _ (rec-sym? m)))
     (println "\npersistent-vector loop-sym?:")
-    (bench (def _ (loop-sym? m))))
+    (bench (def _ (loop-sym? m)))
+    (println "\npersistent-vector symmetric?:")
+    (bench (def _ (mx/symmetric? m)))
+    )
 
-;  (let [m (mx/new-matrix :clatrix dim dim)]
-;    (println "\nclatrix comp-sym?:")
-;    (bench (def _ (comp-sym? m)))
-;    (println "\nclatrix rec-sym?:")
-;    (bench (def _ (rec-sym? m)))
-;    (println "\nclatrix loop-sym?:")
-;    (bench (def _ (loop-sym? m))))
+  (let [m (mx/new-matrix :clatrix dim dim)]
+    ;(println "\nclatrix comp-sym?:")
+    ;(bench (def _ (comp-sym? m)))
+    (println "\nclatrix rec-sym?:")
+    (bench (def _ (rec-sym? m)))
+    (println "\nclatrix loop-sym?:")
+    (bench (def _ (loop-sym? m)))
+    (println "\nclatrix symmetric?:")
+    (bench (def _ (mx/symmetric? m))))
   )
