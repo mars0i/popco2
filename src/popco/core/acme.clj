@@ -404,6 +404,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS
 
+;; TODO: Note that core.matrix/pm does some pretty-printing of matrices.
+;;       Consider using it.  Or adding to it.
+
 (defn max-strlen
   "Returns the maximum length of the strings contained in its argument."
   [strings]
