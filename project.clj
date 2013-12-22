@@ -10,7 +10,7 @@
                                   ;[net.mikera/core.matrix "0.15.0"]
                                   ;[net.mikera/vectorz-clj "0.17.0"]
                                   [mars0i/clatrix "0.4.0-SNAPSHOT"]
-                                  [mars0i/core.matrix "0.16.1-SNAPSHOT"]
+                                  [mars0i/core.matrix "0.18.1-SNAPSHOT"]
                                   [mars0i/vectorz-clj "0.17.1-SNAPSHOT"]
                                  ]
                    :source-paths ["src"] ; where load will look for source files
