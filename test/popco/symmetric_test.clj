@@ -73,6 +73,8 @@
     (bench (def _ (loop-sym? mn)))
     (println "\nndarray symmetric?:")
     (bench (def _ (mx/symmetric? mn)))
+    (println "\nndarray loop-symmetric?:")
+    (bench (def _ (mx/loop-symmetric? mn)))
 
     ;(println "\npersistent-vector comp-sym?:")
     ;(bench (def _ (comp-sym? mp)))
@@ -82,6 +84,8 @@
     (bench (def _ (loop-sym? mp)))
     (println "\npersistent-vector symmetric?:")
     (bench (def _ (mx/symmetric? mp)))
+    (println "\npersistent-vector loop-symmetric?:")
+    (bench (def _ (mx/loop-symmetric? mp)))
 
     ;(println "\nclatrix comp-sym?:")
     ;(bench (def _ (comp-sym? mc)))
@@ -91,6 +95,8 @@
     (bench (def _ (loop-sym? mc)))
     (println "\nclatrix symmetric?:")
     (bench (def _ (mx/symmetric? mc)))
+    (println "\nclatrix loop-symmetric?:")
+    (bench (def _ (mx/loop-symmetric? mc)))
   ))
 
 (defn bench-zero
