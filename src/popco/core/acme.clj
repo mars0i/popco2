@@ -1,8 +1,10 @@
 (ns popco.core.acme
   (:use popco.core.lot
         [clojure.pprint :only [cl-format]])
-  (:import [popco.core.lot Propn Pred Obj])
+  (:import [popco.core.lot Propn Pred Obj]
+           [popco.core.nn AnalogyNetStru])
   (:require [utils.general :as ug]
+            [popco.core.nn :as nn]
             [clojure.core.matrix :as mx]
             [clojure.string :as string])
   (:gen-class))
@@ -15,11 +17,10 @@
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix will be needed.
 
-;; TODO
-;; - Hand-spot-check whether the new neg weights are coming out right
-
 (def pos-link-increment 0.1)
 (def neg-link-value -0.2)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS TO BE MOVED TO ONE OR MORE SEPARATE FILES/NSes
@@ -65,40 +66,6 @@
   "Returns a core.matrix square matrix with dimension dim, filled with zeros."
   [dim]
   (mx/new-matrix dim dim))
-
-;; Both analogy nets and proposition nets have nodes and links between them.
-;; That means that both have (1) information on the meaning of each node,
-;; (2) a matrix representing link weights (actually this will probably turn
-;; into two or three matrices later), and (3) a mapping from nodes to row or
-;; column indexes, and back, to keep track of the relationship between nodes 
-;; and their links.  This function initializes (A) a vector of node info, 
-;; which are maps containing, at least, an :id, so that node info can be looked 
-;; up from indexes; (B) a map from node ids to indexes, so that indexes can
-;; be looked up from nodes, and (C), a matrix which will contain link weights.
-;; The matrix is initialized by this function to contain all zeros, since setting
-;; the link weights is a more complicated operation that depends on the purpose
-;; of the constrain network.
-(defn make-nn-stru
-  "Given a sequence of data on individual nodes, returns a clojure map with 
-  three entries:
-  :node-vec -    A Clojure vector of data providing information about the meaning
-                 of particular neural net nodes.  The indexes of the data items
-                 correspond to indexes into activation vectors and rows/columns
-                 of weight matrices.  This vector may be identical to the sequence
-                 of nodes passed in.
-  :id-to-idx -   A Clojure map from ids of the same data items to integers, 
-                 allowing lookup of a node's index from its id.
-  :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
-                 nodes, with all elements initialized to 0.0.  This will represent
-                 positively weighted links.
-  :neg-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
-                 nodes, with all elements initialized to 0.0.  This will represent
-                 negatively weighted links."
-  [node-seq]
-  {:node-vec (vec node-seq)
-   :id-to-idx (make-id-to-idx-map (map :id node-seq)) ; index order will be same as node-seq's order
-   :pos-wt-mat (make-wt-mat (count node-seq))
-   :neg-wt-mat (make-wt-mat (count node-seq))})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 1
@@ -356,50 +323,70 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
-(defn assoc-ids-to-idx-nn-stru
-  [nn-stru]
-  (assoc nn-stru 
-         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-stru) 
-                                              (:id-to-idx nn-stru))))
+(defn assoc-ids-to-idx-nnstru-map
+  [nnstru]
+  (assoc nnstru 
+         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nnstru) 
+                                              (:id-to-idx nnstru))))
 
-(defn make-acme-nn-stru
-  "Make an ACME neural-net structure, i.e. a structure that represents an ACME analogy constraint
-  satisfaction network.  This is a standard neural-net structure produced by make-nn-stru (q.v.)
+;; Both analogy nets and proposition nets have nodes and links between them.
+;; That means that both have (1) information on the meaning of each node,
+;; (2) a matrix representing link weights (actually this will probably turn
+;; into two or three matrices later), and (3) a mapping from nodes to row or
+;; column indexes, and back, to keep track of the relationship between nodes 
+;; and their links.  This function initializes (A) a vector of node info, 
+;; which are maps containing, at least, an :id, so that node info can be looked 
+;; up from indexes; (B) a map from node ids to indexes, so that indexes can
+;; be looked up from nodes, and (C), a matrix which will contain link weights.
+;; The matrix is initialized by this function to contain all zeros, since setting
+;; the link weights is a more complicated operation that depends on the purpose
+;; of the constrain network.
+(defn make-analogy-net-core
+  "Given a sequence of data on individual nodes, returns a clojure map with 
+  these entries:
+  :node-vec -    A Clojure vector of data providing information about the meaning
+                 of particular neural net nodes.  The indexes of the data items
+                 correspond to indexes into activation vectors and rows/columns
+                 of weight matrices.  This vector may be identical to the sequence
+                 of nodes passed in.
+  :id-to-idx -   A Clojure map from ids of the same data items to integers, 
+                 allowing lookup of a node's index from its id.
+  :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
+                 nodes, with all elements initialized to 0.0.  This will represent
+                 positively weighted links.
+  :neg-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
+                 nodes, with all elements initialized to 0.0.  This will represent
+                 negatively weighted links."
+  [node-seq]
+  {:node-vec (vec node-seq)
+   :id-to-idx (make-id-to-idx-map (map :id node-seq)) ; index order will be same as node-seq's order
+   :pos-wt-mat (make-wt-mat (count node-seq))
+   :neg-wt-mat (make-wt-mat (count node-seq))})
+
+(defn make-analogy-net-stru
+  "Make an ACME analogy neural-net structure, i.e. a structure that represents an ACME analogy constraint
+  satisfaction network.  This is a standard neural-net structure produced by make-analogy-net-core (q.v.)
   with these changes that are specific to an analogy network:
   - Field :ids-to-idx is added.  This does roughly the same thing as :id-to-idx. The latter
     maps mapnode ids to indexes into the node vector (or rows, or columns of the matrices).
     :ids-to-idx, by contrast, maps vector pairs containing the ids of the two sides (from
     which the mapnode id is constructed).  This is redundant information, but convenient.
-  - The :pos-wt-mat and :neg-wt-mat matrices, which are initialized with zeros by make-nn-stru, 
+  - The :pos-wt-mat and :neg-wt-mat matrices, which are initialized with zeros by make-analogy-net-core, 
     are now given some nonzero weights--positive weights in the first, negative weights in the 
     second.  These weights follow ACME's rules for analogy networks.  Note that this is an 
     imperative operation using core.matrix functions; no new matrices are created."
   [pset1 pset2 pos-increment neg-increment]
   (let [fams (match-propn-components (match-propns pset1 pset2))
-        nn-stru (assoc-ids-to-idx-nn-stru 
-                  (make-nn-stru 
+        nnstru-map (assoc-ids-to-idx-nnstru-map 
+                  (make-analogy-net-core 
                     (distinct (flatten fams)))) ] ; flatten here assumes map-pairs aren't seqs
-    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) 
-                         (matched-idx-fams fams (:id-to-idx nn-stru)) 
+    (add-pos-wts-to-mat! (:pos-wt-mat nnstru-map) 
+                         (matched-idx-fams fams (:id-to-idx nnstru-map)) 
                          pos-increment)
-    (add-neg-wts-to-mat! (:neg-wt-mat nn-stru) 
-                         (competing-mapnode-idx-fams (:ids-to-idx nn-stru)) 
+    (add-neg-wts-to-mat! (:neg-wt-mat nnstru-map) 
+                         (competing-mapnode-idx-fams (:ids-to-idx nnstru-map)) 
                          neg-increment)
-    nn-stru))
-
-;(defn old-make-acme-nn-stru
-;  ;; ADD DOCSTRING
-;  [pset1 pset2 pos-increment neg-increment]
-;  (let [fams (match-propn-components (match-propns pset1 pset2))
-;        mapnodes (distinct (flatten fams)) ; use of flatten here assumes map-pairs aren't seqs
-;        node-vec (vec mapnodes) ; IDs already added by m-p-c: (vec (map add-id-to-pair-map mapnodes))
-;        temp-nn-stru (make-nn-stru node-vec)
-;        id-to-idx (:id-to-idx temp-nn-stru) ; index order will be same as node-vec order
-;        ids-to-idx (make-two-ids-to-idx-map mapnodes id-to-idx)
-;        nn-stru (assoc temp-nn-stru :ids-to-idx ids-to-idx) ]
-;    (add-pos-wts-to-mat! (:pos-wt-mat nn-stru) (matched-idx-fams fams id-to-idx) pos-increment)
-;    (add-neg-wts-to-mat! (:neg-wt-mat nn-stru) (competing-mapnode-idx-fams ids-to-idx) neg-increment)
-;    nn-stru))
+    (nn/map->AnalogyNetStru nnstru-map)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS
@@ -486,20 +473,20 @@
               (format-top-labels col-labels nums-width left-pad-width sep)
               (format-mat-with-row-labels pv-mat row-labels nums-width sep))))))
 
-(defn format-nn-stru
-  "Format the matrix in nn-stru with associated row, col info into a string
+(defn format-nnstru
+  "Format the matrix in nnstru with associated row, col info into a string
   that would be printed prettily.  Display fields are fixed width, so this
   can also be used to output a matrix to a file for use in other programs."
-  ([nn-stru mat-key] (format-nn-stru mat-key ""))
-  ([nn-stru mat-key sep]
-   (let [labels (map name (map :id (:node-vec nn-stru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nn-stru))]
-         mat (get nn-stru mat-key)]
+  ([nnstru mat-key] (format-nnstru mat-key ""))
+  ([nnstru mat-key sep]
+   (let [labels (map name (map :id (:node-vec nnstru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nnstru))]
+         mat (get nnstru mat-key)]
      (format-matrix-with-labels mat labels labels sep))))
 
-(defn pprint-nn-stru
-  "Pretty-print the matrix in nn-stru with associated row, col info."
-  [nn-stru mat-key]
-  (print (format-nn-stru nn-stru mat-key)))
+(defn pprint-nnstru
+  "Pretty-print the matrix in nnstru with associated row, col info."
+  [nnstru mat-key]
+  (print (format-nnstru nnstru mat-key)))
 
 (defn dotformat
   "Given a string for display of a matrix (or anything), replaces
@@ -507,20 +494,20 @@
   [matstring]
   (clojure.string/replace matstring #"\b0\.0\b"  " . ")) ; \b matches word border. Dot escaped so only matches dots.
 
-(defn dotformat-nn-stru
-  "Format matrix in nn-stru with associated row, col info, like
-  the output of format-nn-stru, but with '0.0' replaced by dot.
+(defn dotformat-nnstru
+  "Format matrix in nnstru with associated row, col info, like
+  the output of format-nnstru, but with '0.0' replaced by dot.
   Display fields are fixed width, so this can also be used to output
   a matrix to a file for use in other programs."
-  [nn-stru mat-key]
-  (dotformat (format-nn-stru nn-stru mat-key)))
+  [nnstru mat-key]
+  (dotformat (format-nnstru nnstru mat-key)))
 
-(defn dotprint-nn-stru
-  "Pretty-print the matrix in nn-stru with associated row, col info,
+(defn dotprint-nnstru
+  "Pretty-print the matrix in nnstru with associated row, col info,
   replacing zeros with dots, so that it's easy to distinguish zeros
   from other values."
-  [nn-stru mat-key]
-  (print (dotformat-nn-stru nn-stru mat-key)))
+  [nnstru mat-key]
+  (print (dotformat-nnstru nnstru mat-key)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; OTHER UTILITIES FOR DATA STRUCTURES DEFINED ABOVE
@@ -566,3 +553,4 @@
 ;    (map (fn [[p1 p2]] 
 ;           [(:id p1) (:id p2)])
 ;         prs)))
+

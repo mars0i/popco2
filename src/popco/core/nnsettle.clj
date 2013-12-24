@@ -1,5 +1,6 @@
 (ns popco.core.nnsettle
-  [:use clojure.core.matrix]
+  (:use clojure.core.matrix)
+  (:require [popco.core.nn :as nn])
   (:gen-class))
 
 (set-current-implementation :vectorz)
@@ -95,22 +96,17 @@
 
 (defn next-activns 
   "Calculate a new set of activations for nodes starting from the current
-  activations in vector activns, using network link weights in Wts to
+  activations in vector activns, using network link weights in wts to
   update activations from neighbors using the Grossberg (1978) algorithm
   as described in Holyoak & Thagard (1989).  If three args given, first two
-  are nonnegative and nonpositive versions of Wts, i.e. with negative and
+  are nonnegative and nonpositive versions of wts, i.e. with negative and
   positive weights, respectively, replaced by zeros."
-
-  ([Wts activns]
-   (next-activns
-     (emap posify Wts) (emap negify Wts) activns)) ; split into nonegative and nonpositve weight matrices
-
-  ([PosWts NegWts activns]
-   (let [pos-activns (emap posify activns)] ; Negative activations are ignored as inputs.
-     (emap clip-to-extrema                  ; Values outside [-1,1] are clipped to -1, 1.
-           (add (emul 0.9 activns)                       ; Sum into decayed activations ...
-                (emul (mmul PosWts pos-activns)          ; positively weighted inputs scaled by
-                      (emap dist-from-max activns))      ;  inputs' distances from 1, and
-                (emul (mmul NegWts pos-activns)          ; negatively weighted inputs scaled by
-                      (emap dist-from-min activns))))))) ;  inputs' distances from -1.
+  [activns nnstru]
+  (let [pos-activns (emap nn/posify activns)] ; Negative activations are ignored as inputs.
+    (emap clip-to-extrema                  ; Values outside [-1,1] are clipped to -1, 1.
+          (add (emul 0.9 activns)                       ; Sum into decayed activations ...
+               (emul (mmul (nn/pos-wt-mat nnstru) pos-activns)          ; positively weighted inputs scaled by
+                     (emap dist-from-max activns))      ;  inputs' distances from 1, and
+               (emul (mmul (nn/neg-wt-mat nnstru) pos-activns)          ; negatively weighted inputs scaled by
+                     (emap dist-from-min activns)))))) ;  inputs' distances from -1.
 
