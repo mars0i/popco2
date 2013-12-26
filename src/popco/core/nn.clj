@@ -1,14 +1,15 @@
-;; Definitions of neural network types, associated functions, etc. for POPCO
 (ns popco.core.nn
   (:require [utils.general :as ug]
             [clojure.core.matrix :as mx])
   (:gen-class))
 
-;; NOTE: The two fields shared by the an analogy-net structure and a
-;; proposition-net structure are node-vec and id-to-idx.  However, they
-;; share the accessors wt-mat, pos-wt-mat, and neg-wt-mat.
+;; Definitions of neural network types, associated functions, etc. for POPCO
 
-(defprotocol NNStruMats
+;; NOTE: The two fields shared by the an analogy net structure and a
+;; proposition net structure are :node-vec and :id-to-idx.  However, they
+;; share the accessors wt-mat, pos-wt-mat, and neg-wt-mat.  
+
+(defprotocol NNMats
   "Protocol for access to matrices in an nnstru, i.e. a neural-network 
   structure.  Defines accessors for the matrices in neural-net structures, 
   but not other fields.  It's efficient and simple for the analogy net to
@@ -27,13 +28,13 @@
     "Returns the nnstru's negative-only weight matrix.")
 )
 
-(defrecord AnalogyNetStru [pos-wt-mat neg-wt-mat node-vec id-to-idx ids-to-idx]
-  NNStruMats
+(defrecord AnalogyNet [pos-wt-mat neg-wt-mat node-vec id-to-idx ids-to-idx]
+  NNMats
   (wt-mat [nnstru] (mx/add (:pos-wt-mat nnstru) (:neg-wt-mat nnstru)))
   (pos-wt-mat [nnstru] (:pos-wt-mat nnstru))
   (neg-wt-mat [nnstru] (:neg-wt-mat nnstru)))
 
-(ug/add-to-docstr ->AnalogyNetStru
+(ug/add-to-docstr ->AnalogyNet
   "Makes an ACME analogy neural-net structure, i.e. a structure that represents an ACME analogy constraint
   satisfaction network.  Has these fields:
   :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
@@ -56,13 +57,13 @@
 
 (declare posify negify)
 
-(defrecord PropnNetStru [wt-mat node-vec id-to-idx]
-  NNStruMats
+(defrecord PropnNet [wt-mat node-vec id-to-idx]
+  NNMats
   (wt-mat [nnstru] (:wt-mat nnstru))
   (pos-wt-mat [nnstru] (mx/emap posify (:wt-mat nnstru)))
   (neg-wt-mat [nnstru] (mx/emap negify (:wt-mat nnstru))))
 
-(ug/add-to-docstr ->PropnNetStru
+(ug/add-to-docstr ->PropnNet
   "Makes a proposition neural-net structure, i.e. a structure that represents a
   POPCO proposition constraint satisfaction network.  Has these fields:
   :wt-mat -      A core.matrix square matrix with dimensions equal to the number of

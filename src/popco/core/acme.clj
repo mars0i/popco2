@@ -6,7 +6,7 @@
             [clojure.core.matrix :as mx]
             [clojure.string :as string])
   (:import [popco.core.lot Propn Pred Obj]
-           [popco.core.nn AnalogyNetStru])
+           [popco.core.nn AnalogyNet])
   (:gen-class))
 
 ;; SEE acme.md for an overview of what's going on in this file.
@@ -386,7 +386,7 @@
     (add-neg-wts-to-mat! (:neg-wt-mat nnstru-map) 
                          (competing-mapnode-idx-fams (:ids-to-idx nnstru-map)) 
                          neg-increment)
-    (nn/map->AnalogyNetStru nnstru-map)))
+    (nn/map->AnalogyNet nnstru-map)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS
