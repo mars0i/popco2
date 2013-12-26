@@ -1,4 +1,4 @@
-(ns popco.nn.acme
+(ns popco.nn.analogy
   (:use popco.core.lot
         [clojure.pprint :only [cl-format]])
   (:require [popco.nn.core :as nn]
@@ -9,7 +9,7 @@
            [popco.nn.core AnalogyNet])
   (:gen-class))
 
-;; SEE acme.md for an overview of what's going on in this file.
+;; SEE analogy.md for an overview of what's going on in this file.
 
 ;;; NOTE for the analogy net we probably don't really need a link
 ;;; matrix that just represents the existence of links, strictly speaking, 

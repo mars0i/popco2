@@ -1,4 +1,4 @@
-acme.clj
+analogy.clj
 =======
 
 An implementation of Holyoak & Thagard's (1989) ACME method
