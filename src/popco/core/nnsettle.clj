@@ -62,16 +62,6 @@
   [prob]
   (if (< (rand) prob) 1 0))
 
-(defn posify 
-  "Return the non-negative number closest to x, i.e. 0 if x < 0, else x."
-  [x]
-  (max 0 x))
-
-(defn negify
-  "Return the non-positive number closest to x, i.e. 0 if x > 0, else x."
-  [x]
-  (min 0 x))
-
 (defn dist-from-max
   "Return the distance of activn from 1.  Note return value will be > 1
   if activn < 0."
