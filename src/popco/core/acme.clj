@@ -323,25 +323,21 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
-(defn assoc-ids-to-idx-nnstru-map
+(defn assoc-ids-to-idx-nn-map
   [nnstru]
   (assoc nnstru 
          :ids-to-idx (make-two-ids-to-idx-map (:node-vec nnstru) 
                                               (:id-to-idx nnstru))))
 
 ;; Both analogy nets and proposition nets have nodes and links between them.
-;; That means that both have (1) information on the meaning of each node,
-;; (2) a matrix representing link weights (actually this will probably turn
-;; into two or three matrices later), and (3) a mapping from nodes to row or
-;; column indexes, and back, to keep track of the relationship between nodes 
-;; and their links.  This function initializes (A) a vector of node info, 
-;; which are maps containing, at least, an :id, so that node info can be looked 
-;; up from indexes; (B) a map from node ids to indexes, so that indexes can
-;; be looked up from nodes, and (C), a matrix which will contain link weights.
-;; The matrix is initialized by this function to contain all zeros, since setting
-;; the link weights is a more complicated operation that depends on the purpose
-;; of the constrain network.
-(defn make-analogy-net-core
+;; That means that both have (1) information on the meaning of each node
+;; and (2) a mapping from nodes to row or column indexes (same thing)
+;; and back, to keep track of the relationship between nodes  and their
+;; links.  This function initializes (A) a vector of node info, which are
+;; maps containing, at least, an :id, so that node info can be looked  up
+;; from indexes; (B) a map from node ids to indexes, so that indexes can
+;; be looked up from nodes.
+(defn make-nn-core
   "Given a sequence of data on individual nodes, returns a clojure map with 
   these entries:
   :node-vec -    A Clojure vector of data providing information about the meaning
@@ -350,43 +346,40 @@
                  of weight matrices.  This vector may be identical to the sequence
                  of nodes passed in.
   :id-to-idx -   A Clojure map from ids of the same data items to integers, 
-                 allowing lookup of a node's index from its id.
-  :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
-                 nodes, with all elements initialized to 0.0.  This will represent
-                 positively weighted links.
-  :neg-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
-                 nodes, with all elements initialized to 0.0.  This will represent
-                 negatively weighted links."
+                 allowing lookup of a node's index from its id."
   [node-seq]
-  {:node-vec (vec node-seq)
-   :id-to-idx (make-id-to-idx-map (map :id node-seq)) ; index order will be same as node-seq's order
-   :pos-wt-mat (make-wt-mat (count node-seq))
-   :neg-wt-mat (make-wt-mat (count node-seq))})
+  { :node-vec (vec node-seq)
+    :id-to-idx (make-id-to-idx-map (map :id node-seq)) }) ; index order will be same as node-seq's order
 
 (defn make-analogy-net-stru
   "Make an ACME analogy neural-net structure, i.e. a structure that represents an ACME analogy constraint
-  satisfaction network.  This is a standard neural-net structure produced by make-analogy-net-core (q.v.)
+  satisfaction network.  This is a standard neural-net structure produced by make-nn-core (q.v.)
   with these changes that are specific to an analogy network:
-  - Field :ids-to-idx is added.  This does roughly the same thing as :id-to-idx. The latter
-    maps mapnode ids to indexes into the node vector (or rows, or columns of the matrices).
-    :ids-to-idx, by contrast, maps vector pairs containing the ids of the two sides (from
-    which the mapnode id is constructed).  This is redundant information, but convenient.
-  - The :pos-wt-mat and :neg-wt-mat matrices, which are initialized with zeros by make-analogy-net-core, 
-    are now given some nonzero weights--positive weights in the first, negative weights in the 
-    second.  These weights follow ACME's rules for analogy networks.  Note that this is an 
-    imperative operation using core.matrix functions; no new matrices are created."
+  :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number
+                 of nodes.  This will represent positively weighted links.
+  :neg-wt-mat -  A core.matrix square matrix with dimensions equal to the number
+                 of nodes.  This will represent negatively weighted links.
+  :ids-to-idx -  This does roughly the same thing as :id-to-idx. The latter
+                 maps mapnode ids to indexes into the node vector (or rows, or 
+                 columns of the matrices).  :ids-to-idx, by contrast, maps
+                 vector pairs containing the ids of the two sides (from which
+                 the mapnode id is constructed).  This is redundant information,
+                 but convenient."
   [pset1 pset2 pos-increment neg-increment]
   (let [fams (match-propn-components (match-propns pset1 pset2))
-        nnstru-map (assoc-ids-to-idx-nnstru-map 
-                  (make-analogy-net-core 
-                    (distinct (flatten fams)))) ] ; flatten here assumes map-pairs aren't seqs
-    (add-pos-wts-to-mat! (:pos-wt-mat nnstru-map) 
-                         (matched-idx-fams fams (:id-to-idx nnstru-map)) 
+        node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
+        num-nodes (count node-seq)
+        nn-map (assoc
+                 (assoc-ids-to-idx-nn-map (make-nn-core node-seq)) ; make node/indexes mappings
+                 :pos-wt-mat (make-wt-mat num-nodes)    ; add zero matrices
+                 :neg-wt-mat (make-wt-mat num-nodes))]  ; ... to be filled below
+    (add-pos-wts-to-mat! (:pos-wt-mat nn-map) 
+                         (matched-idx-fams fams (:id-to-idx nn-map)) 
                          pos-increment)
-    (add-neg-wts-to-mat! (:neg-wt-mat nnstru-map) 
-                         (competing-mapnode-idx-fams (:ids-to-idx nnstru-map)) 
+    (add-neg-wts-to-mat! (:neg-wt-mat nn-map) 
+                         (competing-mapnode-idx-fams (:ids-to-idx nn-map)) 
                          neg-increment)
-    (nn/map->AnalogyNet nnstru-map)))
+    (nn/map->AnalogyNet nn-map)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS
