@@ -1,6 +1,6 @@
-(ns popco.core.nntesttools
+(ns popco.nn.testtools
   [:use clojure.core.matrix
-        popco.core.nnsettle]
+        popco.nn.settle]
   (:gen-class))
 
 (defn make-random-activn-vec

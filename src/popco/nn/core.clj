@@ -1,4 +1,4 @@
-(ns popco.core.nn
+(ns popco.nn.core
   (:require [utils.general :as ug]
             [clojure.core.matrix :as mx])
   (:gen-class))

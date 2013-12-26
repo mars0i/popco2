@@ -71,9 +71,16 @@ STEPS:
    useful to have the information available to an investigator
    running a simulation.)
 
-4. Make a square matrix representing neural network link weights
-   that will be used to settle the "analogy network" of the map
-   nodes:
+4. Make a square matrix, or rather two matrices, representing neural
+   network link weights that will be used to settle the "analogy
+   network" of the map nodes.  The two matrices can be viewed as a
+   logical single matrix, but since this matrix will typically be
+   created only once for a given simulation, and since we'll always 
+   need to treat the positive links and negative links separately
+   in the Grossberg algorithm used to settle the network, two separate
+   matrices are created instead.  (The function `wt-mat`, defined in
+   nn/core.clj, can be used to return the single matrix which is the sum
+   of the two hardcoded matrices.)  In particular, the two matrices:
 
     A. Assign positive weights between all map nodes resulting from
        each paired proposition.  Where there are multiple pairings
@@ -87,9 +94,11 @@ STEPS:
        it can occur that there are multiple instances of competition in
        this sense, creating a weight whose value is farther from zero.
 
+The function `make-analogy-net` wraps up all of these steps, returning
+the result in a Clojure AnalogyNet record (defined in nn/core.clj`) with 
+these elements: 
 
-The function `make-acme-nn-strus` wraps up all of these steps, returning
-the result in a Clojure map with three elements: 
+* The two `clojure.core.matrix`s described above.
 
 * A standard Clojure vector of maps, each containing information about
   the two LOT elements that are paired in an ACME map node.  These maps
@@ -103,8 +112,10 @@ the result in a Clojure map with three elements:
   the vector just mentioned, allowing reverse lookup of indexes from
   map node ids.
 
-* A clojure.core.matrix weight matrix representing link weights in the
-  analogy network.
+* A Clojure map from pairs of ids of the paired elements that were the
+  origin of each of the map nodes, to their indexes in the vector 
+  mentioned above, allowing reverse lookup of indexes from pairs of 
+  LOT element (see core/lot.clj) map node ids.
 
 (This function might also return a matrix of 1's and 0's representing
 the presence or absence of a link.  This isn't essential for the analogy

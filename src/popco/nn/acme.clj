@@ -1,12 +1,12 @@
-(ns popco.core.acme
+(ns popco.nn.acme
   (:use popco.core.lot
         [clojure.pprint :only [cl-format]])
-  (:require [popco.core.nn :as nn]
+  (:require [popco.nn.core :as nn]
             [utils.general :as ug]
             [clojure.core.matrix :as mx]
             [clojure.string :as string])
   (:import [popco.core.lot Propn Pred Obj]
-           [popco.core.nn AnalogyNet])
+           [popco.nn.core AnalogyNet])
   (:gen-class))
 
 ;; SEE acme.md for an overview of what's going on in this file.
