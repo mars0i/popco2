@@ -324,10 +324,10 @@
 ;; ...
 
 (defn assoc-ids-to-idx-nn-map
-  [nnstru]
-  (assoc nnstru 
-         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nnstru) 
-                                              (:id-to-idx nnstru))))
+  [nn-map]
+  (assoc nn-map 
+         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-map) 
+                                              (:id-to-idx nn-map))))
 
 ;; Both analogy nets and proposition nets have nodes and links between them.
 ;; That means that both have (1) information on the meaning of each node
@@ -351,7 +351,7 @@
   { :node-vec (vec node-seq)
     :id-to-idx (make-id-to-idx-map (map :id node-seq)) }) ; index order will be same as node-seq's order
 
-(defn make-analogy-net-stru
+(defn make-analogy-net
   "Make an ACME analogy neural-net structure, i.e. a structure that represents an ACME analogy constraint
   satisfaction network.  This is a standard neural-net structure produced by make-nn-core (q.v.)
   with these changes that are specific to an analogy network:
@@ -466,20 +466,20 @@
               (format-top-labels col-labels nums-width left-pad-width sep)
               (format-mat-with-row-labels pv-mat row-labels nums-width sep))))))
 
-(defn format-nnstru
+(defn format-nn
   "Format the matrix in nnstru with associated row, col info into a string
   that would be printed prettily.  Display fields are fixed width, so this
   can also be used to output a matrix to a file for use in other programs."
-  ([nnstru mat-key] (format-nnstru mat-key ""))
+  ([nnstru mat-key] (format-nn mat-key ""))
   ([nnstru mat-key sep]
    (let [labels (map name (map :id (:node-vec nnstru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nnstru))]
          mat (get nnstru mat-key)]
      (format-matrix-with-labels mat labels labels sep))))
 
-(defn pprint-nnstru
+(defn pprint-nn
   "Pretty-print the matrix in nnstru with associated row, col info."
   [nnstru mat-key]
-  (print (format-nnstru nnstru mat-key)))
+  (print (format-nn nnstru mat-key)))
 
 (defn dotformat
   "Given a string for display of a matrix (or anything), replaces
@@ -487,20 +487,20 @@
   [matstring]
   (clojure.string/replace matstring #"\b0\.0\b"  " . ")) ; \b matches word border. Dot escaped so only matches dots.
 
-(defn dotformat-nnstru
+(defn dotformat-nn
   "Format matrix in nnstru with associated row, col info, like
-  the output of format-nnstru, but with '0.0' replaced by dot.
+  the output of format-nn, but with '0.0' replaced by dot.
   Display fields are fixed width, so this can also be used to output
   a matrix to a file for use in other programs."
   [nnstru mat-key]
-  (dotformat (format-nnstru nnstru mat-key)))
+  (dotformat (format-nn nnstru mat-key)))
 
-(defn dotprint-nnstru
+(defn dotprint-nn
   "Pretty-print the matrix in nnstru with associated row, col info,
   replacing zeros with dots, so that it's easy to distinguish zeros
   from other values."
   [nnstru mat-key]
-  (print (dotformat-nnstru nnstru mat-key)))
+  (print (dotformat-nn nnstru mat-key)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; OTHER UTILITIES FOR DATA STRUCTURES DEFINED ABOVE
