@@ -1,7 +1,8 @@
 (ns popco.core.popco
   [:use clojure.core.matrix
-        popco.nn.analogy
         popco.nn.core
+        popco.nn.analogy
+        popco.nn.propn
         popco.nn.settle
         popco.nn.testtools
         utils.general]
