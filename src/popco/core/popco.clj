@@ -1,6 +1,7 @@
 (ns popco.core.popco
   [:use clojure.core.matrix
         popco.core.acme
+        popco.core.nn
         popco.core.nnsettle
         popco.core.nntesttools
         utils.general]
