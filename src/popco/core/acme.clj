@@ -49,12 +49,6 @@
 ;                :else false))] ; not same, not symmetric. we're done.  
 ;      (f m 0 0))))
 
-(defn make-id-to-idx-map
-  "Given a sequence of things, returns a map from things to indexes.  
-  Allows reverse lookup of indexes from the things."
-  [ids]
-  (zipmap ids (range (count ids))))
-
 (defn make-activn-vec
   "Returns a core.matrix vector of length len, filled with zeros,
   to represent activation values of nodes.  Each person has its own 
@@ -329,28 +323,6 @@
          :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-map) 
                                               (:id-to-idx nn-map))))
 
-;; Both analogy nets and proposition nets have nodes and links between them.
-;; That means that both have (1) information on the meaning of each node
-;; and (2) a mapping from nodes to row or column indexes (same thing)
-;; and back, to keep track of the relationship between nodes  and their
-;; links.  This function initializes (A) a vector of node info, which are
-;; maps containing, at least, an :id, so that node info can be looked  up
-;; from indexes; (B) a map from node ids to indexes, so that indexes can
-;; be looked up from nodes.
-(defn make-nn-core
-  "Given a sequence of data on individual nodes, returns a clojure map with 
-  these entries:
-  :node-vec -    A Clojure vector of data providing information about the meaning
-                 of particular neural net nodes.  The indexes of the data items
-                 correspond to indexes into activation vectors and rows/columns
-                 of weight matrices.  This vector may be identical to the sequence
-                 of nodes passed in.
-  :id-to-idx -   A Clojure map from ids of the same data items to integers, 
-                 allowing lookup of a node's index from its id."
-  [node-seq]
-  { :node-vec (vec node-seq)
-    :id-to-idx (make-id-to-idx-map (map :id node-seq)) }) ; index order will be same as node-seq's order
-
 (defn make-analogy-net
   "Make an ACME analogy neural-net structure, i.e. a structure that represents an ACME analogy constraint
   satisfaction network.  This is a standard neural-net structure produced by make-nn-core (q.v.)
@@ -370,7 +342,7 @@
         node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
         num-nodes (count node-seq)
         nn-map (assoc
-                 (assoc-ids-to-idx-nn-map (make-nn-core node-seq)) ; make node/indexes mappings
+                 (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
                  :pos-wt-mat (make-wt-mat num-nodes)    ; add zero matrices
                  :neg-wt-mat (make-wt-mat num-nodes))]  ; ... to be filled below
     (add-pos-wts-to-mat! (:pos-wt-mat nn-map) 

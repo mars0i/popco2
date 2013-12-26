@@ -85,3 +85,31 @@
   "Return the non-positive number closest to x, i.e. 0 if x > 0, else x."
   [x]
   (min 0 x))
+
+(defn make-id-to-idx-map
+  "Given a sequence of things, returns a map from things to indexes.  
+  Allows reverse lookup of indexes from the things."
+  [ids]
+  (zipmap ids (range (count ids))))
+
+;; Both analogy nets and proposition nets have nodes and links between them.
+;; That means that both have (1) information on the meaning of each node
+;; and (2) a mapping from nodes to row or column indexes (same thing)
+;; and back, to keep track of the relationship between nodes  and their
+;; links.  This function initializes (A) a vector of node info, which are
+;; maps containing, at least, an :id, so that node info can be looked  up
+;; from indexes; (B) a map from node ids to indexes, so that indexes can
+;; be looked up from nodes.
+(defn make-nn-core
+  "Given a sequence of data on individual nodes, returns a clojure map with 
+  these entries:
+  :node-vec -    A Clojure vector of data providing information about the meaning
+                 of particular neural net nodes.  The indexes of the data items
+                 correspond to indexes into activation vectors and rows/columns
+                 of weight matrices.  This vector may be identical to the sequence
+                 of nodes passed in.
+  :id-to-idx -   A Clojure map from ids of the same data items to integers, 
+                 allowing lookup of a node's index from its id."
+  [node-seq]
+  { :node-vec (vec node-seq)
+    :id-to-idx (make-id-to-idx-map (map :id node-seq)) }) ; index order will be same as node-seq's order
