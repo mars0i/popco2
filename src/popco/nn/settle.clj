@@ -1,7 +1,6 @@
 (ns popco.nn.settle
   (:use clojure.core.matrix)
-  (:require [popco.nn.core :as nn])
-  (:gen-class))
+  (:require [popco.nn.core :as nn]))
 
 (set-current-implementation :vectorz)
 ;; use one of these:

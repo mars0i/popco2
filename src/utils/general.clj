@@ -1,6 +1,5 @@
 (ns utils.general ; Utility functions handy for any Clojure program
-  (:require [clojure.pprint :only [*print-right-margin*]])
-  (:gen-class))
+  (:require [clojure.pprint :only [*print-right-margin*]]))
 
 (defn unlocknload 
   "Given a symbol representing a namespace, converts the symbol

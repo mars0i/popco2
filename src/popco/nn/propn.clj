@@ -4,5 +4,4 @@
             [utils.general :as ug]
             [clojure.core.matrix :as mx])
   (:import [popco.core.lot Propn]
-           [popco.nn.core PropnNet])
-  (:gen-class))
+           [popco.nn.core PropnNet]))

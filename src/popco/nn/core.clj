@@ -1,7 +1,6 @@
 (ns popco.nn.core
   (:require [utils.general :as ug]
-            [clojure.core.matrix :as mx])
-  (:gen-class))
+            [clojure.core.matrix :as mx]))
 
 ;; Definitions of neural network types, associated functions, etc. for POPCO
 

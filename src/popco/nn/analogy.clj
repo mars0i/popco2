@@ -6,8 +6,7 @@
             [clojure.core.matrix :as mx]
             [clojure.string :as string])
   (:import [popco.core.lot Propn Pred Obj]
-           [popco.nn.core AnalogyNet])
-  (:gen-class))
+           [popco.nn.core AnalogyNet]))
 
 ;; SEE analogy.md for an overview of what's going on in this file.
 

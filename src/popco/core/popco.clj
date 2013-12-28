@@ -6,9 +6,8 @@
         popco.nn.settle
         popco.nn.testtools
         utils.general]
-  [:import [popco.core.lot Propn Pred Obj]]
-  (:gen-class))
-;; cf. https://kotka.de/blog/2010/02/gen-class_how_it_works_and_how_to_use_it.html
+  [:import [popco.core.lot Propn Pred Obj]])
+;; add :gen-class ?
 
 ;; set pretty-print width to terminal width
 (set-pprint-width (Integer/valueOf (System/getenv "COLUMNS"))) ; or read-string

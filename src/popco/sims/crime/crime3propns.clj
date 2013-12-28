@@ -1,7 +1,6 @@
 (ns popco.sims.crime.crime3propns
   [:use popco.core.lot]
-  [:import [popco.core.lot Propn Pred Obj]]
-  (:gen-class))
+  [:import [popco.core.lot Propn Pred Obj]])
 
 ;; declare all proposition names
 ;(declare V-ip V-na V-ia V-ha V-ia->v-ha V-ipa V-ipa->v-ia V-ica V-ica->-v-ipa V-ica->-v-ipa->v-na V-qp V-qp->-v-ipa V-qp->-v-ipa->v-na

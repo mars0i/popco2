@@ -2,8 +2,7 @@
 ;;; is believed, entertained, or communicated between persons.
 
 (ns popco.core.lot
-  (:require [utils.general :as ug])
-  (:gen-class))
+  (:require [utils.general :as ug]))
 
 ;; CONVENTIONS:
 ;; The value of all fields are keywords.
