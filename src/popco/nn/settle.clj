@@ -24,7 +24,7 @@
 ;; perception. New York: Wiley.
 
 ;; Note the distinction in clojure.core.matrix between:
-;; emul: Multiply together corresponding elements of matrices
+;; emul: Multiply together corresponding elements of matrices,
 ;;       which should have the same shape.
 ;; mul:  Same as emul.
 ;; mmul: Regular matrice multiplication A * B:
@@ -39,27 +39,54 @@
 ;; Convention: Vector names are all-lower-case.  Matrices have initial cap
 ;; in each component of the name.
 
+(declare clip-to-extrema dist-from-max dist-from-min)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Network settling with Grossberg algorithm
+
+;; NOTE: 
+;;
+;; The Grossberg algorithm does no normalization in anything like
+;; the probabilistic sense: That is, outputs are outputs; they're not scaled
+;; relative to other signals coming into the same node:  The only "averaging"
+;; comes from the weighting across links due to the network, and the scaling
+;; by distance from max and min.  Moreover, the link weights are absolute
+;; numbers; they are not themselves scaled relative to other link weights.
+;; (In essence, it's the job of the neural net settling process to do something
+;; analogous to probabilistic normalization.)
+;; (Qualification: For the proposition network there is a kludgey method of
+;; scaling negative links relative to positive links since there are more
+;; negative links: We just give the negative links a lower abs weight.)
+;; 
+;; WHAT THIS MEANS is that you can effectively "remove" links from the network 
+;; simply by masking the input vector, forcing some values to zero.  If a node
+;; sends no activation over the wires, then it's just as if links
+;; from that node had weight zero--i.e. as if these links didn't exist.
+
+;; SHOULD I USE add-product here for the inner addition of emuls?
+(defn next-activns 
+  "Calculate a new set of activations for nodes starting from the current
+  activations in vector activns, using network link weights in constraint
+  network nnet to update activations from neighbors using the Grossberg (1978) 
+  algorithm as described in Holyoak & Thagard's (1989) \"Analogue Retrieval
+  by Constraint Satisfaction\"."
+  [activns nnet]
+  (let [pos-activns (emap nn/posify activns)] ; Negative activations are ignored as inputs.
+    (emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
+          (add (emul 0.9 activns)                            ; Sum into decayed activations ...
+               (emul (mmul (nn/pos-wt-mat nnet) pos-activns) ; positively weighted inputs scaled by
+                     (emap dist-from-max activns))           ;  inputs' distances from 1, and
+               (emul (mmul (nn/neg-wt-mat nnet) pos-activns) ; negatively weighted inputs scaled by
+                     (emap dist-from-min activns))))))       ;  inputs' distances from -1.
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions
 
-(defn rand-1+1 
-  "Returns a random number in [-1, 1)."
-  []
-  (dec (rand 2)))
-
-(defn rand-rand-1+1
-  "Returns a random number in [-1, 1) if a prior binary random variable
-  with probability prob of success succeeds, else 0.  prob should be
-  a number in [0,1].  0 is equivalent to no possibility, not zero prob."
-  [prob]
-  (if (< (rand) prob)
-    (rand-1+1)
-    0))
-
-(defn rand-0-or-1
-  "Returns either 0 or 1, with probability prob."
-  [prob]
-  (if (< (rand) prob) 1 0))
+(defn clip-to-extrema
+  "Returns -1 if x < -1, 1 if x > 1, and x otherwise."
+  [x]
+  (max -1 (min 1 x)))
 
 (defn dist-from-max
   "Return the distance of activn from 1.  Note return value will be > 1
@@ -71,31 +98,5 @@
   "Return the distance of activn from 1.  Note return value will be > 1
   if activn > 0."
   [activn]
-  (+ 1 activn)) ; What's HT1989 p. 313 really says is (activn - -1)
-
-(defn clip-to-extrema
-  "Returns -1 if x < -1, 1 if x > 1, and x otherwise."
-  [x]
-  (max -1 (min 1 x)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Network settling
-
-;; SHOULD I USE add-product here for the inner addition of emuls?
-
-(defn next-activns 
-  "Calculate a new set of activations for nodes starting from the current
-  activations in vector activns, using network link weights in wts to
-  update activations from neighbors using the Grossberg (1978) algorithm
-  as described in Holyoak & Thagard (1989).  If three args given, first two
-  are nonnegative and nonpositive versions of wts, i.e. with negative and
-  positive weights, respectively, replaced by zeros."
-  [activns nnstru]
-  (let [pos-activns (emap nn/posify activns)] ; Negative activations are ignored as inputs.
-    (emap clip-to-extrema                  ; Values outside [-1,1] are clipped to -1, 1.
-          (add (emul 0.9 activns)                       ; Sum into decayed activations ...
-               (emul (mmul (nn/pos-wt-mat nnstru) pos-activns)          ; positively weighted inputs scaled by
-                     (emap dist-from-max activns))      ;  inputs' distances from 1, and
-               (emul (mmul (nn/neg-wt-mat nnstru) pos-activns)          ; negatively weighted inputs scaled by
-                     (emap dist-from-min activns)))))) ;  inputs' distances from -1.
+  (+ 1 activn)) ; HT1989 p. 313 says: (- activn -1)
 

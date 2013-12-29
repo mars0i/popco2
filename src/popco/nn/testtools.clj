@@ -2,6 +2,26 @@
   [:use clojure.core.matrix
         popco.nn.settle])
 
+(defn rand-1+1 
+  "Returns a random number in [-1, 1)."
+  []
+  (dec (rand 2)))
+
+(defn rand-rand-1+1
+  "Returns a random number in [-1, 1) if a prior binary random variable
+  with probability prob of success succeeds, else 0.  prob should be
+  a number in [0,1].  0 is equivalent to no possibility, not zero prob."
+  [prob]
+  (if (< (rand) prob)
+    (rand-1+1)
+    0))
+
+(defn rand-0-or-1
+  "Returns either 0 or 1, with probability prob."
+  [prob]
+  (if (< (rand) prob) 1 0))
+
+
 (defn make-random-activn-vec
   "Generate a vector of random activations of num-nodes nodes."
   [num-nodes]
