@@ -78,6 +78,9 @@
 ;; different repertoires of propositions, while using a single set of
 ;; analogy network weight matrices (which needn't slow down run time
 ;; due to being modified later).
+;;
+;; Note: The proposition networks, by contrast, can't be treated this way,
+;; because they acquire new links between old nodes.
 
 ;; SHOULD I USE add-product here for the inner addition of emuls?
 (defn next-activns 
