@@ -42,7 +42,7 @@
 (declare clip-to-extrema dist-from-max dist-from-min)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Network settling with Grossberg algorithm
+;; Network settling (with Grossberg algorithm)
 
 ;; NOTE: 
 ;;
@@ -52,16 +52,32 @@
 ;; comes from the weighting across links due to the network, and the scaling
 ;; by distance from max and min.  Moreover, the link weights are absolute
 ;; numbers; they are not themselves scaled relative to other link weights.
-;; (In essence, it's the job of the neural net settling process to do something
-;; analogous to probabilistic normalization.)
+;; (In essence, it's the job of the neural net settling process to do 
+;; something analogous to probabilistic normalization.)
+;;
 ;; (Qualification: For the proposition network there is a kludgey method of
 ;; scaling negative links relative to positive links since there are more
 ;; negative links: We just give the negative links a lower abs weight.)
-;; 
-;; WHAT THIS MEANS is that you can effectively "remove" links from the network 
-;; simply by masking the input vector, forcing some values to zero.  If a node
-;; sends no activation over the wires, then it's just as if links
+;;
+;; WHAT THIS MEANS is that you can effectively "remove" links from the 
+;; network simply by masking the input vector, forcing some values to zero.
+;; If a node sends no activation over the wires, then it's just as if links
 ;; from that node had weight zero--i.e. as if these links didn't exist.
+;; Nothing *else* about the network needs to change.
+;;
+;; AND this means that since the analogy network has certain links to a 
+;; map node if and only if the node exists, and never adds or removes links
+;; to a map node once it exists, we can create the analogy network once,
+;; including all map nodes possible given the set of propositions in the
+;; two analogue structures.  Then we can "remove" map nodes and their
+;; links from the network simply by zeroing the map node activations in
+;; the input vector.  Or rather, we can add map nodes *and their links*
+;; to the analogy network simply by beginning to put nonzero activations 
+;; in the corresponding map nodes.  In this way, different persons can
+;; have effectively different analogy networks, corresponding to their
+;; different repertoires of propositions, while using a single set of
+;; analogy network weight matrices (which needn't slow down run time
+;; due to being modified later).
 
 ;; SHOULD I USE add-product here for the inner addition of emuls?
 (defn next-activns 
