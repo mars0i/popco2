@@ -1,9 +1,57 @@
-create master analogy net
-create master vector of propns
+Global parameters of a run:
 
-now we have to provide to each person:
+	master analogy net
 
-a mask on mapnode indexes for the analogy net
-a mask on propn indexes for the propn net
-	this is going to require mapping from propns to mapnodes (?)
-a propn net
+	master vector of propns
+		this is easy
+		e.g. in crime3propns.clj, it's all-propns, defined at the end of the file
+		well, maybe it should be converted from a LazySeq to a vector.
+
+We have to provide to each person:
+
+	a mask on mapnode indexes for the analogy net
+
+	a mask on propn indexes for the propn net
+		this is going to require mapping from propns to mapnodes (?)
+
+	a propn net
+
+How are the masks used?  
+
+	For reporting of what nodes exist in a person's two networks
+
+	During network settling, on each iteration, the activation vector which is the output
+	of the Grossberg algorithm should be element-multiplied by the mask, zeroing out
+	activations in nodes that are not supposed to exist in that person.  (i.e. it's innocuous
+	to allow activation to flow through the network to nodes that don't exist in the person,
+	since there's no distribution of the total activation in the source node going on.
+	We can allow the multiplication to send activation to "non-existent" nodes, but then
+	just zero them before the next iteration so that they won't affect other nodes.)
+
+When you add a new propn to a receipient person due to communication (or
+direct intervention by the modeler), the following has to happen:
+
+	The proposition P has to be unmasked in the propn mask.
+
+	Any relevant map nodes that are masked have to be unmasked.
+	This is a little bit tricky.  What has to be unmasked is:
+
+		1. Any propositional map node that has P on one side, where
+		the other side already exists in the recipient person.
+		Note that for this purpose it helps to identify which
+		analogue P is in.
+
+		2. Any predicate or object map node that are related by
+		component relations to the new propositional map node,
+		if they don't exist already (and they might).
+
+		3. Any propositional map node that's related by component
+		relations through the argument place in the new proposition.
+		This could cause recursing back through step 2.
+		[Is this correct?]
+
+The point of having a mapping from propns to mapnodes would be so that
+when you add a propn a new to a person, you could figure out efficiently
+what other map nodes to unmask.  Um, but maybe it's more complicated
+than that?
+More thought needed.
