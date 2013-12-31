@@ -54,4 +54,11 @@ The point of having a mapping from propns to mapnodes would be so that
 when you add a propn a new to a person, you could figure out efficiently
 what other map nodes to unmask.  Um, but maybe it's more complicated
 than that?
-More thought needed.
+
+OK, how about for each propn, generate an vec of indexes of mapnodes
+that it would cause to come into existence.  This might be best
+generated at the same time that I'm generating the map nodes?  Then make
+a Clojure map from propn to such vecs of indexes.  Then when you receive
+a new proposition, just check whether those nodes exist or not, and pop
+them into existence if not (or just do it and don't worry if they're
+already there.)
