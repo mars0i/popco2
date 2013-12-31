@@ -72,9 +72,9 @@
   "Returns a (lazy) sequence of 2-element sequences, each containing two 
   propositions that match according to propns-match?.  These are propositions 
   that are isomorphic and can be used to construct map nodes."
-  [pset1 pset2]
-  (for [p1 pset1
-        p2 pset2
+  [propnseq1 propnseq2]
+  (for [p1 propnseq1
+        p2 propnseq2
         :when (propns-match? p1 p2)]
     `(~p1 ~p2)))
 
@@ -336,8 +336,8 @@
                  vector pairs containing the ids of the two sides (from which
                  the mapnode id is constructed).  This is redundant information,
                  but convenient."
-  [pset1 pset2 pos-increment neg-increment]
-  (let [fams (match-propn-components (match-propns pset1 pset2))
+  [propnseq1 propnseq2 pos-increment neg-increment]
+  (let [fams (match-propn-components (match-propns propnseq1 propnseq2))
         node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
         num-nodes (count node-seq)
         nn-map (assoc
