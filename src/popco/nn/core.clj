@@ -27,6 +27,7 @@
     "Returns the nnstru's negative-only weight matrix.")
 )
 
+;; AnalogyNets are created with make-analogy-net in nn/analogy.clj
 (defrecord AnalogyNet [pos-wt-mat neg-wt-mat node-vec id-to-idx ids-to-idx]
   NNMats
   (wt-mat [nnstru] (mx/add (:pos-wt-mat nnstru) (:neg-wt-mat nnstru)))
@@ -34,17 +35,18 @@
   (neg-wt-mat [nnstru] (:neg-wt-mat nnstru)))
 
 (ug/add-to-docstr ->AnalogyNet
-  "Makes an ACME analogy neural-net structure, i.e. a structure that represents an ACME analogy constraint
-  satisfaction network.  Has these fields:
+  "Makes an ACME analogy neural-net structure, i.e. a structure that represents an ACME 
+  analogy constraint satisfaction network.  Has these fields:
   :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
                  nodes, representing positively weighted links.
   :neg-wt-mat -  A core.matrix square matrix with dimensions equal to the number of
                  nodes, representing negatively weighted links.
   :node-vec -    A Clojure vector of data providing information about the meaning
-                 of particular neural net nodes.  The indexes of the data items
-                 correspond to indexes into activation vectors and rows/columns
-                 of weight matrices.  This vector may be identical to the sequence
-                 of nodes passed in.
+                 of particular neural net nodes.  Nodes represent possible mappings
+                 between propositions and between components of propositions.
+                 The indexes of the data items correspond to indexes into activation 
+                 vectors and rows/columns of weight matrices.  This vector may be identical 
+                 to the sequence of nodes passed in.
   :id-to-idx -   A Clojure map from ids of the same data items to integers, 
                  allowing lookup of a node's index from its id.
   :ids-to-idx -  This does roughly the same thing as :id-to-idx. The latter maps
