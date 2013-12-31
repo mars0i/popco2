@@ -1,0 +1,9 @@
+create master analogy net
+create master vector of propns
+
+now we have to provide to each person:
+
+a mask on mapnode indexes for the analogy net
+a mask on propn indexes for the propn net
+	this is going to require mapping from propns to mapnodes (?)
+a propn net
