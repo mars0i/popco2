@@ -128,10 +128,12 @@
   Note that although Propns that are args of Propns are matched, there's
   no deeper matching on the Preds and arguments of these embedded Propns."
   [pairs]
+
   (letfn [(match-components-of-propn-pair [[p1 p2]]
             (cons (make-mapnode-map p1 p2)                       ; we already know the propns match
                   (cons (make-mapnode-map (:pred p1) (:pred p2)) ; predicates always match if the propns matched
                         (map make-mapnode-map (:args p1) (:args p2)))))]
+
           (map match-components-of-propn-pair pairs)))
 
 ;; TODO NOTE ON CONSTRUCTING SOMETHING THAT ALLOWS FINDING ALL MAPNODES DERIVED FROM A PROPN-MAPNODE:
@@ -143,6 +145,12 @@
 ;; or in addition to using distinct.  Also, this is associating the propns with the component nodes,
 ;; when what I really want is the reverse.  So would need a *further* pass to reverse the relationship.
 ;;
+;; Note that the relationship between propn-mapnodes and other mapnodes is many-to-many:
+;; Each propn-mapnode has a predicate-mapnode and zero or more arg-mapnodes (either obj-mapnodes
+;; or propn-mapnodes).
+;; But a predicate-mapnode can be related to more than one propn-mapnode, and likewise for
+;; arg-mapnodes.
+;;
 ;; OK, so how about if I make the component mapnodes first, above, and then stuff info about them
 ;; into the propn-mapnode?
 ;;
@@ -151,6 +159,22 @@
 ;; than replacing it.  (Later this clojure-map has to be made in a vector, probably.)
 ;; And then ... Return a pair, where one element is the seq of mapnodes, and the other is the "map"
 ;; from propn-mapnodes to component mapnodes?
+;;
+;; OHH ... Here is some trickyness:
+;;
+;; (a) If personA communicates propn1 to personB, and propn1 has propn2 as an arg, then is it
+;;     as if propn2 has been communicated as well?  (WHAT DID POPCO DO?  (What should it have done?))
+;;
+;;     In that case, in order to decide whether to add mapnodes in personB, do *both* at leat one of
+;;     propn1's analogues *and* the corresponding analogue of propn2 have to already exist in personB 
+;;     before we start adding mapnodes??
+;;
+;; (b) What if personA first communicates propn2 to personB?  If personB has an analogue of propn2,
+;;     is that enough for adding mapnodes?  Or must personB also have propn1's analogues?
+;;     OK, the answer to the last question is clearly "no".  But I must be careful that the
+;;     method of looking up mapnodes as a result of communication reflects this answer.
+;;     i.e. the entry for mapnodes involving propn2 should not reference propn1.
+;;     (POPCO/POPCO-X don't handle mutual recursion of propns, btw.)
 
 ;; NOTE we use sorted-maps here because when we construct 
 ;; mapnode ids, we need it to be the case that (vals clojure-map) always returns these
