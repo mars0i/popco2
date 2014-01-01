@@ -146,6 +146,20 @@
   (sorted-map :alog1 alog1 :alog2 alog2 
               :id (ids-to-mapnode-id (:id alog1) (:id alog2))))
 
+(defn seq-to-map-of-set
+  "Given a sequence, creates a 1-element map with the first element as key,
+  and a set containing the remaining elements as value."
+  [s]
+  {(first s) (set (rest s))})
+
+(defn make-propn-mn-to-component-mn-map
+  "Create a Clojure map from propn-mapnode ids to sets containing ids of the 
+  associated component mapnodes."
+  [fams]
+  (into {} 
+        (map #(seq-to-map-of-set (map :id %)) 
+             fams)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 3
 ;; Make a flat sequence of unique pairs.  Define vectors and matrices with it.
@@ -257,24 +271,27 @@
   "Make an ACME analogy neural-net structure, i.e. a structure that represents an ACME analogy constraint
   satisfaction network.  This is a standard neural-net structure produced by make-nn-core (q.v.)
   with these changes that are specific to an analogy network:
-  :pos-wt-mat -  A core.matrix square matrix with dimensions equal to the number
-                 of nodes.  This will represent positively weighted links.
-  :neg-wt-mat -  A core.matrix square matrix with dimensions equal to the number
-                 of nodes.  This will represent negatively weighted links.
-  :ids-to-idx -  This does roughly the same thing as :id-to-idx. The latter
-                 maps mapnode ids to indexes into the node vector (or rows, or 
-                 columns of the matrices).  :ids-to-idx, by contrast, maps
-                 vector pairs containing the ids of the two sides (from which
-                 the mapnode id is constructed).  This is redundant information,
-                 but convenient."
+  :pos-wt-mat -    A core.matrix square matrix with dimensions equal to the number
+                   of nodes.  This will represent positively weighted links.
+  :neg-wt-mat -    A core.matrix square matrix with dimensions equal to the number
+                   of nodes.  This will represent negatively weighted links.
+  :ids-to-idx -    This does roughly the same thing as :id-to-idx. The latter
+                   maps mapnode ids to indexes into the node vector (or rows, or 
+                   columns of the matrices).  :ids-to-idx, by contrast, maps
+                   vector pairs containing the ids of the two sides (from which
+                   the mapnode id is constructed).  This is redundant information,
+                   but convenient.
+  :propn-id-to-comp-ids - A map from ids of propn-mapnodes to sets of ids of the
+                          associated component mapnodes."
   [propnseq1 propnseq2 pos-increment neg-increment]
   (let [fams (match-propn-components (match-propns propnseq1 propnseq2))
         node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
         num-nodes (count node-seq)
         nn-map (assoc
                  (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
-                 :pos-wt-mat (make-wt-mat num-nodes)    ; add zero matrices
-                 :neg-wt-mat (make-wt-mat num-nodes))]  ; ... to be filled below
+                 :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
+                 :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
+                 :propn-id-to-comp-ids (make-propn-mn-to-component-mn-map fams))] ; TODO UNTESTED
     (add-pos-wts-to-mat! (:pos-wt-mat nn-map) 
                          (matched-idx-fams fams (:id-to-idx nn-map)) 
                          pos-increment)
