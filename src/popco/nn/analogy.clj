@@ -99,6 +99,21 @@
 
 (declare make-mapnode-map match-components-of-propn-pair match-propn-components ids-to-mapnode-id)
 
+;; NOTE The functions match-propn-components (with the functions it causes
+;; to be called: match-componens-of-propn-pair and make-mapnode-map)
+;; doesn't try to perform matching on args of propns that appear as args
+;; of propns.  Rather, we *just* match the propns themselves when they appear
+;; in argument place.  (Note that we *did* need to recurse on args to decide which
+;; propns matched which propns [that was the desired behavior in H&T1989, though not the
+;; actual behavior in ACME, nor what was described in the p. 314 specification--
+;; but it was what happened in POPCO 1 and was what "Moderate Role" described].  This
+;; recursive proposition matching operation is performed by match-propns.) However, at 
+;; this stage, once match-propns has generated a seq of matched propns, we should assume 
+;; that we are only looking at propn pairs that are known to match in this deep way.
+;; That doesn't mean that weights get calculated from matchings that have to do with 
+;; what's inside the propns that are args.  The H&T1989 algorithm does *not* do this, 
+;; nor did POPCO 1.
+
 ;; Note that order within pairs matters.  It preserves the distinction
 ;; between the two analogue structures, and allows predicates and objects
 ;; to have the same names in different analogue structures (sets don't allow that).
