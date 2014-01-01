@@ -62,3 +62,16 @@ a Clojure map from propn to such vecs of indexes.  Then when you receive
 a new proposition, just check whether those nodes exist or not, and pop
 them into existence if not (or just do it and don't worry if they're
 already there.)
+Yes, like that: But don't use a Clojure map to connect propns to vecs of
+indexes of mapnodes:
+
+Just have a Clojure vector with the slot for each propn containing a
+vector of mapnode indexes.  Just identify propns by their indexes in
+the master vec, which is also their indexes wrt the propn net.
+
+And when communicating, just pass a propn index and an activn.
+Is that significantly faster?  Than using a map with propns?
+
+(umm, this is starting to worry me that it's too fragile)
+
+
