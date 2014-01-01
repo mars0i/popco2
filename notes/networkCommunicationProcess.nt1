@@ -131,3 +131,6 @@ And for step 1, you need something else.
 ;;     method of looking up mapnodes as a result of communication reflects this answer.
 ;;     i.e. the entry for mapnodes involving propn2 should not reference propn1.
 ;;     (POPCO/POPCO-X don't handle mutual recursion of propns, btw.)
+
+How to implement that?  Doing it as before with map isn't working.  I think I need something
+fancier like for.
