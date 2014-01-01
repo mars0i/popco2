@@ -128,18 +128,11 @@
   Note that although Propns that are args of Propns are matched, there's
   no deeper matching on the Preds and arguments of these embedded Propns."
   [pairs]
-  (map match-components-of-propn-pair pairs))
-
-;; NOTE we use sorted-maps here, returned by make-mapnode-map because when we construct 
-;; mapnode ids, we need it to be the case that (vals clojure-map) always returns these
-;; vals in the same order :alog1, :alog2:
-(defn match-components-of-propn-pair
-  "ADD DOCSTRING"
-  [[p1 p2]]
-  ;; that the following is a seq, not vec, flags that it's a family of map-pairs from the same propn
-  (cons (make-mapnode-map p1 p2)                 ; we already know the propns match
-        (cons (make-mapnode-map (:pred p1) (:pred p2)) ; predicates always match if the propns matched
-              (map make-mapnode-map (:args p1) (:args p2)))))
+  (letfn [(match-components-of-propn-pair [[p1 p2]]
+            (cons (make-mapnode-map p1 p2)                       ; we already know the propns match
+                  (cons (make-mapnode-map (:pred p1) (:pred p2)) ; predicates always match if the propns matched
+                        (map make-mapnode-map (:args p1) (:args p2)))))]
+          (map match-components-of-propn-pair pairs)))
 
 ;; TODO NOTE ON CONSTRUCTING SOMETHING THAT ALLOWS FINDING ALL MAPNODES DERIVED FROM A PROPN-MAPNODE:
 ;; How about if we pass p1 and p2 above, or their mapnode, to the other mapnodes, and add that info
