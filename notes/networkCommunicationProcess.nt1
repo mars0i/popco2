@@ -68,9 +68,15 @@ indexes of mapnodes:
 Just have a Clojure vector with the slot for each propn containing a
 vector of mapnode indexes.  Just identify propns by their indexes in
 the master vec, which is also their indexes wrt the propn net.
-
 And when communicating, just pass a propn index and an activn.
 Is that significantly faster?  Than using a map with propns?
+
+Uh, that's not quite right.  There's a two-step process for new propns:
+1. check whether there are any propn-mapnodes with this as one side,
+and an existing propn as the other side.
+2. Find associated component mapnodes.
+So you really need a way of getting from propn mapnodes to the others, for step 2.
+For step 1, you need something else.
 
 (umm, this is starting to worry me that it's too fragile)
 

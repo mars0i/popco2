@@ -126,6 +126,24 @@
         (cons (make-mapnode-map (:pred p1) (:pred p2)) ; predicates always match if the propns matched
               (map make-mapnode-map (:args p1) (:args p2)))))
 
+;; TODO NOTE ON CONSTRUCTING SOMETHING THAT ALLOWS FINDING ALL MAPNODES DERIVED FROM A PROPN-MAPNODE:
+;; How about if we pass p1 and p2 above, or their mapnode, to the other mapnodes, and add that info
+;; to an additional field in the sorted-map that represents the mapnode?
+;;
+;; PROBLEM: Duplicate mapnodes are created in this process.  I squash them out later using 'distinct'
+;; in make-analogy-net.  So we'd need an additional pass to merge the associated data, rather than
+;; or in addition to using distinct.  Also, this is associating the propns with the component nodes,
+;; when what I really want is the reverse.  So would need a *further* pass to reverse the relationship.
+;;
+;; OK, so how about if I make the component mapnodes first, above, and then stuff info about them
+;; into the propn-mapnode?
+;;
+;; Or better yet, make them, and then *also* put them into a Clojure map from propn pairs (or a mapnode)
+;; to the associated info.  But make it so that updating this map just conses into the value, rather
+;; than replacing it.  (Later this clojure-map has to be made in a vector, probably.)
+;; And then ... Return a pair, where one element is the seq of mapnodes, and the other is the "map"
+;; from propn-mapnodes to component mapnodes?
+
 ;; NOTE we use sorted-maps here because when we construct 
 ;; mapnode ids, we need it to be the case that (vals clojure-map) always returns these
 ;; vals in the same order :alog1, :alog2:
