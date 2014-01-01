@@ -55,9 +55,8 @@
                    vector pairs containing the ids of the two sides (from
                    which the mapnode id is constructed).  This is redundant 
                    information, but convenient.
-  :propn-id-to-comp-ids -
-                   A map from ids of propn-mapnodes to sets of ids of the associated
-                   component mapnodes.")
+  :propn-id-to-comp-ids - A map from ids of propn-mapnodes to sets of ids of the 
+                          associated  component mapnodes.")
 
 (declare posify negify)
 
