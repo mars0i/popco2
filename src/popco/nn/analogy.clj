@@ -24,19 +24,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS TO BE MOVED TO ONE OR MORE SEPARATE FILES/NSes
 
-;; Moved to my personal versions of core.matrix, vectorz-clj:
-;(defn comp-sym?
-;  "Returns true if matrix is symmetric, false otherwise."
-;  [m]
-;  (and (mx/square? m)
-;       (every? (fn [[i j]] (= (mx/mget m i j) (mx/mget m j i)))
-;               (let [dim (first (mx/shape m))]
-;                 (for [i (range dim)
-;                       j (range dim)
-;                       :when (> j i)] ; no need to test both i,j and j,i since we do both at once. always true for (= j i).
-;                   [i j])))))
-;
-;(defn rec-sym?
+;(defn symmetric?
 ;  [m]
 ;  (let [dim (first (mx/shape m))] ; 1 past the last valid index
 ;    (letfn [(f [m i j]
@@ -185,74 +173,9 @@
   (keyword 
     (str (name id1) "=" (name id2))))
 
-; (defn id-pair-to-mapnode-id
-;   "Given a 2-element sequence of id keywords, constructs and returns 
-;   a corresponding mapnode id."
-;   [[id1 id2]]
-;   (ids-to-mapnode-id id1 id2))
-; 
-; ;; See note below on order of keys and vals
-; (defn pair-map-to-id-pair
-;   "Given a map containing two LOT items, returns a 2-element sequence of their ids,
-;   in order of keys, i.e. in :alog1, :alog2 order if the map is a sorted-map."
-;   [pairmap]
-;   (map :id (vals pairmap))) ; See note above about order of vals.
-; 
-; (def pair-map-to-mapnode-id
-;   (comp id-pair-to-mapnode-id pair-map-to-id-pair))
-; (ug/add-to-docstr pair-map-to-mapnode-id
-;   "Given a map containing two LOT items, constructs and returns a corresponding
-;   mapnode id.")
-; 
-; (defn add-id-to-pair-map
-;   "Given a map containing two LOT items, adds an id field with a mapnode id."
-;   [pairmap]
-;   (assoc pairmap :id (pair-map-to-mapnode-id pairmap)))
-
-;; NOTE re pair-map-to-id-pair, etc.:
-;; According to several remarks on the Internet from 2010 into 2013, (keys x)
-;; and (vals x) return keys and vals in the same corresponding order.  Moreover,
-;; other remarks say that for sorted-maps, (vals x) always returns values according
-;; to the sort-order of keys.  So if pairmap is a sorted map, the ids should always
-;; come out in the order of :alog1, :alog2.  This is important, because otherwise
-;; the mapnode ids we construct from these pairs might arbitrarily swap the parts of
-;; the name on either side of "="; thus id's of map nodes would be unstable.  
-;; This point about order seems not to be guaranteed by any explicit documentation,
-;; as of 10/2013, but the sentiment on the net seems to be that it's reasonable to
-;; assume that this behavior won't change.  The most thorough and authoritative 
-;; statement that I've found so far (11/2013) about order of (vals x) for sorted-maps
-;; is here: https://groups.google.com/d/msg/clojure/2AyndHfeigk/zaD9T5mT6WkJ 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 4
 ;; Make weight matrix representing positive and negative link weights
-
-; (defn add-pos-wts-to-mat!
-;   "ADD DOCSTRING"
-;   [mat fams indexes increment]
-;   (doseq [fam fams]
-;     (doseq [itm1 fam           ; fam is a list of map-pairs
-;             itm2 fam]          ; we want all poss ordered pairs
-;       (when-not (= itm1 itm2)  ; except duplicates
-;         (let [i (indexes (:id itm1)) 
-;               j (indexes (:id itm2))]
-;           ;(cl-format true "~%setting link between ~s, ~s at ~s ~s~%" (:id itm1) (:id itm2) i j) ; DEBUG
-;           (mx/mset! mat i j (+ increment (mx/mget mat i j)))))))
-;   mat)
-
-; ;; IF THIS WORKS, CONSIDER REWRITING ADD-POSS-WTS-TO-MAT! AROUND IT (THIS IS MORE ABSTRACT)
-; ;; TODO: Check that there should be no summing.
-; ;; Check whether there could be summing, even.
-; ;; Revise this as necessary, since at present, it sums.
-; (defn add-neg-wts-to-mat!
-;   "ADD DOCSTRING"
-;   [mat idx-fams wt-val]
-;   (doseq [fam idx-fams]
-;     (doseq [i fam           ; TODO fam is a list of map-pairs
-;             j fam]          ; TODO we want all poss ordered pairs
-;       (when-not (= i j)  ; except duplicates TODO IS THIS RIGHT?
-;         (mx/mset! mat i j (+ wt-val (mx/mget mat i j))))))
-;   mat)
 
 (defn add-wts-to-mat!
   "ADD DOCSTRING"
@@ -280,7 +203,6 @@
     new-val
     (throw (Exception. (format "Trying to overwrite nonzero weight.")))))
 
-;; TODO: TEST ME - is result correct?
 (defn add-neg-wts-to-mat!
   "Add weights of value wt-val to matrix mat between all nodes with indexes in the same
   subseq of idx-fams.  idx-fams should be a seq of seqs of indexes from mapnodes that are 
