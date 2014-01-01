@@ -134,3 +134,7 @@ And for step 1, you need something else.
 
 How to implement that?  Doing it as before with map isn't working.  I think I need something
 fancier like for.
+
+Or maybe not: What match-propn-components returns is a seq of seqs in which the first element
+of the subseq is always a propn mapnode, and the rest are the component mapnode.
+New function seq-to-map-of-set ought to be useful.
