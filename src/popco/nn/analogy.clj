@@ -5,7 +5,8 @@
   (:require [popco.nn.core :as nn]
             [utils.general :as ug]
             [clojure.core.matrix :as mx]
-            [clojure.string :as string])
+            [clojure.string :as string]
+            [clojure.algo.generic.functor :as gf])
   (:import [popco.core.lot Propn Pred Obj]
            [popco.nn.core AnalogyNet]))
 
@@ -146,19 +147,22 @@
   (sorted-map :alog1 alog1 :alog2 alog2 
               :id (ids-to-mapnode-id (:id alog1) (:id alog2))))
 
-(defn seq-to-map-of-set
-  "Given a sequence, creates a 1-element map with the first element as key,
-  and a set containing the remaining elements as value."
-  [s]
-  {(first s) (set (rest s))})
-
-(defn make-propn-mn-to-component-mn-map
+(defn make-propn-mn-to-mn-map
   "Create a Clojure map from propn-mapnode ids to sets containing ids of the 
-  associated component mapnodes."
+  associated propn and component mapnodes."
   [fams]
   (into {} 
-        (map #(seq-to-map-of-set (map :id %)) 
+        (map #(ug/seq-to-first-all-map (map :id %)) 
              fams)))
+
+;; make-propn-mn-to-mn-map and make-propn-mn-map-to-idxs-map could be merged, but
+;; keeping them separate makes debugging them easier.
+
+(defn make-propn-mn-map-to-idxs-map
+  "Create a Clojure map from propn-mapnode ids to sets containing ids of the 
+  associated propn and component indexes."
+  [id-to-idx fams]
+  (gf/fmap #(into [] (map id-to-idx %)) (make-propn-mn-to-mn-map fams)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 3
@@ -287,18 +291,19 @@
   (let [fams (match-propn-components (match-propns propnseq1 propnseq2))
         node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
         num-nodes (count node-seq)
-        nn-map (assoc
-                 (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
-                 :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
-                 :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
-                 :propn-id-to-comp-ids (make-propn-mn-to-component-mn-map fams))] ; TODO UNTESTED
-    (add-pos-wts-to-mat! (:pos-wt-mat nn-map) 
-                         (matched-idx-fams fams (:id-to-idx nn-map)) 
+        nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
+        analogy-map (assoc nn-map
+                           :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
+                           :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
+                           :propn-id-to-comp-idxs (make-propn-mn-map-to-idxs-map 
+                                                    (:id-to-idx nn-map) fams))] ; TODO UNTESTED
+    (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
+                         (matched-idx-fams fams (:id-to-idx analogy-map)) 
                          pos-increment)
-    (add-neg-wts-to-mat! (:neg-wt-mat nn-map) 
-                         (competing-mapnode-idx-fams (:ids-to-idx nn-map)) 
+    (add-neg-wts-to-mat! (:neg-wt-mat analogy-map) 
+                         (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
                          neg-increment)
-    (nn/map->AnalogyNet nn-map)))
+    (nn/map->AnalogyNet analogy-map)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS
