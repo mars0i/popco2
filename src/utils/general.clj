@@ -37,3 +37,15 @@
   partition by the same function."
   [keyfn coll]
   (partition-by keyfn (sort-by keyfn coll)))
+
+(defn seq-to-first-rest-map
+  "Given a sequence, creates a 1-element map with the first element as key,
+  and a seq containing the remaining elements as value."
+  [s]
+  {(first s) (rest s)})
+
+(defn seq-to-first-all-map
+  "Given a sequence, creates a 1-element map with the first element as key,
+  and a seq containing all of the elements, including the first, as value."
+  [s]
+  {(first s) s})
