@@ -12,6 +12,7 @@
                                   [mars0i/clatrix "0.4.0-SNAPSHOT"]
                                   [mars0i/core.matrix "0.18.1-SNAPSHOT"]
                                   [mars0i/vectorz-clj "0.17.1-SNAPSHOT"]
+                                  [org.clojure/algo.generic "0.1.1"]
                                  ]
                    :source-paths ["src"] ; where load will look for source files
                    }}
