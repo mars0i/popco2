@@ -285,7 +285,7 @@
                    vector pairs containing the ids of the two sides (from which
                    the mapnode id is constructed).  This is redundant information,
                    but convenient.
-  :propn-id-to-comp-ids - A map from ids of propn-mapnodes to sets of ids of the
+  :propn-mn-to-idxs - A map from ids of propn-mapnodes to sets of ids of the
                           associated component mapnodes."
   [propnseq1 propnseq2 pos-increment neg-increment]
   (let [fams (match-propn-components (match-propns propnseq1 propnseq2))
@@ -295,8 +295,8 @@
         analogy-map (assoc nn-map
                            :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
                            :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
-                           :propn-id-to-comp-idxs (make-propn-mn-map-to-idxs-map 
-                                                    (:id-to-idx nn-map) fams))] ; TODO UNTESTED
+                           :propn-mn-id-to-idxs (make-propn-mn-map-to-idxs-map 
+                                                  (:id-to-idx nn-map) fams))] ; TODO UNTESTED
     (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
                          (matched-idx-fams fams (:id-to-idx analogy-map)) 
                          pos-increment)
