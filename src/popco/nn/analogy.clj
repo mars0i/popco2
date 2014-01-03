@@ -147,7 +147,7 @@
   (sorted-map :alog1 alog1 :alog2 alog2 
               :id (ids-to-mapnode-id (:id alog1) (:id alog2))))
 
-(defn make-propn-mn-to-mn-map
+(defn make-propn-mn-to-mns
   "Create a Clojure map from propn-mapnode ids to sets containing ids of the 
   associated propn and component mapnodes."
   [fams]
@@ -155,14 +155,19 @@
         (map #(ug/seq-to-first-all-map (map :id %)) 
              fams)))
 
-;; make-propn-mn-to-mn-map and make-propn-mn-map-to-idxs-map could be merged, but
-;; keeping them separate makes debugging them easier.
+(defn make-propn-idx-to-idxs
+  [id-to-idx propn-mn-to-mns]
+  ;; NEEDS WORK return a vec with mapnodes indexed  ????
+  )
+;(zip
+;  (map #(something) (keys propn-mn-to-mns))
+;  (map #(map something %) (vals propn-mn-to-mns))) 
 
-(defn make-propn-mn-map-to-idxs-map
-  "Create a Clojure map from propn-mapnode ids to sets containing ids of the 
-  associated propn and component indexes."
-  [id-to-idx fams]
-  (gf/fmap #(into [] (map id-to-idx %)) (make-propn-mn-to-mn-map fams)))
+;(defn make-propn-mn-map-to-idxs-map
+;  "Create a Clojure map from propn-mapnode ids to sets containing ids of the 
+;  associated propn and component indexes."
+;  [id-to-idx fams]
+;  (gf/fmap #(into [] (map id-to-idx %)) (make-propn-mn-to-mn-map fams)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 3
@@ -285,8 +290,10 @@
                    vector pairs containing the ids of the two sides (from which
                    the mapnode id is constructed).  This is redundant information,
                    but convenient.
-  :propn-mn-to-idxs - A map from ids of propn-mapnodes to sets of ids of the
-                          associated component mapnodes."
+  :propn-mn-to-mns -   A map from ids of propn-mapnodes to sets of ids of the 
+                       associated component mapnodes (for humans).
+  :propn-idx-to-idxs - A vector taking indexes of propn-mapnodes to sets of indexes of the
+                       associated component mapnodes (for code)."
   [propnseq1 propnseq2 pos-increment neg-increment]
   (let [fams (match-propn-components (match-propns propnseq1 propnseq2))
         node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
@@ -295,8 +302,8 @@
         analogy-map (assoc nn-map
                            :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
                            :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
-                           :propn-mn-id-to-idxs (make-propn-mn-map-to-idxs-map 
-                                                  (:id-to-idx nn-map) fams))] ; TODO UNTESTED
+                           :propn-mn-to-mns (make-propn-mn-to-mns fams) ; TODO UNTESTED
+                           :propn-idx-to-idxs (make-propn-idx-to-idxs (:id-to-idx nn-map) fams))] ; TODO UNTESTED
     (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
                          (matched-idx-fams fams (:id-to-idx analogy-map)) 
                          pos-increment)

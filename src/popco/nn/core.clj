@@ -27,6 +27,8 @@
     "Returns the nnstru's negative-only weight matrix.")
 )
 
+;; AnalogyNets store weight matrices, node activations, and associated semantic
+;; information for a proposition network.
 ;; AnalogyNets are created with make-analogy-net in nn/analogy.clj
 (defrecord AnalogyNet [pos-wt-mat neg-wt-mat node-vec id-to-idx ids-to-idx]
   NNMats
@@ -55,11 +57,15 @@
                    vector pairs containing the ids of the two sides (from
                    which the mapnode id is constructed).  This is redundant 
                    information, but convenient.
-  :propn-id-to-comp-ids - A map from ids of propn-mapnodes to sets of ids of the 
-                          associated  component mapnodes.")
+  :propn-mn-to-mns -   A map from ids of propn-mapnodes to sets of ids of the 
+                       associated component mapnodes (for humans).
+  :propn-idx-to-idxs - A vector taking indexes of propn-mapnodes to sets of indexes of the
+                       associated component mapnodes (for code).")
 
 (declare posify negify)
 
+;; PropnNets store a weight matrix, node activations, and associated semantic
+;; information for a proposition network.
 (defrecord PropnNet [wt-mat node-vec id-to-idx]
   NNMats
   (wt-mat [nnstru] (:wt-mat nnstru))
