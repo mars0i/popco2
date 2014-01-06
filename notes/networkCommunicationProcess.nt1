@@ -82,6 +82,12 @@ and an existing propn as the other side.
 
 2. Find associated component mapnodes.
 
+	This can be a map from propn mapnode ids to associated indexes (including
+	the propn mapnode's id), since that's what you need at the receiver end:
+	You need to unmask those ids.  Or you could have a vector, mapping
+	from propn mapnode indexes, but probably doesn't matter, and ids are
+	clearer.
+
 So you really need a way of getting from propn mapnodes to the others, for step 2.
 (But I don't think that can be done with a vector, without using a clojuremap.
 propn mapnodes per se don't have their own vector.  Only propns, and all mapnodes,
@@ -90,7 +96,6 @@ have that.)
 And for step 1, you need something else.
 
 (umm, this is starting to worry me that it's too fragile)
-
 
 ;; TODO NOTE ON CONSTRUCTING SOMETHING THAT ALLOWS FINDING ALL MAPNODES DERIVED FROM A PROPN-MAPNODE:
 ;; How about if we pass p1 and p2 above, or their mapnode, to the other mapnodes, and add that info

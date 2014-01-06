@@ -39,28 +39,26 @@
 (ug/add-to-docstr ->AnalogyNet
   "Makes an ACME analogy neural-net structure, i.e. a structure that represents an ACME 
   analogy constraint satisfaction network.  Has these fields:
-  :pos-wt-mat -    A core.matrix square matrix with dimensions equal to the number of
-                   nodes, representing positively weighted links.
-  :neg-wt-mat -    A core.matrix square matrix with dimensions equal to the number of
-                   nodes, representing negatively weighted links.
-  :node-vec -      A Clojure vector of data providing information about the meaning
-                   of particular neural net nodes.  Nodes represent possible mappings
-                   between propositions and between components of propositions.
-                   The indexes of the data items correspond to indexes into activation 
-                   vectors and rows/columns of weight matrices.  This vector may be identical 
-                   to the sequence of nodes passed in.
-  :id-to-idx -     A Clojure map from ids of the same data items to integers, 
-                   allowing lookup of a node's index from its id.
-  :ids-to-idx -    This does roughly the same thing as :id-to-idx. The latter maps
-                   mapnode ids to indexes into the node vector (or rows, or
-                   columns of the matrices).  :ids-to-idx, by contrast, maps
-                   vector pairs containing the ids of the two sides (from
-                   which the mapnode id is constructed).  This is redundant 
-                   information, but convenient.
-  :propn-mn-to-mns -   A map from ids of propn-mapnodes to sets of ids of the 
-                       associated component mapnodes (for humans).
-  :propn-idx-to-idxs - A vector taking indexes of propn-mapnodes to sets of indexes of the
-                       associated component mapnodes (for code).")
+  :pos-wt-mat - A core.matrix square matrix with dimensions equal to the number of
+                nodes, representing positively weighted links.
+  :neg-wt-mat - A core.matrix square matrix with dimensions equal to the number of
+                nodes, representing negatively weighted links.
+  :node-vec -   A Clojure vector of data providing information about the meaning
+                of particular neural net nodes.  Nodes represent possible mappings
+                between propositions and between components of propositions.
+                The indexes of the data items correspond to indexes into activation 
+                vectors and rows/columns of weight matrices.  This vector may be identical 
+                to the sequence of nodes passed in.
+  :id-to-idx -  A Clojure map from ids of the same data items to integers, 
+                allowing lookup of a node's index from its id.
+  :ids-to-idx - This does roughly the same thing as :id-to-idx. The latter maps
+                mapnode ids to indexes into the node vector (or rows, or
+                columns of the matrices).  :ids-to-idx, by contrast, maps
+                vector pairs containing the ids of the two sides (from
+                which the mapnode id is constructed).  This is redundant 
+                information, but convenient.
+  :propn-mn-to-idxs - A map from ids of propn-mapnodes to sets of indexes of the
+                associated component mapnodes.")
 
 (declare posify negify)
 
