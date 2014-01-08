@@ -143,3 +143,96 @@ fancier like for.
 Or maybe not: What match-propn-components returns is a seq of seqs in which the first element
 of the subseq is always a propn mapnode, and the rest are the component mapnode.
 New function seq-to-map-of-set ought to be useful.
+
+---------------
+What POPCO does:
+
+receive-utterance (in popco.lisp, called indirectly from
+transmit-utterances) simply tests whether the received propn is already
+there.  No checking of argument propns.  If it's new to the receiver,
+it's added to the appropriate analog structure, then given an activation
+value (i.e. in the propn net), and we check whether there are any
+semantic-iffs for it and set up the links for them if so (also wrt the
+propn net).
+
+So the incorporation into the analogy net comes at a later stage of the
+main loop, update-analogy nets, which indirectly calls
+make-constraint-net in acme.lisp, the normal all-encompassing analogy
+net maker/updater.  And that just does what it normally does--what it
+does when first creating the analogy net.  It makes mapnodes if
+necessary, creates their links, etc.
+
+So the answer to question (a) above appears to be:
+
+1. As far as the propn net is concerned: No, the argument proposition is
+not communicated.
+
+2. As far as the analogy net is concerned, it's as if the argument propn
+is communicated.  Because make-constraint-net is going to look at the
+entire structure of the propn sent (propn1), and its arg propn2 will
+play the normal role in analogy net creation/update: (See #3: Its analog
+(blah2) has to be there for propn1 to match blah1, and if they match,
+then since I do a recursive match test, propn2 must have matched blah2
+as well, and they'll get a mapnode.)
+
+3. If the other side of the argument propn (propn2) wasn't in the
+recipient, then the propn it's an arg of (propn1) wouldn't be
+isomorphic, so the propn1=blah1 mapnode wouldn't get added.  But this is
+not a real issue.  Because if blah1 is there in the recipient, then its
+arg blah2 would already be there as well.  At least if #2 above is
+correct.  That's what you'd need to get propn1 to match blah1 to produce
+propn1=blah1, and make-constraint-net would cause a propn2=blah2 node to
+be produced as well. 
+
+4. [And questions like (b) above have clear answers.  If you send propn2
+without propn1, then it's as if propn2 is a toplevel propn.  Nothing
+about propnt1 matters.]
+
+Summary of POPCO behavior as applied to POPCO-X:
+
+(A) Sending the propn should unmask that node in the propn net.  Argument
+nodes should not be unmasked in the propn net.
+
+(B) Whether or not any mapnodes should get unmasked depends on whether
+the new propn matches any propns that are already there, using the
+recursive match.  And if it matches, then its arguments match all the
+way down, and their mapnodes should get created as well.
+
+
+Question: Is (A) really the desired behavior, even if it is what POPCO did?
+
+Pro: All that was sent was propn1.  OK, so the concepts of its args come
+along with it, but that doesn't mean that they are seriously entertained
+and thought about.  Why should a whole cluster of propns come over with one?
+
+Con: If you understand propn1, you understand its args.  So they should
+be realized as well.
+
+	One man's modus ponens: Maybe you should not be able to
+	communicate propn1 *unless* you already have propn2 (and so on
+	all the way down, if propn2 is higher-order as well).  After
+	all, you can't think that for which you have no concepts.
+	That's why we teach concepts in classes.
+
+	On the other hand, we in fact often teach concepts according to
+	Frege's principle, in context, with examples, etc.  How do you
+	learn a language?  It's not bottom up.
+
+	Further, in POPCO there's no requirement that the predicates and
+	objects already be present in the recipient.  This is a level of
+	detail that we simply abstract from.  If we don't have that kind
+	of test for predicates and objects, we shouldn't for arg propns
+	either.
+
+Turning around that last point: By acquiring propn1, you acquire its
+non-propn components.  They come along for free.  This doesn't play any
+role in the propn net, but note that it does affect the analogy net.
+It's as if they're understood.  That suggests that arg propns should get
+added to the propn net, just as they are allowed to compose mapnodes in
+the analogy net.
+
+On the other hand, it really is kind of feeling like you already have
+a conceptual framework in the background, and communication really
+is just adding salience to what you already could entertain.
+Which could make sense either with or without adding arg propns
+to the analogy net.
