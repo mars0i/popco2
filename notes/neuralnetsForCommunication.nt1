@@ -4,7 +4,8 @@ Global parameters of a run:
 
 	master vector of propns
 		this is easy
-		e.g. in crime3propns.clj, it's all-propns, defined at the end of the file
+		e.g. in crime3propns.clj, it's all-propns, defined
+		at the end of the file
 		well, maybe it should be converted from a LazySeq to a vector.
 
 We have to provide to each person:
@@ -20,13 +21,16 @@ How are the masks used?
 
 	For reporting of what nodes exist in a person's two networks
 
-	During network settling, on each iteration, the activation vector which is the output
-	of the Grossberg algorithm should be element-multiplied by the mask, zeroing out
-	activations in nodes that are not supposed to exist in that person.  (i.e. it's innocuous
-	to allow activation to flow through the network to nodes that don't exist in the person,
-	since there's no distribution of the total activation in the source node going on.
-	We can allow the multiplication to send activation to "non-existent" nodes, but then
-	just zero them before the next iteration so that they won't affect other nodes.)
+	During network settling, on each iteration, the activation
+	vector which is the output of the Grossberg algorithm should be
+	element-multiplied by the mask, zeroing out activations in nodes
+	that are not supposed to exist in that person.  (i.e. it's
+	innocuous to allow activation to flow through the network to
+	nodes that don't exist in the person, since there's no
+	distribution of the total activation in the source node going
+	on.  We can allow the multiplication to send activation to
+	"non-existent" nodes, but then just zero them before the next
+	iteration so that they won't affect other nodes.)
 
 When you add a new propn to a receipient person due to communication (or
 direct intervention by the modeler), the following has to happen:
@@ -82,60 +86,69 @@ and an existing propn as the other side.
 
 2. Find associated component mapnodes.
 
-	This can be a map from propn mapnode ids to associated indexes (including
-	the propn mapnode's id), since that's what you need at the receiver end:
-	You need to unmask those ids.  Or you could have a vector, mapping
-	from propn mapnode indexes, but probably doesn't matter, and ids are
-	clearer.
+	This can be a map from propn mapnode ids to associated indexes
+	(including the propn mapnode's id), since that's what you need
+	at the receiver end: You need to unmask those ids.  Or you could
+	have a vector, mapping from propn mapnode indexes, but probably
+	doesn't matter, and ids are clearer.
 
-So you really need a way of getting from propn mapnodes to the others, for step 2.
-(But I don't think that can be done with a vector, without using a clojuremap.
-propn mapnodes per se don't have their own vector.  Only propns, and all mapnodes,
-have that.)
+So you really need a way of getting from propn mapnodes to the others,
+for step 2.  (But I don't think that can be done with a vector, without
+using a clojuremap.  propn mapnodes per se don't have their own vector.
+Only propns, and all mapnodes, have that.)
 
 And for step 1, you need something else.
 
 (umm, this is starting to worry me that it's too fragile)
 
-;; TODO NOTE ON CONSTRUCTING SOMETHING THAT ALLOWS FINDING ALL MAPNODES DERIVED FROM A PROPN-MAPNODE:
-;; How about if we pass p1 and p2 above, or their mapnode, to the other mapnodes, and add that info
-;; to an additional field in the sorted-map that represents the mapnode?
-;;
-;; PROBLEM: Duplicate mapnodes are created in this process.  I squash them out later using 'distinct'
-;; in make-analogy-net.  So we'd need an additional pass to merge the associated data, rather than
-;; or in addition to using distinct.  Also, this is associating the propns with the component nodes,
-;; when what I really want is the reverse.  So would need a *further* pass to reverse the relationship.
-;;
-;; Note that the relationship between propn-mapnodes and other mapnodes is many-to-many:
-;; Each propn-mapnode has a predicate-mapnode and zero or more arg-mapnodes (either obj-mapnodes
-;; or propn-mapnodes).
-;; But a predicate-mapnode can be related to more than one propn-mapnode, and likewise for
-;; arg-mapnodes.
-;;
-;; OK, so how about if I make the component mapnodes first, above, and then stuff info about them
-;; into the propn-mapnode?
-;;
-;; Or better yet, make them, and then *also* put them into a Clojure map from propn pairs (or a mapnode)
-;; to the associated info.  But make it so that updating this map just conses into the value, rather
-;; than replacing it.  (Later this clojure-map has to be made in a vector, probably.)
-;; And then ... Return a pair, where one element is the seq of mapnodes, and the other is the "map"
-;; from propn-mapnodes to component mapnodes?
-;;
-;; OHH ... Here is some trickyness:
-;;
-;; (a) If personA communicates propn1 to personB, and propn1 has propn2 as an arg, then is it
-;;     as if propn2 has been communicated as well?  (WHAT DID POPCO DO?  (What should it have done?))
-;;
-;;     In that case, in order to decide whether to add mapnodes in personB, do *both* at leat one of
-;;     propn1's analogues *and* the corresponding analogue of propn2 have to already exist in personB 
-;;     before we start adding mapnodes??
-;;
-;; (b) What if personA first communicates propn2 to personB?  If personB has an analogue of propn2,
-;;     is that enough for adding mapnodes?  Or must personB also have propn1's analogues?
-;;     OK, the answer to the last question is clearly "no".  But I must be careful that the
-;;     method of looking up mapnodes as a result of communication reflects this answer.
-;;     i.e. the entry for mapnodes involving propn2 should not reference propn1.
-;;     (POPCO/POPCO-X don't handle mutual recursion of propns, btw.)
+   TODO NOTE ON CONSTRUCTING SOMETHING THAT ALLOWS FINDING ALL MAPNODES
+   DERIVED FROM A PROPN-MAPNODE: How about if we pass p1 and p2 above,
+   or their mapnode, to the other mapnodes, and add that info to an
+   additional field in the sorted-map that represents the mapnode?
+
+   PROBLEM: Duplicate mapnodes are created in this process.  I squash
+   them out later using 'distinct' in make-analogy-net.  So we'd need an
+   additional pass to merge the associated data, rather than or in
+   addition to using distinct.  Also, this is associating the propns
+   with the component nodes, when what I really want is the reverse.  So
+   would need a *further* pass to reverse the relationship.
+
+   Note that the relationship between propn-mapnodes and other mapnodes
+   is many-to-many: Each propn-mapnode has a predicate-mapnode and zero
+   or more arg-mapnodes (either obj-mapnodes or propn-mapnodes).  But a
+   predicate-mapnode can be related to more than one propn-mapnode, and
+   likewise for arg-mapnodes.
+
+   OK, so how about if I make the component mapnodes first, above, and
+   then stuff info about them into the propn-mapnode?
+
+   Or better yet, make them, and then *also* put them into a Clojure map
+   from propn pairs (or a mapnode) to the associated info.  But make it
+   so that updating this map just conses into the value, rather than
+   replacing it.  (Later this clojure-map has to be made in a vector,
+   probably.) And then ... Return a pair, where one element is the seq
+   of mapnodes, and the other is the "map" from propn-mapnodes to
+   component mapnodes?
+
+   OHH ... Here is some trickyness:
+
+   (a) If personA communicates propn1 to personB, and propn1 has propn2
+       as an arg, then is it as if propn2 has been communicated as well?
+       (WHAT DID POPCO DO?  (What should it have done?))
+
+       In that case, in order to decide whether to add mapnodes in
+       personB, do *both* at leat one of propn1's analogues *and* the
+       corresponding analogue of propn2 have to already exist in personB
+       before we start adding mapnodes??
+
+   (b) What if personA first communicates propn2 to personB?  If personB
+       has an analogue of propn2, is that enough for adding mapnodes?
+       Or must personB also have propn1's analogues?  OK, the answer to
+       the last question is clearly "no".  But I must be careful that
+       the method of looking up mapnodes as a result of communication
+       reflects this answer.  i.e. the entry for mapnodes involving
+       propn2 should not reference propn1.  (POPCO/POPCO-X don't handle
+       mutual recursion of propns, btw.)
 
 How to implement that?  Doing it as before with map isn't working.  I think I need something
 fancier like for.
@@ -188,7 +201,9 @@ be produced as well.
 without propn1, then it's as if propn2 is a toplevel propn.  Nothing
 about propnt1 matters.]
 
-Summary of POPCO behavior as applied to POPCO-X:
+....................
+
+SUMMARY OF POPCO BEHAVIOR AS APPLIED TO POPCO-X:
 
 (A) Sending the propn should unmask that node in the propn net.  Argument
 nodes should not be unmasked in the propn net.
@@ -198,8 +213,8 @@ the new propn matches any propns that are already there, using the
 recursive match.  And if it matches, then its arguments match all the
 way down, and their mapnodes should get created as well.
 
-
-Question: Is (A) really the desired behavior, even if it is what POPCO did?
+BUT: QUESTION: Is (A) really the desired behavior, even if it is what
+POPCO did?
 
 Pro: All that was sent was propn1.  OK, so the concepts of its args come
 along with it, but that doesn't mean that they are seriously entertained
@@ -236,3 +251,37 @@ a conceptual framework in the background, and communication really
 is just adding salience to what you already could entertain.
 Which could make sense either with or without adding arg propns
 to the analogy net.
+
+-----------------
+
+WHAT TO DO ABOUT THE QUESTION OF WHETHER TO ADD ARG-PROPNS TO PROPN NET?
+I think I should have a switch, or use alternative functions.
+I want to be able to run popco2 like popco, but it would be interesting
+to consider the effect of adding the arg-propns too.
+
+-----------------
+
+Whether or not arg-propns should be added to the propn net as a result of
+the top propn being communicated:
+
+How about this strategy for determining whether to unmask mapnodes when
+a propn is communicated:
+
+A. Maintain clojmap A from propns in each analogue struct to propns to
+which they can be mapped--i.e. to propns that participate in mapnodes in
+the master list of mapnodes.
+
+B. Maintain clojmap (or vec) B from propns to their arg-propns, arg-propns'
+arg-propns, etc.  Or maybe to their propn net indexes.
+
+2. When a propn P is sent to a receiver, look it up in clojmap A.
+If there any propns Q are returned--i.e. there are possible mapnodes in which
+P participates:
+	check whether they have been unmasked in the receiver
+	and if so:
+		use clojmap B to look up the associated recursive arg-propns
+		and check whether they've been unmasked in the receiver
+
+		if all of these recursive arg-propns have been
+		unmasked in the receiver
+		then unmask the mapnode P=Q
