@@ -267,6 +267,8 @@ the top propn being communicated:
 How about this strategy for determining whether to unmask mapnodes when
 a propn is communicated:
 
+1. 
+
 A. Maintain clojmap A from propns in each analogue struct to propns to
 which they can be mapped--i.e. to propns that participate in mapnodes in
 the master list of mapnodes.
@@ -285,3 +287,13 @@ P participates:
 		if all of these recursive arg-propns have been
 		unmasked in the receiver
 		then unmask the mapnode P=Q
+
+So note that communication will require reference to:
+	the propn net mask in the receiver
+	the analogy net mask in the receiver
+	global structures 
+		(probably stored in the global analogy net stru)
+		So all of these will need to be passed to
+		communication functions
+		well the masks will probably come from the person
+
