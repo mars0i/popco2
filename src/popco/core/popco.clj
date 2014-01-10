@@ -5,6 +5,7 @@
         popco.nn.propn
         popco.nn.settle
         popco.nn.testtools
+        popco.nn.pprint
         utils.general]
   [:import [popco.core.lot Propn Pred Obj]])
 ;; add :gen-class ?
