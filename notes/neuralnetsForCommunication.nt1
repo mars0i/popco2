@@ -271,7 +271,7 @@ a propn is communicated:
 
 A. Maintain clojmap A from propns in each analogue struct to propns to
 which they can be mapped--i.e. to propns that participate in mapnodes in
-the master list of mapnodes.
+the master list of mapnodes.  [DONE: propn-to-analogues field of AnalogyNet]
 
 B. Maintain clojmap (or vec) B from propns to their arg-propns, arg-propns'
 arg-propns, etc.  Or maybe to their propn net indexes.

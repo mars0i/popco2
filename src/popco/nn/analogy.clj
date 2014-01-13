@@ -19,7 +19,62 @@
 (def pos-link-increment 0.1)
 (def neg-link-value -0.2)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat 
+         match-propns propns-match?  match-propn-components make-mapnode-map 
+         make-propn-mn-to-mns make-propn-mn-to-idxs alog-ids make-two-ids-to-idx-map 
+         ids-to-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! add-neg-wts-to-mat! 
+         matched-idx-fams competing-mapnode-fams competing-mapnode-idx-fams
+         args-match? identity-if-zero make-propn-to-analogues)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ALL STEPS - put it all together
+;; ...
+
+(defn make-analogy-net
+  "Make an ACME analogy neural-net structure, i.e. a structure that represents
+  an ACME analogy constraint satisfaction network.  This is a standard 
+  neural-net structure produced by make-nn-core (q.v.), with these changes that
+  are specific to an analogy network:
+  :pos-wt-mat - A core.matrix square matrix with dimensions equal to the number
+                of nodes.  This will represent positively weighted links.
+  :neg-wt-mat - A core.matrix square matrix with dimensions equal to the number
+                of nodes.  This will represent negatively weighted links.
+  :ids-to-idx - This does roughly the same thing as :id-to-idx. The latter
+                maps mapnode ids to indexes into the node vector (or rows, or 
+                columns of the matrices).  :ids-to-idx, by contrast, maps
+                vector pairs containing the ids of the two sides (from which
+                the mapnode id is constructed).  This is redundant information,
+                but convenient.
+  :propn-mn-to-idxs - A map from ids of propn-mapnodes to sets of indexes of the
+                associated component mapnodes.
+  :propn-to-analogues -  A map from ids of propns to ids of their analogues--i.e.
+                      the propns that are the other sides of mapnodes."
+  [propnseq1 propnseq2 pos-increment neg-increment]
+  (let [propn-pairs (match-propns propnseq1 propnseq2)
+        fams (match-propn-components propn-pairs)
+        node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
+        num-nodes (count node-seq)
+        nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
+        analogy-map (assoc nn-map
+                           :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
+                           :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
+                           :propn-mn-to-idxs (make-propn-mn-to-idxs (:id-to-idx nn-map) fams)  ; TODO UNTESTED
+                           :propn-to-analogues (make-propn-to-analogues 
+                                                 (map #(map :id %) propn-pairs)))] ; TODO UNTESTED
+    (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
+                         (matched-idx-fams fams (:id-to-idx analogy-map)) 
+                         pos-increment)
+    (add-neg-wts-to-mat! (:neg-wt-mat analogy-map) 
+                         (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
+                         neg-increment)
+    (nn/map->AnalogyNet analogy-map)))
+
+
+(defn assoc-ids-to-idx-nn-map
+  [nn-map]
+  (assoc nn-map 
+         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-map) 
+                                              (:id-to-idx nn-map))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS TO BE MOVED TO ONE OR MORE SEPARATE FILES/NSes
@@ -39,8 +94,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 1
 ;; Find out which propositions can be paired up, i.e. the isomorphic ones.
-
-(declare propns-match? args-match?)
 
 ;; Note that order within pairs matters:  It preserves the distinction
 ;; between the two analogue structures.
@@ -84,8 +137,6 @@
 
 ;; i.e. we feed the return value of match-propns, above, to 
 ;; match-propn-components-too, below.
-
-(declare make-mapnode-map match-components-of-propn-pair match-propn-components ids-to-mapnode-id)
 
 ;; NOTE The functions match-propn-components (with the functions it causes
 ;; to be called: match-componens-of-propn-pair and make-mapnode-map)
@@ -222,6 +273,9 @@
   [mat idx-fams wt-val]
   (add-wts-to-mat! mat idx-fams wt-val identity-if-zero))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; STEP 5 - Make other useful data structures
+
 (defn matched-idx-fams
   [fams id-to-idx]
   (let [f (comp id-to-idx :id)]
@@ -244,47 +298,11 @@
   (map #(map ids-to-idx %)
        (competing-mapnode-fams (keys ids-to-idx))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ALL STEPS - put it all together
-;; ...
-
-(defn assoc-ids-to-idx-nn-map
-  [nn-map]
-  (assoc nn-map 
-         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-map) 
-                                              (:id-to-idx nn-map))))
-
-(defn make-analogy-net
-  "Make an ACME analogy neural-net structure, i.e. a structure that represents
-  an ACME analogy constraint satisfaction network.  This is a standard 
-  neural-net structure produced by make-nn-core (q.v.), with these changes that
-  are specific to an analogy network:
-  :pos-wt-mat - A core.matrix square matrix with dimensions equal to the number
-                of nodes.  This will represent positively weighted links.
-  :neg-wt-mat - A core.matrix square matrix with dimensions equal to the number
-                of nodes.  This will represent negatively weighted links.
-  :ids-to-idx - This does roughly the same thing as :id-to-idx. The latter
-                maps mapnode ids to indexes into the node vector (or rows, or 
-                columns of the matrices).  :ids-to-idx, by contrast, maps
-                vector pairs containing the ids of the two sides (from which
-                the mapnode id is constructed).  This is redundant information,
-                but convenient.
-  :propn-mn-to-idxs - A map from ids of propn-mapnodes to sets of indexes of the
-                associated component mapnodes."
-  [propnseq1 propnseq2 pos-increment neg-increment]
-  (let [fams (match-propn-components (match-propns propnseq1 propnseq2))
-        node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
-        num-nodes (count node-seq)
-        nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
-        analogy-map (assoc nn-map
-                           :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
-                           :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
-                           :propn-mn-to-idxs (make-propn-mn-to-idxs (:id-to-idx nn-map) fams))] ; TODO UNTESTED
-    (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
-                         (matched-idx-fams fams (:id-to-idx analogy-map)) 
-                         pos-increment)
-    (add-neg-wts-to-mat! (:neg-wt-mat analogy-map) 
-                         (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
-                         neg-increment)
-    (nn/map->AnalogyNet analogy-map)))
+(defn make-propn-to-analogues
+  "Given pairs of ids of matched propns, creates a map from ids of individual
+  propns, to seq of ids of propns to which they match."
+  [propn-pair-ids]
+  (merge
+    (gf/fmap #(vec (map second %)) (group-by first propn-pair-ids))
+    (gf/fmap #(vec (map first %)) (group-by second propn-pair-ids))))
 
