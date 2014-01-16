@@ -125,6 +125,25 @@
 (defmethod args-match? [Obj Obj] [_ _] true)   ; objects always match
 (defmethod args-match? [Propn Propn] [p1 p2] (propns-match? p1 p2))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; EXPERIMENTAL attempt at function that would create seqs of ids from familial propn-pairs
+
+(declare ppaux)
+
+(defn pull-propn-pairs
+  [propn-pairs]
+  (map pppaux propn-pairs))
+
+(defn- pppaux
+  [pair]
+  (let [[p1 p2] pair]
+    (cons #(map :id pair)
+          (map (comp pull-propn-pairs list)
+               (filter propn? (second p1))
+               (filter propn? (second p2))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 2
