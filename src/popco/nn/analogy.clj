@@ -24,7 +24,8 @@
          make-propn-mn-to-mns make-propn-mn-to-idxs alog-ids make-two-ids-to-idx-map 
          ids-to-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! add-neg-wts-to-mat! 
          matched-idx-fams competing-mapnode-fams competing-mapnode-idx-fams
-         args-match? identity-if-zero make-propn-to-analogues)
+         args-match? identity-if-zero make-propn-to-analogues make-propn-to-family-propns 
+         one-propn-to-family-propns)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -48,7 +49,9 @@
   :propn-mn-to-idxs - A map from ids of propn-mapnodes to sets of indexes of the
                 associated component mapnodes.
   :propn-to-analogues -  A map from ids of propns to ids of their analogues--i.e.
-                      the propns that are the other sides of mapnodes."
+                the propns that are the other sides of mapnodes.
+  :propn-to-family-propns - a map from propn ids to ids of their arg propns,
+                arg propns' arg-propns, etc."
   [propnseq1 propnseq2 pos-increment neg-increment]
   (let [propn-pairs (match-propns propnseq1 propnseq2)
         fams (match-propn-components propn-pairs)
@@ -60,7 +63,9 @@
                            :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
                            :propn-mn-to-idxs (make-propn-mn-to-idxs (:id-to-idx nn-map) fams)  ; TODO UNTESTED
                            :propn-to-analogues (make-propn-to-analogues 
-                                                 (map #(map :id %) propn-pairs)))] ; TODO UNTESTED
+                                                 (map #(map :id %) propn-pairs)) ; TODO UNTESTED
+                           :propn-to-family-propns (make-propn-to-family-propns
+                                                     (concat propnseq1 propnseq2)))] ; TODO UNTESTED
     (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
                          (matched-idx-fams fams (:id-to-idx analogy-map)) 
                          pos-increment)
@@ -126,21 +131,30 @@
 (defmethod args-match? [Propn Propn] [p1 p2] (propns-match? p1 p2))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; EXPERIMENTAL attempt at function that would create seqs of ids from familial propn-pairs
+;; EXPERIMENTAL attempt at function that would create seqs of ids from familial propns
 
-(declare pppaux)
+;; This walks the propn tree, so maybe there's a way to merge it with
+;; other code here to avoid duplicating tree-walking.  But it's simpler
+;; this way, and everything in this file is only done once.
 
-(defn pull-propn-pairs
-  [propn-pairs]
-  (map pppaux propn-pairs))
+;; TODO ? replace the vals with seq of indexes, including the original propn
 
-(defn- pppaux
-  [pair]
-  (let [[p1 p2] pair]
-    (cons #(map :id pair)
-          (map (comp pull-propn-pairs list)
-               (filter propn? (second p1))
-               (filter propn? (second p2))))))
+(defn one-propn-to-family-propns
+  "Make a single-key map from a propn to a set of its children propns, if 
+  any, children's children, etc."
+  [propn]
+  (letfn [(fam-propns [args]
+            (for [arg args 
+                  :when (propn? arg)] 
+              (cons (:id arg) (fam-propns (:args arg)))))]
+    { (:id propn)
+      (distinct (flatten (fam-propns (:args propn)))) } ))
+
+(defn make-propn-to-family-propns
+  "ADD DOCSTRING"
+  [propns]
+  (apply merge  ; TODO isn't there a more elegant way?
+         (map one-propn-to-family-propns propns)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
