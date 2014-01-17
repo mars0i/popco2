@@ -2,7 +2,11 @@
   (:require [utils.general :as ug]
             [clojure.core.matrix :as mx]))
 
-;; Definitions of neural-net data types and related functions
+;; Definitions of neural-net data types and related functions.
+;; Defines AnalogyNet and PropnNet, and definitions that are common 
+;; to both analogy networks and proposition networks or that are very 
+;; closely related.  Definitions specific to the two kinds of networks
+;; can be found in analogy.clj and propn.clj.
 
 ;; NOTE: Two fields shared by the an analogy net structure and a
 ;; proposition net structure are :node-vec and :id-to-idx.  However, they
