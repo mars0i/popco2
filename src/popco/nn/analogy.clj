@@ -1,12 +1,12 @@
 (ns popco.nn.analogy
   (:use popco.core.lot
         [clojure.set :only [union]])
-  (:require [popco.nn.core :as nn]
+  (:require [popco.nn.nets :as nn]
             [utils.general :as ug]
             [clojure.core.matrix :as mx]
             [clojure.algo.generic.functor :as gf])
   (:import [popco.core.lot Propn Pred Obj]
-           [popco.nn.core AnalogyNet]))
+           [popco.nn.nets AnalogyNet]))
 
 ;; SEE analogy.md for an overview of what's going on in this file.
 
@@ -128,7 +128,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EXPERIMENTAL attempt at function that would create seqs of ids from familial propn-pairs
 
-(declare ppaux)
+(declare pppaux)
 
 (defn pull-propn-pairs
   [propn-pairs]

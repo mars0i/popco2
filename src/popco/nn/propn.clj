@@ -1,10 +1,10 @@
 (ns popco.nn.propn
   (:use popco.core.lot)
-  (:require [popco.nn.core :as nn]
+  (:require [popco.nn.nets :as nn]
             [utils.general :as ug]
             [clojure.core.matrix :as mx])
   (:import [popco.core.lot Propn]
-           [popco.nn.core PropnNet]))
+           [popco.nn.nets PropnNet]))
 
 
 (defn make-propn-net

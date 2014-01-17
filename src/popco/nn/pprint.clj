@@ -2,7 +2,7 @@
   (:use [clojure.pprint :only [cl-format]])
   (:require [clojure.core.matrix :as mx]
             [clojure.string :as string])
-  (:import [popco.nn.core AnalogyNet]))
+  (:import [popco.nn.nets AnalogyNet]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS

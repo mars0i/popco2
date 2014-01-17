@@ -1,22 +1,12 @@
-(ns popco.nn.core
+(ns popco.nn.nets
   (:require [utils.general :as ug]
             [clojure.core.matrix :as mx]))
 
-;; Definitions of person and neural-net data types for POPCO
+;; Definitions of neural-net data types and related functions
 
 ;; NOTE: Two fields shared by the an analogy net structure and a
 ;; proposition net structure are :node-vec and :id-to-idx.  However, they
 ;; share the accessors wt-mat, pos-wt-mat, and neg-wt-mat.  
-
-(defrecord Person [propn-mask propn-activns propn-net analogy-mask analogy-activns analogy-net])
-(ug/add-to-docstr ->Person
-   "Makes a POPCO Person, with these fields:
-   propn-mask -      vector of 1's (propn is entertained) and 0's (it isn't)
-   propn-activns -   vector of activation values for nodes in propn net
-   propn-net -       PropnNet for this person
-   analogy-mask -    vector of 1's (mapnode is present) or 0's (it's absent)
-   analogy-activns - activation values of nodes in analogy net
-   analogy-net -     AnalogyNet (same for all persons)")
 
 (defprotocol NNMats
   "Protocol for access to matrices in an nnstru, i.e. a neural-network 

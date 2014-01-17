@@ -1,6 +1,6 @@
 (ns popco.nn.settle
   (:use clojure.core.matrix)
-  (:require [popco.nn.core :as nn]))
+  (:require [popco.nn.nets :as nn]))
 
 (set-current-implementation :vectorz)
 ;; use one of these:
