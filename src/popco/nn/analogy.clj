@@ -64,8 +64,8 @@
                            :propn-mn-to-idxs (make-propn-mn-to-idxs (:id-to-idx nn-map) fams)  ; TODO UNTESTED
                            :propn-to-analogues (make-propn-to-analogues 
                                                  (map #(map :id %) propn-pairs)) ; TODO UNTESTED
-                           :propn-to-family-propns (make-propn-to-family-propns
-                                                     (concat propnseq1 propnseq2)))] ; TODO UNTESTED
+                           :propn-to-family-propns (make-propn-to-family-propns ; TODO **MOVE TO PROPN-NET**
+                                                     (concat propnseq1 propnseq2)))]
     (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
                          (matched-idx-fams fams (:id-to-idx analogy-map)) 
                          pos-increment)
@@ -139,22 +139,39 @@
 
 ;; TODO ? replace the vals with seq of indexes, including the original propn
 
-(defn one-propn-to-family-propns
-  "Make a single-key map from a propn to a set of its children propns, if 
-  any, children's children, etc."
+(defn propn-family-propns
+  "ADD DOCSTRING"
   [propn]
   (letfn [(fam-propns [args]
             (for [arg args 
                   :when (propn? arg)] 
               (cons (:id arg) (fam-propns (:args arg)))))]
-    { (:id propn)
-      (distinct (flatten (fam-propns (:args propn)))) } ))
+    (distinct 
+      (flatten 
+        (cons (:id propn)
+              (fam-propns (:args propn)))))))
 
 (defn make-propn-to-family-propns
   "ADD DOCSTRING"
   [propns]
-  (apply merge  ; TODO isn't there a more elegant way?
-         (map one-propn-to-family-propns propns)))
+  (zipmap (map :id propns) (map propn-family-propns propns)))
+
+;(defn old-one-propn-to-family-propns
+;  "Make a single-key map from a propn to a set of its children propns, if 
+;  any, children's children, etc."
+;  [propn]
+;  (letfn [(fam-propns [args]
+;            (for [arg args 
+;                  :when (propn? arg)] 
+;              (cons (:id arg) (fam-propns (:args arg)))))]
+;    { (:id propn)
+;      (distinct (flatten (fam-propns (:args propn)))) } ))
+;
+;(defn old-make-propn-to-family-propns
+;  "ADD DOCSTRING"
+;  [propns]
+;  (apply merge  ; TODO isn't there a more elegant way?
+;         (map old-one-propn-to-family-propns propns)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
