@@ -1,4 +1,4 @@
-(ns popco.sims.crime.crime3propns
+(ns sims.crime3.propns
   [:use popco.core.lot]
   [:import [popco.core.lot Propn Pred Obj]])
 
