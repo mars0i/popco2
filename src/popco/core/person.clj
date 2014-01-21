@@ -16,6 +16,12 @@
    analogy-mask -    vector of 1's (mapnode is present) or 0's (it's absent)
    analogy-activns - activation values of nodes in analogy net")
 
+;; TODO Consider making code below more efficient if popco is extended
+;; to involve regularly creating new persons in the middle of simulation runs
+;; e.g. with natural selection.
+
+(declare make-mask)
+
 (defn make-person
   "Creates a person with name (nm), propns with propn-ids, and a pre-constructed
   propn-net and analogy-net.  Uses propns to construct propn-mask and
@@ -24,19 +30,17 @@
   matrix.  The analogy net can be shared with every other person, however, since
   this will not be modified.  (The analogy mask might be modified.)"
   [nm propn-ids propn-net analogy-net]
-  (let [propn-mask nil])
+  (let [propn-mask (make-mask propn-ids (:id-to-idx propn-net))]
   ;; TODO
-  )
+  ))
 
-;; TODO
 (defn make-mask
   "ADD DOCSTRING"
   [node-ids id-to-idx]
-  (letfn [(id-to-boolint [id] (if (id-to-idx id) 1 0))]
-    (let [all-idxs (range (count id-to-idx))]
-        
-(vec (map #(
-            ) all-idxs))
-
-        )))
-
+  (let [num-nodes (count id-to-idx)
+        found-nodes (map id-to-idx node-ids)]
+    (assoc
+      (vec (repeat num-nodes 0))
+      (interleave
+        found-nodes
+        (repeat (count found-nodes) 1)))))
