@@ -30,9 +30,10 @@
   weight matrix (:wt-mat), since each person may modify its own propn weight
   matrix.  The analogy net can be shared with every other person, however, since
   this will not be modified.  (The analogy mask might be modified.)"
-  [nm propn-ids propn-net analogy-net]
-  (let [num-poss-propn-nodes (first (mx/shape propn-net))
-        num-poss-analogy-nodes (first (mx/shape analogy-net))]
+  [nm propns propn-net analogy-net]
+  (let [num-poss-propn-nodes (count (:node-vec propn-net))
+        num-poss-analogy-nodes (count (:node-vec analogy-net))
+        propn-ids (map :id propns)]
     (->Person nm 
               propn-net
               (make-mask propn-ids (:id-to-idx propn-net)) ; propn-mask
@@ -48,7 +49,7 @@
   [node-ids id-to-idx]
   (let [mask (mx/new-vector (count id-to-idx))]
     (doseq [id node-ids]
-      (mx/mset! mask (:id-to-idx id) 1.0))
+      (mx/mset! mask (id-to-idx id) 1.0))
     mask))
 
 (defn functional-make-mask
