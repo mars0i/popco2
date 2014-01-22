@@ -1,5 +1,6 @@
 (ns popco.core.person
-  (:require [utils.general :as ug]))
+  (:require [utils.general :as ug]
+            [clojure.core.matrix :as mx]))
 
 ;; Definition of person and related functions
 
@@ -30,11 +31,27 @@
   matrix.  The analogy net can be shared with every other person, however, since
   this will not be modified.  (The analogy mask might be modified.)"
   [nm propn-ids propn-net analogy-net]
-  (let [propn-mask (make-mask propn-ids (:id-to-idx propn-net))]
-  ;; TODO
-  ))
+  (let [num-poss-propn-nodes (first (mx/shape propn-net))
+        num-poss-analogy-nodes (first (mx/shape analogy-net))]
+    (->Person nm 
+              propn-net
+              (make-mask propn-ids (:id-to-idx propn-net)) ; propn-mask
+              (mx/new-vector num-poss-propn-nodes)            ; propn-activns
+              analogy-net
+              ; How to make analogy mask? NOT RIGHT
+              ; Answer?: Pretend that person received all of the propns as communication
+              (make-mask propn-ids (:id-to-idx propn-net)) ; TODO: PLACEHOLDER
+              (mx/new-vector num-poss-analogy-nodes))))            ; analogy-activns
 
 (defn make-mask
+  "ADD DOCSTRING"
+  [node-ids id-to-idx]
+  (let [mask (mx/new-vector (count id-to-idx))]
+    (doseq [id node-ids]
+      (mx/mset! mask (:id-to-idx id) 1.0))
+    mask))
+
+(defn functional-make-mask
   "ADD DOCSTRING"
   [node-ids id-to-idx]
   (let [num-nodes (count id-to-idx)
