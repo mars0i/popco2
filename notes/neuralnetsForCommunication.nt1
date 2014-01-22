@@ -275,6 +275,7 @@ the master list of mapnodes.  [DONE: propn-to-analogues field of AnalogyNet]
 
 B. Maintain clojmap (or vec) B from propns to their arg-propns, arg-propns'
 arg-propns, etc.  Or maybe to their propn net indexes.
+[DONE: propn-to-family-propn-idxs in PropnNet]
 
 2. When a propn P is sent to a receiver, look it up in clojmap A.
 If there any propns Q are returned--i.e. there are possible mapnodes in which
