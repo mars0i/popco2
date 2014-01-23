@@ -1,8 +1,8 @@
-;;; LOT, language of thought: records/classes that represent what
-;;; is believed, entertained, or communicated between persons.
-
 (ns popco.core.lot
   (:require [utils.general :as ug]))
+
+;;; LOT, language of thought: records/classes that represent what
+;;; is believed, entertained, or communicated between persons.
 
 ;; CONVENTIONS:
 ;; The value of all fields are keywords.

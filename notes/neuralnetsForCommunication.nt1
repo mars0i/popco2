@@ -267,7 +267,7 @@ the top propn being communicated:
 How about this strategy for determining whether to unmask mapnodes when
 a propn is communicated:
 
-1. 
+1. Data structures:
 
 A. Maintain clojmap A from propns in each analogue struct to propns to
 which they can be mapped--i.e. to propns that participate in mapnodes in
@@ -277,7 +277,9 @@ B. Maintain clojmap (or vec) B from propns to their arg-propns, arg-propns'
 arg-propns, etc.  Or maybe to their propn net indexes.
 [DONE: propn-to-family-propn-idxs in PropnNet]
 
-2. When a propn P is sent to a receiver, look it up in clojmap A.
+2. Process:
+
+When a propn P is sent to a receiver, look it up in clojmap A.
 If there any propns Q are returned--i.e. there are possible mapnodes in which
 P participates:
 	check whether they have been unmasked in the receiver
