@@ -48,9 +48,7 @@
   :propn-mn-to-idxs - A map from ids of propn-mapnodes to sets of indexes of the
                 associated component mapnodes.
   :propn-to-analogues -  A map from ids of propns to ids of their analogues--i.e.
-                the propns that are the other sides of mapnodes.
-  :propn-to-family-propns - a map from propn ids to ids of their arg propns,
-                arg propns' arg-propns, etc."
+                the propns that are the other sides of mapnodes."
   [propnseq1 propnseq2 pos-increment neg-increment]
   (let [propn-pairs (match-propns propnseq1 propnseq2)
         fams (match-propn-components propn-pairs)
