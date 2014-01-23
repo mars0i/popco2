@@ -2,6 +2,7 @@
   [:use clojure.core.matrix
         popco.core.person
         popco.core.lot
+        popco.core.communic
         popco.nn.nets
         popco.nn.analogy
         popco.nn.propn
