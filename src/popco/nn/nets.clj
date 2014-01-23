@@ -67,8 +67,8 @@
                  of nodes passed in.
   :id-to-idx -   A Clojure map from ids of the same data items to integers, 
                  allowing lookup of a node's index from its id.
-  :propn-to-family-propns - a map from propn ids to seqs of indexes into the propn
-                            vector." )
+  :propn-to-family-propn-idxs - a map from propn ids to seqs of indexes into the propn
+                 vector." )
 
 (defn posify 
   "Return the non-negative number closest to x, i.e. 0 if x < 0, else x."
