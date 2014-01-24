@@ -36,13 +36,15 @@
         pnet (:propn-net pers)
         propn-id-to-idx (:id-to-idx pnet)
         propn-mask (:propn-mask pers)
-        propn-to-propns (:propn-to-family-propn-idxs pnet) ]
+        propn-to-propns (:propn-to-family-propn-idxs pnet) 
+        
+        propn-net-has-node?  (partial net-has-node? propn-mask propn-id-to-idx) ]
 
-    (doseq [a-propn analogue-propns]
-      (when (net-has-node? propn-mask propn-id-to-idx a-propn) ; pers has this analogue propn
-          (when (every? 
-                  (partial net-has-node? propn-mask propn-id-to-idx)
-                  (propn-to-propns a-propn))
-            (unmask! analogy-mask 
-                    analogy-id-to-idx 
-                    (an/ids-to-mapnode-id propn a-propn))))))) ; TODO or reverse args?
+    (when (every? propn-net-has-node? (propn-to-propns propn)) ; if sent propn missing extended-family propns, can't match
+      (doseq [a-propn analogue-propns]                         ; now check any possible matches to sent propn
+        (when (and 
+                (propn-net-has-node? a-propn)                           ; pers has this analogue propn
+                (every? propn-net-has-node? (propn-to-propns a-propn))) ; and its extended-family-propns 
+            (unmask! analogy-mask                ; TODO THIS STEP HAS TO DO A *LOT* MORE
+                     analogy-id-to-idx           ; TODO ALSO UNMASK PRED MAPNODES, AND THEN DO THE SAME RECURSING INTO THE ARGS.
+                     (an/ids-to-mapnode-id propn a-propn))))))) ; TODO or reverse args? deal with source/target direction??
