@@ -192,7 +192,7 @@ as well, and they'll get a mapnode.)
 recipient, then the propn it's an arg of (propn1) wouldn't be
 isomorphic, so the propn1=blah1 mapnode wouldn't get added.  But this is
 not a real issue.  Because if blah1 is there in the recipient, then its
-arg blah2 would already be there as well.  At least if #2 above is
+arg blah2 would already be there as well. <-REALLY??  At least if #2 above is
 correct.  That's what you'd need to get propn1 to match blah1 to produce
 propn1=blah1, and make-constraint-net would cause a propn2=blah2 node to
 be produced as well. 
@@ -210,9 +210,14 @@ nodes should not be unmasked in the propn net.
 
 (B) Whether or not any mapnodes should get unmasked depends on whether
 the new propn matches any propns that are already there, using the
-recursive match.  And if it matches, then its arguments match all the
-way down, and their mapnodes should get created as well.
+recursive match.  IN ORDER TO MATCH, ALL RECURSIVELY FOUND SUBARGS
+MUST EXIST AS WELL, ON BOTH SIDES.  i.e. if the subargs of the added
+propn don't exist, then don't match.  If the subargs on the other side
+don't exist, don't match.
+And IF IT MATCHES, THEN ITS ARGUMENTS MATCH ALL THE
+WAY DOWN, AND THEIR MAPNODES SHOULD GET CREATED AS WELL.
 
+.......
 BUT: QUESTION: Is (A) really the desired behavior, even if it is what
 POPCO did?
 
@@ -251,6 +256,7 @@ a conceptual framework in the background, and communication really
 is just adding salience to what you already could entertain.
 Which could make sense either with or without adding arg propns
 to the analogy net.
+.......
 
 -----------------
 
@@ -282,7 +288,10 @@ arg-propns, etc.  Or maybe to their propn net indexes.
 When a propn P is sent to a receiver, look it up in clojmap A.
 If there any propns Q are returned--i.e. there are possible mapnodes in which
 P participates:
-	check whether they have been unmasked in the receiver
+	check whether all of the recursively found family propns of
+	the sent propn exist in the receiver.  If not, skip the rest.
+
+	check whether the other sides have been unmasked in the receiver
 	and if so:
 		use clojmap B to look up the associated recursive arg-propns
 		and check whether they've been unmasked in the receiver
@@ -290,6 +299,7 @@ P participates:
 		if all of these recursive arg-propns have been
 		unmasked in the receiver
 		then unmask the mapnode P=Q
+		and all of its components, and then recurse on down.
 
 So note that communication will require reference to:
 	the propn net mask in the receiver
