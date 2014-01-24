@@ -49,7 +49,7 @@
   [node-ids id-to-idx]
   (let [mask (mx/new-vector (count id-to-idx))]
     (doseq [id node-ids]
-      (mx/mset! mask (id-to-idx id) 1.0))
+      (mx/mset! mask (id-to-idx id) 0.0))
     mask))
 
 (defn functional-make-mask
