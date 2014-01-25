@@ -6,7 +6,7 @@
 
 ;; TODO MOVE ELSEWHERE?
 (defn unmask!
-  [mask id-to-idx node]
+  [mask id-to-idx node] ;; TODO CHANGE TO TAKE ONLY INDEX ARG, NOT THE NODE ID
     (mx/mset! mask (id-to-idx node) 1.0))
 
 ;; TODO MOVE ELSEWHERE?
@@ -24,7 +24,7 @@
 (defn add-to-propn-net
   [pers propn]
   (let [pnet (:propn-net pers)]
-    (unmask! (:propn-mask pers) ((:id-to-idx pnet) propn))))
+    (unmask! (:propn-mask pers) ((:id-to-idx pnet) propn)))) ;; TODO NOT RIGHT
 
 ;; WHAT add-to-analogy-net IS SUPPOSED TO DO:
 ;; All legal mappings between lot-elements are found by make-analogy-net,
@@ -66,12 +66,7 @@
         (when (and 
                 (propn-net-has-node? a-propn)                           ; pers has this analogue propn
                 (every? propn-net-has-node? (propn-to-propns a-propn))) ; and its extended-family-propns 
-            (unmask! analogy-mask                ; TODO THIS STEP HAS TO DO A *LOT* MORE
-                     analogy-id-to-idx           ; TODO ALSO UNMASK PRED MAPNODES, AND THEN DO THE SAME RECURSING INTO THE ARGS.
-                     (an/ids-to-mapnode-id propn a-propn))))))) ; TODO or reverse args? deal with source/target direction??
+          ;; TODO unmask the propn mapnode, pred mapnode, object mapnodes, and recurse into propn args
+          ;; USE :propn-mn-to-ext-fam-idxs
+          )))))
 
-
-(defn unmask-propn-components!
-  []
-  ; TODO
-  )
