@@ -57,16 +57,10 @@
 
 (ug/add-to-docstr ->PropnNet
   "Makes a proposition neural-net structure, i.e. a structure that represents a
-  POPCO proposition constraint satisfaction network.  Has these fields:
+  POPCO proposition constraint satisfaction network.  Has these fields in addition
+  to those documented for make-nn-core:
   :wt-mat -      A core.matrix square matrix with dimensions equal to the number of
                  nodes, representing all links.
-  :node-vec -    A Clojure vector of data providing information about the meaning
-                 of particular neural net nodes.  The indexes of the data items
-                 correspond to indexes into activation vectors and rows/columns
-                 of weight matrices.  This vector may be identical to the sequence
-                 of nodes passed in.
-  :id-to-idx -   A Clojure map from ids of the same data items to integers, 
-                 allowing lookup of a node's index from its id.
   :propn-to-family-propn-idxs - a map from propn ids to seqs of indexes into the propn
                  vector." )
 
