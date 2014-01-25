@@ -7,7 +7,7 @@
            [popco.nn.nets PropnNet]))
 
 
-(declare make-propn-to-family-propn-idxs propn-family-propns make-propn-net)
+(declare make-propn-to-extended-family-propn-idxs propn-extended-family-propns make-propn-net)
 
 (defn make-propn-net
   [propnseq]
@@ -17,12 +17,12 @@
       (assoc 
         nncore
         :wt-mat (mx/new-matrix dim dim)
-        :propn-to-family-propn-idxs (make-propn-to-family-propn-idxs propnseq 
+        :propn-to-family-propn-idxs (make-propn-to-extended-family-propn-idxs propnseq 
 		                                                     (:id-to-idx nncore))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn make-propn-to-family-propn-idxs
+(defn make-propn-to-extended-family-propn-idxs
   "Create a map from propn ids to seqs of indexes into the propn vector.
   For propn P, the seq contains its index, the indexes of any propns that
   are its args, propns that are their args, etc.  First arg is a collection
@@ -32,9 +32,9 @@
     (zipmap 
       (map :id propns) 
       (map #(map id-to-idx %)
-           (map propn-family-propns propns))))
+           (map propn-extended-family-propns propns))))
 
-(defn propn-family-propns
+(defn propn-extended-family-propns
   "List the ids of this propn, propns that are its args, propns that 
   are their args, etc."
   [propn]

@@ -14,7 +14,7 @@
   [mask id-to-idx node]
   (= 1.0 (mask (id-to-idx node))))
 
-(declare receive-propn add-to-propn-net add-to-analogy-net)
+(declare receive-propn add-to-propn-net add-to-analogy-net unmask-propn-components!)
 
 (defn receive-propn
   [pers propn]
@@ -49,14 +49,14 @@
 
 (defn add-to-analogy-net
   [pers propn]
-  (let [anet (:analogy-net pers)
+  (let [analogy-mask (:analogy-mask pers)
+        anet (:analogy-net pers)
         analogy-id-to-idx (:id-to-idx anet)
-        analogy-mask (:analogy-mask pers)
         analogue-propns ((:propn-to-analogues anet) propn)
 
+        propn-mask (:propn-mask pers)
         pnet (:propn-net pers)
         propn-id-to-idx (:id-to-idx pnet)
-        propn-mask (:propn-mask pers)
         propn-to-propns (:propn-to-family-propn-idxs pnet) 
         
         propn-net-has-node?  (partial net-has-node? propn-mask propn-id-to-idx) ]
@@ -69,3 +69,9 @@
             (unmask! analogy-mask                ; TODO THIS STEP HAS TO DO A *LOT* MORE
                      analogy-id-to-idx           ; TODO ALSO UNMASK PRED MAPNODES, AND THEN DO THE SAME RECURSING INTO THE ARGS.
                      (an/ids-to-mapnode-id propn a-propn))))))) ; TODO or reverse args? deal with source/target direction??
+
+
+(defn unmask-propn-components!
+  []
+  ; TODO
+  )
