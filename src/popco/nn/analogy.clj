@@ -20,16 +20,20 @@
 (def neg-link-value -0.2)
 
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat 
-         match-propns propns-match?  match-propn-components make-mapnode-map 
-         make-propn-mn-to-mns make-propn-mn-to-idxs alog-ids make-two-ids-to-idx-map 
-         ids-to-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! add-neg-wts-to-mat! 
-         matched-idx-fams competing-mapnode-fams competing-mapnode-idx-fams
-         args-match? identity-if-zero make-propn-to-analogues)
+         match-propns propns-match?  match-propn-components match-propn-components-deeply
+         make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids 
+         make-two-ids-to-idx-map ids-to-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! 
+         add-neg-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
+         competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogues)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
 ;; ...
 
+;; The fields contain redundant information, but it's all information that can
+;; be precomputed at initialization time, and that will only be read during
+;; simulation run time.  Having the redundant, precomputed fields makes runtime
+;; code simple and efficient.
 (defn make-analogy-net
   "Make an ACME analogy neural-net structure, i.e. a structure that represents
   an ACME analogy constraint satisfaction network.  This is a standard 
@@ -39,26 +43,34 @@
                 of nodes.  This will represent positively weighted links.
   :neg-wt-mat - A core.matrix square matrix with dimensions equal to the number
                 of nodes.  This will represent negatively weighted links.
+  :id-to-idx -   A Clojure map from ids of the same data items to integers, 
+                 allowing lookup of a node's index from its id.
   :ids-to-idx - This does roughly the same thing as :id-to-idx. The latter
                 maps mapnode ids to indexes into the node vector (or rows, or 
                 columns of the matrices).  :ids-to-idx, by contrast, maps
                 vector pairs containing the ids of the two sides (from which
                 the mapnode id is constructed).  This is redundant information,
                 but convenient.
-  :propn-mn-to-idxs - A map from ids of propn-mapnodes to sets of indexes of the
-                associated component mapnodes.
+  :propn-mn-to-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
+                associated component mapnodes, i.e. of the propn mapnode's 'family'.
+  :propn-mn-to-ext-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
+                associated component mapnodes, components of argument propn-mapnodes, etc.
+                all the say down--i.e. of the propn-mapnode's 'extended family'.
   :propn-to-analogues -  A map from ids of propns to ids of their analogues--i.e.
-                the propns that are the other sides of mapnodes."
+                of the propns that are the other sides of mapnodes."
   [propnseq1 propnseq2 pos-increment neg-increment]
   (let [propn-pairs (match-propns propnseq1 propnseq2)
         fams (match-propn-components propn-pairs)
+        ext-fams (match-propn-components-deeply propn-pairs)
         node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
         num-nodes (count node-seq)
         nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
+        id-to-idx (:id-to-idx nn-map)
         analogy-map (assoc nn-map
                            :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
                            :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
-                           :propn-mn-to-idxs (make-propn-mn-to-idxs (:id-to-idx nn-map) fams)  ; TODO UNTESTED
+                           :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED
+                           :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams) ; TODO UNTESTED
                            :propn-to-analogues (make-propn-to-analogues 
                                                  (map #(map :id %) propn-pairs)))] ; TODO UNTESTED
     (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
@@ -126,18 +138,6 @@
 (defmethod args-match? [Propn Propn] [p1 p2] (propns-match? p1 p2))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; EXPERIMENTAL attempt at function that would create seqs of ids from familial propns
-
-;; This walks the propn tree, so maybe there's a way to merge it with
-;; other code here to avoid duplicating tree-walking.  But it's simpler
-;; this way, and everything in this file is only done once.
-
-;; TODO ? replace the vals with seq of indexes, including the original propn
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 2
 ;; For all isomporphic propositions, pair up their components
 ;; (By separating step 1 and step 2, we do some redundant work, but it makes
@@ -184,6 +184,24 @@
                         (map make-mapnode-map (:args p1) (:args p2)))))]
           (map match-components-of-propn-pair pairs)))
 
+(defn match-propn-components-deeply
+  "Exactly like match-propn-components (q.v.), but recurses into propn arguments,
+  returning a sequence of extended families of mapped-pairs, i.e. each element of
+  the top-level sequence is a flat sequence containing mapnodes made of propns, preds, 
+  objs of both toplevel propns and argument propns (recursively)."
+  [pairs]
+  (letfn [(match-components-of-propn-pair-deeply [[p1 p2]]
+            (cons (make-mapnode-map p1 p2)                       ; we already know the propns match
+                  (cons (make-mapnode-map (:pred p1) (:pred p2)) ; predicates always match if the propns matched
+                        ;; chose which function to apply to arg pair depending on whether propns:
+                        (map (fn [arg1 arg2]
+                               (if (propn? arg1)  ; assume already matched, so only need to check one arg
+                                 (match-components-of-propn-pair-deeply [arg1 arg2])
+                                 (make-mapnode-map arg1 arg2)))
+                             (:args p1) (:args p2)))))]
+    (map flatten
+      (map match-components-of-propn-pair-deeply pairs))))
+
 ;; NOTE we use sorted-maps here because when we construct 
 ;; mapnode ids, we need it to be the case that (vals clojure-map) always returns these
 ;; vals in the same order :alog1, :alog2:
@@ -203,7 +221,7 @@
         (map #(ug/seq-to-first-all-map (map :id %)) 
              fams)))
 
-(defn make-propn-mn-to-idxs
+(defn make-propn-mn-to-fam-idxs
   "Create a Clojure map from propn-mapnode ids to sets containing ids of the 
   associated propn and component indexes."
   [id-to-idx fams]
