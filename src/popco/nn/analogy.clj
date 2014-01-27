@@ -22,7 +22,7 @@
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat 
          match-propns propns-match?  match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids 
-         make-two-ids-to-idx-map ids-to-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! 
+         make-two-ids-to-idx-map ids-to-mapnode-id ids-to-valid-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! 
          add-neg-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
          competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogues)
 
@@ -262,6 +262,15 @@
   [id1 id2]
   (keyword 
     (str (name id1) "=" (name id2))))
+
+(defn ids-to-valid-mapnode-id
+  "Given two id keywords and a map from ids to indexes, constructs and returns 
+  a corresponding mapnode id, or nil if the id has no index."
+  [id1 id2 id-to-idx]
+  (let [mn-id (ids-to-mapnode-id id1 id2)]
+    (if (id-to-idx mn-id)
+      mn-id
+      nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 4
