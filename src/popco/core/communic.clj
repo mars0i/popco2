@@ -6,13 +6,13 @@
 
 ;; TODO MOVE ELSEWHERE?
 (defn unmask!
-  [mask id-to-idx node] ;; TODO CHANGE TO TAKE ONLY INDEX ARG, NOT THE NODE ID
-    (mx/mset! mask (id-to-idx node) 1.0))
+  [mask idx] ;; TODO CHANGE TO TAKE ONLY INDEX ARG, NOT THE NODE ID
+    (mx/mset! mask idx 1.0))
 
 ;; TODO MOVE ELSEWHERE?
 (defn net-has-node?
-  [mask id-to-idx node]
-  (= 1.0 (mask (id-to-idx node))))
+  [mask idx]
+  (= 1.0 (mx/mget mask idx)))
 
 (declare receive-propn add-to-propn-net add-to-analogy-net unmask-propn-components!)
 
@@ -47,26 +47,29 @@
 ;; case, they all will get corresponding mapnodes unmasked, along with predicates
 ;; and objects along the way.
 
+;; TODO NOT WORKING
 (defn add-to-analogy-net
   [pers propn]
   (let [analogy-mask (:analogy-mask pers)
         anet (:analogy-net pers)
-        analogy-id-to-idx (:id-to-idx anet)
+        aid-to-idx (:id-to-idx anet)
+        aid-to-ext-fam-idxs (:propn-mn-to-ext-fam-idxs anet)
         analogue-propns ((:propn-to-analogues anet) propn)
 
         propn-mask (:propn-mask pers)
         pnet (:propn-net pers)
-        propn-id-to-idx (:id-to-idx pnet)
-        propn-to-propns (:propn-to-family-propn-idxs pnet) 
+        pid-to-idx (:id-to-idx pnet)
+        propn-to-propn-idxs (:propn-to-family-propn-idxs pnet) 
         
-        propn-net-has-node?  (partial net-has-node? propn-mask propn-id-to-idx) ]
+        propn-net-has-node? (partial net-has-node? propn-mask)
+        unmask-mapnode! (partial unmask! analogy-mask) ]
 
-    (when (every? propn-net-has-node? (propn-to-propns propn)) ; if sent propn missing extended-family propns, can't match
+    (when (every? propn-net-has-node? (propn-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
       (doseq [a-propn analogue-propns]                         ; now check any possible matches to sent propn
         (when (and 
-                (propn-net-has-node? a-propn)                           ; pers has this analogue propn
-                (every? propn-net-has-node? (propn-to-propns a-propn))) ; and its extended-family-propns 
-          ;; TODO unmask the propn mapnode, pred mapnode, object mapnodes, and recurse into propn args
-          ;; USE :propn-mn-to-ext-fam-idxs
-          )))))
-
+                (propn-net-has-node? (pid-to-idx a-propn))                  ; pers has this analogue propn
+                (every? propn-net-has-node? (propn-to-propn-idxs a-propn))) ; and its extended-family-propns 
+          ;; Then we can unmask all mapnodes corresponding to this propn pair:j
+          (let [aid (or (an/ids-to-valid-mapnode-id a-propn propn aid-to-idx)   ; TODO: replace the or by passing in the analogue-struct?
+                        (an/ids-to-valid-mapnode-id propn a-propn aid-to-idx))]
+            (map unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes
