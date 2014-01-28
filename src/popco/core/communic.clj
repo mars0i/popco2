@@ -27,16 +27,17 @@
     (unmask! (:propn-mask pers) ((:id-to-idx pnet) propn)))) ;; TODO NOT RIGHT
 
 ;; WHAT add-to-analogy-net IS SUPPOSED TO DO:
-;; All legal mappings between lot-elements are found by make-analogy-net,
-;; along with their links.
-;; By default, however, these nodes are masked.  They don't contribute to
+;; Background: All legal mappings between lot-elements are found by make-analogy-net,
+;; in analogy.clj, along with their links.
+;; By default, however, those nodes are masked.  They don't contribute to
 ;; the changes in activation values.
 ;; When a propn is added to a person, we may be able to unmask some of the
 ;; masked mapnodes--to add them into the process.
-;; We can't add a propn-propn mapnode, though, unless all of its components' 
-;; analogues already exist in the receiver person.  However, we don't need to 
+;; We can't add a propn-propn mapnode, though, unless its analogue, 
+;; all of its component propositions, and their analogues 
+;; already exist in the receiver person.  However, we don't need to 
 ;; worry about predicates and objects.  If a matched propn exists in the receiver,
-;; then so does its predicate and so to its argument objects.  However, if
+;; then so does its predicate and so do its argument objects.  However, if
 ;; the propn sent is higher-order, then it's possible for it to be there without
 ;; its argument propns to be in the receiver.  (This might not be what *should*
 ;; happen, but it's what popco 1 did, so its a behavior we want to be able to
@@ -69,7 +70,8 @@
         (when (and 
                 (propn-net-has-node? (pid-to-idx a-propn))                  ; pers has this analogue propn
                 (every? propn-net-has-node? (propn-to-propn-idxs a-propn))) ; and its extended-family-propns 
-          ;; Then we can unmask all mapnodes corresponding to this propn pair:j
-          (let [aid (or (an/ids-to-valid-mapnode-id a-propn propn aid-to-idx)   ; TODO: replace the or by passing in the analogue-struct?
-                        (an/ids-to-valid-mapnode-id propn a-propn aid-to-idx))]
+          ;; Then we can unmask all mapnodes corresponding to this propn pair:
+          ;; TODO: Rewrite with :poss-mapnode?:
+          (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; TODO: replace the or by passing in the analogue-struct?
+                        (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
             (map unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes

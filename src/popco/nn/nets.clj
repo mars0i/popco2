@@ -97,7 +97,12 @@
                  of weight matrices.  This vector may be identical to the sequence
                  of nodes passed in.
   :id-to-idx -   A Clojure map from ids of the same data items to integers, 
-                 allowing lookup of a node's index from its id."
+                 allowing lookup of a node's index from its id.
+  :poss-mapnode? - A function that returns a false (nil) if the id passed is not
+                   a possible mapnode, or the mapnode's index if it is.  An index
+                   doesn't imply that the mapnode has been unmasked."
   [node-seq]
-  { :node-vec (vec node-seq)
-    :id-to-idx (make-id-to-idx-map (map :id node-seq)) }) ; index order will be same as node-seq's order
+  (let [id-to-idx (make-id-to-idx-map (map :id node-seq))] ; index order will be same as node-seq's order
+    { :node-vec (vec node-seq)
+     :id-to-idx id-to-idx
+     :poss-mapnode? (fn [id] (id-to-idx id)) } )) ; O-O in Clojure! I feel guilty.

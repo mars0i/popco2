@@ -22,7 +22,7 @@
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat 
          match-propns propns-match?  match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids 
-         make-two-ids-to-idx-map ids-to-mapnode-id ids-to-valid-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! 
+         make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! 
          add-neg-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
          competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogues)
 
@@ -60,6 +60,7 @@
                 of the propns that are the other sides of mapnodes."
   [propnseq1 propnseq2 pos-increment neg-increment]
   (let [propn-pairs (match-propns propnseq1 propnseq2)
+        propn-pair-ids (map #(map :id %) propn-pairs)
         fams (match-propn-components propn-pairs)
         ext-fams (match-propn-components-deeply propn-pairs)
         node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
@@ -71,8 +72,7 @@
                            :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
                            :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED
                            :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams) ; TODO UNTESTED
-                           :propn-to-analogues (make-propn-to-analogues 
-                                                 (map #(map :id %) propn-pairs)))] ; TODO UNTESTED
+                           :propn-to-analogues (make-propn-to-analogues propn-pair-ids)) ] ; TODO UNTESTED
     (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
                          (matched-idx-fams fams (:id-to-idx analogy-map)) 
                          pos-increment)
@@ -263,12 +263,12 @@
   (keyword 
     (str (name id1) "=" (name id2))))
 
-(defn ids-to-valid-mapnode-id
+(defn ids-to-poss-mapnode-id
   "Given two id keywords and a map from ids to indexes, constructs and returns 
   a corresponding mapnode id, or nil if the id has no index."
   [id1 id2 id-to-idx]
   (let [mn-id (ids-to-mapnode-id id1 id2)]
-    (if (id-to-idx mn-id)
+    (if (id-to-idx mn-id) ;; TODO REPLACE WITH NEW METHOD IN nn-map
       mn-id
       nil)))
 
