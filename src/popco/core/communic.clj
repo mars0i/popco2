@@ -7,11 +7,16 @@
 
 ;; TODO MOVE ELSEWHERE?
 (defn unmask!
-  [mask idx] ;; TODO CHANGE TO TAKE ONLY INDEX ARG, NOT THE NODE ID
+  "Given a core.matrix vector representing a mask, and an index
+  into the mask, set the indexed element of the mask to 1."
+  [mask idx]
     (mx/mset! mask idx 1.0))
 
 ;; TODO MOVE ELSEWHERE?
 (defn net-has-node?
+  "Given a core.matrix vector representing a mask, and an index
+  into the mask, return true if the mask is 1 at that index;
+  otherwise false."
   [mask idx]
   (= 1.0 (mx/mget mask idx)))
 
