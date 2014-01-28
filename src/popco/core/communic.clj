@@ -2,6 +2,7 @@
   (:require [utils.general :as ug]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
+            [clojure.pprint :as pp] ; TEMPORARY
             [clojure.core.matrix :as mx])) ; for unmask!
 
 ;; TODO MOVE ELSEWHERE?
@@ -60,18 +61,26 @@
         propn-mask (:propn-mask pers)
         pnet (:propn-net pers)
         pid-to-idx (:id-to-idx pnet)
-        propn-to-propn-idxs (:propn-to-family-propn-idxs pnet) 
+        pid-to-propn-idxs (:propn-to-family-propn-idxs pnet) 
         
         propn-net-has-node? (partial net-has-node? propn-mask)
         unmask-mapnode! (partial unmask! analogy-mask) ]
 
-    (when (every? propn-net-has-node? (propn-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
+(pp/cl-format true "propn: ~s~%" propn)
+    (when (every? propn-net-has-node? (pid-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
       (doseq [a-propn analogue-propns]                         ; now check any possible matches to sent propn
+(pp/cl-format true "a-propn: ~s~%" a-propn)
+(pp/cl-format true "a-propn propn-net-has-node?: ~s~%" (pid-to-idx a-propn))
+(pp/cl-format true "a-propn propn-net-has-node?: ~s~%" (propn-net-has-node? (pid-to-idx a-propn)))
+(pp/cl-format true "sub-a-propns propn-net-has-node?: ~s~%" (pid-to-propn-idxs a-propn))
+(pp/cl-format true "sub-a-propns propn-net-has-node?: ~s~%" (every? propn-net-has-node? (pid-to-propn-idxs a-propn)))
         (when (and 
-                (propn-net-has-node? (pid-to-idx a-propn))                  ; pers has this analogue propn
-                (every? propn-net-has-node? (propn-to-propn-idxs a-propn))) ; and its extended-family-propns 
+                (propn-net-has-node? (pid-to-idx a-propn))                ; pers has this analogue propn
+                (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; and its extended-family-propns 
           ;; Then we can unmask all mapnodes corresponding to this propn pair:
           ;; TODO: Rewrite with :poss-mapnode?:
           (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; TODO: replace the or by passing in the analogue-struct?
                         (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
+(pp/cl-format true "aid: ~s~%" aid)
+(pp/cl-format true "idxs: ~s~%" (aid-to-ext-fam-idxs aid))
             (map unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes
