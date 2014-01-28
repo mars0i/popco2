@@ -1,6 +1,12 @@
 (ns utils.general ; Utility functions handy for any Clojure program
   (:require [clojure.pprint :only [*print-right-margin*]]))
 
+;; Simple Clojure version of mapc.
+;; Needs to be exanded to deal with multiple seqs
+(defn mapc [f s]
+  (doseq [e s]
+    (f e)))
+
 (defn unlocknload 
   "Given a symbol representing a namespace, converts the symbol
   into the corresponding path + clojure source fileanem, tries to 
