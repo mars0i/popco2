@@ -88,4 +88,4 @@
                         (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
 (pp/cl-format true "aid: ~s~%" aid)
 (pp/cl-format true "idxs: ~s~%" (aid-to-ext-fam-idxs aid))
-            (ug/mapc unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes
+            (ug/domap unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes

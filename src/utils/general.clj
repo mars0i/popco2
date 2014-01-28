@@ -3,7 +3,7 @@
 
 ;; Simple Clojure version of mapc.
 ;; Needs to be exanded to deal with multiple seqs
-(defn mapc [f s]
+(defn domap [f s]
   (doseq [e s]
     (f e)))
 
