@@ -22,7 +22,7 @@
 (defn domapidx
   [f & colls]
   (let [vecs (map vec colls)]
-    (dotimes [i (max (map count vecs))]
+    (dotimes [i (apply max (map count vecs))]
       (apply f (map #(get % i) vecs)))))
 
 ;(defmacro domapidxmac
