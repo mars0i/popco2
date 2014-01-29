@@ -1,7 +1,7 @@
 (ns utils.general ; Utility functions handy for any Clojure program
   (:require [clojure.pprint :only [*print-right-margin*]]))
 
-;; Simple Clojure version of mapc.
+;; Simple Clojure version of mapc. Allows only one list arg.
 (defn domap1 [f coll]
   [f coll]
   (doseq [e coll] 
@@ -18,6 +18,11 @@
     `(let [argvecs# (map vector ~@colls)]               ; seq of vecs of interleaved elements
        (doseq [~params argvecs#]
          (~f ~@params)))))
+
+;; version of domap implemented with map
+(defmacro domaprun
+  [f & colls]
+  `(dorun (map ~f ~@colls)))
 
 (defn unlocknload 
   "Given a symbol representing a namespace, converts the symbol
