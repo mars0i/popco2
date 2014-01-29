@@ -96,12 +96,12 @@
   to represent activation values of nodes.  Each person has its own 
   activation vector."
   [len]
-  (mx/new-vector len))
+  (mx/zero-vector len))
 
 (defn make-wt-mat
   "Returns a core.matrix square matrix with dimension dim, filled with zeros."
   [dim]
-  (mx/new-matrix dim dim))
+  (mx/zero-matrix dim dim))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 1
