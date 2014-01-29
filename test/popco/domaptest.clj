@@ -14,10 +14,10 @@
 
 (println "loaded.")
 
-(println "domap1:")
-(bench (def _ (domap1 unmaskit! nums)))
 (println "domap:")
 (bench (def _ (domap unmaskit! nums)))
+(println "domapmany:")
+(bench (def _ (domapmany unmaskit! nums)))
 (println "domaprun:")
 (bench (def _ (domaprun unmaskit! nums)))
 

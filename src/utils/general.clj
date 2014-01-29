@@ -2,7 +2,7 @@
   (:require [clojure.pprint :only [*print-right-margin*]]))
 
 ;; Simple Clojure version of mapc. Allows only one list arg.
-(defn domap1 [f coll]
+(defn domap [f coll]
   [f coll]
   (doseq [e coll] 
     (f e)))
@@ -12,7 +12,7 @@
 ;; After all, it constructs a new seq combining the arg seqs
 ;; How is this better than constructing a seq of results?
 ;; It does enforce that only side effects will matter--only nil is returned.
-(defmacro domap
+(defmacro domapmany
   [f & colls]
   (let [params (vec (repeatedly (count colls) gensym))] ; one param name for each seq arg
     `(let [argvecs# (map vector ~@colls)]               ; seq of vecs of interleaved elements
