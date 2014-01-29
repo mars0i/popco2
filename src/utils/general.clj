@@ -19,10 +19,40 @@
        (doseq [~params argvecs#]
          (~f ~@params)))))
 
+(defn domaprecur
+  [f coll] 
+  (when (seq coll)
+    (f (first coll))
+    (recur f (rest coll))))
+
 ;; version of domap implemented with map
 (defmacro domaprun
   [f & colls]
   `(dorun (map ~f ~@colls)))
+
+;; Hacked version of map from clojure/core.clj:
+(defn domapcloj
+  ([f coll]
+    (when-let [s (seq coll)]
+      (f (first coll))
+      (recur f (rest coll))))
+  ([f c1 c2]
+   (let [s1 (seq c1) s2 (seq c2)]
+     (when (and s1 s2)
+       (f (first s1) (first s2))
+       (recur f (rest s1) (rest s2)))))
+  ([f c1 c2 c3]
+   (let [s1 (seq c1) s2 (seq c2) s3 (seq c3)]
+     (when (and s1 s2 s3)
+       (f (first s1) (first s2) (first s3))
+       (recur f (rest s1) (rest s2) (rest s3)))))
+  ([f c1 c2 c3 & colls]
+   (let [step (fn step [cs]
+                  (let [ss (map seq cs)]
+                    (when (every? identity ss)
+                      (cons (map first ss) (step (map rest ss))))))]
+     (domapcloj #(apply f %) (step (conj colls c3 c2 c1))))))
+
 
 (defn unlocknload 
   "Given a symbol representing a namespace, converts the symbol
