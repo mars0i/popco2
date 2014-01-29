@@ -16,6 +16,8 @@
 
 (println "domap:")
 (bench (def _ (domap unmaskit! nums)))
+(println "domapidx")
+(bench (def _ (domapidx unmaskit! nums)))
 (println "domapcloj:")
 (bench (def _ (domapcloj unmaskit! nums)))
 (println "domaprecur:")

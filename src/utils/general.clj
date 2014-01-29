@@ -19,6 +19,18 @@
        (doseq [~params argvecs#]
          (~f ~@params)))))
 
+(defn domapidx
+  [f & colls]
+  (let [vecs (map vec colls)]
+    (dotimes [i (max (map count vecs))]
+      (apply f (map #(get % i) vecs)))))
+
+;(defmacro domapidxmac
+;  [f & colls]
+;  `(let [vecs# (map vec ~colls)]
+;     (dotimes [i# (max ~@(map count vecs#))]
+;       (apply f (map #(get % i#) vecs#)))))
+
 (defn domaprecur
   [f coll] 
   (when (seq coll)
