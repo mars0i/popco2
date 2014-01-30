@@ -36,7 +36,13 @@
     (dotimes [i (count coll)]
       (f (nth coll i))))
 
-(defmacro domaptimesmac
+(defmacro domaptimesmac1
+  [f & colls]
+  (let [i (gensym "i")]
+    `(dotimes [~i ~(apply min (map count colls))]
+       (~f ~@(map #(list 'nth % i) colls)))))
+
+(defmacro domaptimesmac0
   [f & colls]
   (let [i (gensym "i")]
     `(dotimes [~i (min ~@(map count colls))]
