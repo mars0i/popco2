@@ -1,16 +1,37 @@
 (ns utils.general ; Utility functions handy for any Clojure program
   (:require [clojure.pprint :only [*print-right-margin*]]))
 
-(defn domap
-  [f coll]
-  (dotimes [i (count coll)]
-    (f (nth coll i))))
+;(defn domap
+;  [f coll]
+;  (dotimes [i (count coll)]
+;    (f (nth coll i))))
+;
+;(defn domap2
+;  ([f c1]
+;   (dotimes [i (count c1)] 
+;     (f (nth c1 i))))
+;  ([f c1 c2]
+;   (dotimes [i (count c1)] ; should use min
+;     (f (nth c1 i) (nth c2 i)))))
+;
+;(defn domaps
+;  [f & colls]
+;  (dotimes [i (apply min (map count colls))]
+;    (apply f (map #(nth % i) colls))))
 
-(defmacro domapmac
-  [f & colls]
-  (let [i (gensym "i")]
-    `(dotimes [~i (min ~@(map count colls))]
-       (~f ~@(map #(list 'nth % i) colls)))))
+;; doesn't work right?
+;; it's OK if you pass it literal vectors of stuff in the colls
+;; it's not ok if you pass symbols.  they end up asliterals
+(defmacro domap [f & colls] 
+  `(dotimes [i# (apply min (map count '(~@colls)))]
+     (apply ~f (map #(nth % i#) '(~@colls)))))
+
+;; doesn't work right
+;(defmacro domapmac
+;  [f & colls]
+;  (let [i (gensym "i")]
+;    `(dotimes [~i (min ~@(map count colls))]
+;       (~f ~@(map #(list 'nth % i) colls)))))
 
 (defn unlocknload 
   "Given a symbol representing a namespace, converts the symbol

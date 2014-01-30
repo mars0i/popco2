@@ -19,6 +19,16 @@
   (doseq [e coll] 
     (f e)))
 
+;(defn domaps
+;  [f & colls]
+;  (dotimes [i (apply min (map count colls))]
+;    (apply f (map #(nth % i) colls))))
+;
+;(defmacro domapsmac
+;  [f & colls]
+;  `(dotimes [i# (apply min (map count '~colls))]
+;    (apply ~f (map #(nth % i#) '~colls))))
+
 ;; Clojure mapc with multiple list args
 ;; Is this any more efficient than Clojure map ?
 ;; After all, it constructs a new seq combining the arg seqs
@@ -96,17 +106,15 @@
 
 (println "loaded. yow.")
 
-(println (macroexpand-1 '(domaptimesmac println nums)))
-(println (macroexpand-1 '(domaptimesmac (partial pc/unmask! veczvec) nums)))
-(println (macroexpand-1 '(domaptimesmac unmaskit! nums)))
-
-(print "\ndomaptimesmac with partial:\n") (bench (def _ (domaptimesmac (partial pc/unmask! veczvec nums))))
-(print "\ndomaptimesmac:\n") (bench (def _ (domaptimesmac unmaskit! nums)))
+(print "\ndomapsmac:\n") (bench (def _ (domapsmac unmaskit! nums)))
+;(print "\ndomaps:\n") (bench (def _ (domaps unmaskit! nums)))
 (print "\ndomapseq:\n") (bench (def _ (domapseq unmaskit! nums)))
 (print "\ndomaptimes:\n") (bench (def _ (domaptimes unmaskit! nums)))
-(print "\ndomaptimesv:\n") (bench (def _ (domaptimesv unmaskit! nums)))
-(print "\ndomaprecur:\n") (bench (def _ (domaprecur unmaskit! nums)))
-(print "\ndomaptimesvs:\n") (bench (def _ (domaptimesvs unmaskit! nums)))
-(print "\ndomapclojmap:\n") (bench (def _ (domapclojmap unmaskit! nums)))
-(print "\ndomapseqmac:\n") (bench (def _ (domapseqmac unmaskit! nums)))
-(print "\ndomaprun:\n") (bench (def _ (domaprun unmaskit! nums)))
+;(print "\ndomaptimesmac with partial:\n") (bench (def _ (domaptimesmac (partial pc/unmask! veczvec nums))))
+;(print "\ndomaptimesmac:\n") (bench (def _ (domaptimesmac unmaskit! nums)))
+;(print "\ndomaptimesv:\n") (bench (def _ (domaptimesv unmaskit! nums)))
+;(print "\ndomaprecur:\n") (bench (def _ (domaprecur unmaskit! nums)))
+;(print "\ndomaptimesvs:\n") (bench (def _ (domaptimesvs unmaskit! nums)))
+;(print "\ndomapclojmap:\n") (bench (def _ (domapclojmap unmaskit! nums)))
+;(print "\ndomapseqmac:\n") (bench (def _ (domapseqmac unmaskit! nums)))
+;(print "\ndomaprun:\n") (bench (def _ (domaprun unmaskit! nums)))
