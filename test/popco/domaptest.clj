@@ -69,6 +69,7 @@
   [f coll]
   (dorun (map f coll)))
 
+;; see domap18 below for alternate version:
 (defn domap8
   [f & colls]
   (dorun (apply (partial map f) colls)))
@@ -148,6 +149,16 @@
     (doseq [args argvecs]
       (apply f args))))
 
+;; like domap8
+(defn domap18
+  [f & colls]
+  (dorun (apply map f colls)))
+
+;; from noisesmith on SO:
+(defn domap19 
+  [f & colls]
+  (apply mapv f colls))
+
 (println "loaded. yow.")
 
 ;(runbench domap1 "domap1")
@@ -156,4 +167,6 @@
 ;(runbench domap7 "domap7")
 ;(runbench domap8 "domap8")
 ;(runbench domap15 "domap15")
-(runbench domap17 "domap17")
+;(runbench domap17 "domap17")
+;(runbench domap18 "domap18")
+(runbench domap19 "domap19")
