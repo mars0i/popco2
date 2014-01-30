@@ -2,11 +2,12 @@
   (:require [popco.core.communic :as pc])
   (:use criterium.core
         clojure.core.matrix
+        [clojure.pprint :only [pprint]]
         utils.general))
 
 (def howmany 1000)
 (def nums (vec (range howmany)))
-(def veczvec (zero-vector howmany))
+(def veczvec (zero-vector :vectorz howmany))
 
 (defn unmaskit!
   [idx]
@@ -87,11 +88,16 @@
                       (cons (map first ss) (step (map rest ss))))))]
      (domapclojmap #(apply f %) (step (conj colls c3 c2 c1))))))
 
-(println "loaded.")
+(println "loaded. yow.")
 
+(println (macroexpand-1 '(domaptimesmac println nums)))
+(println (macroexpand-1 '(domaptimesmac (partial pc/unmask! veczvec) nums)))
+(println (macroexpand-1 '(domaptimesmac unmaskit! nums)))
+
+(print "\ndomaptimesmac with partial:\n") (bench (def _ (domaptimesmac (partial pc/unmask! veczvec nums))))
+(print "\ndomaptimesmac:\n") (bench (def _ (domaptimesmac unmaskit! nums)))
 (print "\ndomapseq:\n") (bench (def _ (domapseq unmaskit! nums)))
 (print "\ndomaptimes:\n") (bench (def _ (domaptimes unmaskit! nums)))
-(print "\ndomaptimesmac:\n") (bench (def _ (domaptimesmac unmaskit! nums)))
 (print "\ndomaptimesv:\n") (bench (def _ (domaptimesv unmaskit! nums)))
 (print "\ndomaprecur:\n") (bench (def _ (domaprecur unmaskit! nums)))
 (print "\ndomaptimesvs:\n") (bench (def _ (domaptimesvs unmaskit! nums)))

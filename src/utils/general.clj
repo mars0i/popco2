@@ -2,9 +2,9 @@
   (:require [clojure.pprint :only [*print-right-margin*]]))
 
 (defn domap
-  ([f coll]
-    (dotimes [i (count coll)]
-      (f (nth coll i)))))
+  [f coll]
+  (dotimes [i (count coll)]
+    (f (nth coll i))))
 
 (defmacro domapmac
   [f & colls]
