@@ -1,10 +1,10 @@
 (ns utils.general ; Utility functions handy for any Clojure program
   (:require [clojure.pprint :only [*print-right-margin*]]))
 
-;(defn domap
-;  [f coll]
-;  (dotimes [i (count coll)]
-;    (f (nth coll i))))
+(defn domap
+  [f coll]
+  (dotimes [i (count coll)]
+    (f (nth coll i))))
 ;
 ;(defn domap2
 ;  ([f c1]
@@ -22,7 +22,7 @@
 ;; doesn't work right?
 ;; it's OK if you pass it literal vectors of stuff in the colls
 ;; it's not ok if you pass symbols.  they end up asliterals
-(defmacro domap [f & colls] 
+(defmacro domap44 [f & colls] 
   `(dotimes [i# (apply min (map count '(~@colls)))]
      (apply ~f (map #(nth % i#) '(~@colls)))))
 

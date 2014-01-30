@@ -1,88 +1,125 @@
 (ns tst
-  (:require [popco.core.communic :as pc])
   (:use criterium.core
-        clojure.core.matrix
-        [clojure.pprint :only [pprint]]
-        utils.general))
+        [clojure.core.matrix :as mx]))
+
+;;; Benchmarking setup
 
 (def howmany 1000)
-(def nums (vec (range howmany)))
-(def veczvec (zero-vector :vectorz howmany))
+(def a-coll (vec (range howmany)))
+(def maskvec (zero-vector :vectorz howmany))
 
 (defn unmaskit!
   [idx]
-  (pc/unmask! veczvec idx))
+  (mx/mset! maskvec idx 1.0)) ; sets element idx of maskvec to 1.0
 
-;; Simple Clojure version of mapc. Allows only one list arg.
-(defn domapseq
+(defn runbench
+  [domapfn label]
+  (print (str "\n" label ":\n"))
+  (bench (def _ (domapfn unmaskit! a-coll))))
+
+
+;;; domap versions
+
+;; Note the name domap was suggested by Jozef Wagner in the Clojure Google group: https://groups.google.com/forum/#!topic/clojure/bn5QmxQF7vI
+
+;(defn domap0
+;  ([f c1]
+;   (doseq [e c1]  ; doseq might be faster than dotimes
+;     (f e)))
+;  ([f c1 c2]
+;  (dotimes [i (apply min (map count colls))] ; however, I haven't figured out how to use doseq with parallel seq walking
+;    (apply f (map #(nth % i) colls)))))
+
+(defn domap1
   [f coll]
   (doseq [e coll] 
     (f e)))
 
-;(defn domaps
-;  [f & colls]
-;  (dotimes [i (apply min (map count colls))]
-;    (apply f (map #(nth % i) colls))))
-;
-;(defmacro domapsmac
-;  [f & colls]
-;  `(dotimes [i# (apply min (map count '~colls))]
-;    (apply ~f (map #(nth % i#) '~colls))))
+(defn domap2
+  [f coll]
+    (dotimes [i (count coll)]
+      (f (nth coll i))))
 
-;; Clojure mapc with multiple list args
-;; Is this any more efficient than Clojure map ?
-;; After all, it constructs a new seq combining the arg seqs
-;; How is this better than constructing a seq of results?
-;; It does enforce that only side effects will matter--only nil is returned.
-(defmacro domapseqmac
+(defn domap3
+  [f & colls]
+  (dotimes [i (apply min (map count colls))]
+    (apply f (map #(nth % i) colls))))
+
+(defmacro domap4
+  [f & colls]
+  `(dotimes [i# (apply min (map count '~colls))]
+    (apply ~f (map #(nth % i#) '~colls))))
+
+;; by Ankur in SO:
+(defn domap5
+  [f & colls]
+  (doall (for [coll colls
+               x coll]
+           (f x))))
+
+;; with dorun vs doall
+(defn domap6
+  [f & colls]
+  (dorun (for [coll colls
+               x coll]
+           (f x))))
+
+;; version of domap implemented with map
+(defn domap7
+  [f coll]
+  (dorun (map f coll)))
+
+(defn domap8
+  [f & colls]
+  (dorun (apply (partial map f) colls)))
+
+;; might be broken
+(defmacro domap9
+  [f & colls]
+  `(dorun (map ~f ~@colls)))
+
+;; see domap17 below for function version
+(defmacro domap10
   [f & colls]
   (let [params (vec (repeatedly (count colls) gensym))] ; one param name for each seq arg
     `(let [argvecs# (map vector ~@colls)]               ; seq of vecs of interleaved elements
        (doseq [~params argvecs#]
          (~f ~@params)))))
 
-(defn domaptimes
-  [f coll]
-    (dotimes [i (count coll)]
-      (f (nth coll i))))
-
-(defmacro domaptimesmac1
+(defmacro domap11
   [f & colls]
   (let [i (gensym "i")]
     `(dotimes [~i ~(apply min (map count colls))]
        (~f ~@(map #(list 'nth % i) colls)))))
 
-(defmacro domaptimesmac0
+(defmacro domap12
   [f & colls]
   (let [i (gensym "i")]
     `(dotimes [~i (min ~@(map count colls))]
        (~f ~@(map #(list 'nth % i) colls)))))
 
-(defn domaptimesv
+(defn domap13
   [f coll]
   (let [v (vec coll)]
     (dotimes [i (count v)]
       (f (get v i)))))
 
-(defn domaptimesvs
+(defn domap14
   [f & colls]
   (let [vecs (map vec colls)]
     (dotimes [i (apply min (map count vecs))]
       (apply f (map #(get % i) vecs)))))
 
-(defn domaprecur
+(defn domap15
   [f coll] 
   (when (seq coll)
     (f (first coll))
     (recur f (rest coll))))
 
-;; version of domap implemented with map
-(defmacro domaprun
-  [f & colls]
-  `(dorun (map ~f ~@colls)))
-
-;; Hacked version of map from clojure/core.clj:
-(defn domapclojmap
+;; Hacked version of map from clojure/core.clj.
+;; Turns out this is slow.  Maybe because I deleted the chunking code
+;; that I didn't understand, which may or may not depend on lazy output.
+(defn domap16
   ([f coll]
     (when-let [s (seq coll)]
       (f (first coll))
@@ -102,19 +139,21 @@
                   (let [ss (map seq cs)]
                     (when (every? identity ss)
                       (cons (map first ss) (step (map rest ss))))))]
-     (domapclojmap #(apply f %) (step (conj colls c3 c2 c1))))))
+     (domap16 #(apply f %) (step (conj colls c3 c2 c1))))))
+
+;; function version of domap10
+(defn domap17
+  [f & colls]
+  (let [argvecs (apply (partial map vector) colls)] ; seq of ntuples of interleaved vals
+    (doseq [args argvecs]
+      (apply f args))))
 
 (println "loaded. yow.")
 
-(print "\ndomapsmac:\n") (bench (def _ (domapsmac unmaskit! nums)))
-;(print "\ndomaps:\n") (bench (def _ (domaps unmaskit! nums)))
-(print "\ndomapseq:\n") (bench (def _ (domapseq unmaskit! nums)))
-(print "\ndomaptimes:\n") (bench (def _ (domaptimes unmaskit! nums)))
-;(print "\ndomaptimesmac with partial:\n") (bench (def _ (domaptimesmac (partial pc/unmask! veczvec nums))))
-;(print "\ndomaptimesmac:\n") (bench (def _ (domaptimesmac unmaskit! nums)))
-;(print "\ndomaptimesv:\n") (bench (def _ (domaptimesv unmaskit! nums)))
-;(print "\ndomaprecur:\n") (bench (def _ (domaprecur unmaskit! nums)))
-;(print "\ndomaptimesvs:\n") (bench (def _ (domaptimesvs unmaskit! nums)))
-;(print "\ndomapclojmap:\n") (bench (def _ (domapclojmap unmaskit! nums)))
-;(print "\ndomapseqmac:\n") (bench (def _ (domapseqmac unmaskit! nums)))
-;(print "\ndomaprun:\n") (bench (def _ (domaprun unmaskit! nums)))
+;(runbench domap1 "domap1")
+;(runbench domap2 "domap2")
+;(runbench domap3 "domap3")
+;(runbench domap7 "domap7")
+;(runbench domap8 "domap8")
+;(runbench domap15 "domap15")
+(runbench domap17 "domap17")
