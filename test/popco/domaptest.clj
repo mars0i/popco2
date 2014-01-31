@@ -5,7 +5,9 @@
 ;;; Benchmarking setup
 
 (def howmany 1000)
-(def a-coll (vec (range howmany)))
+;(def a-coll (range howmany))
+(def a-coll (into () (range howmany)))
+;(def a-coll (vec (range howmany)))
 (def maskvec (zero-vector :vectorz howmany))
 
 (defn unmaskit!
@@ -111,6 +113,7 @@
     (dotimes [i (apply min (map count vecs))]
       (apply f (map #(get % i) vecs)))))
 
+;; cf. domap23
 (defn domap15
   [f coll] 
   (when (seq coll)
@@ -157,16 +160,42 @@
 ;; from noisesmith on SO:
 (defn domap19 
   [f & colls]
+  (apply mapv f colls)
+  nil)
+
+;; same, but allowed to return the seq
+(defn domap20
+  [f & colls]
   (apply mapv f colls))
+
+;; with dorun
+(defn domap21
+  [f & colls]
+  (dorun (apply mapv f colls)))
+
+;; I don't think adding nil after dorun should matter
+(defn domap22
+  [f & colls]
+  (dorun (apply mapv f colls))
+  nil)
+
+;; also from noisesmith on SO
+;; kind of a multi-seq version of domap15
+(defn domap23
+  [f & colls]
+  (loop [heads colls]
+    (when (every? seq heads)
+      (apply f (map first heads))
+      (recur (map rest heads)))))
 
 (println "loaded. yow.")
 
-;(runbench domap1 "domap1")
-;(runbench domap2 "domap2")
-;(runbench domap3 "domap3")
-;(runbench domap7 "domap7")
-;(runbench domap8 "domap8")
-;(runbench domap15 "domap15")
-;(runbench domap17 "domap17")
-;(runbench domap18 "domap18")
-(runbench domap19 "domap19")
+(runbench domap1 "domap1: simple doseq") ; the standard
+(runbench domap2 "domap2: dotimes")
+(runbench domap7 "domap7: map + dorun")
+(runbench domap19 "domap19: mapv, nil")
+(runbench domap20 "domap20: mapv")
+;(runbench domap21 "domap21: mapv, dorun")
+;(runbench domap22 "domap22: mapv, dorun, nil")
+(runbench domap15 "domap15: simple recur")
+(runbench domap23 "domap23: multi recur")
