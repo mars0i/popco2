@@ -310,3 +310,9 @@ So note that communication will require reference to:
 		communication functions
 		well the masks will probably come from the person
 
+*********
+QUESTION: Suppose that I add a HO propn before its components exist,
+so the mapnode isn't created.  Later, they are added.  What will cause
+the mapnode to be created then?? Don't I have to therefore check
+what HO propns propns participate in??
+*********

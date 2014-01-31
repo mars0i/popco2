@@ -54,6 +54,37 @@
 ;; case, they all will get corresponding mapnodes unmasked, along with predicates
 ;; and objects along the way.
 
+
+;; TODO THIS IS BAD:
+;; popco.core.popco=> (receive-propn jo :CV-ca)
+;; propn: :CV-ca
+;; a-propn: :V-ip
+;; a-propn propn-net-has-node?: 0
+;; a-propn propn-net-has-node?: false
+;; sub-a-propns propn-net-has-node?: (0)
+;; sub-a-propns propn-net-has-node?: false
+;; a-propn: :V-na
+;; a-propn propn-net-has-node?: 1
+;; a-propn propn-net-has-node?: false
+;; sub-a-propns propn-net-has-node?: (1)
+;; sub-a-propns propn-net-has-node?: false
+;; a-propn: :V-ia
+;; a-propn propn-net-has-node?: 2
+;; a-propn propn-net-has-node?: true
+;; sub-a-propns propn-net-has-node?: (2)
+;; sub-a-propns propn-net-has-node?: true
+;; aid: :V-ia=CV-ca
+;; idxs: (48 1 28)
+;; a-propn: :V-ha
+;; a-propn propn-net-has-node?: 3
+;; a-propn propn-net-has-node?: true
+;; sub-a-propns propn-net-has-node?: (3)
+;; sub-a-propns propn-net-has-node?: true
+;; aid: :V-ha=CV-ca
+;; idxs: (61 58 28)
+;; 
+;; ArrayIndexOutOfBoundsException 61  mikera.vectorz.Vector.set (Vector.java:149)
+
 ;; TODO NOT WORKING
 (defn add-to-analogy-net
   [pers propn]
@@ -74,17 +105,17 @@
 (pp/cl-format true "propn: ~s~%" propn)
     (when (every? propn-net-has-node? (pid-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
       (doseq [a-propn analogue-propns]                         ; now check any possible matches to sent propn
-(pp/cl-format true "a-propn: ~s~%" a-propn)
-(pp/cl-format true "a-propn propn-net-has-node?: ~s~%" (pid-to-idx a-propn))
-(pp/cl-format true "a-propn propn-net-has-node?: ~s~%" (propn-net-has-node? (pid-to-idx a-propn)))
-(pp/cl-format true "sub-a-propns propn-net-has-node?: ~s~%" (pid-to-propn-idxs a-propn))
-(pp/cl-format true "sub-a-propns propn-net-has-node?: ~s~%" (every? propn-net-has-node? (pid-to-propn-idxs a-propn)))
+(pp/cl-format true "\ta-propn: ~s~%" a-propn)
+(pp/cl-format true "\ta-propn index: ~s~%" (pid-to-idx a-propn))
+(pp/cl-format true "\ta-propn propn-net-has-node?: ~s~%" (propn-net-has-node? (pid-to-idx a-propn)))
+(pp/cl-format true "\tsub-a-propns propn-net-has-node?: ~s~%" (pid-to-propn-idxs a-propn))
+(pp/cl-format true "\tsub-a-propns propn-net-has-node?: ~s~%" (every? propn-net-has-node? (pid-to-propn-idxs a-propn)))
         (when (and 
                 (propn-net-has-node? (pid-to-idx a-propn))                ; pers has this analogue propn
                 (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; and its extended-family-propns 
           ;; Then we can unmask all mapnodes corresponding to this propn pair:
           (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; TODO: replace the or by passing in the analogue-struct?
                         (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
-(pp/cl-format true "aid: ~s~%" aid)
-(pp/cl-format true "idxs: ~s~%" (aid-to-ext-fam-idxs aid))
+(pp/cl-format true "\t\taid: ~s~%" aid)
+(pp/cl-format true "\t\tidxs: ~s~%" (aid-to-ext-fam-idxs aid))
             (ug/domap unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes
