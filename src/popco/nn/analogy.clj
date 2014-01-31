@@ -268,7 +268,7 @@
   a corresponding mapnode id, or nil if the id has no index."
   [id1 id2 id-to-idx]
   (let [mn-id (ids-to-mapnode-id id1 id2)]
-    (if (id-to-idx mn-id) ;; TODO REPLACE WITH NEW METHOD IN nn-map
+    (if (id-to-idx mn-id)
       mn-id
       nil)))
 

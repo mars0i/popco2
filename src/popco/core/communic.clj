@@ -83,7 +83,6 @@
                 (propn-net-has-node? (pid-to-idx a-propn))                ; pers has this analogue propn
                 (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; and its extended-family-propns 
           ;; Then we can unmask all mapnodes corresponding to this propn pair:
-          ;; TODO: Rewrite with :poss-mapnode?:
           (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; TODO: replace the or by passing in the analogue-struct?
                         (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
 (pp/cl-format true "aid: ~s~%" aid)
