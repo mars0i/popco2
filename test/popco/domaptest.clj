@@ -117,6 +117,13 @@
     (f (first coll))
     (recur f (rest coll))))
 
+(defn domap15a
+  [f coll] 
+  (loop [c coll]
+    (when (seq c)
+      (f (first c))
+      (recur (rest c)))))
+
 ;; Hacked version of map from clojure/core.clj.
 ;; Turns out this is slow.  Maybe because I deleted the chunking code
 ;; that I didn't understand, which may or may not depend on lazy output.
@@ -169,4 +176,4 @@
 ;(runbench domap15 "domap15")
 ;(runbench domap17 "domap17")
 ;(runbench domap18 "domap18")
-(runbench domap19 "domap19")
+;(runbench domap19 "domap19")
