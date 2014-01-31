@@ -6,8 +6,8 @@
 
 (def howmany 1000)
 ;(def a-coll (range howmany))
-(def a-coll (into () (range howmany)))
-;(def a-coll (vec (range howmany)))
+;(def a-coll (into () (range howmany)))
+(def a-coll (vec (range howmany)))
 (def maskvec (zero-vector :vectorz howmany))
 
 (defn unmaskit!
@@ -23,14 +23,6 @@
 ;;; domap versions
 
 ;; Note the name domap was suggested by Jozef Wagner in the Clojure Google group: https://groups.google.com/forum/#!topic/clojure/bn5QmxQF7vI
-
-;(defn domap0
-;  ([f c1]
-;   (doseq [e c1]  ; doseq might be faster than dotimes
-;     (f e)))
-;  ([f c1 c2]
-;  (dotimes [i (apply min (map count colls))] ; however, I haven't figured out how to use doseq with parallel seq walking
-;    (apply f (map #(nth % i) colls)))))
 
 (defn domap1
   [f coll]
@@ -119,6 +111,13 @@
   (when (seq coll)
     (f (first coll))
     (recur f (rest coll))))
+
+(defn domap15a
+  [f coll] 
+  (loop [c coll]
+    (when (seq c)
+      (f (first c))
+      (recur (rest c)))))
 
 ;; Hacked version of map from clojure/core.clj.
 ;; Turns out this is slow.  Maybe because I deleted the chunking code
