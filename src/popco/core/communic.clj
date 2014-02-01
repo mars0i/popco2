@@ -55,36 +55,6 @@
 ;; and objects along the way.
 
 
-;; TODO THIS IS BAD:
-;; popco.core.popco=> (receive-propn jo :CV-ca)
-;; propn: :CV-ca
-;; a-propn: :V-ip
-;; a-propn propn-net-has-node?: 0
-;; a-propn propn-net-has-node?: false
-;; sub-a-propns propn-net-has-node?: (0)
-;; sub-a-propns propn-net-has-node?: false
-;; a-propn: :V-na
-;; a-propn propn-net-has-node?: 1
-;; a-propn propn-net-has-node?: false
-;; sub-a-propns propn-net-has-node?: (1)
-;; sub-a-propns propn-net-has-node?: false
-;; a-propn: :V-ia
-;; a-propn propn-net-has-node?: 2
-;; a-propn propn-net-has-node?: true
-;; sub-a-propns propn-net-has-node?: (2)
-;; sub-a-propns propn-net-has-node?: true
-;; aid: :V-ia=CV-ca
-;; idxs: (48 1 28)
-;; a-propn: :V-ha
-;; a-propn propn-net-has-node?: 3
-;; a-propn propn-net-has-node?: true
-;; sub-a-propns propn-net-has-node?: (3)
-;; sub-a-propns propn-net-has-node?: true
-;; aid: :V-ha=CV-ca
-;; idxs: (61 58 28)
-;; 
-;; ArrayIndexOutOfBoundsException 61  mikera.vectorz.Vector.set (Vector.java:149)
-
 ;; TODO NOT WORKING
 (defn add-to-analogy-net
   [pers propn]
