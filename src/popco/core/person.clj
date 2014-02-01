@@ -42,7 +42,7 @@
               analogy-net
               (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
               (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
-   ; (ug/domap (partial cc/add-to-propn-net pers) propns)
+   ; (ug/domap (partial cc/add-to-propn-net pers) propns)   ; geting NPEs
    ; (ug/domap (partial cc/add-to-analogy-net pers) propns)
     ))
 
