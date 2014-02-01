@@ -1,5 +1,6 @@
 (ns popco.core.person
   (:require [utils.general :as ug]
+            [popco.core.communic :as cc]
             [clojure.core.matrix :as mx]))
 
 ;; Definition of person and related functions
@@ -33,16 +34,17 @@
   [nm propns propn-net analogy-net]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
-        propn-ids (map :id propns)]
-    (->Person nm 
+        propn-ids (map :id propns)
+        pers (->Person nm 
               propn-net
-              (mx/zero-vector (count (:node-vec propn-net))) ; propn-mask
-              (mx/new-vector num-poss-propn-nodes)            ; propn-activns
+              (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
+              (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
               analogy-net
-              ; How to make analogy mask? NOT RIGHT
-              ; Answer?: Pretend that person received all of the propns as communication
-              (mx/zero-vector (count (:node-vec analogy-net))) ; propn-mask
-              (mx/new-vector num-poss-analogy-nodes))))            ; analogy-activns
+              (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
+              (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
+   ; (ug/domap (partial cc/add-to-propn-net pers) propns)
+   ; (ug/domap (partial cc/add-to-analogy-net pers) propns)
+    ))
 
 ;(defn make-mask
 ;  "ADD DOCSTRING"
