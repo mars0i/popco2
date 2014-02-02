@@ -30,7 +30,7 @@
 (defn add-to-propn-net
   [pers propn]
   (let [pnet (:propn-net pers)]
-    (unmask! (:propn-mask pers) ((:id-to-idx pnet) propn)))) ;; TODO NOT RIGHT
+    (unmask! (:propn-mask pers) ((:id-to-idx pnet) propn))))
 
 ;; WHAT add-to-analogy-net IS SUPPOSED TO DO:
 ;; Background: All legal mappings between lot-elements are found by make-analogy-net,
