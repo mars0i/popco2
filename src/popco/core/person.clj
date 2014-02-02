@@ -36,15 +36,15 @@
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
         pers (->Person nm 
-              propn-net
-              (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
-              (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
-              analogy-net
-              (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
-              (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
-   ; (ug/domap (partial cc/add-to-propn-net pers) propns)   ; geting NPEs
-   ; (ug/domap (partial cc/add-to-analogy-net pers) propns)
-    ))
+                       propn-net
+                       (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
+                       (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
+                       analogy-net
+                       (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
+                       (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
+    (doseq [propn propns] (cc/add-to-propn-net pers (:id propn)))   ; better to fill propn mask before
+    (doseq [propn propns] (cc/add-to-analogy-net pers (:id propn))) ;  analogy mask, so propns are known
+    pers))
 
 ;(defn make-mask
 ;  "ADD DOCSTRING"
