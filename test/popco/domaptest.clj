@@ -14,10 +14,12 @@
   [idx]
   (mx/mset! maskvec idx 1.0)) ; sets element idx of maskvec to 1.0
 
-(defn runbench
+;; needs to be macro to pass in and run macros
+(defmacro runbench
   [domapfn label]
-  (print (str "\n" label ":\n"))
-  (bench (def _ (domapfn unmaskit! a-coll))))
+  `(do 
+     (print (str "\n" ~label ":\n"))
+     (bench (~domapfn unmaskit! a-coll))))
 
 
 ;;; domap versions
@@ -195,12 +197,12 @@
      (dotimes [i# (apply min (map count colls#))]
        (apply f# (map #(nth % i#) colls#)))))
 
-(println "loaded. yow.")
+(println "loaded.")
 
+(runbench domap24 "domap24: working dotimes macro")
 (runbench domap1 "domap1: simple doseq") ; the standard
 (runbench domap2 "domap2: dotimes")
 (runbench domap7 "domap7: map + dorun")
-(runbench domap24 "domap24: working dotimes macro")
 (runbench domap19 "domap19: mapv, nil")
 (runbench domap20 "domap20: mapv")
 ;(runbench domap21 "domap21: mapv, dorun")
