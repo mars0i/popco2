@@ -5,9 +5,9 @@
 ;;; Benchmarking setup
 
 (def howmany 1000)
-;(def a-coll (range howmany))
-;(def a-coll (into () (range howmany)))
-(def a-coll (vec (range howmany)))
+;(def a-coll (range howmany)) ; lazy seq
+;(def a-coll (into () (range howmany))) ; regular list
+(def a-coll (vec (range howmany)))  ; Clojure vector
 (def maskvec (zero-vector :vectorz howmany))
 
 (defn unmaskit!
@@ -187,11 +187,20 @@
       (apply f (map first heads))
       (recur (map rest heads)))))
 
+;; based on answer from Igrapenthin on SE: http://stackoverflow.com/questions/21542365/clojure-variadic-macro-iterating-over-sequences-collected-in-extra-parameter
+(defmacro domap24
+  [f & colls]
+  `(let [colls# (list ~@colls)
+         f# ~f]
+     (dotimes [i# (apply min (map count colls#))]
+       (apply f# (map #(nth % i#) colls#)))))
+
 (println "loaded. yow.")
 
 (runbench domap1 "domap1: simple doseq") ; the standard
 (runbench domap2 "domap2: dotimes")
 (runbench domap7 "domap7: map + dorun")
+(runbench domap24 "domap24: working dotimes macro")
 (runbench domap19 "domap19: mapv, nil")
 (runbench domap20 "domap20: mapv")
 ;(runbench domap21 "domap21: mapv, dorun")
