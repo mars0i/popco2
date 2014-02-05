@@ -4,15 +4,22 @@
 
 ;;; Benchmarking setup
 
-(def howmany 1000)
-;(def a-coll (range howmany)) ; lazy seq
+(def howmany 10000000)
+(def a-coll (range howmany)) ; lazy seq
 ;(def a-coll (into () (range howmany))) ; regular list
-(def a-coll (vec (range howmany)))  ; Clojure vector
-(def maskvec (zero-vector :vectorz howmany))
+;(def a-coll (vec (range howmany)))  ; Clojure vector
+;(def vecsize howmany)
+(def vecsize 1000)
+(def maskvec (zero-vector :vectorz vecsize))
 
 (defn unmaskit!
   [idx]
   (mx/mset! maskvec idx 1.0)) ; sets element idx of maskvec to 1.0
+
+;; needed for large seq args so vec isn't too big
+(defn mod-unmaskit!
+  [idx]
+  (mx/mset! maskvec (mod idx vecsize) 1.0))
 
 ;; needs to be macro to pass in and run macros
 (defmacro runbench
@@ -20,6 +27,13 @@
   `(do 
      (print (str "\n" ~label ":\n"))
      (bench (~domapfn unmaskit! a-coll))))
+
+;; needed for large seq args so vec isn't too big
+;(defmacro runbench
+;  [domapfn label]
+;  `(do 
+;     (print (str "\n" ~label ":\n"))
+;     (bench (~domapfn mod-unmaskit! a-coll))))
 
 
 ;;; domap versions
@@ -61,6 +75,7 @@
            (f x))))
 
 ;; version of domap implemented with map
+;; cf. domap25
 (defn domap7
   [f coll]
   (dorun (map f coll)))
@@ -197,15 +212,23 @@
      (dotimes [i# (apply min (map count colls#))]
        (apply f# (map #(nth % i#) colls#)))))
 
+(def domap25 (comp dorun map))
+
 (println "loaded.")
 
-(runbench domap24 "domap24: working dotimes macro")
-(runbench domap1 "domap1: simple doseq") ; the standard
-(runbench domap2 "domap2: dotimes")
-(runbench domap7 "domap7: map + dorun")
-(runbench domap19 "domap19: mapv, nil")
-(runbench domap20 "domap20: mapv")
+;(runbench domap1 "domap1: simple doseq") ; the standard
+;(runbench domap25 "domap25: (comp dorun domap)")
+;(runbench domap24 "domap24: working dotimes macro")
+;(runbench domap2 "domap2: dotimes")
+;(runbench domap7 "domap7: map + dorun")
+;(runbench domap19 "domap19: mapv, nil")
+;(runbench domap20 "domap20: mapv")
 ;(runbench domap21 "domap21: mapv, dorun")
 ;(runbench domap22 "domap22: mapv, dorun, nil")
-(runbench domap15 "domap15: simple recur")
-(runbench domap23 "domap23: multi recur")
+;(runbench domap15 "domap15: simple recur")
+;(runbench domap23 "domap23: multi recur")
+
+(println "doseq:")
+(bench (doseq [i (range 100000000)] (mod-unmaskit! i)))
+(println "domap25: dorun+map")
+(bench (domap25 mod-unmaskit! (range 100000000)))
