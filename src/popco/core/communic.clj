@@ -54,12 +54,19 @@
 ;; case, they all will get corresponding mapnodes unmasked, along with predicates
 ;; and objects along the way.
 
+(defn propn-matchable?
+  [{{pid-to-family-propn-idxs :propn-to-family-propn-idxs} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
+    propn-mask :propn-mask} ; bind propn-mask of person
+   propn]
+  (every? (partial net-has-node? propn-mask) 
+          (pid-to-family-propn-idxs propn))) ; if propn is missing extended-family propns, can't match
 
 ;; TODO:
 ;; QUESTION: Suppose that I add a HO propn before its components exist,
 ;; so the mapnode isn't created.  Later, they are added.  What will cause
 ;; the mapnode to be created then?? Don't I have to therefore check
 ;; what HO propns propns participate in??
+
 (defn add-to-analogy-net
   [pers propn]
   (let [analogy-mask (:analogy-mask pers)
@@ -77,15 +84,14 @@
         unmask-mapnode! (partial unmask! analogy-mask) ]
 
     ;(pp/cl-format true "propn: ~s~%" propn) ; DEBUG
-    (when (every? propn-net-has-node? (pid-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
+    (when (propn-matchable? pers propn) ; if sent propn missing extended-family propns, can't match
       (doseq [a-propn analogue-propns]                         ; now check any possible matches to sent propn
-        ;(pp/cl-format true "\ta-propn: ~s ~s ~s~%" a-propn (pid-to-idx a-propn) (propn-net-has-node? (pid-to-idx a-propn))) ; DEBUG
-        ;(pp/cl-format true "\tsub-a-propns propn-net-has-node?: ~s ~s~%" (pid-to-propn-idxs a-propn) (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; DEBUG
+        ;(do (pp/cl-format true "\ta-propn: ~s ~s ~s~%" a-propn (pid-to-idx a-propn) (propn-net-has-node? (pid-to-idx a-propn))) (pp/cl-format true "\tsub-a-propns propn-net-has-node?: ~s ~s~%" (pid-to-propn-idxs a-propn) (every? propn-net-has-node? (pid-to-propn-idxs a-propn)))) ; DEBUG
         (when (and 
                 (propn-net-has-node? (pid-to-idx a-propn))                ; pers has this analogue propn
                 (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; and its extended-family-propns 
           ;; Then we can unmask all mapnodes corresponding to this propn pair:
           (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; TODO: replace the or by passing in the analogue-struct?
                         (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
-            (pp/cl-format true "\t\taid + idxs: ~s~%" aid (aid-to-ext-fam-idxs aid)) ; DEBUG
+            ;(pp/cl-format true "\t\taid + idxs: ~s~%" aid (aid-to-ext-fam-idxs aid)) ; DEBUG
             (ug/domap unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes
