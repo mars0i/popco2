@@ -1,0 +1,10 @@
+Salience means: available for inference.
+
+This is why it's justified to not add component propns
+when you add a propn: The components aren't salient,
+available for inference, even though they're there.
+
+Well, but salience is different from being there as a node.  If P goes
+high, its components will tend to go high--*if* they exist.  And then
+they're likely to be communicated.  But not if they don't yet exist.
+Hmm.
