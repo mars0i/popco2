@@ -54,12 +54,22 @@
 ;; case, they all will get corresponding mapnodes unmasked, along with predicates
 ;; and objects along the way.
 
+(defn propn-components-already-unmasked?
+  "Return true if, in person (first arg), propn (second arg) is a possible
+  candidate for matching--i.e. if its component propns (and therefore
+  preds, objs) already exist, i.e. have been unmasked.  Returns false if not."
+  [{{pid-to-family-propn-idxs :propn-to-family-propn-idxs} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
+    propn-mask :propn-mask} ; bind propn-mask of person
+   propn]
+  (every? (partial net-has-node? propn-mask) 
+          (pid-to-family-propn-idxs propn))) ; if propn is missing extended-family propns, can't match
 
 ;; TODO:
 ;; QUESTION: Suppose that I add a HO propn before its components exist,
 ;; so the mapnode isn't created.  Later, they are added.  What will cause
 ;; the mapnode to be created then?? Don't I have to therefore check
 ;; what HO propns propns participate in??
+
 (defn add-to-analogy-net
   [pers propn]
   (let [analogy-mask (:analogy-mask pers)
@@ -77,7 +87,7 @@
         unmask-mapnode! (partial unmask! analogy-mask) ]
 
     ;(pp/cl-format true "propn: ~s~%" propn) ; DEBUG
-    (when (every? propn-net-has-node? (pid-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
+    (when (propn-components-already-unmasked? pers propn) ; if sent propn missing extended-family propns, can't match
       (doseq [a-propn analogue-propns]                         ; now check any possible matches to sent propn
         ;(do (pp/cl-format true "\ta-propn: ~s ~s ~s~%" a-propn (pid-to-idx a-propn) (propn-net-has-node? (pid-to-idx a-propn))) (pp/cl-format true "\tsub-a-propns propn-net-has-node?: ~s ~s~%" (pid-to-propn-idxs a-propn) (every? propn-net-has-node? (pid-to-propn-idxs a-propn)))) ; DEBUG
         (when (and 

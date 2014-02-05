@@ -45,22 +45,3 @@
     (doseq [propn propns] (cc/add-to-propn-net pers (:id propn)))   ; better to fill propn mask before
     (doseq [propn propns] (cc/add-to-analogy-net pers (:id propn))) ;  analogy mask, so propns are known
     pers))
-
-;(defn make-mask
-;  "ADD DOCSTRING"
-;  [node-ids id-to-idx]
-;  (let [mask (mx/new-vector (count id-to-idx))]
-;    (doseq [id node-ids]
-;      (mx/mset! mask (id-to-idx id) 1.0))
-;    mask))
-
-;(defn functional-make-mask
-;  "ADD DOCSTRING"
-;  [node-ids id-to-idx]
-;  (let [num-nodes (count id-to-idx)
-;        found-nodes (map id-to-idx node-ids)]
-;    (assoc
-;      (vec (repeat num-nodes 0))
-;      (interleave
-;        found-nodes
-;        (repeat (count found-nodes) 1)))))
