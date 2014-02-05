@@ -24,7 +24,10 @@
 
 (defn receive-propn
   [pers propn]
+    ; TODO should I test for already being unmasked, before unmasking again?
     (add-to-propn-net pers propn)
+    ; TODO should I test for already having mapnodes, before trying to create them again
+    ; TODO also find propns that the new propn participates in, and try to add them to analogy net as well
     (add-to-analogy-net pers propn))
 
 (defn add-to-propn-net
@@ -63,12 +66,6 @@
    propn]
   (every? (partial net-has-node? propn-mask) 
           (pid-to-family-propn-idxs propn))) ; if propn is missing extended-family propns, can't match
-
-;; TODO:
-;; QUESTION: Suppose that I add a HO propn before its components exist,
-;; so the mapnode isn't created.  Later, they are added.  What will cause
-;; the mapnode to be created then?? Don't I have to therefore check
-;; what HO propns propns participate in??
 
 (defn add-to-analogy-net
   [pers propn]
