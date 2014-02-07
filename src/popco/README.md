@@ -3,17 +3,14 @@ src/popco
 
 Subdirectories:
 
-**core/**
+**popco/**
 
-Directory for starting points, central functions, and things that
-don't fit elsewhere.
-
-**nn/**
-
-Directory for neural net creation, settling, etc.  (There are two kinds
-of neural nets in POPCO: analogy networks, and proposition networks, but
-they operate similarly.)
+Directory for POPCO simulation framework source.
 
 **sims/**
 
 Directory for code to create particular POPCO simulations.
+
+**utils/**
+
+Directory for general-purpose utility code.
