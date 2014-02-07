@@ -103,3 +103,36 @@
                         (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
             ;(pp/cl-format true "\t\taid + idxs: ~s~%" aid (aid-to-ext-fam-idxs aid)) ; DEBUG
             (ug/domap unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes
+
+
+;; TEMPORARY
+;; Keeping it around as a sanity check of the new version above.
+(defn old-add-to-analogy-net
+  [pers propn]
+  (let [analogy-mask (:analogy-mask pers)
+        anet (:analogy-net pers)
+        aid-to-idx (:id-to-idx anet)
+        aid-to-ext-fam-idxs (:propn-mn-to-ext-fam-idxs anet)
+        analogue-propns ((:propn-to-analogues anet) propn)
+
+        propn-mask (:propn-mask pers)
+        pnet (:propn-net pers)
+        pid-to-idx (:id-to-idx pnet)
+        pid-to-propn-idxs (:propn-to-family-propn-idxs pnet) 
+        
+        propn-net-has-node? (partial net-has-node? propn-mask)
+        unmask-mapnode! (partial unmask! analogy-mask) ]
+
+    (pp/cl-format true "propn: ~s~%" propn) ; DEBUG
+    (when (every? propn-net-has-node? (pid-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
+      (doseq [a-propn analogue-propns]                         ; now check any possible matches to sent propn
+        (pp/cl-format true "\ta-propn: ~s ~s ~s~%" a-propn (pid-to-idx a-propn) (propn-net-has-node? (pid-to-idx a-propn))) ; DEBUG
+        (pp/cl-format true "\tsub-a-propns propn-net-has-node?: ~s ~s~%" (pid-to-propn-idxs a-propn) (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; DEBUG
+        (when (and 
+                (propn-net-has-node? (pid-to-idx a-propn))                ; pers has this analogue propn
+                (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; and its extended-family-propns 
+          ;; Then we can unmask all mapnodes corresponding to this propn pair:
+          (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; TODO: replace the or by passing in the analogue-struct?
+                        (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
+            (pp/cl-format true "\t\taid + idxs: ~s~%" aid (aid-to-ext-fam-idxs aid)) ; DEBUG
+            (ug/domap unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes
