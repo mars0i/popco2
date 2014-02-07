@@ -25,18 +25,17 @@
 
 (defn receive-propn
   [pers propn]
-    (add-to-propn-net pers propn) ; TODO test for already being unmasked? maybe not as long as add-to-propn-net is cheap
-    ; TODO should I test for already having mapnodes, before trying to create them again
+    (add-to-propn-net pers propn) ; test for already being unmasked? maybe not since add-to-propn-net is cheap
     ; TODO also find propns that the new propn participates in, and try to add them to analogy net as well
-    (add-to-analogy-net pers propn))
+    (add-to-analogy-net pers propn)) ; TODO add test for already having mapnode, since add-to-analogy-net is not cheap
 
 (defn add-to-propn-net
   [pers propn]
   (let [pnet (:propn-net pers)]
     (unmask! (:propn-mask pers) ((:id-to-idx pnet) propn))))
 
-;; see communic.md for explanation
 (defn add-to-analogy-net
+  "ADD DOCSTRING.  See communic.md for further explanation."
   [pers propn]
   (when (propn-components-already-unmasked? pers propn)                ; if sent propn missing extended-family propns, can't match
     (doseq [a-propn ((:propn-to-analogues (:analogy-net pers)) propn)] ; check possible analogue propns to sent propn
