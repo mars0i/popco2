@@ -1,4 +1,7 @@
-** WHAT add-to-analogy-net IS SUPPOSED TO DO **
+communic.clj
+=======
+
+**add-to-analogy-net**
 
 Background: All legal mappings between lot-elements are found by make-analogy-net,
 in analogy.clj, along with their links.
