@@ -20,12 +20,12 @@
   [mask idx]
   (= 1.0 (mx/mget mask idx)))
 
-(declare receive-propn add-to-propn-net add-to-analogy-net unmask-propn-components!)
+(declare receive-propn add-to-propn-net add-to-analogy-net propn-already-unmasked?  
+         propn-components-already-unmasked?  ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
 (defn receive-propn
   [pers propn]
-    ; TODO should I test for already being unmasked, before unmasking again?
-    (add-to-propn-net pers propn)
+    (add-to-propn-net pers propn) ; TODO test for already being unmasked? maybe not as long as add-to-propn-net is cheap
     ; TODO should I test for already having mapnodes, before trying to create them again
     ; TODO also find propns that the new propn participates in, and try to add them to analogy net as well
     (add-to-analogy-net pers propn))
@@ -34,6 +34,17 @@
   [pers propn]
   (let [pnet (:propn-net pers)]
     (unmask! (:propn-mask pers) ((:id-to-idx pnet) propn))))
+
+;; see communic.md for explanation
+(defn add-to-analogy-net
+  [pers propn]
+  (when (propn-components-already-unmasked? pers propn)                ; if sent propn missing extended-family propns, can't match
+    (doseq [a-propn ((:propn-to-analogues (:analogy-net pers)) propn)] ; check possible analogue propns to sent propn
+      (when (and (propn-already-unmasked? pers a-propn)                ; if pers has this analogue propn
+                 (propn-components-already-unmasked? pers a-propn))    ; and its extended-family-propns 
+        (let [mn-id (or (ids-to-poss-mn-id pers a-propn propn)         ; then unmask mapnode corresponding to this propn pair
+                        (ids-to-poss-mn-id pers propn a-propn))]
+          (unmask-mapnode-extended-family! pers mn-id))))))            ; and all extended family mapnodes
 
 (defn propn-already-unmasked?
   "Return true if, in person (first arg), propn (second arg) exists in the
@@ -67,40 +78,9 @@
   (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
     (unmask! analogy-mask idx)))
 
-(defn add-to-analogy-net
-  [pers propn]
-  (when (propn-components-already-unmasked? pers propn)                ; if sent propn missing extended-family propns, can't match
-    (doseq [a-propn ((:propn-to-analogues (:analogy-net pers)) propn)] ; check possible analogue propns to sent propn
-      (when (and (propn-already-unmasked? pers a-propn)                ; if pers has this analogue propn
-                 (propn-components-already-unmasked? pers a-propn))    ; and its extended-family-propns 
-        (let [mn-id (or (ids-to-poss-mn-id pers a-propn propn)         ; then unmask mapnode corresponding to this propn pair
-                        (ids-to-poss-mn-id pers propn a-propn))]
-          (unmask-mapnode-extended-family! pers mn-id))))))            ; and all extended family mapnodes
 
-;; WHAT add-to-analogy-net IS SUPPOSED TO DO:
-;; Background: All legal mappings between lot-elements are found by make-analogy-net,
-;; in analogy.clj, along with their links.
-;; By default, however, those nodes are masked.  They don't contribute to
-;; the changes in activation values.
-;; When a propn is added to a person, we may be able to unmask some of the
-;; masked mapnodes--to add them into the process.
-;; We can't add a propn-propn mapnode, though, unless its analogue, 
-;; all of its component propositions, and their analogues 
-;; already exist in the receiver person.  However, we don't need to 
-;; worry about predicates and objects.  If a matched propn exists in the receiver,
-;; then so does its predicate and so do its argument objects.  However, if
-;; the propn sent is higher-order, then it's possible for it to be there without
-;; its argument propns to be in the receiver.  (This might not be what *should*
-;; happen, but it's what popco 1 did, so its a behavior we want to be able to
-;; produce at least as an option.)  Similarly, if a matching propn exists in the
-;; receiver, nevertheless its arg propns might not exist in the receiver.  So:
-;; We can only unmask a mapnode involving the sent propn if the appropriate
-;; extended family propns on both sides exist all the way down.  And in that
-;; case, they all will get corresponding mapnodes unmasked, along with predicates
-;; and objects along the way.
-
-
-;; TEMPORARY DEFS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; TEMPORARY DEFS FOR TESTING
 (def net-has-node? node-unmasked?)
 ;; Keeping around as a sanity check of the new version above.
 (defn old-add-to-analogy-net
