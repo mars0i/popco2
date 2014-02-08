@@ -43,7 +43,7 @@
                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
     (doseq [propn propns] (cc/add-to-propn-net pers (:id propn)))   ; better to fill propn mask before
-    (doseq [propn propns] (cc/add-to-analogy-net pers (:id propn))) ;  analogy mask, so propns are known
+    (doseq [propn propns] (cc/try-add-to-analogy-net pers (:id propn))) ;  analogy mask, so propns are known
     pers))
 
 

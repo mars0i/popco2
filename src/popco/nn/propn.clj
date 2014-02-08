@@ -9,6 +9,7 @@
 
 (declare make-propn-to-extended-family-propn-idxs propn-extended-family-propns make-propn-net)
 
+;; TODO Add the SALIENT node
 (defn make-propn-net
   [propnseq]
   (let [dim (count propnseq)

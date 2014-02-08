@@ -1,40 +1,32 @@
 (ns popco.core.communic
   (:require [utils.general :as ug]
+            ;[clojure.pprint :as pp] ; only if needed for cl-format
             [popco.nn.nets :as nn]
-            [popco.nn.analogy :as an]
-            [clojure.pprint :as pp] ; TEMPORARY
-            [clojure.core.matrix :as mx])) ; for unmask!
+            [popco.nn.analogy :as an]))
 
-;; TODO MOVE ELSEWHERE?
-(defn unmask!
-  "Given a core.matrix vector representing a mask, and an index
-  into the mask, set the indexed element of the mask to 1."
-  [mask idx]
-    (mx/mset! mask idx 1.0))
-
-;; TODO MOVE ELSEWHERE?
-(defn node-unmasked?
-  "Given a core.matrix vector representing a mask, and an index
-  into the mask, return true if the mask is 1 at that index;
-  otherwise false."
-  [mask idx]
-  (= 1.0 (mx/mget mask idx)))
-
-(declare receive-propn add-to-propn-net add-to-analogy-net propn-already-unmasked?  
+(declare receive-propn add-to-propn-net try-add-to-analogy-net propn-already-unmasked? propn-still-masked?  
          propn-components-already-unmasked?  ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
+;; TODO this or some other function will eventually have to add in other effects
+;; on the proposition network in order to add/subtract activation via weight to
+;; the SALIENT node (which needs to be added to the net!).
+;; TODO also find propns that the new propn participates in, and try to add them to analogy net as well
 (defn receive-propn
   [pers propn]
-    (add-to-propn-net pers propn) ; test for already being unmasked? maybe not since add-to-propn-net is cheap
-    ; TODO also find propns that the new propn participates in, and try to add them to analogy net as well
-    (add-to-analogy-net pers propn)) ; TODO add test for already having mapnode, since add-to-analogy-net is not cheap
+  (when (propn-still-masked? pers propn)
+    (add-to-propn-net pers propn)
+    (try-add-to-analogy-net pers propn)))
+;; Note: We don't really need to test whether propn is still masked for the sake
+;; of add-to-propn-map, since it's cheap and it doesn't matter if it's performed
+;; redundantly.  try-add-to-analogy-net is more expensive--worth testing
+;; before going through any work.
 
 (defn add-to-propn-net
   [pers propn]
   (let [pnet (:propn-net pers)]
-    (unmask! (:propn-mask pers) ((:id-to-idx pnet) propn))))
+    (nn/unmask! (:propn-mask pers) ((:id-to-idx pnet) propn))))
 
-(defn add-to-analogy-net
+(defn try-add-to-analogy-net
   "ADD DOCSTRING.  See communic.md for further explanation."
   [pers propn]
   (when (propn-components-already-unmasked? pers propn)                ; if sent propn missing extended-family propns, can't match
@@ -51,7 +43,15 @@
   [{{id-to-idx :id-to-idx} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
     propn-mask :propn-mask}           ; bind propn-mask of person
    propn]
-  (node-unmasked? propn-mask (id-to-idx propn)))
+  (nn/node-unmasked? propn-mask (id-to-idx propn)))
+
+(defn propn-still-masked?
+  "Return true if, in person (first arg), propn (second arg) doesn't exist
+   in the proposition net in the sense that it's masked; false otherwise."
+  [{{id-to-idx :id-to-idx} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
+    propn-mask :propn-mask}           ; bind propn-mask of person
+   propn]
+  (nn/node-masked? propn-mask (id-to-idx propn)))
 
 (defn propn-components-already-unmasked?
   "Return true if, in person (first arg), propn (second arg) is a possible
@@ -60,7 +60,7 @@
   [{{propn-to-family-propn-idxs :propn-to-family-propn-idxs} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
     propn-mask :propn-mask} ; bind propn-mask of person
    propn]
-  (every? (partial node-unmasked? propn-mask) 
+  (every? (partial nn/node-unmasked? propn-mask) 
           (propn-to-family-propn-idxs propn))) ; if propn is missing extended-family propns, can't match
 
 (defn ids-to-poss-mn-id
@@ -75,12 +75,12 @@
     analogy-mask :analogy-mask} ; bind mask in person
    mn-id]
   (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
-    (unmask! analogy-mask idx)))
+    (nn/unmask! analogy-mask idx)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TEMPORARY DEFS FOR TESTING
-(def net-has-node? node-unmasked?)
+(def net-has-node? nn/node-unmasked?)
 ;; Keeping around as a sanity check of the new version above.
 (defn old-add-to-analogy-net
   [pers propn]
@@ -96,7 +96,7 @@
         pid-to-propn-idxs (:propn-to-family-propn-idxs pnet) 
         
         propn-net-has-node? (partial net-has-node? propn-mask)
-        unmask-mapnode! (partial unmask! analogy-mask) ]
+        unmask-mapnode! (partial nn/unmask! analogy-mask) ]
 
     ;(pp/cl-format true "propn: ~s~%" propn) ; DEBUG
     (when (every? propn-net-has-node? (pid-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match

@@ -102,3 +102,23 @@
   (let [id-to-idx (make-id-to-idx-map (map :id node-seq))] ; index order will be same as node-seq's order
     { :node-vec (vec node-seq)
      :id-to-idx id-to-idx } ))
+
+(defn unmask!
+  "Given a core.matrix vector representing a mask, and an index
+  into the mask, set the indexed element of the mask to 1."
+  [mask idx]
+    (mx/mset! mask idx 1.0))
+
+(defn node-unmasked?
+  "Given a core.matrix vector representing a mask, and an index
+  into the mask, return true if the mask is 1 at that index;
+  otherwise false."
+  [mask idx]
+  (= 1.0 (mx/mget mask idx)))
+
+(defn node-masked?
+  "Given a core.matrix vector representing a mask, and an index
+  into the mask, return true if the mask is 0 at that index;
+  otherwise false."
+  [mask idx]
+  (= 0.0 (mx/mget mask idx)))
