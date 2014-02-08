@@ -30,6 +30,7 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
+;; TODO Add the SPECIAL node
 ;; The fields contain redundant information, but it's all information that can
 ;; be precomputed at initialization time, and that will only be read during
 ;; simulation run time.  Having the redundant, precomputed fields makes runtime
