@@ -315,4 +315,23 @@ QUESTION: Suppose that I add a HO propn before its components exist,
 so the mapnode isn't created.  Later, they are added.  What will cause
 the mapnode to be created then?? Don't I have to therefore check
 what HO propns propns participate in??
-*********
+
+Yes.  One way to do that is this:
+In addition to trying to add mapnodes for a sent propn
+ in part by checking whether its extended-family propns exist
+find out what HO propns it participates in
+and do the same thing for them.
+
+Question: Is there a simpler more elegant organization to these tasks?
+i.e. for each extended family of propns in which a propn participates, see whether
+all of the other members of the extended family exist, and if so,
+check whether appropriate analogue nodes exist, and if so, create the mapnodes.
+
+i.e. for the sent propn, you need to know whether its descendant propns exist.
+
+But you also need to know, for those HO propns in which its a descendant, whether
+the parent propn and all of its descendants exist.
+
+In either case, you just need to know whether the other members of the set exist,
+and it looks like it's exactly the same test.
+Is that right?
