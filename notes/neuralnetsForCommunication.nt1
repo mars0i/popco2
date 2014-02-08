@@ -335,3 +335,25 @@ the parent propn and all of its descendants exist.
 In either case, you just need to know whether the other members of the set exist,
 and it looks like it's exactly the same test.
 Is that right?
+
+OK, in particular, the idea would be:
+
+For each propn p1, and for each propn p2 in which it participates
+(including itself, i.e. p1), I need a collection of all propns in p2's
+extended family.  And then in deciding what to add to the analogy net, I
+have to first test, for each such p2, whether all of the propns in its
+extended family exist.
+
+This could be expensive if there were many propns and many HO propns.
+Cries out for some kind of database interface or tricky algorithm in
+that case.  Maybe the important thing is to put the tests behind
+abstractions in functions.
+
+Note that two such p2's might share a propn in their extended
+families.  So it's then redundant to check that same propn twice.
+Don't know how that could be handled.  Or whether/when it would be
+worth it.
+
+For each HO propn, there are at least two propns that reference it--more
+if there are multiple propn args or multiple "generations" to the
+family.
