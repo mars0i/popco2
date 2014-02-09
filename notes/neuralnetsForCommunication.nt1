@@ -357,3 +357,8 @@ worth it.
 For each HO propn, there are at least two propns that reference it--more
 if there are multiple propn args or multiple "generations" to the
 family.
+
+Maybe what I need is: for each propn, a list of lists of propns.
+i.e. a map from propns to seqs of seqs of propns.
+where each of the latter seqs contains all propns from a single
+propn-extended-family, of which the key propn is a member.
