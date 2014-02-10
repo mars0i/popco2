@@ -28,14 +28,21 @@
 ;; indexes of all propns that bear extended family relations to, whether
 ;; upward or downward.  Not sure if it does it correctly, or if this is
 ;; exactly what I need in receive-propn.  Probably needs refactoring anyway.
+;; OK: the simple call to 'merge' is wrong.  Also, calling 'permutations' is overkill,
+;; since the only reason I'm using it is to get different indexes into the
+;; first position--I don't care about the order of the rest of the indexes.
+;; Instead I should use clojure.contrib.seq-utils/rotations, if I'm using this
+;; algorithm.  When I merge, I need to list as separate subseqs, each of the
+;; different sets of indexes associated with the first index.
 (defn make-extended-family-propn-idxs
   [pnet]
   (apply merge 
-         (map #(hash-map (:id ((:node-vec pnet) (first %))) 
-                         (rest %)) 
+         (map #(hash-map (:id ((:node-vec pnet) (first %))) %) 
               (apply concat 
                      (map comb/permutations 
                           (vals (:propn-to-descendant-propn-idxs pnet)))))))
+
+; (defn yo [pnet] (map #(hash-map (:id ((:node-vec pnet) (first %))) (rest %)) (apply concat (map comb/permutations (vals (:propn-to-descendant-propn-idxs pnet))))))
 
 (defn make-propn-to-extended-descendant-propn-idxs
   "Create a map from propn ids to seqs of indexes into the propn vector.
