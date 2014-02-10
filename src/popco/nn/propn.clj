@@ -2,7 +2,8 @@
   (:use popco.core.lot)
   (:require [popco.nn.nets :as nn]
             [utils.general :as ug]
-            [clojure.core.matrix :as mx])
+            [clojure.core.matrix :as mx]
+            [clojure.math.combinatorics :as comb])
   (:import [popco.core.lot Propn]
            [popco.nn.nets PropnNet]))
 
@@ -22,6 +23,19 @@
 		                                                     (:id-to-idx nncore))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO I think this little monster defines a map from propn ids to
+;; indexes of all propns that bear extended family relations to, whether
+;; upward or downward.  Not sure if it does it correctly, or if this is
+;; exactly what I need in receive-propn.  Probably needs refactoring anyway.
+(defn make-extended-family-propn-idxs
+  [pnet]
+  (apply merge 
+         (map #(hash-map (:id ((:node-vec pnet) (first %))) 
+                         (rest %)) 
+              (apply concat 
+                     (map comb/permutations 
+                          (vals (:propn-to-descendant-propn-idxs pnet)))))))
 
 (defn make-propn-to-extended-descendant-propn-idxs
   "Create a map from propn ids to seqs of indexes into the propn vector.
