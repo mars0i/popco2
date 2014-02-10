@@ -7,7 +7,7 @@
            [popco.nn.nets PropnNet]))
 
 
-(declare make-propn-to-extended-family-propn-idxs propn-extended-family-propns make-propn-net)
+(declare make-propn-to-extended-descendant-propn-idxs propn-extended-descendant-propns make-propn-net)
 
 ;; TODO Add the SALIENT node
 (defn make-propn-net
@@ -18,12 +18,12 @@
       (assoc 
         nncore
         :wt-mat (mx/new-matrix dim dim)
-        :propn-to-family-propn-idxs (make-propn-to-extended-family-propn-idxs propnseq 
+        :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs propnseq 
 		                                                     (:id-to-idx nncore))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn make-propn-to-extended-family-propn-idxs
+(defn make-propn-to-extended-descendant-propn-idxs
   "Create a map from propn ids to seqs of indexes into the propn vector.
   For propn P, the seq contains its index, the indexes of any propns that
   are its args, propns that are their args, etc.  First arg is a collection
@@ -33,9 +33,9 @@
     (zipmap 
       (map :id propns) 
       (map #(map id-to-idx %)
-           (map propn-extended-family-propns propns))))
+           (map propn-extended-descendant-propns propns))))
 
-(defn propn-extended-family-propns
+(defn propn-extended-descendant-propns
   "List the ids of this propn, propns that are its args, propns that 
   are their args, etc."
   [propn]

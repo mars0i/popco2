@@ -57,11 +57,11 @@
   "Return true if, in person (first arg), propn (second arg) is a possible
   candidate for matching--i.e. if its component propns (and therefore
   preds, objs) already exist, i.e. have been unmasked.  Returns false if not."
-  [{{propn-to-family-propn-idxs :propn-to-family-propn-idxs} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
+  [{{propn-to-descendant-propn-idxs :propn-to-descendant-propn-idxs} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
     propn-mask :propn-mask} ; bind propn-mask of person
    propn]
   (every? (partial nn/node-unmasked? propn-mask) 
-          (propn-to-family-propn-idxs propn))) ; if propn is missing extended-family propns, can't match
+          (propn-to-descendant-propn-idxs propn))) ; if propn is missing extended-descendant propns, can't match
 
 (defn ids-to-poss-mn-id
   "Given two id keywords and a person, constructs and returns 
@@ -93,7 +93,7 @@
         propn-mask (:propn-mask pers)
         pnet (:propn-net pers)
         pid-to-idx (:id-to-idx pnet)
-        pid-to-propn-idxs (:propn-to-family-propn-idxs pnet) 
+        pid-to-propn-idxs (:propn-to-descendant-propn-idxs pnet) 
         
         propn-net-has-node? (partial net-has-node? propn-mask)
         unmask-mapnode! (partial nn/unmask! analogy-mask) ]
