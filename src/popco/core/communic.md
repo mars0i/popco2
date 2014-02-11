@@ -3,8 +3,8 @@ Notes on parts of communic.clj
 
 **add-to-analogy-net:**
 
-Background: All legal mappings between lot-elements are found by make-analogy-net,
-in analogy.clj, along with their links.
+Background: All legal mappings between lot-elements are found by
+make-analogy-net, in analogy.clj, along with their links.
 
 By default, however, those nodes are masked.  They don't contribute to
 the changes in activation values.
@@ -29,3 +29,8 @@ So: We can only unmask a mapnode involving the sent propn if the
 appropriate extended family propns on both sides exist all the way down.
 And in that case, they all will get corresponding mapnodes unmasked,
 along with predicates and objects along the way.
+
+Furthermore: When a propn p1 is sent, if it is an argument of some other
+propn p2, it may be that p2 can now participate in mapnodes.  i.e.
+suppose that when p2 was sent, p1 was not yet unmasked.  Therefore p2
+could not participate in mapnodes.  Now, however, it may be that it can.

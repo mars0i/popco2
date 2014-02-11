@@ -96,11 +96,13 @@
                  correspond to indexes into activation vectors and rows/columns
                  of weight matrices.  This vector may be identical to the sequence
                  of nodes passed in.
+  :id-vec -      Same as node-vec, but just the ids, not the whole data structures.
   :id-to-idx -   A Clojure map from ids of the same data items to integers, 
                  allowing lookup of a node's index from its id."
   [node-seq]
   (let [id-to-idx (make-id-to-idx-map (map :id node-seq))] ; index order will be same as node-seq's order
-    { :node-vec (vec node-seq)
+    {:node-vec (vec node-seq)
+     :id-vec (vec (map :id node-seq))
      :id-to-idx id-to-idx } ))
 
 (defn unmask!

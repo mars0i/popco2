@@ -2,8 +2,8 @@
   (:use popco.core.lot)
   (:require [popco.nn.nets :as nn]
             [utils.general :as ug]
-            [clojure.core.matrix :as mx]
-            [clojure.math.combinatorics :as comb])
+            [clojure.contrib.seq-utils :as su]
+            [clojure.core.matrix :as mx])
   (:import [popco.core.lot Propn]
            [popco.nn.nets PropnNet]))
 
@@ -28,19 +28,18 @@
 ;; indexes of all propns that bear extended family relations to, whether
 ;; upward or downward.  Not sure if it does it correctly, or if this is
 ;; exactly what I need in receive-propn.  Probably needs refactoring anyway.
-;; OK: the simple call to 'merge' is wrong.  Also, calling 'permutations' is overkill,
+;; OK: the simple call to 'concat' is wrong.  Also, calling 'permutations' is overkill,
 ;; since the only reason I'm using it is to get different indexes into the
 ;; first position--I don't care about the order of the rest of the indexes.
 ;; Instead I should use clojure.contrib.seq-utils/rotations, if I'm using this
-;; algorithm.  When I merge, I need to list as separate subseqs, each of the
+;; algorithm.  When I concat, I instead need to list as separate subseqs, each of the
 ;; different sets of indexes associated with the first index.
 (defn make-extended-family-propn-idxs
   [pnet]
   (apply merge 
-         (map #(hash-map (:id ((:node-vec pnet) (first %))) %) 
-              (apply concat 
-                     (map comb/permutations 
-                          (vals (:propn-to-descendant-propn-idxs pnet)))))))
+         (map #(hash-map ((:id-vec pnet) (first %)) %) ; make first idx into id as key (just a way to reverse-map the 
+                     (map su/rotations  ; dupe the set of idxs with each one first
+                          (vals (:propn-to-descendant-propn-idxs pnet)))))) ; we already have extended fams as idxs, so use them
 
 ; (defn yo [pnet] (map #(hash-map (:id ((:node-vec pnet) (first %))) (rest %)) (apply concat (map comb/permutations (vals (:propn-to-descendant-propn-idxs pnet))))))
 
