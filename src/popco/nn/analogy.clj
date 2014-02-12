@@ -1,3 +1,8 @@
+;; analogy.clj
+;; Functions for creating and working with AnalogyNets.
+;; Further documentation on AnalogyNets can be read and maintained in net.clj
+;; See lot.clj for documentation on Propns and their components.
+
 (ns popco.nn.analogy
   (:use popco.core.lot
         [clojure.set :only [union]])
