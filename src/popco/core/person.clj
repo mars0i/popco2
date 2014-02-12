@@ -10,13 +10,13 @@
                    analogy-net analogy-mask analogy-activns])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
-   nm -              name of person (TODO: What type?: keyword? symbol? string?)
-   propn-net -       PropnNet for this person
-   propn-mask -      vector of 1's (propn is entertained) and 0's (it isn't)
-   propn-activns -   vector of activation values for nodes in propn net
-   analogy-net -     AnalogyNet (same for all persons)
-   analogy-mask -    vector of 1's (mapnode is present) or 0's (it's absent)
-   analogy-activns - activation values of nodes in analogy net")
+   :nm -              name of person (TODO: What type?: keyword? symbol? string?)
+   :propn-net -       PropnNet for this person
+   :propn-mask -      vector of 1's (propn is entertained) and 0's (it isn't)
+   :propn-activns -   vector of activation values for nodes in propn net
+   :analogy-net -     AnalogyNet (same for all persons)
+   :analogy-mask -    vector of 1's (mapnode is present) or 0's (it's absent)
+   :analogy-activns - activation values of nodes in analogy net")
 
 ;; TODO Consider making code below more efficient if popco is extended
 ;; to involve regularly creating new persons in the middle of simulation runs
