@@ -37,6 +37,12 @@
         (partition (count xs) 1  ; start again 1 past where you last started
                    (cycle xs))))
 
+;(defn mapseqs
+;  [f xs]
+;  (if (not (coll? (first xs)))
+;    (map f xs)
+;    (map (partial mapseqs f) xs)))
+
 (defn println-and-ret
   "Print a single argument with println, then return that argument.
   Useful for debugging."
