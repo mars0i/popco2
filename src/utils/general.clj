@@ -29,6 +29,14 @@
   [sym addlstr] 
   `(alter-meta! #'~sym update-in [:doc] str ~addlstr))
 
+;; By Ray Miller in response to my question at
+;; https://groups.google.com/forum/#!topic/clojure/VO8V8m6bfEI
+(defn rotations
+  [xs]
+  (take (count xs) 
+        (partition (count xs) 1  ; start again 1 past where you last started
+                   (cycle xs))))
+
 (defn println-and-ret
   "Print a single argument with println, then return that argument.
   Useful for debugging."
