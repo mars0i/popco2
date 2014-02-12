@@ -63,7 +63,7 @@
                  of nodes, representing all links.
   :propn-to-descendant-propn-idxs - a map from each propn id to a seq of 
                  of indexes from the propn's descendant propns.
-  :propn-to-extended-fams-idxs - a map from each propn id to a vec of seqs
+  :propn-to-extended-fams-ids - a map from each propn id to a vec of seqs
                  of indexes from the propn's extended family propns.  Note there
                  can be more than one such extended family." )
 
