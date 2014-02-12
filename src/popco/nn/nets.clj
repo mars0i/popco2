@@ -59,10 +59,13 @@
   "Makes a proposition neural-net structure, i.e. a structure that represents a
   POPCO proposition constraint satisfaction network.  Has these fields in addition
   to those documented for make-nn-core:
-  :wt-mat -      A core.matrix square matrix with dimensions equal to the number of
-                 nodes, representing all links.
-  :propn-to-family-propn-idxs - a map from propn ids to seqs of indexes into the propn
-                 vector." )
+  :wt-mat -      A core.matrix square matrix with dimensions equal to the number
+                 of nodes, representing all links.
+  :propn-to-descendant-propn-idxs - a map from each propn id to a seq of 
+                 of indexes from the propn's descendant propns.
+  :propn-to-extended-fams-idxs - a map from each propn id to a vec of seqs
+                 of indexes from the propn's extended family propns.  Note there
+                 can be more than one such extended family." )
 
 (defn posify 
   "Return the non-negative number closest to x, i.e. 0 if x < 0, else x."

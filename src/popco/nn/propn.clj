@@ -2,46 +2,39 @@
   (:use popco.core.lot)
   (:require [popco.nn.nets :as nn]
             [utils.general :as ug]
-            [clojure.contrib.seq-utils :as su]
             [clojure.core.matrix :as mx])
   (:import [popco.core.lot Propn]
            [popco.nn.nets PropnNet]))
 
 
-(declare make-propn-to-extended-descendant-propn-idxs propn-extended-descendant-propns make-propn-net)
+(declare make-propn-to-extended-descendant-propn-idxs propn-extended-descendant-propns make-propn-to-extended-fams-idxs make-propn-net)
 
 ;; TODO Add the SALIENT node
 (defn make-propn-net
   [propnseq]
   (let [dim (count propnseq)
-        nncore (nn/make-nn-core propnseq)]
+        nncore (nn/make-nn-core propnseq)
+        pnetmap (assoc 
+                  nncore
+                  :wt-mat (mx/new-matrix dim dim)
+                  :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
+                                                    propnseq (:id-to-idx nncore)))]
     (nn/map->PropnNet
-      (assoc 
-        nncore
-        :wt-mat (mx/new-matrix dim dim)
-        :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs propnseq 
-		                                                     (:id-to-idx nncore))))))
+      (assoc pnetmap
+             :propn-to-extended-fams-idxs (make-propn-to-extended-fams-idxs pnetmap)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO I think this little monster defines a map from propn ids to
-;; indexes of all propns that bear extended family relations to, whether
-;; upward or downward.  Not sure if it does it correctly, or if this is
-;; exactly what I need in receive-propn.  Probably needs refactoring anyway.
-;; OK: the simple call to 'concat' is wrong.  Also, calling 'permutations' is overkill,
-;; since the only reason I'm using it is to get different indexes into the
-;; first position--I don't care about the order of the rest of the indexes.
-;; Instead I should use clojure.contrib.seq-utils/rotations, if I'm using this
-;; algorithm.  When I concat, I instead need to list as separate subseqs, each of the
-;; different sets of indexes associated with the first index.
-(defn make-extended-family-propn-idxs
+;; TODO NOT VERIFIED
+(defn make-propn-to-extended-fams-idxs
+  "Create a map from each propn id to sets of indexes of all propns that bear 
+  extended family relations to it, whether upward or downward."
   [pnet]
-  (apply merge 
-         (map #(hash-map ((:id-vec pnet) (first %)) %) ; make first idx into id as key (just a way to reverse-map the 
-                     (map su/rotations  ; dupe the set of idxs with each one first
-                          (vals (:propn-to-descendant-propn-idxs pnet)))))) ; we already have extended fams as idxs, so use them
-
-; (defn yo [pnet] (map #(hash-map (:id ((:node-vec pnet) (first %))) (rest %)) (apply concat (map comb/permutations (vals (:propn-to-descendant-propn-idxs pnet))))))
+  (let [idx-to-id (:id-vec pnet)
+        idx-fams (vals (:propn-to-descendant-propn-idxs pnet))] ; we already have extended fams as idxs, so use them
+    (group-by 
+      (comp idx-to-id first)            ; group/hashmap on id of the first idx
+      (mapcat ug/rotations idx-fams)))) ; list all rotations of each idx fam in order to put each id first
 
 (defn make-propn-to-extended-descendant-propn-idxs
   "Create a map from propn ids to seqs of indexes into the propn vector.
