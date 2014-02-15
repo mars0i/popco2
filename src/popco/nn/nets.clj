@@ -92,10 +92,10 @@
 ;; from indexes; (B) a map from node ids to indexes, so that indexes can
 ;; be looked up from nodes.
 (defn make-nn-core
-  "Given a sequence of data on individual nodes, returns a clojure map with 
-  these entries:
+  "Given a sequence of data on individual nodes that contain (at least) an :id
+  field, returns a clojure map with these entries:
   :node-vec -    A Clojure vector of data providing information about the meaning
-                 of particular neural net nodes.  The indexes of the data items
+                 of particular neural net nodes.  The indexes of the data items 
                  correspond to indexes into activation vectors and rows/columns
                  of weight matrices.  This vector may be identical to the sequence
                  of nodes passed in.
