@@ -35,7 +35,7 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
-;; TODO Add the SPECIAL node
+;; TODO I added the SPECIAL node, which seems to work, but have not caused links to it to be made e.g. for same predicates
 ;; The fields contain redundant information, but it's all information that can
 ;; be precomputed at initialization time, and that will only be read during
 ;; simulation run time.  Having the redundant, precomputed fields makes runtime
@@ -69,7 +69,7 @@
         propn-pair-ids (map #(map :id %) propn-pairs)
         fams (match-propn-components propn-pairs)
         ext-fams (match-propn-components-deeply propn-pairs)
-        node-seq (distinct (flatten fams)) ; flatten here assumes map-pairs aren't seqs
+        node-seq (cons {:id :SPECIAL} (distinct (flatten fams))) ; flatten here assumes map-pairs aren't seqs
         num-nodes (count node-seq)
         nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
         id-to-idx (:id-to-idx nn-map)
