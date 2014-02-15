@@ -1,14 +1,47 @@
 (ns popco.nn.pprint
-  (:use [clojure.pprint :only [cl-format]])
+  (:use [popco.nn.nets :as nn]
+        [clojure.pprint :only [cl-format]])
   (:require [clojure.core.matrix :as mx]
-            [clojure.string :as string])
-  (:import [popco.nn.nets AnalogyNet]))
+            [clojure.string :as string]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS WITH LABELS
 
 ;; TODO: Note that core.matrix/pm does some pretty-printing of matrices.
 ;;       Consider using it.  Or adding to it.
+
+(defn list-links
+  [nnstru]
+  "Return a seq of all node pairs that are linked in nnstru's matrix."
+  (let [mat (nn/wt-mat nnstru)
+        id-vec (:id-vec nnstru)
+        num-nodes (count id-vec)]
+    (for [i (range num-nodes)
+          j (range i num-nodes)
+          :when (> (mx/mget mat i j) 0)]
+        [(id-vec i) (id-vec j)])))
+
+(defn list-nodes
+  [nnstru mask]
+  (let [mat (nn/wt-mat nnstru)
+        id-vec (:id-vec nnstru)
+        num-nodes (count id-vec)]
+    (for [i (range num-nodes)
+          :when (nn/node-unmasked? mask i)]
+      (id-vec i))))
+
+(defn list-propn-nodes
+  [pers]
+  (list-nodes (:propn-net pers) (:propn-mask pers)))
+
+(defn list-analogy-nodes
+  [pers]
+  (list-nodes (:analogy-net pers) (:analogy-mask pers)))
+
+(defn list-both-nodes
+  [pers]
+  {:propn   (list-propn-nodes pers)
+   :analogy (list-analogy-nodes pers)})
 
 (defn max-strlen
   "Returns the maximum length of the strings contained in its argument."
