@@ -23,13 +23,13 @@
         (try-add-to-analogy-net pers propn)))))  ; see whether we can now add analogies using it
 ;; TODO ? this last loop redundantly tries to add analogies for recd-propn repeatedly, though will not do much after the first time
 
-(defn add-to-propn-net
+(defn add-to-propn-net!
   "ADD DOCSTRING"
   [pers propn]
   (let [pnet (:propn-net pers)]
     (nn/unmask! (:propn-mask pers) ((:id-to-idx pnet) propn))))
 
-(defn try-add-to-analogy-net
+(defn try-add-to-analogy-net!
   "ADD DOCSTRING.  See communic.md for further explanation."
   [pers propn]
   (when (propn-components-already-unmasked? pers propn)                ; if sent propn missing extended-family propns, can't match
