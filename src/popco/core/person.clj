@@ -1,6 +1,7 @@
 (ns popco.core.person
   (:require [utils.general :as ug]
             [popco.core.communic :as cc]
+            [popco.nn.nets :as nn]
             [clojure.core.matrix :as mx]))
 
 ;; Definition of person and related functions
@@ -42,7 +43,8 @@
                        analogy-net
                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
-    (mx/mset! (:propn-mask pers) (:id-to-idx (:propn-net pers) :SALIENT) 1.0)
+    (nn/unmask! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT))
+    (nn/unmask! (:analogy-mask pers) ((:id-to-idx analogy-net) :SPECIAL))
     (doseq [propn propns] (cc/add-to-propn-net! pers (:id propn)))   ; better to fill propn mask before
     (doseq [propn propns] (cc/try-add-to-analogy-net! pers (:id propn))) ;  analogy mask, so propns are known
     pers))
