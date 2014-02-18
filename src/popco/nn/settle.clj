@@ -69,7 +69,7 @@
 ;; map node if and only if the node exists, and never adds or removes links
 ;; to a map node once it exists, we can create the analogy network once,
 ;; including all map nodes possible given the set of propositions in the
-;; two analogue structures.  Then we can "remove" map nodes and their
+;; two analog structures.  Then we can "remove" map nodes and their
 ;; links from the network simply by zeroing the map node activations in
 ;; the input vector.  Or rather, we can add map nodes *and their links*
 ;; to the analogy network simply by beginning to put nonzero activations 

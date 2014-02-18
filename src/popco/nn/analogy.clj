@@ -29,7 +29,7 @@
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids 
          make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! 
          add-neg-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
-         competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogues)
+         competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -56,13 +56,16 @@
                 columns of the matrices).  :ids-to-idx, by contrast, maps
                 vector pairs containing the ids of the two sides (from which
                 the mapnode id is constructed).  This is redundant information,
-                but convenient.
+                but convenient. Note: The SPECIAL node will have the key [nil nil]
+                since it's not built from analogs.
   :propn-mn-to-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
                 associated component mapnodes, i.e. of the propn mapnode's 'family'.
+                Note: Has no entry for the SPECIAL node.
   :propn-mn-to-ext-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
                 associated component mapnodes, components of argument propn-mapnodes, etc.
                 all the say down--i.e. of the propn-mapnode's 'extended family'.
-  :propn-to-analogues -  A map from ids of propns to ids of their analogues--i.e.
+                Note: Has no entry for the SPECIAL node.
+  :propn-to-analogs -  A map from ids of propns to ids of their analogs--i.e.
                 of the propns that are the other sides of mapnodes."
   [propnseq1 propnseq2 pos-increment neg-increment]
   (let [propn-pairs (match-propns propnseq1 propnseq2)
@@ -76,9 +79,9 @@
         analogy-map (assoc nn-map
                            :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
                            :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
-                           :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED
+                           :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED [NOT NEEDED?]
                            :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams) ; TODO UNTESTED
-                           :propn-to-analogues (make-propn-to-analogues propn-pair-ids)) ] ; TODO UNTESTED
+                           :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ] ; TODO UNTESTED
     (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
                          (matched-idx-fams fams (:id-to-idx analogy-map)) 
                          pos-increment)
@@ -91,7 +94,7 @@
 (defn assoc-ids-to-idx-nn-map
   [nn-map]
   (assoc nn-map 
-         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-map) 
+         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-map)     ; SPECIAL node index will have key [nil nil]
                                               (:id-to-idx nn-map))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -114,7 +117,7 @@
 ;; Find out which propositions can be paired up, i.e. the isomorphic ones.
 
 ;; Note that order within pairs matters:  It preserves the distinction
-;; between the two analogue structures.
+;; between the two analog structures.
 (defn match-propns
   "Returns a (lazy) sequence of 2-element sequences, each containing two 
   propositions that match according to propns-match?.  These are propositions 
@@ -171,8 +174,8 @@
 ;; nor did POPCO 1.
 
 ;; Note that order within pairs matters.  It preserves the distinction
-;; between the two analogue structures, and allows predicates and objects
-;; to have the same names in different analogue structures (sets don't allow that).
+;; between the two analog structures, and allows predicates and objects
+;; to have the same names in different analog structures (sets don't allow that).
 (defn match-propn-components
   "Returns a (lazy) sequence of sequences (families) of mapped-pairs of matched
   Propns, Preds, or Objs from a sequence of of pairs of Propns.  Each pair is a
@@ -342,7 +345,7 @@
   (map #(map ids-to-idx %)
        (competing-mapnode-fams (keys ids-to-idx))))
 
-(defn make-propn-to-analogues
+(defn make-propn-to-analogs
   "Given pairs of ids of matched propns, creates a map from ids of individual
   propns, to seq of ids of propns to which they match."
   [propn-pair-ids]

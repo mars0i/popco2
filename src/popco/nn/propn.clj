@@ -16,16 +16,17 @@
 ;; TODO Add the SALIENT node
 (defn make-propn-net
   [propnseq]
-  (let [dim (count propnseq)
-        nncore (nn/make-nn-core propnseq)
-        pnetmap (assoc 
+  (let [node-seq (cons {:id :SALIENT} propnseq)
+        num-nodes (count node-seq)
+        nncore (nn/make-nn-core node-seq)
+        propn-map (assoc 
                   nncore
-                  :wt-mat (mx/new-matrix dim dim)
+                  :wt-mat (mx/new-matrix num-nodes num-nodes)
                   :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
-                                                    propnseq (:id-to-idx nncore)))]
+                                                    node-seq (:id-to-idx nncore)))]
     (nn/map->PropnNet
-      (assoc pnetmap
-             :propn-to-extended-fams-ids (make-propn-to-extended-fams-ids pnetmap)))))
+      (assoc propn-map
+             :propn-to-extended-fams-ids (make-propn-to-extended-fams-ids propn-map)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
