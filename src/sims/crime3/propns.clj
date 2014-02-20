@@ -118,6 +118,15 @@
    (defpropn CB-cpc->cb-dtp Causal-if [CB-cpc CB-dtp])        ; 11. Non-criminal capturing criminal is dangerous to non-criminal. [HO1]
   ])
 
+;; from the Common Lisp version for popco1
+;(defvar semantic-relations
+;  '(
+;    (similar 'cause 'prevent (* -1L0 *ident-weight*)) ; avoid mapping cause to prevent
+;    (semantic-iff 'cb-vpp 'v-ipa -.1L0)
+;    (semantic-iff 'cv-rpa 'b-abp -.1L0)
+;    (similar 'is-beastly 'is-infected (* -1L0 *ident-weight*))
+;   ))
+
 (def living-propns (concat virus-propns beast-propns))
 (def crime-propns (concat viral-crime-propns beastly-crime-propns))
 (def all-propns (concat living-propns crime-propns))
