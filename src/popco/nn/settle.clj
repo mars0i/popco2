@@ -2,13 +2,6 @@
   (:use clojure.core.matrix)
   (:require [popco.nn.nets :as nn]))
 
-(set-current-implementation :vectorz)
-;; use one of these:
-;(set-current-implementation :persistent-vector)
-;(set-current-implementation :ndarray)
-;(set-current-implementation :vectorz)
-;(set-current-implementation :clatrix)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NOTES
 

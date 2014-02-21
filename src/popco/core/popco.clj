@@ -1,5 +1,5 @@
 (ns popco.core.popco
-  [:use clojure.core.matrix
+  [:use [clojure.core.matrix :as mx]
         popco.core.person
         popco.core.lot
         popco.core.communic
@@ -17,6 +17,13 @@
 
 ;; set pretty-print width to terminal width
 (set-pprint-width (Integer/valueOf (System/getenv "COLUMNS"))) ; or read-string
+
+(mx/set-current-implementation :vectorz)
+;; use one of these:
+;(set-current-implementation :persistent-vector)
+;(set-current-implementation :ndarray)
+;(set-current-implementation :vectorz)
+;(set-current-implementation :clatrix)
 
 (defn -main
   "I don't do a whole lot ... yet."
