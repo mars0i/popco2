@@ -35,11 +35,7 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
-;; TODO I added the SPECIAL node, which seems to work, but have not caused links to it to be made e.g. for same predicates
-;; The fields contain redundant information, but it's all information that can
-;; be precomputed at initialization time, and that will only be read during
-;; simulation run time.  Having the redundant, precomputed fields makes runtime
-;; code simple and efficient.
+;; TODO I added the SPECIAL node, which seems to work, but have not caused links to it to be made e.g. for same predicates.
 (defn make-analogy-net
   "Make an ACME analogy neural-net structure, i.e. a structure that represents
   an ACME analogy constraint satisfaction network.  This is a standard 
