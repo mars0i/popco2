@@ -11,7 +11,7 @@
                    analogy-net analogy-mask analogy-activns])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
-   :nm -              name of person (TODO: What type?: keyword? symbol? string?)
+   :nm -              name of person (a keyword)
    :propn-net -       PropnNet for this person
    :propn-mask -      vector of 1's (propn is entertained) and 0's (it isn't)
    :propn-activns -   vector of activation values for nodes in propn net
