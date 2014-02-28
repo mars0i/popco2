@@ -13,7 +13,6 @@
 
 (declare make-propn-to-extended-descendant-propn-idxs propn-extended-descendant-propns make-propn-to-extended-fams-ids make-propn-net)
 
-;; TODO Add the SALIENT node
 (defn make-propn-net
   [propnseq]
   (let [node-seq (cons {:id :SALIENT} propnseq)
