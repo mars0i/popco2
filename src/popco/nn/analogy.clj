@@ -36,6 +36,9 @@
 ;; ...
 
 ;; TODO I added the SPECIAL node, which seems to work, but have not caused links to it to be made e.g. for same predicates.
+;; Here's one starting point for adding those links:
+;; (pprint (map #(let [p1 (:pred (:alog1 %)) p2 (:pred (:alog2 %))] [p1 p2 (= p1 p2)]) (:node-vec a)))
+;;
 (defn make-analogy-net
   "Make an ACME analogy neural-net structure, i.e. a structure that represents
   an ACME analogy constraint satisfaction network.  This is a standard 
