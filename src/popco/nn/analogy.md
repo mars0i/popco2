@@ -47,7 +47,14 @@ the functions in this file will only be run once at the beginning
 of a simulation, so there's no need for speed.  If this assumption
 changes, the internal processes here may need to be redesigned.
 
+Note: The fields defined in an AnalogNet contain redundant information,
+but it's all information that can be precomputed at initialization time,
+and that will only be read during simulation run time.  Having the
+redundant, precomputed fields makes runtime code simple and efficient.
+
 STEPS:
+
+Some of this may be obsolete.
 
 1. Pair isomorphic propositions.
 
