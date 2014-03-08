@@ -10,7 +10,7 @@
 ;; TODO UNVERIFIED
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to
-;; the SALIENT node (which needs to be added to the net!).
+;; the SALIENT node.
 (defn receive-propn
   "ADD DOCSTRING"
   [pers recd-propn]
