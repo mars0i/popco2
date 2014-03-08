@@ -23,21 +23,37 @@
 
 (def pos-link-increment 0.1)
 (def neg-link-value -0.2)
+(def sem-similarity-link-value 0.1)
 
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat 
          match-propns propns-match?  match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids 
          make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! 
          add-neg-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
-         competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs)
+         competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs pred-mapnode? dupe-pred-mapnode?)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
 ;; ...
 
+(defn pred-mapnode?
+  [lot-elt]
+  (pred? (:alog1 lot-elt)))
+
+(defn dupe-pred-mapnode?
+  [lot-elt]
+  (and (pred-mapnode? lot-elt)
+       (= (:alog1 lot-elt) 
+          (:alog2 lot-elt))))
+
+
 ;; TODO I added the SPECIAL node, which seems to work, but HAVE NOT YET CAUSED LINKS TO IT TO BE MADE E.G. FOR SAME PREDICATES.
 ;; Here's one starting point for adding those links:
-;; (pprint (map #(let [p1 (:pred (:alog1 %)) p2 (:pred (:alog2 %))] [p1 p2 (= p1 p2)]) (:node-vec a)))
+;; (pprint (map #(let [p1 (:pred (:alog1 %)) p2 (:pred (:alog2 %))] [% p1 p2 (= p1 p2)]) (:node-vec a))
+;; NO THAT'S NOT RIGHT.  The prev line checks propn mapnodes, but what's wanted are predicate mapnodes.
+;; S/B e.g.
+;; (filter dupe-pred-mapnode? (:node-vec a))
+;; and then for each of those create a link to SPECIAL
 ;;
 (defn make-analogy-net
   "Make an ACME analogy neural-net structure, i.e. a structure that represents
