@@ -35,7 +35,7 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
-;; TODO I added the SPECIAL node, which seems to work, but have not caused links to it to be made e.g. for same predicates.
+;; TODO I added the SPECIAL node, which seems to work, but HAVE NOT YET CAUSED LINKS TO IT TO BE MADE E.G. FOR SAME PREDICATES.
 ;; Here's one starting point for adding those links:
 ;; (pprint (map #(let [p1 (:pred (:alog1 %)) p2 (:pred (:alog2 %))] [p1 p2 (= p1 p2)]) (:node-vec a)))
 ;;
@@ -285,7 +285,11 @@
 ;; Make weight matrix representing positive and negative link weights
 
 (defn add-wts-to-mat!
-  "ADD DOCSTRING"
+  "Given a matrix mat; index families, seq of seqs of indexs, idx-fams, 
+  representing indexes from a set of nodes that should be linked; a weight 
+  wt-val, and a mathematical operation op (e.g. +), links each member of a 
+  given index family with every other member, giving the link weight wt-val,
+  or composing the weight with whatever weight is already there, using op."
   [mat idx-fams wt-val op]
   (doseq [fam idx-fams]
     (doseq [i fam
@@ -303,13 +307,6 @@
   [mat idx-fams wt-val]
   (add-wts-to-mat! mat idx-fams wt-val +))
 
-(defn- identity-if-zero
-  "Returns new-val unchanged if old-val is zero.  If old-val is non-zero, throws an exception."
-  [new-val old-val]
-  (if (zero? old-val)
-    new-val
-    (throw (Exception. (format "Trying to overwrite nonzero weight.")))))
-
 (defn add-neg-wts-to-mat!
   "Add weights of value wt-val to matrix mat between all nodes with indexes in the same
   subseq of idx-fams.  idx-fams should be a seq of seqs of indexes from mapnodes that are 
@@ -318,6 +315,13 @@
   been set to something other than zero (an exception will be thrown)."
   [mat idx-fams wt-val]
   (add-wts-to-mat! mat idx-fams wt-val identity-if-zero))
+
+(defn- identity-if-zero
+  "Returns new-val unchanged if old-val is zero.  If old-val is non-zero, throws an exception."
+  [new-val old-val]
+  (if (zero? old-val)
+    new-val
+    (throw (Exception. (format "Trying to overwrite nonzero weight.")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 5 - Make other useful data structures
