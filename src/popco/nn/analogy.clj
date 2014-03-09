@@ -28,9 +28,10 @@
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat 
          match-propns propns-match?  match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids 
-         make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! add-pos-wts-to-mat! 
-         add-neg-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
-         competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs pred-mapnode? dupe-pred-mapnode?)
+         make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
+         sum-wts-to-mat!  write-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
+         competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs 
+         pred-mapnode? dupe-pred-mapnode? dupe-pred-mapnode-idxs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -45,6 +46,11 @@
   (and (pred-mapnode? lot-elt)
        (= (:alog1 lot-elt) 
           (:alog2 lot-elt))))
+
+(defn dupe-pred-mapnode-idxs
+  [node-vec id-to-idx]
+  (map (comp id-to-idx :id) 
+       (filter dupe-pred-mapnode? node-vec)))
 
 
 ;; TODO I added the SPECIAL node, which seems to work, but HAVE NOT YET CAUSED LINKS TO IT TO BE MADE E.G. FOR SAME PREDICATES.
@@ -97,10 +103,10 @@
                            :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED [NOT NEEDED?]
                            :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams) ; TODO UNTESTED
                            :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ] ; TODO UNTESTED
-    (add-pos-wts-to-mat! (:pos-wt-mat analogy-map) 
+    (sum-wts-to-mat! (:pos-wt-mat analogy-map) 
                          (matched-idx-fams fams (:id-to-idx analogy-map)) 
                          pos-increment)
-    (add-neg-wts-to-mat! (:neg-wt-mat analogy-map) 
+    (write-wts-to-mat! (:neg-wt-mat analogy-map) 
                          (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
                          neg-increment)
     (nn/map->AnalogyNet analogy-map)))
@@ -314,8 +320,8 @@
         (mx/mset! mat i j (op wt-val (mx/mget mat i j))))))
   mat)
 
-(defn add-pos-wts-to-mat!
-  "Add weights of value wt-val to matrix mat between all nodes with indexes in the same
+(defn sum-wts-to-mat!
+  "Sum weights of value wt-val into matrix mat between all nodes with indexes in the same
   subseq of idx-fams.  idx-fams should be a seq of seqs of indexes from mapnodes related via
   language-of-thought relationships.  This procedure implements ACME's rule that weights
   on such links sum--i.e. if two nodes are linked multiple times, their link weight will
@@ -323,8 +329,8 @@
   [mat idx-fams wt-val]
   (add-wts-to-mat! mat idx-fams wt-val +))
 
-(defn add-neg-wts-to-mat!
-  "Add weights of value wt-val to matrix mat between all nodes with indexes in the same
+(defn write-wts-to-mat!
+  "Write weights of value wt-val into matrix mat between all nodes with indexes in the same
   subseq of idx-fams.  idx-fams should be a seq of seqs of indexes from mapnodes that are 
   competing because they all share a 'side'.  This procedure implements ACME's rule that negative
   on such links do not sum:  This function will not set the value of a weight that has already 
