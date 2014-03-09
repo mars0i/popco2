@@ -127,3 +127,9 @@
   otherwise false."
   [mask idx]
   (= 0.0 (mx/mget mask idx)))
+
+;; Note: We make symlinks other ways as well, e.g. nn.analogy/add-wts-to-mat! .
+(defn make-symlink!
+  [mat wt-val i j]
+  (mx/mset! mat i j wt-val)
+  (mx/mset! mat j i wt-val))
