@@ -52,14 +52,13 @@
   (map (comp id-to-idx :id) 
        (filter dupe-pred-mapnode? node-vec)))
 
-
-;; TODO I added the SPECIAL node, which seems to work, but HAVE NOT YET CAUSED LINKS TO IT TO BE MADE E.G. FOR SAME PREDICATES.
+;; TODO I added the SEMANTIC node, which seems to work, but HAVE NOT YET CAUSED LINKS TO IT TO BE MADE E.G. FOR SAME PREDICATES.
 ;; Here's one starting point for adding those links:
 ;; (pprint (map #(let [p1 (:pred (:alog1 %)) p2 (:pred (:alog2 %))] [% p1 p2 (= p1 p2)]) (:node-vec a))
 ;; NO THAT'S NOT RIGHT.  The prev line checks propn mapnodes, but what's wanted are predicate mapnodes.
 ;; S/B e.g.
 ;; (filter dupe-pred-mapnode? (:node-vec a))
-;; and then for each of those create a link to SPECIAL
+;; and then for each of those create a link to SEMANTIC
 ;;
 (defn make-analogy-net
   "Make an ACME analogy neural-net structure, i.e. a structure that represents
@@ -77,15 +76,15 @@
                 columns of the matrices).  :ids-to-idx, by contrast, maps
                 vector pairs containing the ids of the two sides (from which
                 the mapnode id is constructed).  This is redundant information,
-                but convenient. Note: The SPECIAL node will have the key [nil nil]
+                but convenient. Note: The SEMANTIC node will have the key [nil nil]
                 since it's not built from analogs.
   :propn-mn-to-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
                 associated component mapnodes, i.e. of the propn mapnode's 'family'.
-                Note: Has no entry for the SPECIAL node.
+                Note: Has no entry for the SEMANTIC node.
   :propn-mn-to-ext-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
                 associated component mapnodes, components of argument propn-mapnodes, etc.
                 all the say down--i.e. of the propn-mapnode's 'extended family'.
-                Note: Has no entry for the SPECIAL node.
+                Note: Has no entry for the SEMANTIC node.
   :propn-to-analogs -  A map from ids of propns to ids of their analogs--i.e.
                 of the propns that are the other sides of mapnodes."
   [propnseq1 propnseq2 pos-increment neg-increment]
@@ -93,7 +92,7 @@
         propn-pair-ids (map #(map :id %) propn-pairs)
         fams (match-propn-components propn-pairs)
         ext-fams (match-propn-components-deeply propn-pairs)
-        node-seq (cons {:id :SPECIAL} (distinct (flatten fams))) ; flatten here assumes map-pairs aren't seqs
+        node-seq (cons {:id :SEMANTIC} (distinct (flatten fams))) ; flatten here assumes map-pairs aren't seqs
         num-nodes (count node-seq)
         nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
         id-to-idx (:id-to-idx nn-map)
@@ -115,7 +114,7 @@
 (defn assoc-ids-to-idx-nn-map
   [nn-map]
   (assoc nn-map 
-         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-map)     ; SPECIAL node index will have key [nil nil]
+         :ids-to-idx (make-two-ids-to-idx-map (:node-vec nn-map)     ; SEMANTIC node index will have key [nil nil]
                                               (:id-to-idx nn-map))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -349,6 +348,7 @@
 ;; STEP 5 - Make other useful data structures
 
 (defn matched-idx-fams
+  "ADD DOCSTRING"
   [fams id-to-idx]
   (let [f (comp id-to-idx :id)]
     (map #(map f %) fams)))

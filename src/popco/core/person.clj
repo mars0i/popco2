@@ -44,7 +44,7 @@
                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
     (nn/unmask! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT))
-    (nn/unmask! (:analogy-mask pers) ((:id-to-idx analogy-net) :SPECIAL))
+    (nn/unmask! (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC))
     (doseq [propn propns] (cc/add-to-propn-net! pers (:id propn)))   ; better to fill propn mask before
     (doseq [propn propns] (cc/try-add-to-analogy-net! pers (:id propn))) ;  analogy mask, so propns are known
     pers))
