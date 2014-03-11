@@ -37,29 +37,6 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
-(defn pred-mapnode?
-  [lot-elt]
-  (pred? (:alog1 lot-elt)))
-
-(defn dupe-pred-mapnode?
-  [lot-elt]
-  (and (pred-mapnode? lot-elt)
-       (= (:alog1 lot-elt) 
-          (:alog2 lot-elt))))
-
-(defn dupe-pred-mapnode-idxs
-  [node-vec id-to-idx]
-  (map (comp id-to-idx :id) 
-       (filter dupe-pred-mapnode? node-vec)))
-
-;; TODO I added the SEMANTIC node, which seems to work, but HAVE NOT YET CAUSED LINKS TO IT TO BE MADE E.G. FOR SAME PREDICATES.
-;; Here's one starting point for adding those links:
-;; (pprint (map #(let [p1 (:pred (:alog1 %)) p2 (:pred (:alog2 %))] [% p1 p2 (= p1 p2)]) (:node-vec a))
-;; NO THAT'S NOT RIGHT.  The prev line checks propn mapnodes, but what's wanted are predicate mapnodes.
-;; S/B e.g.
-;; (filter dupe-pred-mapnode? (:node-vec a))
-;; and then for each of those create a link to SEMANTIC
-;;
 (defn make-analogy-net
   "Make an ACME analogy neural-net structure, i.e. a structure that represents
   an ACME analogy constraint satisfaction network.  This is a standard 
@@ -103,12 +80,17 @@
                            :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams) ; TODO UNTESTED
                            :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ] ; TODO UNTESTED
     (sum-wts-to-mat! (:pos-wt-mat analogy-map) 
-                         (matched-idx-fams fams (:id-to-idx analogy-map)) 
-                         pos-increment)
+                     (matched-idx-fams fams (:id-to-idx analogy-map)) 
+                     pos-increment)
+    (nn/symlink-to-idxs! (:pos-wt-mat analogy-map)
+                         sem-similarity-link-value 
+                         (id-to-idx :SEMANTIC) 
+                         (dupe-pred-mapnode-idxs node-seq id-to-idx)) ; TODO add hand-specified semantic links
     (write-wts-to-mat! (:neg-wt-mat analogy-map) 
-                         (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
-                         neg-increment)
+                       (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
+                       neg-increment)
     (nn/map->AnalogyNet analogy-map)))
+
 
 
 (defn assoc-ids-to-idx-nn-map
@@ -343,6 +325,29 @@
   (if (zero? old-val)
     new-val
     (throw (Exception. (format "Trying to overwrite nonzero weight.")))))
+
+
+;; These next few functions are used to add links to the SEMANTIC node:
+
+(defn pred-mapnode?
+  "Return true iff mapnode mn maps a predicate to a predicate.  
+  (Assumes that the second side is a predicate if the first is.)"
+  [mn]
+  (pred? (:alog1 mn)))
+
+(defn dupe-pred-mapnode?
+  "Return true iff mapnode mn maps predicate to predicate, and the two
+  predicates are the same predicate."
+  [mn]
+  (and (pred-mapnode? mn)
+       (= (:alog1 mn) 
+          (:alog2 mn))))
+
+(defn dupe-pred-mapnode-idxs
+  "Return indexes of nodes that map a predicate to the same predicate."
+  [node-seq id-to-idx]
+  (map (comp id-to-idx :id) 
+       (filter dupe-pred-mapnode? node-seq)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 5 - Make other useful data structures
