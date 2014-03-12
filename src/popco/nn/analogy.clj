@@ -31,7 +31,7 @@
          make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
          sum-wts-to-mat!  write-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
          competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs 
-         pred-mapnode? dupe-pred-mapnode? dupe-pred-mapnode-idxs)
+         pred-mapnode? dupe-pred-mapnode? dupe-pred-mapnode-idxs write-semantic-symlinks!)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -64,7 +64,7 @@
                 Note: Has no entry for the SEMANTIC node.
   :propn-to-analogs -  A map from ids of propns to ids of their analogs--i.e.
                 of the propns that are the other sides of mapnodes."
-  [propnseq1 propnseq2 pos-increment neg-increment]
+  [propnseq1 propnseq2 pos-increment neg-increment sem-relats]
   (let [propn-pairs (match-propns propnseq1 propnseq2)
         propn-pair-ids (map #(map :id %) propn-pairs)
         fams (match-propn-components propn-pairs)
@@ -79,19 +79,26 @@
                            :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED [NOT NEEDED?]
                            :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams) ; TODO UNTESTED
                            :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ] ; TODO UNTESTED
-    (sum-wts-to-mat! (:pos-wt-mat analogy-map) 
+    (sum-wts-to-mat! (:pos-wt-mat analogy-map)   ; add pos wts between mapnodes in same family
                      (matched-idx-fams fams (:id-to-idx analogy-map)) 
                      pos-increment)
-    (nn/symlink-to-idxs! (:pos-wt-mat analogy-map)
+    (nn/symlink-to-idxs! (:pos-wt-mat analogy-map) ; add automatic semantic boost to same predicate mapnodes
                          sem-similarity-link-value 
                          (id-to-idx :SEMANTIC) 
-                         (dupe-pred-mapnode-idxs node-seq id-to-idx)) ; TODO add hand-specified semantic links
-    (write-wts-to-mat! (:neg-wt-mat analogy-map) 
+                         (dupe-pred-mapnode-idxs node-seq id-to-idx))
+    (write-semantic-symlinks! (:pos-wt-mat analogy-map)   ; add semantic boosts, etc. to specified mapnodes
+                              sem-similarity-link-value
+                              (id-to-idx :SEMANTIC)
+                              (map (fn [[id mult]] [(id-to-idx id) mult]) sem-relats))  ;; TODO needs to automatically do it for swapped mappings
+    (write-wts-to-mat! (:neg-wt-mat analogy-map)  ; add neg wts between mapnodes that compete
                        (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
                        neg-increment)
     (nn/map->AnalogyNet analogy-map)))
 
-
+(defn write-semantic-symlinks!
+  [mat sem-sim-wt semnode-idx idx-multiplier-pairs]
+  (doseq [[idx multiplier] idx-multiplier-pairs]
+    (nn/symlink! mat (* sem-sim-wt multiplier) semnode-idx idx)))
 
 (defn assoc-ids-to-idx-nn-map
   [nn-map]

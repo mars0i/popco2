@@ -127,6 +127,15 @@
 ;    (similar 'is-beastly 'is-infected (* -1L0 *ident-weight*))
 ;   ))
 
+(def sem-relats [[:Causal-if=Preventative-if -1]]) ; TODO FIXME this should automatically do it for mapnodes in both dirs.
+;; This lists mapnodes that should be provided with a link from SEMANTIC.
+;; The number will be multiplied by the default semantic link weight of
+;; popco.nn.analogy/sem-similarity-link-value.  NOTE that the traditional 
+;; ACME-based POPCO behavior allows this to happen *only* for mapnodes that
+;; between predicates.  ALSO note that these directives are NOT needed for
+;; when the two mapped predicates are identical.  In that case, a link of
+;; weight sem-similarity-link-value to SEMANTIC is added automatically.
+
 (def living-propns (concat virus-propns beast-propns))
 (def crime-propns (concat viral-crime-propns beastly-crime-propns))
 (def all-propns (concat living-propns crime-propns))
