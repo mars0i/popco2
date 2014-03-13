@@ -67,3 +67,9 @@
   and a seq containing all of the elements, including the first, as value."
   [s]
   {(first s) s})
+
+(defn reverse-elts
+  "Return a sequence constructed from the input sequence, with each
+  element in the sequence reversed (but in the same overall order)."
+  [xs]
+  (map reverse xs))

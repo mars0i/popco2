@@ -87,6 +87,7 @@
                          (id-to-idx :SEMANTIC) 
                          (dupe-pred-mapnode-idxs node-seq id-to-idx))
     (write-semantic-symlinks! (:pos-wt-mat analogy-map)   ; add semantic boosts, etc. to specified mapnodes
+                              (:ids-to-idx analogy-map)
                               sem-similarity-link-value
                               (id-to-idx :SEMANTIC)
                               (map (fn [[id mult]] [(id-to-idx id) mult]) sem-relats))  ;; TODO needs to automatically do it for swapped mappings
@@ -95,10 +96,22 @@
                        neg-increment)
     (nn/map->AnalogyNet analogy-map)))
 
+;; TODO REWRITE using sem-specs-to-idx-multiplier-pairs
 (defn write-semantic-symlinks!
-  [mat sem-sim-wt semnode-idx idx-multiplier-pairs]
+  [mat ids-to-idx sem-sim-wt semnode-idx idx-multiplier-pairs]
   (doseq [[idx multiplier] idx-multiplier-pairs]
     (nn/symlink! mat (* sem-sim-wt multiplier) semnode-idx idx)))
+
+(defn sem-specs-to-idx-multiplier-pairs
+  [id-to-idx sem-specs]
+  (filter identity ; strip the nils
+  (concat
+    (map
+      (fn [[mplier lot-id1 lot-id-2]] [mplier (ids-to-mapnode-id lot-id1 lot-id2)])
+      sem-specs)
+    (map
+      (fn [[mplier lot-id1 lot-id-2]] [mplier (ids-to-mapnode-id lot-id2 lot-id1)])
+      sem-specs))))
 
 (defn assoc-ids-to-idx-nn-map
   [nn-map]
