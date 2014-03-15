@@ -31,7 +31,8 @@
          make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
          sum-wts-to-mat!  write-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
          competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs 
-         pred-mapnode? dupe-pred-mapnode? dupe-pred-mapnode-idxs write-semantic-symlinks!)
+         pred-mapnode? dupe-pred-mapnode? write-semantic-links! 
+         sem-specs-to-idx-multiplier-pairs dupe-pred-idx-multiplier-pairs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -63,8 +64,9 @@
                 all the say down--i.e. of the propn-mapnode's 'extended family'.
                 Note: Has no entry for the SEMANTIC node.
   :propn-to-analogs -  A map from ids of propns to ids of their analogs--i.e.
-                of the propns that are the other sides of mapnodes."
-  [propnseq1 propnseq2 pos-increment neg-increment sem-relats]
+                of the propns that are the other sides of mapnodes.
+  Also see docstring for write-semantic-links!."
+  [propnseq1 propnseq2 pos-increment neg-increment sem-specs]
   (let [propn-pairs (match-propns propnseq1 propnseq2)
         propn-pair-ids (map #(map :id %) propn-pairs)
         fams (match-propn-components propn-pairs)
@@ -73,45 +75,38 @@
         num-nodes (count node-seq)
         nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
         id-to-idx (:id-to-idx nn-map)
+        ids-to-idx (:ids-to-idx nn-map)
+        pos-wt-mat (make-wt-mat num-nodes)  ; construct zero matrices
+        neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
         analogy-map (assoc nn-map
-                           :pos-wt-mat (make-wt-mat num-nodes)  ; add zero matrices
-                           :neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
+                           :pos-wt-mat pos-wt-mat
+                           :neg-wt-mat neg-wt-mat
                            :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED [NOT NEEDED?]
                            :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams) ; TODO UNTESTED
                            :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ] ; TODO UNTESTED
-    (sum-wts-to-mat! (:pos-wt-mat analogy-map)   ; add pos wts between mapnodes in same family
-                     (matched-idx-fams fams (:id-to-idx analogy-map)) 
+    (sum-wts-to-mat! pos-wt-mat   ; add pos wts between mapnodes in same family
+                     (matched-idx-fams fams id-to-idx) 
                      pos-increment)
-    (nn/symlink-to-idxs! (:pos-wt-mat analogy-map) ; add automatic semantic boost to same predicate mapnodes
-                         sem-similarity-link-value 
-                         (id-to-idx :SEMANTIC) 
-                         (dupe-pred-mapnode-idxs node-seq id-to-idx))
-    (write-semantic-symlinks! (:pos-wt-mat analogy-map)   ; add semantic boosts, etc. to specified mapnodes
-                              (:ids-to-idx analogy-map)
-                              sem-similarity-link-value
-                              (id-to-idx :SEMANTIC)
-                              (map (fn [[id mult]] [(id-to-idx id) mult]) sem-relats))  ;; TODO needs to automatically do it for swapped mappings
-    (write-wts-to-mat! (:neg-wt-mat analogy-map)  ; add neg wts between mapnodes that compete
+;    (nn/symlink-to-idxs! pos-wt-mat ; add automatic semantic boost to same predicate mapnodes
+;                         sem-similarity-link-value 
+;                         (id-to-idx :SEMANTIC) 
+;                         (dupe-pred-idx-multiplier-pairs node-seq id-to-idx))
+;    (write-semantic-symlinks! pos-wt-mat   ; add semantic boosts, etc. to specified mapnodes
+;                              (:ids-to-idx analogy-map)
+;                              sem-similarity-link-value
+;                              (id-to-idx :SEMANTIC)
+;                              (map (fn [[id mult]] [(id-to-idx id) mult]) sem-relats))  ;; TODO needs to automatically do it for swapped mappings
+    (write-semantic-links! pos-wt-mat 
+                           sem-similarity-link-value 
+                           (id-to-idx :SEMANTIC) 
+                           (concat 
+                             (dupe-pred-idx-multiplier-pairs node-seq id-to-idx)
+                             (sem-specs-to-idx-multiplier-pairs id-to-idx sem-specs)))
+    (write-wts-to-mat! neg-wt-mat  ; add neg wts between mapnodes that compete
                        (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
                        neg-increment)
     (nn/map->AnalogyNet analogy-map)))
 
-;; TODO REWRITE using sem-specs-to-idx-multiplier-pairs
-(defn write-semantic-symlinks!
-  [mat ids-to-idx sem-sim-wt semnode-idx idx-multiplier-pairs]
-  (doseq [[idx multiplier] idx-multiplier-pairs]
-    (nn/symlink! mat (* sem-sim-wt multiplier) semnode-idx idx)))
-
-(defn sem-specs-to-idx-multiplier-pairs
-  [id-to-idx sem-specs]
-  (filter identity ; strip the nils
-  (concat
-    (map
-      (fn [[mplier lot-id1 lot-id-2]] [mplier (ids-to-mapnode-id lot-id1 lot-id2)])
-      sem-specs)
-    (map
-      (fn [[mplier lot-id1 lot-id-2]] [mplier (ids-to-mapnode-id lot-id2 lot-id1)])
-      sem-specs))))
 
 (defn assoc-ids-to-idx-nn-map
   [nn-map]
@@ -363,11 +358,41 @@
        (= (:alog1 mn) 
           (:alog2 mn))))
 
-(defn dupe-pred-mapnode-idxs
-  "Return indexes of nodes that map a predicate to the same predicate."
+(defn write-semantic-links!
+  "Write asymetric/directional links, in analogy matrix mat, from the semantic node, whose
+  index is passed in as semnode-idx, to mapnodes with
+  semantically related predicates passed in the sequence idx-multiplier pairs.  
+  These are pairs in which the first element is a multiplier in [-1,1], and the second
+  is an index of a node.  The weight of the links is sem-sim-wt times multiplier.
+  Typically sem-sim-wt should be the top-level variable nn.analogy/sem-similarity-link-value.
+  Usually, the semantically related predicates are (a) those that are identical, and 
+  (b) those specified to be related in the sem-specs argument to make-analogy-net, typically 
+  collected from a variable named sem-relats."
+  [mat sem-sim-wt semnode-idx idx-multiplier-pairs]
+  (doseq [[mplier idx] idx-multiplier-pairs]
+    (mx/mset! mat idx semnode-idx (* mplier sem-sim-wt)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
+
+(defn sem-specs-to-idx-multiplier-pairs
+  "ADD DOCSTRING"
+  [id-to-idx sem-specs]
+  (filter identity ; strip the nils
+          (concat
+            (map
+              (fn [[mplier lot-id1 lot-id2]] [mplier (id-to-idx (ids-to-mapnode-id lot-id1 lot-id2))])
+              sem-specs)
+            (map
+              (fn [[mplier lot-id1 lot-id2]] [mplier (id-to-idx (ids-to-mapnode-id lot-id2 lot-id1))])
+              sem-specs))))
+
+
+(defn dupe-pred-idx-multiplier-pairs
+  "Return pairs consisting of 1.0 and indexes of nodes that map a predicate 
+  to the same predicate.  1.0 is the multiplier for semantic links to such nodes,
+  since identical predicates represent the highest possible semantic similarity."
   [node-seq id-to-idx]
-  (map (comp id-to-idx :id) 
-       (filter dupe-pred-mapnode? node-seq)))
+  (map #(vector 1.0 %)
+       (map (comp id-to-idx :id) 
+            (filter dupe-pred-mapnode? node-seq))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 5 - Make other useful data structures
