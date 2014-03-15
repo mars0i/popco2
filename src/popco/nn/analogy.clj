@@ -87,15 +87,6 @@
     (sum-wts-to-mat! pos-wt-mat   ; add pos wts between mapnodes in same family
                      (matched-idx-fams fams id-to-idx) 
                      pos-increment)
-;    (nn/symlink-to-idxs! pos-wt-mat ; add automatic semantic boost to same predicate mapnodes
-;                         sem-similarity-link-value 
-;                         (id-to-idx :SEMANTIC) 
-;                         (dupe-pred-idx-multiplier-pairs node-seq id-to-idx))
-;    (write-semantic-symlinks! pos-wt-mat   ; add semantic boosts, etc. to specified mapnodes
-;                              (:ids-to-idx analogy-map)
-;                              sem-similarity-link-value
-;                              (id-to-idx :SEMANTIC)
-;                              (map (fn [[id mult]] [(id-to-idx id) mult]) sem-relats))  ;; TODO needs to automatically do it for swapped mappings
     (write-semantic-links! pos-wt-mat 
                            sem-similarity-link-value 
                            (id-to-idx :SEMANTIC) 
@@ -359,15 +350,18 @@
           (:alog2 mn))))
 
 (defn write-semantic-links!
-  "Write asymetric/directional links, in analogy matrix mat, from the semantic node, whose
-  index is passed in as semnode-idx, to mapnodes with
-  semantically related predicates passed in the sequence idx-multiplier pairs.  
-  These are pairs in which the first element is a multiplier in [-1,1], and the second
-  is an index of a node.  The weight of the links is sem-sim-wt times multiplier.
-  Typically sem-sim-wt should be the top-level variable nn.analogy/sem-similarity-link-value.
-  Usually, the semantically related predicates are (a) those that are identical, and 
-  (b) those specified to be related in the sem-specs argument to make-analogy-net, typically 
-  collected from a variable named sem-relats."
+  "Write asymetric/directional links, in analogy matrix mat, from the semantic 
+  node, whose index is passed in as semnode-idx, to mapnodes with semantically
+  related predicates passed in the sequence idx-multiplier pairs.  Only 
+  assymetric links are needed because the semantic node's activation should 
+  never be affected by other nodes.  The pairs are ones in which the first 
+  element is a multiplier in [-1,1], and the second is an index of a node.  
+  The weight of the links is sem-sim-wt times multiplier.  Typically sem-sim-wt 
+  should be the top-level variable nn.analogy/sem-similarity-link-value.
+  Usually, the semantically related predicates are (a) those that are identical,
+  and (b) those specified to be related in the sem-specs argument to 
+  make-analogy-net, typically collected from a variable named sem-relats.
+  (See settle.md for notes about order of indexes in assymetric links.)"
   [mat sem-sim-wt semnode-idx idx-multiplier-pairs]
   (doseq [[mplier idx] idx-multiplier-pairs]
     (mx/mset! mat idx semnode-idx (* mplier sem-sim-wt)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
