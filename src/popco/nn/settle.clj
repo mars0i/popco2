@@ -76,6 +76,13 @@
 ;; because they acquire new links between old nodes.
 
 ;; SHOULD I USE add-product here for the inner addition of emuls?
+;; 
+;; NOTE For This way of doing matrix multiplication using (mmul <matrix> <vector>),
+;; <vector> is 1D and is treated as a column vector.  This means that the weight
+;; at index i,j represents the directional link from node j to node i, since j is
+;; the column (input) index, and i is the row index.  (Doesn't matter for symmetric
+;; links, since for the there will be identical weights at i,j and j,i, but matters
+;; for assymetric, directional links.)
 (defn next-activns 
   "Calculate a new set of activations for nodes starting from the current
   activations in vector activns, using network link weights in constraint
