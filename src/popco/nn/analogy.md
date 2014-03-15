@@ -128,3 +128,14 @@ these elements:
 the presence or absence of a link.  This isn't essential for the analogy
 network, which has no weights of value zero, but will be needed for
 the proposition network, which can have zero-valued weights.)
+
+
+NOTE The way that `nn.settle/next-activns` does matrix multiplication
+using `(mmul <matrix> <vector>)`, `<vector>` is 1D and is treated as a
+column vector.  This means that the weight at index i,j represents the
+directional link from node j to node i, since j is the column (input)
+index, and i is the row index.  (This doesn't matter for symmetric
+links, since for them there will be identical weights at i,j and j,i,
+but it matters for assymetric, directional links.)
+
+
