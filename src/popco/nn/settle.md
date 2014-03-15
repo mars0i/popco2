@@ -10,7 +10,6 @@ Satisfaction", Cognitive Science 13, pp. 295-355. See pp. 313, 315.
 
 3. "MR": Abrams 2013, "A Moderate Role for Cognitive Models in Agent-Based 
 Modeling of Cultural Change", Complex Adaptive Systems Modeling 2013.
-Note that the latter has errors.
 
 4. Grossberg. S. (1978). A theory of visual coding, memory, and development.
 In E.L.J. Leeuwenberg & H.F.J. Buffart (Eds.), Formal theories of visual 
@@ -76,11 +75,12 @@ due to being modified later).
 Note: The proposition networks, by contrast, can't be treated this way,
 because they acquire new links between old nodes.
 
-NOTE The way that `next-activns` does matrix multiplication using (mmul <matrix> <vector>),
-<vector> is 1D and is treated as a column vector.  This means that the weight
-at index i,j represents the directional link from node j to node i, since j is
-the column (input) index, and i is the row index.  (Doesn't matter for symmetric
-links, since for the there will be identical weights at i,j and j,i, but matters
-for assymetric, directional links.)
+NOTE The way that `next-activns` does matrix multiplication using `(mmul
+<matrix> <vector>)`, `<vector>` is 1D and is treated as a column vector.
+This means that the weight at index i,j represents the directional link
+from node j to node i, since j is the column (input) index, and i is the
+row index.  (Doesn't matter for symmetric links, since for the there
+will be identical weights at i,j and j,i, but matters for assymetric,
+directional links.)
 
 
