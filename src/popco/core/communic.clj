@@ -21,7 +21,7 @@
       (doseq [fam fams                           ; loop through all extended fams containing this propn
               propn fam]                         ; and each propn in that family
         (try-add-to-analogy-net pers propn)))))  ; see whether we can now add analogies using it
-;; TODO ? this last loop redundantly tries to add analogies for recd-propn repeatedly, though will not do much after the first time
+;; This last loop redundantly tries to add analogies for recd-propn repeatedly, though will not do much after the first time
 
 (defn add-to-propn-net!
   "ADD DOCSTRING"
@@ -111,7 +111,7 @@
                 (propn-net-has-node? (pid-to-idx a-propn))                ; pers has this analog propn
                 (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; and its extended-family-propns 
           ;; Then we can unmask all mapnodes corresponding to this propn pair:
-          (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; TODO: replace the or by passing in the analog-struct?
+          (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; MAYBE: replace the OR by passing in the analog-struct?
                         (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
             ;(pp/cl-format true "\t\taid + idxs: ~s~%" aid (aid-to-ext-fam-idxs aid)) ; DEBUG
             (ug/domap unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes

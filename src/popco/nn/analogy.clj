@@ -25,14 +25,10 @@
 (def neg-link-value -0.2)
 (def sem-similarity-link-value 0.1)
 
-(declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat 
-         match-propns propns-match?  match-propn-components match-propn-components-deeply
-         make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids 
-         make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
-         sum-wts-to-mat!  write-wts-to-mat!  matched-idx-fams competing-mapnode-fams 
-         competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs 
-         pred-mapnode? dupe-pred-mapnode? write-semantic-links! 
-         sem-specs-to-idx-multiplier-pairs dupe-pred-idx-multiplier-pairs)
+(declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat match-propns propns-match? match-propn-components match-propn-components-deeply
+         make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
+         sum-wts-to-mat! write-wts-to-mat! matched-idx-fams competing-mapnode-fams competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs 
+         pred-mapnode? dupe-pred-mapnode? write-semantic-links! sem-specs-to-idx-multiplier-pairs dupe-pred-idx-multiplier-pairs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -87,7 +83,7 @@
     (sum-wts-to-mat! pos-wt-mat   ; add pos wts between mapnodes in same family
                      (matched-idx-fams fams id-to-idx) 
                      pos-increment)
-    (write-semantic-links! pos-wt-mat 
+    (write-semantic-links! pos-wt-mat   ; add pos wts to mapnodes for semantically related predicates
                            sem-similarity-link-value 
                            (id-to-idx :SEMANTIC) 
                            (concat 

@@ -19,7 +19,7 @@
    :analogy-mask -    vector of 1's (mapnode is present) or 0's (it's absent)
    :analogy-activns - activation values of nodes in analogy net")
 
-;; TODO Consider making code below more efficient if popco is extended
+;; MAYBE: Consider making code below more efficient if popco is extended
 ;; to involve regularly creating new persons in the middle of simulation runs
 ;; e.g. with natural selection.
 
