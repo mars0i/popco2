@@ -128,6 +128,15 @@
   [mask idx]
   (= 0.0 (mx/mget mask idx)))
 
+(defn mask-matrix
+  "Given a weight matrix and a mask vector (1-dimensional, i.e. not a 1xN row 
+  matrix or Nx1 column matrix), return a weight matrix with nonzero entries
+  only between unmasked nodes."
+  [mat mask-vec]
+  (mx/emul mat
+           (mx/mmul (mx/column-matrix mask-vec)  ; construct matrix with 1's at entries
+                    (mx/row-matrix mask-vec))))  ; whose coordinates are unmasked
+
 ;; Note: We make symlinks other ways as well, e.g. nn.analogy/add-wts-to-mat! .
 (defn symlink!
   "Create a symmetric link by adding wt-val to mat from i to j and from j to i."
