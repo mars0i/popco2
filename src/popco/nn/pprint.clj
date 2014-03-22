@@ -12,22 +12,34 @@
 
 (defn list-links
   [nnstru]
-  "Return a seq of all node pairs that are linked in nnstru's matrix."
+  "Return a seq of all node pairs that are linked in nnstru's matrix.
+  BUGS: Actually just checks whether weights are nonzero; zero-weight
+  links will be ignored.  And assumes that all links are bidirectional."
   (let [mat (nn/wt-mat nnstru)
         id-vec (:id-vec nnstru)
         num-nodes (count id-vec)]
     (for [i (range num-nodes)
           j (range i num-nodes)
-          :when (> (mx/mget mat i j) 0)]
+          :when (not (== (mx/mget mat i j) 0.0))]    ; there is no 'not==' function
         [(id-vec i) (id-vec j) (mx/mget mat i j)])))
 
 (defn compare-links
-  "A comparator function for use with sort applied to output of list-links."
-  [[n1a n1b] [n2a n2b]] ; ignore weight value, i.e. 3rd element
-  (let [result (compare (string/upper-case n1a) (string/upper-case n2a))]
+  "A comparator function for use with sort on output of list-links. e.g.:
+  (pprint (sort compare-links (list-links a)) 
+                (clojure.java.io/writer \"outfile.txt\"))"
+  [[id1a id1b _] [id2a id2b _]]
+  (let [result (compare (string/upper-case id1a) (string/upper-case id2a))]
     (if-not (= result 0)
       result
-      (compare (string/upper-case n1b) (string/upper-case n2b)))))
+      (compare (string/upper-case id1b) (string/upper-case id2b)))))
+
+(defn normalize-link
+  "Given a representation of a link as [id1 id2 wt], returns the same
+  information in the same format, but with id1 and id2 in alphabetical order."
+  [[id1 id2 wt]]
+  (if (> 0 (compare (string/upper-case id1) (string/upper-case id2)))
+    [id1 id2 wt]
+    [id2 id1 wt]))
 
 (defn list-nodes
   [nnstru mask]
