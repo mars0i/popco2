@@ -19,7 +19,15 @@
     (for [i (range num-nodes)
           j (range i num-nodes)
           :when (> (mx/mget mat i j) 0)]
-        [(id-vec i) (id-vec j)])))
+        [(id-vec i) (id-vec j) (mx/mget mat i j)])))
+
+(defn compare-links
+  "A comparator function for use with sort applied to output of list-links."
+  [[n1a n1b] [n2a n2b]] ; ignore weight value, i.e. 3rd element
+  (let [result (compare (string/upper-case n1a) (string/upper-case n2a))]
+    (if-not (= result 0)
+      result
+      (compare (string/upper-case n1b) (string/upper-case n2b)))))
 
 (defn list-nodes
   [nnstru mask]
