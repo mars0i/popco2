@@ -1,5 +1,6 @@
 (ns popco.nn.pprint
   (:use [popco.nn.nets :as nn]
+        [utils.general :as ug]
         [clojure.pprint :only [cl-format]])
   (:require [clojure.core.matrix :as mx]
             [clojure.string :as string]))
@@ -9,6 +10,30 @@
 
 ;; TODO: Note that core.matrix/pm does some pretty-printing of matrices.
 ;;       Consider using it.  Or adding to it.
+
+(declare list-links-for-popco1-comparison list-links compare-links
+         normalize-link list-nodes list-propn-nodes list-analogy-nodes
+         list-both-nodes max-strlen collcolls-to-vecvecs format-top-labels
+         format-mat-with-row-labels format-matrix-with-labels format-nn
+         pprint-nn dotformat dotformat-nn dotprint-nn upper-case-link)
+
+(defn list-links-for-popco1-comparison
+  "Generates a sequence of links in a form useful for comparison with output
+  of popco1's list-constraints-for-popco2-comparison function.
+  Example usage:
+     (pprint (list-links-for-popco1-comparison a)
+             (clojure.java.io/writer \"outfile.txt\"))"
+  [nnstru]
+  (sort compare-links
+        (map (comp normalize-link upper-case-link)
+             (list-links nnstru))))
+
+(defn upper-case-link
+  "Given a representation of a link as 
+     [node-id-keyword node-id-keyword weight]
+  returns a represention that's similar, but with uppercased keyword names."
+  [[id1 id2 wt]]
+  [(ug/upper-case-keyword id1) (ug/upper-case-keyword id2) wt])
 
 (defn list-links
   [nnstru]
@@ -28,10 +53,10 @@
   (pprint (sort compare-links (list-links a)) 
                 (clojure.java.io/writer \"outfile.txt\"))"
   [[id1a id1b _] [id2a id2b _]]
-  (let [result (compare (string/upper-case id1a) (string/upper-case id2a))]
+  (let [result (compare id1a id2a)]
     (if-not (= result 0)
       result
-      (compare (string/upper-case id1b) (string/upper-case id2b)))))
+      (compare id1b id2b))))
 
 (defn normalize-link
   "Given a representation of a link as [id1 id2 wt], returns the same
