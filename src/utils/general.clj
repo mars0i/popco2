@@ -73,3 +73,15 @@
   element in the sequence reversed (but in the same overall order)."
   [xs]
   (map reverse xs))
+
+(defn upper-case-keyword
+  "Converts a keyword to its uppercase analogue."
+  [kw]
+  (keyword 
+    (clojure.string/upper-case (name kw))))
+
+(defn lower-case-keyword
+  "Converts a keyword to its lowercase analogue."
+  [kw]
+  (keyword 
+    (clojure.string/lower-case (name kw))))
