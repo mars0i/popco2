@@ -21,8 +21,7 @@
   "Generates a sequence of links in a form useful for comparison with output
   of popco1's list-constraints-for-popco2-comparison function.
   Example usage:
-     (pprint (list-links-for-popco1-comparison a)
-             (clojure.java.io/writer \"outfile.txt\"))"
+  (pprint (list-links-for-popco1-comparison a) (clojure.java.io/writer \"yo.txt\"))"
   [nnstru]
   (sort compare-links
         (map (comp normalize-link upper-case-link)
@@ -32,8 +31,8 @@
   "Given a representation of a link as 
      [node-id-keyword node-id-keyword weight]
   returns a represention that's similar, but with uppercased keyword names."
-  [[id1 id2 wt]]
-  [(ug/upper-case-keyword id1) (ug/upper-case-keyword id2) wt])
+  [[id1 id2 wt1 wt2]]
+  [(ug/upper-case-keyword id1) (ug/upper-case-keyword id2) wt1 wt2])
 
 (defn list-links
   [nnstru]
@@ -45,14 +44,15 @@
         num-nodes (count id-vec)]
     (for [i (range num-nodes)
           j (range i num-nodes)
-          :when (not (== (mx/mget mat i j) 0.0))]    ; there is no 'not==' function
-        [(id-vec i) (id-vec j) (mx/mget mat i j)])))
+          :when (or (not (== (mx/mget mat i j) 0.0))   ; there is no not== function
+                    (not (== (mx/mget mat j i) 0.0)))]
+        [(id-vec i) (id-vec j) (mx/mget mat i j) (mx/mget mat j i)])))
 
 (defn compare-links
   "A comparator function for use with sort on output of list-links. e.g.:
   (pprint (sort compare-links (list-links a)) 
                 (clojure.java.io/writer \"outfile.txt\"))"
-  [[id1a id1b _] [id2a id2b _]]
+  [[id1a id1b] [id2a id2b]]  ; ignore args after first two
   (let [result (compare id1a id2a)]
     (if-not (= result 0)
       result
@@ -61,10 +61,10 @@
 (defn normalize-link
   "Given a representation of a link as [id1 id2 wt], returns the same
   information in the same format, but with id1 and id2 in alphabetical order."
-  [[id1 id2 wt]]
+  [[id1 id2 wt1 wt2]]
   (if (> 0 (compare (string/upper-case id1) (string/upper-case id2)))
-    [id1 id2 wt]
-    [id2 id1 wt]))
+    [id1 id2 wt1 wt2]
+    [id2 id1 wt1 wt2]))
 
 (defn list-nodes
   [nnstru mask]
