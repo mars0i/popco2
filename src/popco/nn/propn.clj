@@ -29,7 +29,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO NOT VERIFIED
 (defn make-propn-to-extended-fams-ids
   "Create a map from each propn id to a vector of seqs of ids (not indexes) of propns.
   Each such seq records the ids of propns in one extended family of which the key propn

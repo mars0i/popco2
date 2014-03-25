@@ -52,24 +52,24 @@
 
 ;; TEMPORARY
 ;; differs from make-person in using old-add-to-analogy-net as a sanity check
-(defn old-make-person
-  "Creates a person with name (nm), propns with propn-ids, and a pre-constructed
-  propn-net and analogy-net.  Uses propns to construct propn-mask and
-  analogy-mask.  Important: The propn-net passed in should be new, with a fresh
-  weight matrix (:wt-mat), since each person may modify its own propn weight
-  matrix.  The analogy net can be shared with every other person, however, since
-  this will not be modified.  (The analogy mask might be modified.)"
-  [nm propns propn-net analogy-net]
-  (let [num-poss-propn-nodes (count (:node-vec propn-net))
-        num-poss-analogy-nodes (count (:node-vec analogy-net))
-        propn-ids (map :id propns)
-        pers (->Person nm 
-                       propn-net
-                       (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
-                       (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
-                       analogy-net
-                       (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
-                       (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
-    (doseq [propn propns] (cc/add-to-propn-net pers (:id propn)))   ; better to fill propn mask before
-    (doseq [propn propns] (cc/old-add-to-analogy-net pers (:id propn))) ;  analogy mask, so propns are known
-    pers))
+; (defn old-make-person
+;   "Creates a person with name (nm), propns with propn-ids, and a pre-constructed
+;   propn-net and analogy-net.  Uses propns to construct propn-mask and
+;   analogy-mask.  Important: The propn-net passed in should be new, with a fresh
+;   weight matrix (:wt-mat), since each person may modify its own propn weight
+;   matrix.  The analogy net can be shared with every other person, however, since
+;   this will not be modified.  (The analogy mask might be modified.)"
+;   [nm propns propn-net analogy-net]
+;   (let [num-poss-propn-nodes (count (:node-vec propn-net))
+;         num-poss-analogy-nodes (count (:node-vec analogy-net))
+;         propn-ids (map :id propns)
+;         pers (->Person nm 
+;                        propn-net
+;                        (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
+;                        (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
+;                        analogy-net
+;                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
+;                        (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
+;     (doseq [propn propns] (cc/add-to-propn-net pers (:id propn)))   ; better to fill propn mask before
+;     (doseq [propn propns] (cc/old-add-to-analogy-net pers (:id propn))) ;  analogy mask, so propns are known
+;     pers))

@@ -7,7 +7,6 @@
 (declare receive-propn add-to-propn-net try-add-to-analogy-net propn-already-unmasked? propn-still-masked?  
          propn-components-already-unmasked?  ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
-;; TODO UNVERIFIED
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to
 ;; the SALIENT node.
@@ -84,34 +83,34 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TEMPORARY DEFS FOR TESTING
-(def net-has-node? nn/node-unmasked?)
+; (def net-has-node? nn/node-unmasked?)
 ;; Keeping around as a sanity check of the new version above.
-(defn old-add-to-analogy-net
-  [pers propn]
-  (let [analogy-mask (:analogy-mask pers)
-        anet (:analogy-net pers)
-        aid-to-idx (:id-to-idx anet)
-        aid-to-ext-fam-idxs (:propn-mn-to-ext-fam-idxs anet)
-        analog-propns ((:propn-to-analogs anet) propn)
-
-        propn-mask (:propn-mask pers)
-        pnet (:propn-net pers)
-        pid-to-idx (:id-to-idx pnet)
-        pid-to-propn-idxs (:propn-to-descendant-propn-idxs pnet) 
-        
-        propn-net-has-node? (partial net-has-node? propn-mask)
-        unmask-mapnode! (partial nn/unmask! analogy-mask) ]
-
-    ;(pp/cl-format true "propn: ~s~%" propn) ; DEBUG
-    (when (every? propn-net-has-node? (pid-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
-      (doseq [a-propn analog-propns]                         ; now check any possible matches to sent propn
-        ;(pp/cl-format true "\ta-propn: ~s ~s ~s~%" a-propn (pid-to-idx a-propn) (propn-net-has-node? (pid-to-idx a-propn))) ; DEBUG
-        ;(pp/cl-format true "\tsub-a-propns propn-net-has-node?: ~s ~s~%" (pid-to-propn-idxs a-propn) (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; DEBUG
-        (when (and 
-                (propn-net-has-node? (pid-to-idx a-propn))                ; pers has this analog propn
-                (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; and its extended-family-propns 
-          ;; Then we can unmask all mapnodes corresponding to this propn pair:
-          (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; MAYBE: replace the OR by passing in the analog-struct?
-                        (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
-            ;(pp/cl-format true "\t\taid + idxs: ~s~%" aid (aid-to-ext-fam-idxs aid)) ; DEBUG
-            (ug/domap unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes
+; (defn old-add-to-analogy-net
+;   [pers propn]
+;   (let [analogy-mask (:analogy-mask pers)
+;         anet (:analogy-net pers)
+;         aid-to-idx (:id-to-idx anet)
+;         aid-to-ext-fam-idxs (:propn-mn-to-ext-fam-idxs anet)
+;         analog-propns ((:propn-to-analogs anet) propn)
+; 
+;         propn-mask (:propn-mask pers)
+;         pnet (:propn-net pers)
+;         pid-to-idx (:id-to-idx pnet)
+;         pid-to-propn-idxs (:propn-to-descendant-propn-idxs pnet) 
+;         
+;         propn-net-has-node? (partial net-has-node? propn-mask)
+;         unmask-mapnode! (partial nn/unmask! analogy-mask) ]
+; 
+;     ;(pp/cl-format true "propn: ~s~%" propn) ; DEBUG
+;     (when (every? propn-net-has-node? (pid-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
+;       (doseq [a-propn analog-propns]                         ; now check any possible matches to sent propn
+;         ;(pp/cl-format true "\ta-propn: ~s ~s ~s~%" a-propn (pid-to-idx a-propn) (propn-net-has-node? (pid-to-idx a-propn))) ; DEBUG
+;         ;(pp/cl-format true "\tsub-a-propns propn-net-has-node?: ~s ~s~%" (pid-to-propn-idxs a-propn) (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; DEBUG
+;         (when (and 
+;                 (propn-net-has-node? (pid-to-idx a-propn))                ; pers has this analog propn
+;                 (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; and its extended-family-propns 
+;           ;; Then we can unmask all mapnodes corresponding to this propn pair:
+;           (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; MAYBE: replace the OR by passing in the analog-struct?
+;                         (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
+;             ;(pp/cl-format true "\t\taid + idxs: ~s~%" aid (aid-to-ext-fam-idxs aid)) ; DEBUG
+;             (ug/domap unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes

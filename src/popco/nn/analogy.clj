@@ -52,9 +52,6 @@
                 the mapnode id is constructed).  This is redundant information,
                 but convenient. Note: The SEMANTIC node will have the key [nil nil]
                 since it's not built from analogs.
-  :propn-mn-to-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
-                associated component mapnodes, i.e. of the propn mapnode's 'family'.
-                Note: Has no entry for the SEMANTIC node.
   :propn-mn-to-ext-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
                 associated component mapnodes, components of argument propn-mapnodes, etc.
                 all the say down--i.e. of the propn-mapnode's 'extended family'.
@@ -62,6 +59,10 @@
   :propn-to-analogs -  A map from ids of propns to ids of their analogs--i.e.
                 of the propns that are the other sides of mapnodes.
   Also see docstring for write-semantic-links!."
+ ; REMOVED FROM DOCSTRING:
+ ; :propn-mn-to-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
+ ;               associated component mapnodes, i.e. of the propn mapnode's 'family'.
+ ;               Note: Has no entry for the SEMANTIC node.
   [propnseq1 propnseq2 pos-increment neg-increment sem-specs]
   (let [propn-pairs (match-propns propnseq1 propnseq2)
         propn-pair-ids (map #(map :id %) propn-pairs)
@@ -77,9 +78,9 @@
         analogy-map (assoc nn-map
                            :pos-wt-mat pos-wt-mat
                            :neg-wt-mat neg-wt-mat
-                           :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED [NOT NEEDED?]
-                           :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams) ; TODO UNTESTED
-                           :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ] ; TODO UNTESTED
+                           ; :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED [NOT NEEDED?]
+                           :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams)
+                           :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ]
     (sum-wts-to-mat! pos-wt-mat   ; add pos wts between mapnodes in same family
                      (matched-idx-fams fams id-to-idx) 
                      pos-increment)
