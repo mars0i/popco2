@@ -61,17 +61,22 @@
         lk2 links2]
     (list lk1 lk2)))
 
+;; **********
+;; **********
+;; CONSIDER USING clojure.data/diff for the following
+;; **********
+;; **********
 ;; FUNCTION TO RETURN BOTH MATCHED PAIRS AND UNMATCHED INDIVIDUAL LINKS, DIVIDED BY
 ;; SOURCE.  FIRST ATTEMPT INCOMPLETE AND NOT RIGHT ANYWAY:
-(defn matched-and-unmatched-links
-  [links1 links2]
-  (cond 
-    (or (empty? links1) (empty? links2))
-    [nil (concat links1 links2)]  ; if either is non-empty, we want it as second value
-
-    (same-nodes? (first links1) (first links2))
-    (let [[matched unmatched] (recur (rest links1) (rest links2))] ; won't work--not tail call
-        [(cons [(first links1) (first links2)] matched) unmatched]))
-  ;; unfinished
-  )
+;(defn matched-and-unmatched-links
+;  [links1 links2]
+;  (cond 
+;    (or (empty? links1) (empty? links2))
+;    [nil (concat links1 links2)]  ; if either is non-empty, we want it as second value
+;
+;    (same-nodes? (first links1) (first links2))
+;    (let [[matched unmatched] (recur (rest links1) (rest links2))] ; won't work--not tail call
+;        [(cons [(first links1) (first links2)] matched) unmatched]))
+;  ;; unfinished
+;  )
 
