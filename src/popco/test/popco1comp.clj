@@ -51,10 +51,6 @@
   (and (== wt1a wt2a)
        (== wt1b wt2b)))
 
-;; DON'T USE clojure.data/diff to compare links from old and new popcos,
-;; unless you want to deal with the confusing things diff does
-;; because it does recursive comparison within structures inside of strucutres.
-
 ;; Don't use clojure.data/diff for this; it recurses into vectors and produces unintelligible results.
 (defn matched-and-unmatched-links
   "NEED DOCSTRING"
