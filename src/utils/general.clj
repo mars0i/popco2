@@ -85,3 +85,7 @@
   [kw]
   (keyword 
     (clojure.string/lower-case (name kw))))
+
+(defn third [s] (nth s 2))
+
+(defn fourth [s] (nth s 3))
