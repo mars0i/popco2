@@ -1,5 +1,6 @@
 (ns popco.core.popco
   [:use [clojure.core.matrix :as mx]
+        [clojure.data :as da] ; for 'diff'
         popco.core.person
         popco.core.lot
         popco.core.communic
@@ -9,6 +10,7 @@
         popco.nn.settle
         popco.nn.testtools
         popco.nn.pprint
+        popco.test.popco1comp
         utils.general]
   [:import [popco.core.lot Propn Pred Obj]
            [popco.core.person Person]
