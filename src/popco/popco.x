@@ -1,3 +1,4 @@
+;;; This file contains deleted code that I might possibly want later
 
 (defn format-top-labels-for-csv
   "ADD DOCSTRING"
@@ -44,3 +45,52 @@
              (concat
                (format-top-labels-for-csv col-labels nums-width left-pad-width)
                (format-mat-with-row-labels-for-csv pv-mat row-labels nums-width)))))
+
+;; **********
+;; **********
+;; CONSIDER USING clojure.data/diff for the following
+;; **********
+;; **********
+;; FUNCTION TO RETURN BOTH MATCHED PAIRS AND UNMATCHED INDIVIDUAL LINKS, DIVIDED BY
+;; SOURCE.  FIRST ATTEMPT INCOMPLETE AND NOT RIGHT ANYWAY:
+;(defn matched-and-unmatched-links
+;  [links1 links2]
+;  (cond 
+;    (or (empty? links1) (empty? links2))
+;    [nil (concat links1 links2)]  ; if either is non-empty, we want it as second value
+;
+;    (same-nodes? (first links1) (first links2))
+;    (let [[matched unmatched] (recur (rest links1) (rest links2))] ; won't work--not tail call
+;        [(cons [(first links1) (first links2)] matched) unmatched]))
+;  ;; unfinished
+;  )
+
+
+;; inefficient but fast enough for its use case
+(defn matched-links
+  "Given two seqs of links in list-links format, generate a sequence of pairs
+  of links that have the same node ids.  Weights need not be the same.  Assumes
+  that links have been normalized as by popco.nn.pprint/normalize-link, i.e. 
+  within each link representation, the two ids are in alpha order, but links do
+  not have to be sorted within each of the two toplevel seqs.  Unmatched links
+  are simply ignored."
+  [links1 links2]
+  (for [[id1a id1b & _ :as lk1] links1
+        [id2a id2b & _ :as lk2] links2
+        :when (and (identical? id1a id2a)
+                  (identical? id1b id2b))]
+    (list lk1 lk2)))
+
+;; Maybe not useful since throws away non-matches
+(defn matched-links
+  "Given two seqs of links in list-links format, generate a sequence of pairs
+  of links that have the same node ids.  Weights need not be the same.  Assumes
+  that links have been normalized as by popco.nn.pprint/normalize-link, i.e. 
+  within each link representation, the two ids are in alpha order, but links do
+  not have to be sorted within each of the two toplevel seqs.  Unmatched links
+  are simply ignored."
+  [links1 links2]
+  (for [lk1 links1
+        lk2 links2
+        :when (same-nodes? lk1 lk2)]
+    (list lk1 lk2)))
