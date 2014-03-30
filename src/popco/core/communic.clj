@@ -4,23 +4,23 @@
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]))
 
-(declare receive-propn add-to-propn-net try-add-to-analogy-net propn-already-unmasked? propn-still-masked?  
+(declare receive-propn! add-to-propn-net! try-add-to-analogy-net propn-already-unmasked? propn-still-masked?  
          propn-components-already-unmasked?  ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to
 ;; the SALIENT node.
-(defn receive-propn
+(defn receive-propn!
   "ADD DOCSTRING"
-  [pers recd-propn]
-  (when (propn-still-masked? pers recd-propn) ; if recd propn already unmasked, the rest is already done
-    (add-to-propn-net pers recd-propn)
+  [pers recd-propn-id]
+  (when (propn-still-masked? pers recd-propn-id) ; if recd propn already unmasked, the rest is already done
+    (add-to-propn-net! pers recd-propn-id)
     (let [propn-to-extended-fams-ids (:propn-to-extended-fams-ids (:propn-net pers))
-          fams (propn-to-extended-fams-ids recd-propn)]
+          fams (propn-to-extended-fams-ids recd-propn-id)]
       (doseq [fam fams                           ; loop through all extended fams containing this propn
               propn fam]                         ; and each propn in that family
         (try-add-to-analogy-net pers propn)))))  ; see whether we can now add analogies using it
-;; This last loop redundantly tries to add analogies for recd-propn repeatedly, though will not do much after the first time
+;; This last loop redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time
 
 (defn add-to-propn-net!
   "ADD DOCSTRING"
