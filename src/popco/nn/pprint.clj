@@ -9,27 +9,39 @@
 ;; TODO: Note that core.matrix/pm does some pretty-printing of matrices.
 ;;       Consider using it.  Or adding to it.
 
-(declare list-links compare-links
+(declare list-analogy-links list-propn-links list-links compare-links
          normalize-link list-nodes list-propn-nodes list-analogy-nodes
          list-both-nodes max-strlen collcolls-to-vecvecs format-top-labels
          format-mat-with-row-labels format-matrix-with-labels format-nn
          pprint-nn dotformat dotformat-nn dotprint-nn)
 
+(defn list-analogy-links
+  "ADD DOCSTRING"
+  [pers]
+  (list-links (:analogy-net pers) (:analogy-mask pers)))
+
+(defn list-propn-links
+  "ADD DOCSTRING"
+  [pers]
+  (list-links (:propn-net pers) (:propn-mask pers)))
+
 (defn list-links
-  [nnstru]
-  "Return a seq of all node pairs that are linked in nnstru's matrix.
+  "[REVISE DOCSTRING] Return a seq of all node pairs that are linked in nnstru's matrix.
   Each link is represented in the output as a seq [id1 id2 wt1 wt2],
   where id* are node ids, and wt* are link weights in either direction,
   i.e. wt1 = wt2 for bidirectional links (the usual case).
   BUGS: Actually just checks whether weights are nonzero; zero-weight
   links will be ignored.  And assumes that all links are bidirectional."
+  [nnstru mask]
   (let [mat (nn/wt-mat nnstru)
         id-vec (:id-vec nnstru)
         num-nodes (count id-vec)]
     (for [i (range num-nodes)
           j (range i num-nodes)
-          :when (or (not (== (mx/mget mat i j) 0.0))   ; there is no not== function
-                    (not (== (mx/mget mat j i) 0.0)))]
+          :when (and (== 1.0 (mx/mget mask i))
+                     (== 1.0 (mx/mget mask j))
+                     (or (not (== (mx/mget mat i j) 0.0))   ; there is no not== function
+                         (not (== (mx/mget mat j i) 0.0))))]
         [(id-vec i) (id-vec j) (mx/mget mat i j) (mx/mget mat j i)])))
 
 (defn compare-links
