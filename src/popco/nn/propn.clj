@@ -6,6 +6,8 @@
 (ns popco.nn.propn
   (:use popco.core.lot)
   (:require [popco.nn.nets :as nn]
+            [popco.nn.analogy :as an]
+            [popco.core.person :as ps]
             [utils.general :as ug]
             [clojure.core.matrix :as mx])
   (:import [popco.core.lot Propn]
@@ -14,6 +16,7 @@
 (declare make-propn-to-extended-descendant-propn-idxs propn-extended-descendant-propns make-propn-to-extended-fams-ids make-propn-net)
 
 (defn make-propn-net
+  "ADD DOCSTRING"
   [propnseq]
   (let [node-seq (cons {:id :SALIENT} propnseq)
         num-nodes (count node-seq)
@@ -65,3 +68,17 @@
       (flatten 
         (cons (:id propn)
               (fam-propns (:args propn)))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn update-propn-links
+  [pers]
+  (let [propn-mask (:propn-mask pers)
+        analogy-mask (:analogy-mask pers)
+        propn-net (:propn-net pers)
+        analogy-net (:analogy-net pers)
+        an-ids-to-idx (:ids-to-idx analogy-net)]
+    ;; find propn mapnodes that are unmasked
+    ;; find the corresponding propn nodes
+    ;; and set the weight of the link between them
+    ))
