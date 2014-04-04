@@ -29,19 +29,26 @@
   [sym addlstr] 
   `(alter-meta! #'~sym update-in [:doc] str ~addlstr))
 
-;; By Ray Miller in response to my question at
-;; https://groups.google.com/forum/#!topic/clojure/VO8V8m6bfEI
 (defn rotations
+  "Generate all rotations of a sequence."
   [xs]
-  (take (count xs) 
-        (partition (count xs) 1  ; start again 1 past where you last started
-                   (cycle xs))))
+  (map #(concat (drop % xs) (take % xs))
+       (range (count xs))))
 
-;(defn mapseqs
-;  [f xs]
-;  (if (not (coll? (first xs)))
-;    (map f xs)
-;    (map (partial mapseqs f) xs)))
+;; Notes:
+;; You can do the same thing using split-at and reverse, but the speed
+;; is the same, and the drop/take version is easier to read.
+;; Another version, by Ray Miller in response to my question at
+;; https://groups.google.com/forum/#!topic/clojure/VO8V8m6bfEI
+;; My later version above is twice as fast, at least on seqs up to
+;; count = 100K, even though my version has to concat.
+;; (defn rotations
+;;   [xs]
+;;   (take (count xs) 
+;;         (partition (count xs) 1  ; start again 1 past where you last started
+;;                    (cycle xs))))
+;; See also https://groups.google.com/forum/#!topic/clojure/SjmevTjZPcQ
+;; for other versions.
 
 (defn println-and-ret
   "Print a single argument with println, then return that argument.
