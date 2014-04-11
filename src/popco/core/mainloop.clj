@@ -1,16 +1,42 @@
-(ns popco.core.mainloop )
+(ns popco.core.mainloop
+  (:require [popco.nn.settle :as st]
+            [popco.nn.nets :as nn]
+            [popco.core.communic :as cm]))
+
+(def tick (atom 0))
+(def folks (atom []))
+
+(declare communicate update-nets once popco)
+
+(defn popco
+  [iters]
+  (settle-analogy-nets folks)
+  (loop [i 0
+         population folks]
+    (when (< i iters)
+      (report-progress-to-console)
+      (swap! tick inc)
+      (recur (inc i) (once population)))))
 
 (defn once
-  [tick population]
-  (report-progress-to-console)
-  [(inc tick)
-   (->> population
-     (settle-analogy-nets)
-     (update-propn-nets-from-analogy-nets)
-     (settle-propn-nets)
-     (choose-conversers)
-     (choose-utterances)
-     (transmit-utterances))])
+  [population]
+  (->> population
+    (update-nets)
+    (communicate)))
+
+(defn communicate
+  [population]
+  (->> population
+    (cm/choose-conversers)
+    (cm/choose-utterances)
+    (cm/transmit-utterances)))
+
+(defn update-nets
+  [population]
+  (->>
+    (st/settle-analogy-nets)
+    (nn/update-propn-nets-from-analogy-nets)
+    (st/settle-propn-nets)))
 
 ;; Notes:
 
