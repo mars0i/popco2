@@ -1,38 +1,58 @@
 (ns popco.core.mainloop
+  (:use popco.core.population)
   (:require [popco.nn.settle :as st]
             [popco.nn.nets :as nn]
             [popco.core.communic :as cm]))
 
-(def tick (atom 0))
-(def folks (atom []))
+(def folks (atom (->Population 0 [])))
 
-(declare communicate update-nets once popco)
+(declare communicate update-nets once many popco report-popn report-to-console)
+
+(defn init-popco
+  []
+  ;; do a lot of initialization
+  ;; then:
+  (settle-analogy-nets folks))
 
 (defn popco
-  [iters]
-  (settle-analogy-nets folks)
-  (loop [i 0
-         population folks]
-    (when (< i iters)
-      (report-progress-to-console)
-      (swap! tick inc)
-      (recur (inc i) (once population)))))
+  [popn]
+  (map report-popn (many popn)))
+
+(defn many
+  [popn]
+  (iterate once popn))
+
+(defn report-pop
+  [popn]
+  ;; add other optional report functions here--write to file, etc.
+  (report-to-console popn))
+
+(defn erase-prev-str
+  "Erase len characters from the console."
+  [len]
+  (print (apply str (repeat len \backspace))))
+
+(defn report-to-console
+  [popn]
+  (let [tickstr (str (:tick popn))]
+    (erase-prev-str (count tickstr))
+    (print tickstr)))
 
 (defn once
-  [population]
-  (->> population
+  [popn]
+  (->> popn
     (update-nets)
     (communicate)))
 
 (defn communicate
-  [population]
-  (->> population
+  [popn]
+  (->> popn
     (cm/choose-conversers)
     (cm/choose-utterances)
     (cm/transmit-utterances)))
 
 (defn update-nets
-  [population]
+  [popn]
   (->>
     (st/settle-analogy-nets)
     (nn/update-propn-nets-from-analogy-nets)
