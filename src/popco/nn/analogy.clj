@@ -4,8 +4,7 @@
 ;; See lot.clj for documentation on Propns and their components.
 
 (ns popco.nn.analogy
-  (:use popco.core.lot
-        [clojure.set :only [union]])
+  (:use popco.core.lot)
   (:require [popco.nn.nets :as nn]
             [utils.general :as ug]
             [clojure.core.matrix :as mx]
