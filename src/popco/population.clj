@@ -1,7 +1,7 @@
 (ns popco.core.population
   (:require [utils.general :as ug]))
 
-(defrecord Population [members tick])
+(defrecord Population [tick members])
 
 (ug/add-to-docstr ->Propn
-  "\n  members of the population at time tick.")
+  "\n  Fields tick, members: members of the population at time tick.")
