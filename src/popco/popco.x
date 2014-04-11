@@ -94,3 +94,12 @@
         lk2 links2
         :when (same-nodes? lk1 lk2)]
     (list lk1 lk2)))
+
+(defn popco
+  [iters]
+  (loop [i 0
+         population folks]
+    (when (< i iters)
+      (report-progress-to-console)
+      (swap! tick inc)
+      (recur (inc i) (once population)))))
