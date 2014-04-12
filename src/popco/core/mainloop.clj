@@ -2,61 +2,78 @@
   (:use popco.core.population)
   (:require [popco.nn.settle :as st]
             [popco.nn.nets :as nn]
-            [popco.core.communic :as cm]))
+            [popco.core.communic :as cm]
+            [utils.general :as ug]))
 
 (def folks (atom (->Population 0 [])))
 
 (declare communicate update-nets once many popco report-popn report-to-console)
 
 (defn init-popco
-  []
+  ([] (init-popco folks))
+  ([popn]
   ;; do a lot of initialization
   ;; then:
-  (settle-analogy-nets folks))
+  (settle-analogy-nets popn)))
+
 
 (defn popco
   [popn]
+  "Returns a lazy sequence of population states, one for each tick,
+  with a between-tick reporting on each realized population state."
   (map report-popn (many popn)))
 
 (defn many
+  "Returns a lazy sequence of population states, one for each tick.
+  No between-tick reporting is done when the sequence is realized."
   [popn]
   (iterate once popn))
 
-(defn report-pop
-  [popn]
-  ;; add other optional report functions here--write to file, etc.
-  (report-to-console popn))
-
-(defn erase-prev-str
-  "Erase len characters from the console."
-  [len]
-  (print (apply str (repeat len \backspace))))
-
-(defn report-to-console
-  [popn]
-  (let [tickstr (str (:tick popn))]
-    (erase-prev-str (count tickstr))
-    (print tickstr)))
-
 (defn once
+  "Implements a single timestep's (tick's) worth of evolution of the population.
+  Returns the population in its new state."
   [popn]
   (->> popn
     (update-nets)
     (communicate)))
 
+;; Keep this function here, in case we decide instead to put its components separately into once.
 (defn communicate
+  "Implements a single timestep's (tick's) worth of communication.  Returns the population
+  in it's new state after communication has been performed."
   [popn]
   (->> popn
-    (cm/choose-conversers)
-    (cm/choose-utterances)
-    (cm/transmit-utterances)))
+       (cm/choose-conversers)
+       (cm/choose-utterances)
+       (cm/transmit-utterances)))
 
+;; Keep this function here, in case we decide instead to put its components separately into once.
 (defn update-nets
+  "Implements a single timestep's (tick's) worth of network settling and updating of the
+  proposition network from the analogy network.  Returns the population in its new state
+  after these processes have been performed."
   [popn]
   (->>
     (st/settle-analogy-nets)
     (nn/update-propn-nets-from-analogy-nets)
     (st/settle-propn-nets)))
+
+(defn report-pop
+  "Wrapper for any between-tick reporting functions: Indicate progress to
+  console, record activations to a file, update a plot, etc.  Should return
+  the population unchanged.  Note that report functions on internal popco 
+  processes such as communication must be inserted elsewhere."
+  [popn]
+  (report-to-console popn)
+  ;; add other optional report functions here
+  popn)
+
+(defn report-to-console
+  "Prints current tick to console after erasing the previous tick string."
+  [popn]
+  (let [tickstr (str (:tick popn))]
+    (ug/erase-chars (count tickstr)) ; new tick string is always at least as long as previous
+    (print tickstr)))
 
 ;; Notes:
 
