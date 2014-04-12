@@ -1,6 +1,7 @@
 (ns popco.core.popco
   [:use [clojure.core.matrix :as mx]
         ;[clojure.data :as da] ; for 'diff'
+        popco.core.mainloop
         popco.core.population
         popco.core.person
         popco.core.lot
@@ -28,8 +29,6 @@
 ;(set-current-implementation :ndarray)
 ;(set-current-implementation :vectorz)
 ;(set-current-implementation :clatrix)
-
-(def folks (atom (->Population 0 [])))
 
 (defn -main
   "I don't do a whole lot ... yet."
