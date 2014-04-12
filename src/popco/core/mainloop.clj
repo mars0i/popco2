@@ -3,24 +3,33 @@
   (:require [popco.nn.settle :as st]
             [popco.nn.nets :as nn]
             [popco.core.communic :as cm]
+            [popco.core.popco :as popco]
             [utils.general :as ug]))
-
-(def folks (atom (->Population 0 [])))
 
 (declare communicate update-nets once many popco report-popn report-to-console)
 
-(defn init-popco
-  ([] (init-popco folks))
-  ([popn]
-  ;; do a lot of initialization
-  ;; then:
-  (settle-analogy-nets popn)))
+;; NORMAL INITIALIZATION:
+;; Make two sets of propositions.
+;; Make sem-relations specs
+;; Make analogy network from the propositions and special constants and sem-relations.
+;; Make persons using a (perhaps improper) subset all of the propositions.  For each person:
+;;   Create analogy mask.
+;;   Create proposition network.
+;;   Create proposition mask.
+;;   etc.
+;; Put the persons into the sequence of persons in the population (normally this is folks).
+;; Do any initial settling of the analogy network that's desired.
 
+(defn init
+  ([] (init popco/folks))
+  ([popn]
+   ;; other initialization
+   (settle-analogy-nets popn)))
 
 (defn popco
   [popn]
-  "Returns a lazy sequence of population states, one for each tick,
-  with a between-tick reporting on each realized population state."
+  "Returns a lazy sequence of population states, one for each tick, with 
+  between-tick reporting on each realized population state."
   (map report-popn (many popn)))
 
 (defn many

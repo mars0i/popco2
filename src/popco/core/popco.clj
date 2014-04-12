@@ -1,6 +1,7 @@
 (ns popco.core.popco
   [:use [clojure.core.matrix :as mx]
-        [clojure.data :as da] ; for 'diff'
+        ;[clojure.data :as da] ; for 'diff'
+        popco.core.population
         popco.core.person
         popco.core.lot
         popco.core.communic
@@ -14,6 +15,7 @@
         utils.general]
   [:import [popco.core.lot Propn Pred Obj]
            [popco.core.person Person]
+           [popco.core.population Population]
            [popco.nn.nets AnalogyNet PropnNet]])
 ;; add :gen-class ?
 
@@ -26,6 +28,8 @@
 ;(set-current-implementation :ndarray)
 ;(set-current-implementation :vectorz)
 ;(set-current-implementation :clatrix)
+
+(def folks (atom (->Population 0 [])))
 
 (defn -main
   "I don't do a whole lot ... yet."
