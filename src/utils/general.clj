@@ -98,6 +98,6 @@
 (defn fourth [s] (nth s 3))
 
 (defn erase-chars
-  "Erase len characters from the console."
+  "Erase up to len characters from the console on the current line."
   [len]
   (print (apply str (repeat len \backspace))))
