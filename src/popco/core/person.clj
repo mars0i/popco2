@@ -6,6 +6,7 @@
 
 ;; Definition of person and related functions
 
+;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [nm 
                    propn-net propn-mask propn-activns 
                    analogy-net analogy-mask analogy-activns])
@@ -22,8 +23,6 @@
 ;; MAYBE: Consider making code below more efficient if popco is extended
 ;; to involve regularly creating new persons in the middle of simulation runs
 ;; e.g. with natural selection.
-
-(declare make-mask)
 
 (defn make-person
   "Creates a person with name (nm), propns with propn-ids, and a pre-constructed
