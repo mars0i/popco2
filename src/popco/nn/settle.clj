@@ -98,6 +98,15 @@
                (emul (mmul (nn/neg-wt-mat nnet) pos-activns) ; negatively weighted inputs scaled by
                      (emap dist-from-min activns))))))       ;  inputs' distances from -1.
 
+(defn settle-analogy-nets
+  "Currently a noop; returns the population unchanged."
+  [popn]
+  popn)
+
+(defn settle-propn-nets
+  "Currently a noop; returns the population unchanged."
+  [popn]
+  popn)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions

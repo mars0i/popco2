@@ -80,6 +80,23 @@
   (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
     (nn/unmask! analogy-mask idx)))
 
+(defn choose-conversers
+  "Currently a noop. Returns a pair containing an empty seq of converser pairs
+  and the population unchanged."
+  [popn]
+  [[] popn])
+
+(defn choose-utterances
+  "Currently a noop. Returns a pair containing an empty seq of 
+  converser/utterance tuples, and the population unchanged."
+  [[converser-pairs popn]]
+  [[] popn])
+
+(defn transmit-utterances
+  "Currently a noop. Returns the population unchanged."
+  [[conversations popn]]
+  popn)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TEMPORARY DEFS FOR TESTING

@@ -3,10 +3,11 @@
   (:require [popco.nn.settle :as st]
             [popco.nn.nets :as nn]
             [popco.core.communic :as cm]
-            [popco.core.popco :as popco]
             [utils.general :as ug]))
 
-(declare communicate update-nets once many popco report-popn report-to-console)
+(declare communicate update-nets once many popco report-popn report-to-console inc-tick)
+
+(def folks (atom (->Population 0 [])))
 
 ;; NORMAL INITIALIZATION:
 ;; Make two sets of propositions.
@@ -18,13 +19,16 @@
 ;;   Create proposition mask.
 ;;   etc.
 ;; Put the persons into the sequence of persons in the population (normally this is folks).
+;; 
+;; THIS is done by function 'init':
 ;; Do any initial settling of the analogy network that's desired.
+;; Other initialization.
 
 (defn init
-  ([] (init popco/folks))
+  ([] (init @folks))
   ([popn]
    ;; other initialization
-   (settle-analogy-nets popn)))
+   (st/settle-analogy-nets popn)))
 
 (defn popco
   [popn]
@@ -43,8 +47,9 @@
   Returns the population in its new state."
   [popn]
   (->> popn
-    (update-nets)
-    (communicate)))
+       (update-nets)
+       (communicate)
+       (inc-tick)))
 
 ;; Keep this function here, in case we decide instead to put its components separately into once.
 (defn communicate
@@ -62,12 +67,12 @@
   proposition network from the analogy network.  Returns the population in its new state
   after these processes have been performed."
   [popn]
-  (->>
+  (->> popn
     (st/settle-analogy-nets)
-    (nn/update-propn-nets-from-analogy-nets)
+    (nn/update-propn-wts-from-analogy-activns)
     (st/settle-propn-nets)))
 
-(defn report-pop
+(defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to
   console, record activations to a file, update a plot, etc.  Should return
   the population unchanged.  Note that report functions on internal popco 
@@ -83,6 +88,10 @@
   (let [tickstr (str (:tick popn))]
     (ug/erase-chars (count tickstr)) ; new tick string is always at least as long as previous
     (print tickstr)))
+
+(defn inc-tick
+  [popn]
+  (assoc popn :tick (inc (:tick popn))))
 
 ;; Notes:
 
