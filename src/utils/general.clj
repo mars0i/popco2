@@ -101,3 +101,9 @@
   "Erase up to len characters from the console on the current line."
   [len]
   (print (apply str (repeat len \backspace))))
+
+(defn dorun-nl
+  "Like dorun, but prints a newline to console before returning."
+  [s]
+  (dorun s)
+  (println))
