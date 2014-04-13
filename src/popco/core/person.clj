@@ -2,6 +2,7 @@
   (:require [utils.general :as ug]
             [popco.core.communic :as cc]
             [popco.nn.nets :as nn]
+            [popco.nn.propn :as pn]
             [clojure.core.matrix :as mx]))
 
 ;; Definition of person and related functions
@@ -27,16 +28,17 @@
 (defn make-person
   "Creates a person with name (nm), propns with propn-ids, and a pre-constructed
   propn-net and analogy-net.  Uses propns to construct propn-mask and
-  analogy-mask.  Important: The propn-net passed in should be new, with a fresh
-  weight matrix (:wt-mat), since each person may modify its own propn weight
-  matrix.  The analogy net can be shared with every other person, however, since
-  this will not be modified.  (The analogy mask might be modified.)"
+  analogy-mask.  The propn-net passed in will not be used directly, but will be
+  copied to make a propn-net with a new weight matrix (:wt-mat), since each 
+  person may modify its own propn weight matrix.  The analogy net can be shared 
+  with every other person, however, since this will not be modified.  (The 
+  analogy mask might be modified.)"
   [nm propns propn-net analogy-net]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
         pers (->Person nm 
-                       propn-net
+                       (pn/clone-propn-net propn-net)
                        (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
                        (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
                        analogy-net
