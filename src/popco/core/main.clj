@@ -1,4 +1,4 @@
-(ns popco.core.mainloop
+(ns popco.core.main
   (:use popco.core.population)
   (:require [popco.nn.settle :as st]
             [popco.nn.nets :as nn]
