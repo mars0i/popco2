@@ -139,4 +139,4 @@
 
 (def living-propns (concat virus-propns beast-propns))
 (def crime-propns (concat viral-crime-propns beastly-crime-propns))
-(def all-propns (concat living-propns crime-propns))
+(def all-propns (concat crime-propns living-propns))
