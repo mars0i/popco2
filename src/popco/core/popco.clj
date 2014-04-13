@@ -1,7 +1,7 @@
 (ns popco.core.popco
   [:use [clojure.core.matrix :as mx]
         ;[clojure.data :as da] ; for 'diff'
-        popco.core.mainloop
+        popco.core.main
         popco.core.population
         popco.core.person
         popco.core.lot
