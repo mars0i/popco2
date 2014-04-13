@@ -5,24 +5,13 @@
             [popco.core.communic :as cm]
             [utils.general :as ug]))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; SEE src/popco/start.md for notes. ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (declare communicate update-nets once many popco report-popn report-to-console inc-tick)
 
 (def folks (atom (->Population 0 [])))
-
-;; NORMAL INITIALIZATION:
-;; Make two sets of propositions.
-;; Make sem-relations specs
-;; Make analogy network from the propositions and special constants and sem-relations.
-;; Make persons using a (perhaps improper) subset all of the propositions.  For each person:
-;;   Create analogy mask.
-;;   Create proposition network.
-;;   Create proposition mask.
-;;   etc.
-;; Put the persons into the sequence of persons in the population (normally this is folks).
-;; 
-;; THIS is done by function 'init':
-;; Do any initial settling of the analogy network that's desired.
-;; Other initialization.
 
 (defn init
   ([] (init @folks))
