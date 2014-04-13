@@ -7,7 +7,6 @@
   (:use popco.core.lot)
   (:require [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
-            [popco.core.person :as ps]
             [utils.general :as ug]
             [clojure.core.matrix :as mx])
   (:import [popco.core.lot Propn]
@@ -16,7 +15,8 @@
 (declare make-propn-to-extended-descendant-propn-idxs propn-extended-descendant-propns make-propn-to-extended-fams-ids make-propn-net)
 
 (defn make-propn-net
-  "ADD DOCSTRING"
+  "Constructs a proposition netword object with fields specified in doctrings
+  of ->Propn-net and make-nn-core."
   [propnseq]
   (let [node-seq (cons {:id :SALIENT} propnseq)
         num-nodes (count node-seq)
@@ -29,6 +29,14 @@
     (nn/map->PropnNet
       (assoc propn-map
              :propn-to-extended-fams-ids (make-propn-to-extended-fams-ids propn-map)))))
+
+(defn clone-propn-net
+  "Make a PropnNet pnet that has its own new copy of pnet's wt-mat matrix, 
+  but possibly sharing pnet's other data structures."
+  [pnet]
+  (assoc pnet 
+         :wt-mat 
+         (mx/matrix (:wt-mat pnet))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
