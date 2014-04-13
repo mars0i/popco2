@@ -28,7 +28,8 @@
   ([] (init @folks))
   ([popn]
    ;; other initialization
-   (st/settle-analogy-nets popn)))
+   (st/settle-analogy-nets popn)
+   (reset! folks popn)))
 
 (defn popco
   [popn]
