@@ -151,7 +151,7 @@
   (doseq [j js]
     (symlink! mat wt-val i j)))
 
-(defn update-propn-wts-from-analogy-activns
+(defn update-propn-wts-from-analogy-activns!
   "Currently a noop; returns the population unchanged."
   [popn]
   popn)

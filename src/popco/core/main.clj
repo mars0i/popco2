@@ -17,14 +17,20 @@
   ([] (init @folks))
   ([popn]
    ;; other initialization
-   (st/settle-analogy-nets popn)
+   (st/settle-analogy-nets! popn)
    (reset! folks popn)))
 
 (defn popco
-  [popn]
   "Returns a lazy sequence of population states, one for each tick, with 
-  between-tick reporting on each realized population state."
-  (map report-popn (many popn)))
+  between-tick reporting on each realized population state, starting from
+  initial population state popn, or folks by default."
+  ([] (popco folks))
+  ([popn] (report (many popn))))
+
+(defn report
+  "Apply between-tick reporting to a sequence of population states."
+  [popns]
+  (map report-popn popns))
 
 (defn many
   "Returns a lazy sequence of population states, one for each tick.
@@ -58,9 +64,9 @@
   after these processes have been performed."
   [popn]
   (->> popn
-    (st/settle-analogy-nets)
-    (nn/update-propn-wts-from-analogy-activns)
-    (st/settle-propn-nets)))
+    (st/settle-analogy-nets!)
+    (nn/update-propn-wts-from-analogy-activns!)
+    (st/settle-propn-nets!)))
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to
