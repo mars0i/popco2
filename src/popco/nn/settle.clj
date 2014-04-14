@@ -1,6 +1,7 @@
 (ns popco.nn.settle
   (:use clojure.core.matrix)
-  (:require [popco.nn.nets :as nn]))
+  (:require [popco.nn.nets :as nn]
+            [utils.general :as ug]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NOTES
@@ -98,15 +99,28 @@
                (emul (mmul (nn/neg-wt-mat nnet) pos-activns) ; negatively weighted inputs scaled by
                      (emap dist-from-min activns))))))       ;  inputs' distances from -1.
 
-(defn settle-analogy-nets
-  "Currently a noop; returns the population unchanged."
-  [popn]
-  popn)
+(defn settle-net!
+  "NOOP: FIXME"
+  [net]
+  net)
 
-(defn settle-propn-nets
+(defn settle-analogy-net!
+  [pers]
+  (settle-net (:analogy-net pers)))
+
+(defn settle-analogy-nets!
   "Currently a noop; returns the population unchanged."
   [popn]
-  popn)
+  (ug/domap settle-analogy-net! (:members popn)))
+
+(defn settle-propn-net!
+  [pers]
+  (settle-net (:propn-net pers)))
+
+(defn settle-propn-nets!
+  "Currently a noop; returns the population unchanged."
+  [popn]
+  (ug/domap settle-propn-net! (:members popn)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions
