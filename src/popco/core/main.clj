@@ -43,19 +43,11 @@
   Returns the population in its new state."
   [popn]
   (->> popn
-       (update-nets)
-       (communicate)
-       (inc-tick)))
-
-;; Keep this function here, in case we decide instead to put its components separately into once.
-(defn communicate
-  "Implements a single timestep's (tick's) worth of communication.  Returns the population
-  in it's new state after communication has been performed."
-  [popn]
-  (->> popn
-       (cm/choose-conversers)
-       (cm/choose-utterances)
-       (cm/transmit-utterances)))
+    (update-nets)
+    (doall)       ; make sure that changes to vectors, matrices made before communication [NEEDED?]
+    (communicate)
+    (doall)       ; make sure that changes to vectors, matrices made before settling [NEEDED?]
+    (inc-tick)))
 
 ;; Keep this function here, in case we decide instead to put its components separately into once.
 (defn update-nets
@@ -65,8 +57,20 @@
   [popn]
   (->> popn
     (st/settle-analogy-nets!)
+    ; (doall)  ; make sure changes to analogy activns made before updating propn net weights [NEEDED?]
     (nn/update-propn-wts-from-analogy-activns!)
+    (doall)  ; make sure changes to propn matrix made before settling it [NEEDED?]
     (st/settle-propn-nets!)))
+
+;; Keep this function here, in case we decide instead to put its components separately into once.
+(defn communicate
+  "Implements a single timestep's (tick's) worth of communication.  Returns the population
+  in it's new state after communication has been performed."
+  [popn]
+  (->> popn
+    (cm/choose-conversers)  ; purely functional
+    (cm/choose-utterances)  ; purely functional
+    (cm/transmit-utterances))) ; this might not be purely functional
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to
