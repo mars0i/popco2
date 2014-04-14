@@ -9,7 +9,7 @@
 ;; SEE src/popco/start.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare communicate update-nets once many popco report-popn report-to-console inc-tick)
+(declare communicate update-nets once many popco report-popn report-to-console inc-tick report)
 
 (def folks (atom (->Population 0 [])))
 

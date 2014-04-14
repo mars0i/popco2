@@ -106,21 +106,21 @@
 
 (defn settle-analogy-net!
   [pers]
-  (settle-net (:analogy-net pers)))
+  (settle-net! (:analogy-net pers)))
 
 (defn settle-analogy-nets!
   "Currently a noop; returns the population unchanged."
   [popn]
-  (ug/domap settle-analogy-net! (:members popn)))
+  (assoc popn :members (map settle-analogy-net! (:members popn))))
 
 (defn settle-propn-net!
   [pers]
-  (settle-net (:propn-net pers)))
+  (settle-net! (:propn-net pers)))
 
 (defn settle-propn-nets!
   "Currently a noop; returns the population unchanged."
   [popn]
-  (ug/domap settle-propn-net! (:members popn)))
+  (assoc popn :members (map settle-propn-net! (:members popn))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions
