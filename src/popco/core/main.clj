@@ -65,6 +65,8 @@
 ;;; I'M ONLY CHANGING THE ACTIVN VECTORS IN THE SETTLE FUNCTIONS.
 ;;; MAYBE THE MIDDLE ONE SHOULD BE IMPERATIVE, THOUGH.
 ;;; AND WRAP DOALLs or use DOSEQ/DOMAP OTHERWISE.
+;;; 
+;;; AND SEE cloj/doc/unrealizedrealization.clj.  Oy.
 
 ;; Keep this function here, in case we decide instead to put its components separately into once.
 (defn communicate
