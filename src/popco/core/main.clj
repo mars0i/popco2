@@ -57,10 +57,14 @@
   [popn]
   (->> popn
     (st/settle-analogy-nets!)
-    ; (doall)  ; make sure changes to analogy activns made before updating propn net weights [NEEDED?]
+    (doall)  ; make sure changes to analogy activns made before updating propn net weights [NEEDED?]
     (nn/update-propn-wts-from-analogy-activns!)
     (doall)  ; make sure changes to propn matrix made before settling it [NEEDED?]
     (st/settle-propn-nets!)))
+;;; TODO SHOULD THESE REALLY BE SIDE-EFFECTING? CAN'T I DO IT FUNCTIONALLY?
+;;; I'M ONLY CHANGING THE ACTIVN VECTORS IN THE SETTLE FUNCTIONS.
+;;; MAYBE THE MIDDLE ONE SHOULD BE IMPERATIVE, THOUGH.
+;;; AND WRAP DOALLs or use DOSEQ/DOMAP OTHERWISE.
 
 ;; Keep this function here, in case we decide instead to put its components separately into once.
 (defn communicate

@@ -112,6 +112,7 @@
   "Currently a noop; returns the population unchanged."
   [popn]
   (assoc popn :members (map settle-analogy-net! (:members popn))))
+;; SEE NOTE after settle-propn-nets!
 
 (defn settle-propn-net!
   [pers]
@@ -121,6 +122,13 @@
   "Currently a noop; returns the population unchanged."
   [popn]
   (assoc popn :members (map settle-propn-net! (:members popn))))
+;; If this is really only side-effecting, then it could just
+;; be done like this:
+;; (defn settle-propn-nets!
+;;   [popn]
+;;   (domap settle-propn-net! (:members popn)))
+;; i.e. there's no realy do do the assoc.  You're just modifying the
+;; persons in place.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions
