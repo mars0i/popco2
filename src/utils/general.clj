@@ -107,3 +107,31 @@
   [s]
   (dorun s)
   (println))
+
+(defn skip-realized?
+  "Tests whether the first LazySeq instance in the sequence xs has been 
+  realized, skipping over e.g. Cons's before that point.  (e.g. 'iterate'
+  returns a Cons followed by a LazySeq.  If you want to know whether it's 
+  realized beyond the Cons, you have to check its rest.)"
+  [xs]
+  (if (instance? clojure.lang.IPending xs)
+    (realized? xs)
+    (if (empty? xs)
+      true
+      (recur (rest xs)))))
+
+;; Compare skip-realized? with the follwoing, which tests whether there's any unrealized part anywhere down the line.
+;; By A. Webb in response to a question of mine, at https://groups.google.com/d/msg/clojure/5rwZA-Bzp9A/dgChQhbeF_AJ
+;(defn seq-realized?
+;  "Returns false if there is an unrealized tail in the sequence,
+;  otherwise true."
+;  [s]
+;  (if (instance? clojure.lang.IPending s)
+;    (if (realized? s)
+;      (if (seq s)
+;        (recur (rest s))
+;        true)
+;      false)
+;    (if (seq s)
+;      (recur (rest s))
+;      true)))
