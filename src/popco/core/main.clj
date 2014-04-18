@@ -25,18 +25,17 @@
   between-tick reporting on each realized population state, starting from
   initial population state popn, or folks by default."
   ([] (popco folks))
-  ([popn] (report (many popn))))
-
-(defn report
-  "Apply between-tick reporting to a sequence of population states."
-  [popns]
-  (map report-popn popns))
+  ([popn] (map report-popn (many popn))))
 
 (defn many
   "Returns a lazy sequence of population states, one for each tick.
   No between-tick reporting is done when the sequence is realized."
   [popn]
   (iterate once popn))
+
+;; This should be obvious:
+;; Any side-effects caused by code in 'once' will occur if it's
+;; called on its own, but not on unrealized calls to it under 'iterate'.
 
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
