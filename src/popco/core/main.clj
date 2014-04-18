@@ -9,7 +9,7 @@
 ;; SEE src/popco/start.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare communicate update-nets once many popco report-popn report-to-console inc-tick report)
+(declare update-nets once many popco report-popn report-to-console inc-tick report)
 
 (def folks (atom (->Population 0 [])))
 
@@ -41,12 +41,11 @@
   "Implements a single timestep's (tick's) worth of evolution of the population.
   Returns the population in its new state."
   [popn]
-  (->> popn
-    (update-nets)
-    (doall)       ; make sure that changes to vectors, matrices made before communication [NEEDED?]
-    (communicate)
-    (doall)       ; make sure that changes to vectors, matrices made before settling [NEEDED?]
-    (inc-tick)))
+  (->Population
+    (inc (:tick popn))
+    (doall ; one or both of these steps might not be purely functional
+      (cm/communicate 
+        (update-nets (:members popn))))))
 
 ;; Keep this function here, in case we decide instead to put its components separately into once.
 (defn update-nets
@@ -66,16 +65,6 @@
 ;;; AND WRAP DOALLs or use DOSEQ/DOMAP OTHERWISE.
 ;;; 
 ;;; AND SEE cloj/doc/unrealizedrealization.clj.  Oy.
-
-;; Keep this function here, in case we decide instead to put its components separately into once.
-(defn communicate
-  "Implements a single timestep's (tick's) worth of communication.  Returns the population
-  in it's new state after communication has been performed."
-  [popn]
-  (->> popn
-    (cm/choose-conversers)  ; purely functional
-    (cm/choose-utterances)  ; purely functional
-    (cm/transmit-utterances))) ; this might not be purely functional
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to

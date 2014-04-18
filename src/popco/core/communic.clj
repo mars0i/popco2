@@ -1,11 +1,61 @@
 (ns popco.core.communic
   (:require [utils.general :as ug]
             ;[clojure.pprint :as pp] ; only if needed for cl-format
+            [popco.core.lot :as lot]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]))
 
-(declare receive-propn! add-to-propn-net! try-add-to-analogy-net propn-already-unmasked? propn-still-masked?  
-         propn-components-already-unmasked?  ids-to-poss-mn-id unmask-mapnode-extended-family!)
+(declare communicate choose-conversations choose-person-conversers choose-utterance
+         receive-propn! add-to-propn-net! try-add-to-analogy-net! propn-still-masked?
+         propn-already-unmasked? propn-components-already-unmasked? ids-to-poss-mn-id 
+         unmask-mapnode-extended-family! transmit-utterances choose-thought)
+
+(defn communicate
+  "Implements a single timestep's (tick's) worth of communication.  Given a
+  sequence of persons, constructs conversations and returns the persons, updated
+  to reflect the conversations."
+  [persons]
+  (transmit-utterances persons (choose-conversations persons)))
+
+;; NOTE transmit-utterances might not be purely functional.
+(defn transmit-utterances
+  "Currently a noop: Returns the persons unchanged.  Should return a sequence
+  persons updated to reflect the conversations.  (See choose-conversations for
+  the structure of conversations.)  (Note we need the persons
+  argument as well as conversations, so that we don't lose persons that no one 
+  speaks to.)"
+  [persons conversations]
+  persons)
+
+(defn choose-conversations
+  "Given a sequence of persons, returns a sequence of conversations, i.e.
+  maps with keys :speaker, :listener, and :propn, indicating that speaker
+  will communicate propn to listener."
+  [persons]
+  (map choose-utterance 
+       (mapcat choose-person-conversers persons)))
+
+(defn choose-person-conversers
+  "Currently a noop. Given a person pers, returns a converser-pair, a sequence 
+  of 2-element maps with keys :speaker and :listener, where :speaker is pers, 
+  and :listener is another person."
+  [pers]
+  [])
+
+(defn choose-utterance
+  "Currently a noop. Given a converser-pair, a map with keys :speaker and 
+  :listener, chooses a proposition from speaker's beliefs to communicate to 
+  listener, and returns a conversation, i.e. a map with the proposition assoc'ed
+  into the converser-pair map, with new key :propn"
+  [converser-pair]
+  (assoc converser-pair 
+         :propn (choose-thought (:speaker converser-pair))))
+
+(defn choose-thought
+  "Currently a noop: Returns a dummy proposition."
+  [pers]
+  (lot/->Propn (lot/->Pred :TODO) [] :TODO))
+  
 
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to
@@ -19,7 +69,7 @@
           fams (propn-to-extended-fams-ids recd-propn-id)]
       (doseq [fam fams                           ; loop through all extended fams containing this propn
               propn fam]                         ; and each propn in that family
-        (try-add-to-analogy-net pers propn)))))  ; see whether we can now add analogies using it
+        (try-add-to-analogy-net! pers propn)))))  ; see whether we can now add analogies using it
 ;; This last loop redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time
 
 (defn add-to-propn-net!
@@ -79,23 +129,6 @@
    mn-id]
   (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
     (nn/unmask! analogy-mask idx)))
-
-(defn choose-conversers
-  "Currently a noop. Returns a pair containing an empty seq of converser pairs
-  and the population unchanged."
-  [popn]
-  [[] popn])
-
-(defn choose-utterances
-  "Currently a noop. Returns a pair containing an empty seq of 
-  converser/utterance tuples, and the population unchanged."
-  [[converser-pairs popn]]
-  [[] popn])
-
-(defn transmit-utterances
-  "Currently a noop. Returns the population unchanged."
-  [[conversations popn]]
-  popn)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -103,3 +103,14 @@
       (report-progress-to-console)
       (swap! tick inc)
       (recur (inc i) (once population)))))
+
+(defn once
+  "Implements a single timestep's (tick's) worth of evolution of the population.
+  Returns the population in its new state."
+  [popn]
+  (->> popn
+    (update-nets)
+    (doall)       ; make sure that changes to vectors, matrices made before communication [NEEDED?]
+    (cm/communicate)
+    (doall)       ; make sure that changes to vectors, matrices made before settling [NEEDED?]
+    (inc-tick)))
