@@ -86,7 +86,8 @@
                (iterate (partial next-activns (net-key pers))
                         (activns-key pers)))))
 
-;; SHOULD I USE add-product here for the inner addition of emuls?
+;; SHOULD I USE add-product HERE FOR THE INNER ADDITION OF EMULS?
+;; 
 ;; NOTE: For This way of doing matrix multiplication using (mmul <matrix> <vector>),
 ;; <vector> is 1D and is treated as a column vector.  This means that the weight
 ;; at index i,j represents the directional link from node j to node i, since j is
