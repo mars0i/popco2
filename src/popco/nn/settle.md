@@ -32,9 +32,6 @@ with A as a row vector and B as a column vector.)
 `emap`: Maps a function over each element of a matrix to produce a new
 matrix.
 
-Convention: Vector names are all-lower-case.  Matrices have initial cap
-in each component of the name.
-
 Network settling (with Grossberg algorithm):
 
 NOTE: 

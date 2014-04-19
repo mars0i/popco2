@@ -5,17 +5,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NOTES
-
-;; References:
-;; 1. network.lisp in POPCO, which is based on Thagard's ACME network.lisp.
-;; 2. "HT": Holyoak & Thagard 1989, "Analogue Retrieval by Constraint
-;; Satisfaction", Cognitive Science 13, pp. 295-355. See pp. 313, 315.
-;; 3. "MR": Abrams 2013, "A Moderate Role for Cognitive Models in Agent-Based 
-;; Modeling of Cultural Change", Complex Adaptive Systems Modeling 2013.
-;; Note that the latter has errors.
-;; 4. Grossberg. S. (1978). A theory of visual coding, memory, and development.
-;; In E.L.J. Leeuwenberg & H.F.J. Buffart (Eds.), Formal theories of visual 
-;; perception. New York: Wiley.
+;;; See settle.md for more notes, including abbreviations, overview of
+;;; algorithm, article references, tips, etc.
 
 ;; Note the distinction in clojure.core.matrix between:
 ;; emul: Multiply together corresponding elements of matrices,
@@ -30,9 +21,6 @@
 ;; emap maps a function over each element of a matrix to produce a new
 ;;      matrix.
 
-;; Convention: Vector names are all-lower-case.  Matrices have initial cap
-;; in each component of the name.
-
 (declare next-activns settle-net settle-analogy-net settle-propn-net
          update-propn-wts-from-analogy-activns update-person-nets update-nets
          clip-to-extrema dist-from-max dist-from-min)
@@ -41,7 +29,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
-;; See settle.md for notes.
 
 (defn update-nets
   "Implements a single timestep's (tick's) worth of network settling and updating of the
@@ -86,6 +73,9 @@
                (iterate (partial next-activns (net-key pers))
                         (activns-key pers)))))
 
+;; GROSSBERG SETTLING ALGORITHM
+;; See settle.md for explanation and reference sources.
+;;
 ;; SHOULD I USE add-product HERE FOR THE INNER ADDITION OF EMULS?
 ;; 
 ;; NOTE: For This way of doing matrix multiplication using (mmul <matrix> <vector>),
