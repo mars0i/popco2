@@ -53,25 +53,26 @@
 (defn settle-analogy-net
   "Return person pers with its analogy net updated by settle-iters of settling."
   ([pers] 
-   (settle-analogy-net pers 0))
+   (settle-analogy-net pers 1))
   ([pers iters]
-   (settle-net pers :analogy-activns :analogy-net iters)))
+   (settle-net pers :analogy-net :analogy-activns iters)))
 
 (defn settle-propn-net
   "Return person pers with its propn net updated by settle-iters of settling."
   ([pers] 
-   (settle-propn-net pers 0))
+   (settle-propn-net pers 1))
   ([pers iters]
-   (settle-net pers :propn-activns :propn-net iters)))
+   (settle-net pers :propn-net :propn-activns iters)))
 
 (defn settle-net
   "Return person pers with the net selected by net-key and activns-key updated
   by iters rounds of settling."
   [pers net-key activns-key iters]
   (assoc pers activns-key
-         (take iters
-               (iterate (partial next-activns (net-key pers))
-                        (activns-key pers)))))
+         (nth 
+           (iterate (partial next-activns (net-key pers))
+                    (activns-key pers))
+           iters)))
 
 ;; GROSSBERG SETTLING ALGORITHM
 ;; See settle.md for explanation and reference sources.
