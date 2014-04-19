@@ -9,6 +9,13 @@
 ;; SEE src/popco/start.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO SEMANTIC is settling rather than sticking at 1.0.  (use the mask??)
+;; TODO SEMANTIC is settling rather than sticking at 1.0.  (use the mask??)
+;; TODO SEMANTIC is settling rather than sticking at 1.0.  (use the mask??)
+
+;; TODO Don't I have to clip something to 0.5 to avoid bad cycling?
+;; TODO Don't I have to clip something to 0.5 to avoid bad cycling?
+
 (declare once many popco report-popn report-to-console inc-tick report)
 
 (def folks (atom (->Population 0 [])))
