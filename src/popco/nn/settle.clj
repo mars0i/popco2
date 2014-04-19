@@ -35,6 +35,8 @@
 
 (declare clip-to-extrema dist-from-max dist-from-min)
 
+(def settling-iters 5)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
 
@@ -87,48 +89,73 @@
 (defn next-activns 
   "Calculate a new set of activations for nodes starting from the current
   activations in vector activns, using network link weights in constraint
-  network nnet to update activations from neighbors using the Grossberg (1978) 
+  network net to update activations from neighbors using the Grossberg (1978) 
   algorithm as described in Holyoak & Thagard's (1989) \"Analogue Retrieval
   by Constraint Satisfaction\"."
-  [activns nnet]
+  [net activns]
   (let [pos-activns (emap nn/posify activns)] ; Negative activations are ignored as inputs.
     (emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
           (add (emul 0.9 activns)                            ; Sum into decayed activations ...
-               (emul (mmul (nn/pos-wt-mat nnet) pos-activns) ; positively weighted inputs scaled by
+               (emul (mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
                      (emap dist-from-max activns))           ;  inputs' distances from 1, and
-               (emul (mmul (nn/neg-wt-mat nnet) pos-activns) ; negatively weighted inputs scaled by
+               (emul (mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
                      (emap dist-from-min activns))))))       ;  inputs' distances from -1.
 
-(defn settle-net!
-  "NOOP: FIXME"
-  [net]
-  net)
+(defn settle-net
+  "Return person pers with the net selected by net-key and activns-key updated
+  by iters rounds of settling."
+  [pers net-key activns-key iters]
+  (assoc pers activns-key
+         (take iters
+               (iterate (partial next-activns (net-key pers))
+                        (activns-key pers)))))
 
-(defn settle-analogy-net!
+(defn settle-analogy-net
+  "Return person pers with its analogy net updated by settle-iters of settling."
+  ([pers] 
+   (settle-analogy-net pers 0))
+  ([pers iters]
+   (settle-net pers :analogy-activns :analogy-net iters)))
+
+(defn settle-propn-net
+  "Return person pers with its propn net updated by settle-iters of settling."
+  ([pers] 
+   (settle-propn-net pers 0))
+  ([pers iters]
+   (settle-net pers :propn-activns :propn-net iters)))
+
+(defn update-propn-wts-from-analogy-activns
+  "Currently a noop; returns the person unchanged."
   [pers]
-  (settle-net! (:analogy-net pers)))
+  pers)
 
-(defn settle-analogy-nets!
-  "Currently a noop; returns the population unchanged."
-  [popn]
-  (assoc popn :members (map settle-analogy-net! (:members popn))))
-;; SEE NOTE after settle-propn-nets!
-
-(defn settle-propn-net!
+(defn update-person-nets
+  "Perform one tick's updating of the networks of a single person."
   [pers]
-  (settle-net! (:propn-net pers)))
+  (-> pers
+    (settle-analogy-net  settling-iters) ; is this step necessary??
+    (update-propn-wts-from-analogy-activns)
+    (settle-propn-net    settling-iters)))
 
-(defn settle-propn-nets!
-  "Currently a noop; returns the population unchanged."
-  [popn]
-  (assoc popn :members (map settle-propn-net! (:members popn))))
-;; If this is really only side-effecting, then it could just
-;; be done like this:
-;; (defn settle-propn-nets!
-;;   [popn]
+(defn update-nets
+  "Implements a single timestep's (tick's) worth of network settling and updating of the
+  proposition network from the analogy network.  Returns the population in its new state
+  after these processes have been performed."
+  [persons]
+  (map update-person-nets persons))
+
+;(defn settle-analogy-nets!
+;  "Currently a noop; returns the population unchanged."
+;  [popn]
+;  (assoc popn :members (map settle-analogy-net! (:members popn))))
+;;; SEE NOTE after settle-propn-nets!
+;
+;(defn settle-propn-nets!
+;  "Currently a noop; returns the population unchanged."
+;  [persons]
+;  (map settle-propn-net! persons))
+;;; If this is really only side-effecting, then it could just be done like this:
 ;;   (domap settle-propn-net! (:members popn)))
-;; i.e. there's no realy do do the assoc.  You're just modifying the
-;; persons in place.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions

@@ -9,16 +9,16 @@
 ;; SEE src/popco/start.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare update-nets once many popco report-popn report-to-console inc-tick report)
+(declare once many popco report-popn report-to-console inc-tick report)
 
 (def folks (atom (->Population 0 [])))
 
 (defn init
   ([] (init @folks))
   ([popn]
-   ;; other initialization
-   (st/settle-analogy-nets! popn)
-   (reset! folks popn)))
+   (reset! folks 
+           (assoc popn :members
+                  (map st/settle-analogy-net (:members popn))))))
 
 (defn popco
   "Returns a lazy sequence of population states, one for each tick, with 
@@ -43,28 +43,9 @@
   [popn]
   (->Population
     (inc (:tick popn))
-    (doall ; one or both of these steps might not be purely functional
+    (doall    ; one or both of these steps might not be purely functional:
       (cm/communicate 
-        (update-nets (:members popn))))))
-
-;; Keep this function here, in case we decide instead to put its components separately into once.
-(defn update-nets
-  "Implements a single timestep's (tick's) worth of network settling and updating of the
-  proposition network from the analogy network.  Returns the population in its new state
-  after these processes have been performed."
-  [popn]
-  (->> popn
-    (st/settle-analogy-nets!)
-    (doall)  ; make sure changes to analogy activns made before updating propn net weights [NEEDED?]
-    (nn/update-propn-wts-from-analogy-activns!)
-    (doall)  ; make sure changes to propn matrix made before settling it [NEEDED?]
-    (st/settle-propn-nets!)))
-;;; TODO SHOULD THESE REALLY BE SIDE-EFFECTING? CAN'T I DO IT FUNCTIONALLY?
-;;; I'M ONLY CHANGING THE ACTIVN VECTORS IN THE SETTLE FUNCTIONS.
-;;; MAYBE THE MIDDLE ONE SHOULD BE IMPERATIVE, THOUGH.
-;;; AND WRAP DOALLs or use DOSEQ/DOMAP OTHERWISE.
-;;; 
-;;; AND SEE cloj/doc/unrealizedrealization.clj.  Oy.
+        (st/update-nets (:members popn))))))
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to

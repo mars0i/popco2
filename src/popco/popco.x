@@ -114,3 +114,22 @@
     (cm/communicate)
     (doall)       ; make sure that changes to vectors, matrices made before settling [NEEDED?]
     (inc-tick)))
+
+(defn update-nets
+  "Implements a single timestep's (tick's) worth of network settling and updating of the
+  proposition network from the analogy network.  Returns the population in its new state
+  after these processes have been performed."
+  [persons]
+  (map update-person-net persons))
+  (->> persons
+    (st/settle-analogy-net!)
+    (doall)  ; make sure changes to analogy activns made before updating propn net weights [NEEDED?]
+    (nn/update-propn-wts-from-analogy-activns!)
+    (doall)  ; make sure changes to propn matrix made before settling it [NEEDED?]
+    (st/settle-propn-nets!)))
+;;; TODO SHOULD THESE REALLY BE SIDE-EFFECTING? CAN'T I DO IT FUNCTIONALLY?
+;;; I'M ONLY CHANGING THE ACTIVN VECTORS IN THE SETTLE FUNCTIONS.
+;;; MAYBE THE MIDDLE ONE SHOULD BE IMPERATIVE, THOUGH.
+;;; AND WRAP DOALLs or use DOSEQ/DOMAP OTHERWISE.
+;;; 
+;;; AND SEE cloj/doc/unrealizedrealization.clj.  Oy.
