@@ -108,17 +108,28 @@
   (dorun s)
   (println))
 
-(defn skip-realized?
-  "Tests whether the first LazySeq instance in the sequence xs has been 
-  realized, skipping over e.g. Cons's before that point.  (e.g. 'iterate'
-  returns a Cons followed by a LazySeq.  If you want to know whether it's 
-  realized beyond the Cons, you have to check its rest.)"
+(defn lized?
+  "Utility function to test whether the output of iterate has been realized
+  at all.  Iterate returns a Cons around a LazySeq.  realized? throws an
+  exception on a Cons, but will work on a LazySeq.  If class of xs is Cons,
+  lized? checks whether its rest is realized.  Otherwise, lized? checks
+  whether xs is realized."
   [xs]
-  (if (instance? clojure.lang.IPending xs)
-    (realized? xs)
-    (if (empty? xs)
-      true
-      (recur (rest xs)))))
+  (or (and (instance? clojure.lang.Cons xs)
+           (realized? (rest xs)))
+      (realized? (rest xs))))
+
+;(defn skip-realized?
+;  "Tests whether the first LazySeq instance in the sequence xs has been 
+;  realized, skipping over e.g. Cons's before that point.  (e.g. 'iterate'
+;  returns a Cons followed by a LazySeq.  If you want to know whether it's 
+;  realized beyond the Cons, you have to check its rest.)"
+;  [xs]
+;  (if (instance? clojure.lang.IPending xs)
+;    (realized? xs)
+;    (if (empty? xs)
+;      true
+;      (recur (rest xs)))))
 
 ;; Compare skip-realized? with the follwoing, which tests whether there's any unrealized part anywhere down the line.
 ;; By A. Webb in response to a question of mine, at https://groups.google.com/d/msg/clojure/5rwZA-Bzp9A/dgChQhbeF_AJ
