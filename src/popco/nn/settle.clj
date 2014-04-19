@@ -120,10 +120,10 @@
   "Return the distance of activn from 1.  Note return value will be > 1
   if activn < 0."
   [activn]
-  (- 1 activn))
+  (- 1.0 activn))
 
 (defn dist-from-min 
   "Return the distance of activn from 1.  Note return value will be > 1
   if activn > 0."
   [activn]
-  (+ 1 activn)) ; HT1989 p. 313 says: (- activn -1)
+  (inc activn)) ; HT1989 p. 313 says: (- activn -1).  inc seems to be slightly faster than (+ 1 ...)
