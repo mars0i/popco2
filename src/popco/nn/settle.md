@@ -1,19 +1,7 @@
 settle.clj
 =======
 
-References:
-
-1. network.lisp in POPCO, which is based on Thagard's ACME network.lisp.
-
-2. "HT": Holyoak & Thagard 1989, "Analogue Retrieval by Constraint
-Satisfaction", Cognitive Science 13, pp. 295-355. See pp. 313, 315.
-
-3. "MR": Abrams 2013, "A Moderate Role for Cognitive Models in Agent-Based 
-Modeling of Cultural Change", Complex Adaptive Systems Modeling 2013.
-
-4. Grossberg. S. (1978). A theory of visual coding, memory, and development.
-In E.L.J. Leeuwenberg & H.F.J. Buffart (Eds.), Formal theories of visual 
-perception. New York: Wiley.
+**Notes on core.matrix functions**
 
 Note the distinction in clojure.core.matrix between:
 
@@ -29,12 +17,26 @@ summing the result each time to produce element <i,j> of
 the result matrix.  (For vectors, this is inner product,
 with A as a row vector and B as a column vector.)
 
+Also:
+
 `emap`: Maps a function over each element of a matrix to produce a new
 matrix.
 
-Network settling (with Grossberg algorithm):
+In any core.matrix implementation, there are three kinds of 1-D vectors:
 
-NOTE: 
+n-element vectors, which have shape = [n], and can be treated as column or
+row vectors during multiplication, depending on the order of arguments.
+They can be created by e.g. `(matrix [1 2 3])`.
+POPCO vectors are typically of this kind.
+
+True row vectors, which have shape = [1 n], and which can be created
+e.g. by `(matrix [[1 2 3]])`.
+
+True column vectors, which have shape = [n 1], and which can be created
+e.g. by `(matrix [[1] [2] [3]])`.
+
+
+**Network settling (with Grossberg algorithm):**
 
 The Grossberg algorithm does no normalization in anything like
 the probabilistic sense: That is, outputs are outputs; they're not scaled
@@ -69,15 +71,46 @@ different repertoires of propositions, while using a single set of
 analogy network weight matrices (which needn't slow down run time
 due to being modified later).
 
+HOWEVER, the masking must occur on *every* iteration of next-activn, to
+prevent output into "nonexistent" nodes from the previous iteration
+having an effect on the next iteration.
+
+AND this means that you can't pre-settle the analogy network activations
+once and for all and then unmask them as propositions are added, because
+that would mean that activations of unmasked nodes would have been
+affected by activations of nodes that were supposed to be masked.  So
+even if it turns out that the analogy net doesn't *always* have to go
+through a resettling process (questionable, because of cycling), it will
+have to be resettled whenever beliefs are added to a person.
+
+Also, because the settling algorithm is a bit complex, I don't think we can
+take the shortcut of simply multipling the weight matrix by itself many
+times.  (Maybe this is incorrect, though.)`
+
+
 Note: The proposition networks, by contrast, can't be treated this way,
 because they acquire new links between old nodes.
 
-NOTE The way that `next-activns` does matrix multiplication using `(mmul
-<matrix> <vector>)`, `<vector>` is 1D and is treated as a column vector.
-This means that the weight at index i,j represents the directional link
-from node j to node i, since j is the column (input) index, and i is the
-row index.  (This doesn't matter for symmetric links, since for them there
-will be identical weights at i,j and j,i, but it matters for assymetric,
-directional links.)
+NOTE: For This way of doing matrix multiplication using (mmul <matrix> <vector>),
+<vector> is 1D and is treated as a column vector.  This means that the weight
+at index i,j represents the directional link from node j to node i, since j is
+the column (input) index, and i is the row index.  Doesn't matter for symmetric
+links, since for the there will be identical weights at i,j and j,i, but matters
+for assymetric, directional links.  For example, to cause the 0th, SEMANTIC node
+to send input to other nodes, but to never receive inputs, there should be nonzero
+weights in column 0 but not row 0.
 
 
+**References:**
+
+1. network.lisp in POPCO, which is based on Thagard's ACME network.lisp.
+
+2. "HT": Holyoak & Thagard 1989, "Analogue Retrieval by Constraint
+Satisfaction", Cognitive Science 13, pp. 295-355. See pp. 313, 315.
+
+3. "MR": Abrams 2013, "A Moderate Role for Cognitive Models in Agent-Based 
+Modeling of Cultural Change", Complex Adaptive Systems Modeling 2013.
+
+4. Grossberg. S. (1978). A theory of visual coding, memory, and development.
+In E.L.J. Leeuwenberg & H.F.J. Buffart (Eds.), Formal theories of visual 
+perception. New York: Wiley.
