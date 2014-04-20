@@ -55,24 +55,35 @@
   ([pers] 
    (settle-analogy-net pers 1))
   ([pers iters]
-   (settle-net pers :analogy-net :analogy-activns iters)))
+   (settle-net pers :analogy-net :analogy-activns :analogy-mask iters)))
 
 (defn settle-propn-net
   "Return person pers with its propn net updated by settle-iters of settling."
   ([pers] 
    (settle-propn-net pers 1))
   ([pers iters]
-   (settle-net pers :propn-net :propn-activns iters)))
+   (settle-net pers :propn-net :propn-activns :propn-mask iters)))
 
 (defn settle-net
   "Return person pers with the net selected by net-key and activns-key updated
   by iters rounds of settling."
-  [pers net-key activns-key iters]
+  [pers net-key activns-key mask-key iters]
   (assoc pers activns-key
-         (nth 
-           (iterate (partial next-activns (net-key pers))
-                    (activns-key pers))
+         (ug/fn-pow 
+           (partial next-activns (net-key pers) (mask-key pers))
+           (activns-key pers)
            iters)))
+
+;(defn settle-net
+;  "Return person pers with the net selected by net-key and activns-key updated
+;  by iters rounds of settling."
+;  [pers net-key activns-key mask-key iters]
+;  (assoc pers activns-key
+;         (nth ;; INEFFECIENT--FIX TO AVOID CONSTRUCTING A SEQ:
+;           (iterate (partial next-activns (net-key pers))
+;                    (activns-key pers)
+;                    (mask-key pers))
+;           iters)))
 
 ;; GROSSBERG SETTLING ALGORITHM
 ;; See settle.md for explanation and reference sources.
@@ -82,23 +93,26 @@
 ;; NOTE: For This way of doing matrix multiplication using (mmul <matrix> <vector>),
 ;; <vector> is 1D and is treated as a column vector.  This means that the weight
 ;; at index i,j represents the directional link from node j to node i, since j is
-;; the column (input) index, and i is the row index.  (Doesn't matter for symmetric
+;; the column (input) index, and i is the row index.  Doesn't matter for symmetric
 ;; links, since for the there will be identical weights at i,j and j,i, but matters
-;; for assymetric, directional links.)
+;; for assymetric, directional links.  For example, to cause the 0th, SEMANTIC node
+;; to send input to other nodes, but to never receive inputs, there should be nonzero
+;; weights in column 0 but not row 0.
 (defn next-activns 
   "Calculate a new set of activations for nodes starting from the current
   activations in vector activns, using network link weights in constraint
   network net to update activations from neighbors using the Grossberg (1978) 
   algorithm as described in Holyoak & Thagard's (1989) \"Analogue Retrieval
   by Constraint Satisfaction\"."
-  [net activns]
+  [net mask activns]
   (let [pos-activns (emap nn/posify activns)] ; Negative activations are ignored as inputs.
-    (emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
-          (add (emul 0.9 activns)                            ; Sum into decayed activations ...
-               (emul (mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
-                     (emap dist-from-max activns))           ;  inputs' distances from 1, and
-               (emul (mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
-                     (emap dist-from-min activns))))))       ;  inputs' distances from -1.
+    (emul mask
+          (emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
+                (add (emul 0.9 activns)                            ; Sum into decayed activations ...
+                     (emul (mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
+                           (emap dist-from-max activns))           ;  inputs' distances from 1, and
+                     (emul (mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
+                           (emap dist-from-min activns)))))))       ;  inputs' distances from -1.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions
