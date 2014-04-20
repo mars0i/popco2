@@ -119,6 +119,39 @@
            (realized? (rest xs)))
       (realized? (rest xs))))
 
+;; This is like (nth (iterate f x) n), but doesn't create an intermediate lazy seq.
+(defn fn-pow
+  "Apply function f to x, then to the result of that, etc., n times.
+  If n <= 0, just returns x."
+  [f x n]
+  (if (> n 0) 
+    (recur f (f x) (dec n))
+    x))
+
+;(defn fn-pow1
+;  "Apply function f to x, then to the result of that, etc., n times.
+;  If n <= 0, just returns x."
+;  [f x n]
+;  (loop [x x 
+;         n n]
+;    (if (<= n 0) 
+;      x
+;      (recur (f x) (dec n)))))
+
+;(defn fn-pow2
+;  "Apply function f to x, then to the result of that, etc., n times.
+;  If n <= 0, just returns x."
+;  [f x n]
+;  (if (<= n 0) 
+;    x
+;    (recur f (f x) (dec n))))
+
+;(defn fn-pow0
+;  [f x n]
+;  (take
+;    (iterate f x)
+;    n))
+
 ;(defn skip-realized?
 ;  "Tests whether the first LazySeq instance in the sequence xs has been 
 ;  realized, skipping over e.g. Cons's before that point.  (e.g. 'iterate'
