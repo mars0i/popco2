@@ -25,7 +25,9 @@
          update-propn-wts-from-analogy-activns update-person-nets update-nets
          clip-to-extrema dist-from-max dist-from-min)
 
-(def settling-iters 5)
+(def settling-iters 5)  ; default number of times to run through the settling algorithm in each tick
+
+(def ^:const decay 0.9) ; amount to decay the old activn before adding inputs from other nodes
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
@@ -108,11 +110,11 @@
   (let [pos-activns (emap nn/posify activns)] ; Negative activations are ignored as inputs.
     (emul mask
           (emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
-                (add (emul 0.9 activns)                            ; Sum into decayed activations ...
+                (add (emul decay activns)                         ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
                      (emul (mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
-                           (emap dist-from-max activns))           ;  inputs' distances from 1, and
+                           (emap dist-from-max activns))          ;  inputs' distances from 1, and
                      (emul (mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
-                           (emap dist-from-min activns)))))))       ;  inputs' distances from -1.
+                           (emap dist-from-min activns)))))))     ;  inputs' distances from -1.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions

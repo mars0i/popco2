@@ -96,9 +96,17 @@ NOTE: For This way of doing matrix multiplication using (mmul <matrix> <vector>)
 at index i,j represents the directional link from node j to node i, since j is
 the column (input) index, and i is the row index.  Doesn't matter for symmetric
 links, since for the there will be identical weights at i,j and j,i, but matters
-for assymetric, directional links.  For example, to cause the 0th, SEMANTIC node
-to send input to other nodes, but to never receive inputs, there should be nonzero
-weights in column 0 but not row 0.
+for assymetric, directional links.  
+
+For example, to cause the 0th, SEMANTIC node to send input to other
+nodes, but to never receive inputs, there should be nonzero weights in
+column 0 but not row 0, and this is how we are setting up the weight matrix.
+
+However, `next-activns` would still change the SEMANTIC node over time,
+because it decays all nodes, wehther they get input or not.  To undo
+this, we put a special value > 1.0 in the analogy mask in `make-person`,
+i.e. 1/decay, that will undo the decay.  This is a kludge that is split
+between two different files.  Maybe there's a better way.
 
 
 **References:**
