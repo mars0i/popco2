@@ -53,14 +53,14 @@
   pers)
 
 (defn settle-analogy-net
-  "Return person pers with its analogy net updated by settle-iters of settling."
+  "Return person pers with its analogy net updated by 1 or more iters of settling."
   ([pers] 
    (settle-analogy-net pers 1))
   ([pers iters]
    (settle-net pers :analogy-net :analogy-activns :analogy-mask iters)))
 
 (defn settle-propn-net
-  "Return person pers with its propn net updated by settle-iters of settling."
+  "Return person pers with its propn net updated by 1 or more iters of settling."
   ([pers] 
    (settle-propn-net pers 1))
   ([pers iters]
