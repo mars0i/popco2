@@ -32,7 +32,7 @@
 (reset! mn/folks popn)
 ;(swap! mn/folks assoc :members [jo job jov])
 
-(mn/init popn)
+;(mn/init popn) ; note popn is unchanged, but @folks has been updated.
 
 (def popn-evol (mn/many popn))
 ;(def popn-evol (mn/popco popn))
