@@ -1,0 +1,69 @@
+experiments 4/20/2014 after seeming to get the analogy net settling working
+These are experiments on a single round of settling, in which the
+only effect is from the semantic node, to whatever nodes its linked to.
+
+
+popco.core.popco=> (def mask (:analogy-mask job))
+#'popco.core.popco/mask
+popco.core.popco=> (def semlinks (first (columns (wt-mat (:analogy-net job)))))
+#'popco.core.popco/semlinks
+popco.core.popco=> (def setl1 (:analogy-activns (settle-analogy-net job)))
+#'popco.core.popco/setl1
+popco.core.popco=> (pprint (for [i (range 263) :when (and (not= 0.0 (mget mask i)) (not= 0.0 (mget semlinks i)))] [i (mget mask i) (mget semlinks i) (mget setl1 i)]))
+([66 1.0 0.1 0.1] [81 1.0 0.1 0.1] [113 1.0 0.1 0.1] [116 1.0 -0.1 -0.1] [176 1.0 0.1 0.1] [225 1.0 0.1 0.1] [237 1.0 0.1 0.1] [258 1.0 0.1 0.1])
+nil
+popco.core.popco=> (for [i (range 263) :when (not= 0.0 (mget setl1 i))] [i (mget mask i) (mget semlinks i) (mget setl1 i)])
+([0 1.1111111111111112 0.0 1.0] [66 1.0 0.1 0.1] [81 1.0 0.1 0.1] [113 1.0 0.1 0.1] [116 1.0 -0.1 -0.1] [176 1.0 0.1 0.1] [225 1.0 0.1 0.1] [237 1.0 0.1 0.1] [258 1.0 0.1 0.1])
+popco.core.popco=> (def dif (sub setl1 semlinks))
+#'popco.core.popco/dif
+popco.core.popco=> (for [i (range 263) :when (not= 0.0 
+
+popco.core.popco=> (for [i (range 263) :when (not= 0.0 (mget dif i))] [i (mget mask i) (mget semlinks i) (mget setl1 i)])
+([0 1.1111111111111112 0.0 1.0] [190 0.0 -0.1 -0.0])
+popco.core.popco=> ; dif is the difference between the activn vector after a single round of settling, and the links from SEMANTIC
+
+popco.core.popco=> ; They should be equal except at index 0.  What's going on at 190??
+
+popco.core.popco=> (mget semlinks 190)
+-0.1
+popco.core.popco=> (for [i (range 263) :when (not= 0.0 (mget semlinks i))] [i (mget mask i) (mget semlinks i) (mget setl1 i)])
+([66 1.0 0.1 0.1] [81 1.0 0.1 0.1] [113 1.0 0.1 0.1] [116 1.0 -0.1 -0.1] [176 1.0 0.1 0.1] [190 0.0 -0.1 -0.0] [225 1.0 0.1 0.1] [237 1.0 0.1 0.1] [258 1.0 0.1 0.1])
+popco.core.popco=> ; oh, I get it.  there is a link from SEMANTIC to 190, but 190 is masked out in job.  It's a map node that only plays a role in virus propns.
+
+popco.core.popco=> ((:id-vec anet) 190)
+:Causal-if=Preventative-if
+popco.core.popco=> ; i.e. that only plays a role when there are virus propns.
+
+popco.core.popco=> 
+
+popco.core.popco=> ; let's do it with jov, which lacks beast propns.
+
+popco.core.popco=> (def mask (:analogy-mask jov))
+#'popco.core.popco/mask
+popco.core.popco=> (def semlinks (first (columns (wt-mat (:analogy-net jov)))))
+#'popco.core.popco/semlinks
+popco.core.popco=> (def setl1 (:analogy-activns (settle-analogy-net jov)))
+#'popco.core.popco/setl1
+popco.core.popco=> (for [i (range 263) :when (and (not= 0.0 (mget mask i)) (not= 0.0 (mget semlinks i)))] [i (mget mask i) (mget semlinks i) (mget setl1 i)])
+([66 1.0 0.1 0.1] [81 1.0 0.1 0.1] [113 1.0 0.1 0.1] [190 1.0 -0.1 -0.1])
+popco.core.popco=> (for [i (range 263) :when (not= 0.0 (mget setl1 i))] [i (mget mask i) (mget semlinks i) (mget setl1 i)])
+([0 1.1111111111111112 0.0 1.0] [66 1.0 0.1 0.1] [81 1.0 0.1 0.1] [113 1.0 0.1 0.1] [190 1.0 -0.1 -0.1])
+popco.core.popco=> (for [i (range 263) :when (not= 0.0 (mget dif i))] [i (mget mask i) (mget semlinks i) (mget setl1 i)])
+([0 1.1111111111111112 0.0 1.0] [190 1.0 -0.1 -0.1])
+popco.core.popco=> ; oops ignore that
+
+popco.core.popco=> (def dif (sub setl1 semlinks))
+#'popco.core.popco/dif
+popco.core.popco=> (for [i (range 263) :when (not= 0.0 (mget dif i))] [i (mget mask i) (mget semlinks i) (mget setl1 i)])
+([0 1.1111111111111112 0.0 1.0] [116 0.0 -0.1 -0.0] [176 0.0 0.1 0.0] [225 0.0 0.1 0.0] [237 0.0 0.1 0.0] [258 0.0 0.1 0.0])
+popco.core.popco=> ;; these are presumably map nodes that don't appear with out beast propns.
+
+popco.core.popco=> (map (:id-vec jov) [116 176 225 237 258])
+NullPointerException   clojure.core/map/fn--4245 (core.clj:2557)
+
+popco.core.popco=> (map #((:id-vec jov) %) [116 176 225 237 258])
+NullPointerException   popco.core.popco/eval11792/fn--11793 (form-init1143522163228171970.clj:1)
+
+popco.core.popco=> (map (:id-vec anet) [116 176 225 237 258])
+(:Preventative-if=Causal-if :Aggressive=Aggressive :Helps=Helps :Capture=Capture :Danger-to=Danger-to)
+popco.core.popco=> ; well that makes sense.  The last 4 only appear in beast and beastly-crime propns.
