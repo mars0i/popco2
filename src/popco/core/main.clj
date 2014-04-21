@@ -9,12 +9,10 @@
 ;; SEE src/popco/start.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO SEMANTIC is settling rather than sticking at 1.0.  (use the mask??)
-;; TODO SEMANTIC is settling rather than sticking at 1.0.  (use the mask??)
-;; TODO SEMANTIC is settling rather than sticking at 1.0.  (use the mask??)
-
 ;; TODO Don't I have to clip something to 0.5 to avoid bad cycling?
 ;; TODO Don't I have to clip something to 0.5 to avoid bad cycling?
+;; Here's the variable from POPCO 1:
+;; (defconstant +acme-max-weight+ .5L0) ; Used in make-symlink to tamp down on cyclic non-settling in analogy networks.  A bit of a kludge--should be reworked if POPCO starts using ECHO, for example.
 
 (declare once many popco report-popn report-to-console inc-tick report)
 
