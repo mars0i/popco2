@@ -76,30 +76,10 @@
            (activns-key pers)
            iters)))
 
-;(defn settle-net
-;  "Return person pers with the net selected by net-key and activns-key updated
-;  by iters rounds of settling."
-;  [pers net-key activns-key mask-key iters]
-;  (assoc pers activns-key
-;         (nth ;; INEFFECIENT--FIX TO AVOID CONSTRUCTING A SEQ:
-;           (iterate (partial next-activns (net-key pers))
-;                    (activns-key pers)
-;                    (mask-key pers))
-;           iters)))
-
-;; GROSSBERG SETTLING ALGORITHM
-;; See settle.md for explanation and reference sources.
-;;
-;; SHOULD I USE add-product HERE FOR THE INNER ADDITION OF EMULS?
-;; 
-;; NOTE: For This way of doing matrix multiplication using (mmul <matrix> <vector>),
-;; <vector> is 1D and is treated as a column vector.  This means that the weight
-;; at index i,j represents the directional link from node j to node i, since j is
-;; the column (input) index, and i is the row index.  Doesn't matter for symmetric
-;; links, since for the there will be identical weights at i,j and j,i, but matters
-;; for assymetric, directional links.  For example, to cause the 0th, SEMANTIC node
-;; to send input to other nodes, but to never receive inputs, there should be nonzero
-;; weights in column 0 but not row 0.
+;; GROSSBERG ALGORITHM SETTLING FUNCTION
+;; See settle.md for explanation and reference sources, including
+;; explanation of unidirectional links.
+;; Q: Should I use add-product here for the inner addition of emuls?
 (defn next-activns 
   "Calculate a new set of activations for nodes starting from the current
   activations in vector activns, using network link weights in constraint
