@@ -123,6 +123,14 @@
 (defn fn-pow
   "Apply function f to x, then to the result of that, etc., n times.
   If n <= 0, just returns x."
+  [f x ^long n]
+  (if (> n 0) 
+    (recur f (f x) (dec n))
+    x))
+
+(defn fn-pow2
+  "Apply function f to x, then to the result of that, etc., n times.
+  If n <= 0, just returns x."
   [f x n]
   (if (> n 0) 
     (recur f (f x) (dec n))
