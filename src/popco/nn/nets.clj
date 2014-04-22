@@ -139,14 +139,14 @@
 
 ;; Note: We make symlinks other ways as well, e.g. nn.analogy/add-wts-to-mat! .
 (defn symlink!
-  "Create a symmetric link by adding wt-val to mat from i to j and from j to i."
+  "Create a symmetric link by setting mat to wt-val from i to j and from j to i."
   [mat wt-val i j]
   (mx/mset! mat i j wt-val)
   (mx/mset! mat j i wt-val))
 
 (defn symlink-to-idxs!
-  "Create symmetric links between index i and every element in js by adding
-  wt-val to mat between i and j in js, and between j and i."
+  "Create symmetric links between index i and every element in js by setting
+  mat to wt-val between i and j in js, and between j and i."
   [mat wt-val i js]
   (doseq [j js]
     (symlink! mat wt-val i j)))
