@@ -13,6 +13,13 @@
 ;; TODO Don't I have to clip something to 0.5 to avoid bad cycling?
 ;; Here's the variable from POPCO 1:
 ;; (defconstant +acme-max-weight+ .5L0) ; Used in make-symlink to tamp down on cyclic non-settling in analogy networks.  A bit of a kludge--should be reworked if POPCO starts using ECHO, for example.
+;; This is used in make-symlink to cause make-link to not sum weights past 0.5.
+;; I don't think this is an issue in the crime3 networks.  There is only one weight at 0.5,
+;; from :Causal-if=Causal-if to :CB-vpp=B-abp (indexes 81 and 185, respectively)
+;; (i.e. two weights, really--it's a symlink),
+;; and it's 0.5 even in popco2 at this point, even though I don't believe I've got any
+;; clamping to 0.5 yet.  So in crime3 there are apparently no weights that would naturally
+;; exceed 0.5.  This was apparently an issue in the sanday network.
 
 (declare once many popco report-popn report-to-console inc-tick report)
 
