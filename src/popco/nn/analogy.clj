@@ -20,9 +20,9 @@
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix will be needed.
 
-(def pos-link-increment 0.1)
-(def neg-link-value -0.2)
-(def sem-similarity-link-value 0.1)
+(def ^:const pos-link-increment 0.1)
+(def ^:const neg-link-value -0.2)
+(def ^:const sem-similarity-link-value 0.1)
 
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat match-propns propns-match? match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
