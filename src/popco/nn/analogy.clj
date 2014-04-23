@@ -23,6 +23,8 @@
 (def ^:const pos-link-increment 0.1)
 (def ^:const neg-link-value -0.2)
 (def ^:const sem-similarity-link-value 0.1)
+;(def ^:const analogy-max-wt 0.5) ; In popco1, I forced weights to be <= 0.5 as a kludge to avoid wild cycling.
+(def ^:const analogy-max-wt 1.0)
 
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat match-propns propns-match? match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
@@ -63,13 +65,13 @@
  ;               associated component mapnodes, i.e. of the propn mapnode's 'family'.
  ;               Note: Has no entry for the SEMANTIC node.
   [propnseq1 propnseq2 pos-increment neg-increment sem-specs]
-  (let [propn-pairs (match-propns propnseq1 propnseq2)
-        propn-pair-ids (map #(map :id %) propn-pairs)
-        fams (match-propn-components propn-pairs)
-        ext-fams (match-propn-components-deeply propn-pairs)
+  (let [propn-pairs (match-propns propnseq1 propnseq2) ; match propns
+        propn-pair-ids (map #(map :id %) propn-pairs)  ; get their ids
+        fams (match-propn-components propn-pairs)      ; match their components
+        ext-fams (match-propn-components-deeply propn-pairs) ; match into proposition args
         node-seq (cons {:id :SEMANTIC} (distinct (flatten fams))) ; flatten here assumes map-pairs aren't seqs
         num-nodes (count node-seq)
-        nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; make node/indexes mappings
+        nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; This is the core of the analogy net object.
         id-to-idx (:id-to-idx nn-map)
         ids-to-idx (:ids-to-idx nn-map)
         pos-wt-mat (make-wt-mat num-nodes)  ; construct zero matrices
@@ -300,7 +302,9 @@
     (doseq [i fam
             j fam]
       (when-not (= i j)
-        (mx/mset! mat i j (op wt-val (mx/mget mat i j))))))
+        (mx/mset! mat i j 
+                  (min analogy-max-wt  ;; in popco1, this prevented extreme cycling
+                       (op wt-val (mx/mget mat i j)))))))
   mat)
 
 (defn sum-wts-to-mat!

@@ -138,4 +138,31 @@ index, and i is the row index.  (This doesn't matter for symmetric
 links, since for them there will be identical weights at i,j and j,i,
 but it matters for assymetric, directional links.)
 
+**a note on `analogy-max-wt`**
 
+In popco1, I clipped analogy net weights to be less than or equal to 0.5, in order to reduce extreme cycling of activation values.
+
+Here's the variable from POPCO 1, with its comment:
+
+(defconstant +acme-max-weight+ .5L0) ; Used in make-symlink to tamp down on cyclic non-settling in analogy networks.  A bit of a kludge--should be reworked if POPCO starts using ECHO, for example.
+
+This is used in make-symlink to cause make-link to not sum weights past 0.5.
+I don't think this is an issue in the crime3 networks.  There is only one weight at 0.5,
+from :Causal-if=Causal-if to :CB-vpp=B-abp (indexes 81 and 185, respectively)
+(i.e. two weights, really--it's a symlink),
+and it's 0.5 even in popco2 at this point, even though I don't believe I've got any
+clamping to 0.5 yet.  So in crime3 there are apparently no weights that would naturally
+exceed 0.5.  This was apparently an issue in the sanday network.
+
+Note that though the comment says this is about analogy nets, it seems like it did 
+the propn nets in popco1.  Ah, but links in popco were never that high.  They
+don't sum.  Wait, not even links to SALIENT?  No: The links to SALIENT were
+created by a call to raw-make-symlink in update-salient-link, in popco.lisp.
+By calling raw-make-symlink with no optional arguments, we got the default
+max of 1.0.  i.e. calling raw-make-symlink rather than make-symlink bypasses
+make-symlink's clipping to +acme-max-weight+.  Therefore, if I want to clip
+to weights 0.5 in the analogy net to damp oscillations, I can just apply
+that rule in analogy.clj, and ignore the propn net.
+
+SO: analogy.clj now has var `analogy-max-wt`, which is set to either 1.0
+or 0.5, `and add-wts-to-mat!` prevents weights from exceeding this value.
