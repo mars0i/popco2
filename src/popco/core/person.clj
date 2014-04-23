@@ -20,7 +20,9 @@
    :propn-activns -   vector of activation values for nodes in propn net
    :analogy-net -     AnalogyNet (same for all persons)
    :analogy-mask -    vector of 1's (mapnode is present) or 0's (it's absent)
-   :analogy-activns - activation values of nodes in analogy net")
+   :analogy-activns - activation values of nodes in analogy net
+   :analogy-idxs-to-propn-idx - map from propn mapnode indexes in analogy net
+                                to corresponding propn index pairs in propn net.")
 
 ;; MAYBE: Consider making code below more efficient if popco is extended
 ;; to involve regularly creating new persons in the middle of simulation runs
