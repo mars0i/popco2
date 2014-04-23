@@ -1,5 +1,6 @@
 (ns popco.nn.nets
   (:require [utils.general :as ug]
+            [popco.core.lot :as lot]
             [clojure.core.matrix :as mx]))
 
 ;; Definitions of neural-net data types and related functions.
@@ -150,3 +151,21 @@
   [mat wt-val i js]
   (doseq [j js]
     (symlink! mat wt-val i j)))
+
+
+;; This function concerns the relationship between the analogy net and the proposition
+;; net, so it doesn't belong in the source file for either, although it uses both.
+(defn make-analogy-idxs-to-propn-idx 
+  "Returns a Clojure map from indexes of proposition mapnodes in the analogy network
+  anet to pairs of indexes of nodes in the proposition network pnet.  This can be
+  used to update proposition network link weights from analogy network activations."
+  [anet pnet]
+  (let [a-id-to-idx (:id-to-idx anet)
+        p-id-to-idx (:id-to-idx pnet)
+        a-node-vec (:node-vec anet)
+        a-propn-mapnodes (filter (comp lot/propn? :alog1) a-node-vec)] ; find the propn-mapnodes (since only propns are paired with propns, we only need to check :alog1)
+    (apply merge
+           (map #(hash-map (a-id-to-idx (:id %)) ; now that we know it's a propn mapnode, go back from id to index
+                           [(p-id-to-idx (:id (:alog1 %)))   ; get propn net indexes
+                            (p-id-to-idx (:id (:alog2 %)))]) ;  of mapnode sides
+                a-propn-mapnodes))))

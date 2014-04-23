@@ -34,7 +34,7 @@
   person may modify its own propn weight matrix.  The analogy net can be shared 
   with every other person, however, since this will not be modified.  (The 
   analogy mask might be modified.)"
-  [nm propns propn-net analogy-net]
+  [nm propns propn-net analogy-net analogy-idxs-to-propn-idx]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
@@ -44,7 +44,8 @@
                        (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
                        analogy-net
                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
-                       (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
+                       (mx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
+                       (nn/make-analogy-idxs-to-propn-idx analogy-net propn-net))]
     (nn/unmask! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT))
     (mx/mset! (:propn-activns pers) ((:id-to-idx propn-net) :SALIENT) 1.0) ; salient node always has activn = 1
     (mx/mset! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT) (/ 1.0 st/decay)) ; Kludge to undo next-activn's decay on this node
@@ -54,7 +55,6 @@
     (doseq [propn propns] (cc/add-to-propn-net! pers (:id propn)))   ; better to fill propn mask before
     (doseq [propn propns] (cc/try-add-to-analogy-net! pers (:id propn))) ;  analogy mask, so propns are known
     pers))
-
 
 ;; TEMPORARY
 ;; differs from make-person in using old-add-to-analogy-net as a sanity check
