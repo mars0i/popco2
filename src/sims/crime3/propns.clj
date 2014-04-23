@@ -131,11 +131,11 @@
 ;; This specifies mapnodes that should be provided with a link from SEMANTIC.
 ;; Note order of the last two arguments doesn't matter: Both orders are tried.
 ;; The number will be multiplied by the default semantic link weight of
-;; popco.nn.analogy/sem-similarity-link-value.  NOTE that the traditional 
+;; popco.nn.analogy/+sem-similarity-link-value+.  NOTE that the traditional 
 ;; ACME-based POPCO behavior allows this to happen *only* for mapnodes that
 ;; are between predicates.  ALSO note that these directives are NOT needed
 ;; when the two mapped predicates are identical.  In that case, a link of
-;; weight sem-similarity-link-value to SEMANTIC is added automatically.
+;; weight +sem-similarity-link-value+ to SEMANTIC is added automatically.
 
 (def living-propns (concat virus-propns beast-propns))
 (def crime-propns (concat viral-crime-propns beastly-crime-propns))

@@ -138,7 +138,7 @@ index, and i is the row index.  (This doesn't matter for symmetric
 links, since for them there will be identical weights at i,j and j,i,
 but it matters for assymetric, directional links.)
 
-**a note on `analogy-max-wt`**
+**a note on `+analogy-max-w`+`**
 
 In popco1, I clipped analogy net weights to be less than or equal to 0.5, in order to reduce extreme cycling of activation values.
 
@@ -164,5 +164,5 @@ make-symlink's clipping to +acme-max-weight+.  Therefore, if I want to clip
 to weights 0.5 in the analogy net to damp oscillations, I can just apply
 that rule in analogy.clj, and ignore the propn net.
 
-SO: analogy.clj now has var `analogy-max-wt`, which is set to either 1.0
+SO: analogy.clj now has var `+analogy-max-w`+`, which is set to either 1.0
 or 0.5, `and add-wts-to-mat!` prevents weights from exceeding this value.

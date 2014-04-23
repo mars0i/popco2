@@ -14,8 +14,8 @@
 
 (def anet (an/make-analogy-net pns/crime-propns 
                                pns/living-propns 
-                               an/pos-link-increment 
-                               an/neg-link-value 
+                               an/+pos-link-increment+
+                               an/+neg-link-value+
                                pns/sem-relats))
 
 (def jo (pers/make-person :jo 

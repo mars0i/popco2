@@ -20,11 +20,11 @@
 ;;; For the belief network, however, we need to allow zero-weight links,
 ;;; so a link matrix will be needed.
 
-(def ^:const pos-link-increment 0.1)
-(def ^:const neg-link-value -0.2)
-(def ^:const sem-similarity-link-value 0.1)
-(def ^:const analogy-max-wt 0.5) ; As in popco1: forces weights to be <= 0.5 as a kludge to avoid extreme cycling.
-;(def ^:const analogy-max-wt 1.0)
+(def ^:const +pos-link-increment+ 0.1)
+(def ^:const +neg-link-value+ -0.2)
+(def ^:const +sem-similarity-link-value+ 0.1)
+(def ^:const +analogy-max-wt+ 0.5) ; As in popco1: forces weights to be <= 0.5 as a kludge to avoid extreme cycling.
+;(def ^:const +analogy-max-wt+ 1.0)
 
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat match-propns propns-match? match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
@@ -86,7 +86,7 @@
                      (matched-idx-fams fams id-to-idx) 
                      pos-increment)
     (write-semantic-links! pos-wt-mat   ; add pos wts to mapnodes for semantically related predicates
-                           sem-similarity-link-value 
+                           +sem-similarity-link-value+ 
                            (id-to-idx :SEMANTIC) 
                            (concat 
                              (dupe-pred-idx-multiplier-pairs node-seq id-to-idx)
@@ -303,7 +303,7 @@
             j fam]
       (when-not (= i j)
         (mx/mset! mat i j 
-                  (min analogy-max-wt  ;; in popco1, this prevented extreme cycling
+                  (min +analogy-max-wt+  ;; in popco1, this prevented extreme cycling (called *acme-max-weight*)
                        (op wt-val (mx/mget mat i j)))))))
   mat)
 
@@ -357,7 +357,7 @@
   never be affected by other nodes.  The pairs are ones in which the first 
   element is a multiplier in [-1,1], and the second is an index of a node.  
   The weight of the links is sem-sim-wt times multiplier.  Typically sem-sim-wt 
-  should be the top-level variable nn.analogy/sem-similarity-link-value.
+  should be the top-level variable nn.analogy/+sem-similarity-link-value+.
   Usually, the semantically related predicates are (a) those that are identical,
   and (b) those specified to be related in the sem-specs argument to 
   make-analogy-net, typically collected from a variable named sem-relats.
