@@ -50,7 +50,10 @@
 (defn update-propn-wts-from-analogy-activns
   "Currently a noop; returns the person unchanged."
   [pers]
-  pers)
+  (let [aidxs-to-pidx (:analogy-idxs-to-propn-idxs pers)
+        anet (:analogy-net pers)
+        pnet (:propn-net pers)]
+    pers))
 
 (defn settle-analogy-net
   "Return person pers with its analogy net updated by 1 or more iters of settling."
