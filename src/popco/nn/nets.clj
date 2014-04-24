@@ -13,6 +13,14 @@
 ;; proposition net structure are :node-vec and :id-to-idx.  However, they
 ;; share the accessors wt-mat, pos-wt-mat, and neg-wt-mat.  
 
+
+(def ^:const +analogy-to-propn-pos-multiplier+ 0.2)
+(def ^:const +analogy-to-propn-neg-multiplier+ 0.025)
+;; For explanation, see section "Belief network concepts and initialization",
+;; page 12, item #1 in the "Moderate Role" paper on popco1.
+;; These vars were called *propn-excit-weight* and *propn-inhib-weight* in popco1.
+
+
 (defprotocol NNMats
   "Protocol for access to matrices in an nnstru, i.e. a neural-network 
   structure.  Defines accessors for the matrices in neural-net structures, 
