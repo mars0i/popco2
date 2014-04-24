@@ -1,6 +1,6 @@
 (ns popco.nn.testtools
   [:use clojure.core.matrix
-        popco.nn.settle])
+        popco.nn.update])
 
 (defn rand-1+1 
   "Returns a random number in [-1, 1)."

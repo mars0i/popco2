@@ -9,7 +9,7 @@
         popco.nn.nets
         popco.nn.analogy
         popco.nn.propn
-        popco.nn.settle
+        popco.nn.update
         popco.nn.testtools
         popco.nn.pprint
         popco.test.popco1comp

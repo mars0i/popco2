@@ -1,4 +1,4 @@
-(ns popco.nn.settle
+(ns popco.nn.update
   (:use clojure.core.matrix)
   (:require [popco.nn.nets :as nn]
             [utils.general :as ug]))

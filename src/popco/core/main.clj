@@ -1,6 +1,6 @@
 (ns popco.core.main
   (:use popco.core.population)
-  (:require [popco.nn.settle :as st]
+  (:require [popco.nn.update :as up]
             [popco.nn.nets :as nn]
             [popco.core.communic :as cm]
             [utils.general :as ug]))
@@ -18,7 +18,7 @@
   ([popn]
    (reset! folks 
            (assoc popn :members
-                  (map st/settle-analogy-net (:members popn))))))
+                  (map up/settle-analogy-net (:members popn))))))
 
 (defn popco
   "Returns a lazy sequence of population states, one for each tick, with 
@@ -45,7 +45,7 @@
     (inc (:tick popn))
     (doall    ; one or both of these steps might not be purely functional:
       (cm/communicate 
-        (st/update-nets (:members popn))))))
+        (up/update-nets (:members popn))))))
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to

@@ -14,6 +14,8 @@
 ;; share the accessors wt-mat, pos-wt-mat, and neg-wt-mat.  
 
 
+(declare posify negify)
+
 (def ^:const +analogy-to-propn-pos-multiplier+ 0.2)
 (def ^:const +analogy-to-propn-neg-multiplier+ 0.025)
 ;; For explanation, see section "Belief network concepts and initialization",
@@ -53,8 +55,6 @@
   "Makes an ACME analogy neural-net structure, i.e. a structure that 
   represents an ACME analogy constraint satisfaction network.  See docstring 
   for make-analogy-net for details.")
-
-(declare posify negify)
 
 ;; PropnNets store a weight matrix, node activations, and associated semantic
 ;; information for a proposition network.
