@@ -59,6 +59,30 @@
     (doseq [propn propns] (cc/try-add-to-analogy-net! pers (:id propn))) ;  analogy mask, so propns are known
     pers))
 
+(defn clone
+  "Accepts a single argument, a person, and returns a person containing fresh a
+  copy of any internal structure one might want to mutate.  (Useful for creating 
+  distinct persons rather than to update the same person for a new tick.)"
+  [{nm :nm propn-net :propn-net propn-mask :propn-mask propn-activns :propn-activns
+    analogy-net :analogy-net analogy-mask :analogy-mask analogy-activns :analogy-activns
+    analogy-idx-to-propn-idxs :analogy-idx-to-propn-idxs}]
+  (->Person nm
+            (pn/clone propn-net)
+            (mx/clone propn-mask)
+            (mx/clone propn-activns)
+            analogy-net                 ; should never change
+            (mx/clone analogy-mask)
+            (mx/clone analogy-activns)
+            analogy-idx-to-propn-idxs)) ; should never change
+
+(defn clone-propn-net
+  "Accepts a single argument, a person pers, and returns a person containing
+  fresh a copy of its proposition network.  (Useful e.g. for updating pers's
+  proposition network as a function of analogy net activations.)"
+  [pers]
+  (assoc pers 
+         :propn-net (pn/clone (:propn-net pers))))
+
 ;; TEMPORARY
 ;; differs from make-person in using old-add-to-analogy-net as a sanity check
 ; (defn old-make-person
