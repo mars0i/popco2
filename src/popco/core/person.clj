@@ -2,7 +2,7 @@
   (:require [utils.general :as ug]
             [popco.core.communic :as cc]
             [popco.nn.nets :as nn]
-            [popco.nn.update :as up]
+            [popco.nn.constants :as nc]
             [popco.nn.propn :as pn]
             [clojure.core.matrix :as mx]))
 
@@ -51,10 +51,10 @@
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net))]
     (nn/unmask! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT))
     (mx/mset! (:propn-activns pers) ((:id-to-idx propn-net) :SALIENT) 1.0) ; salient node always has activn = 1
-    (mx/mset! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT) (/ 1.0 up/decay)) ; Kludge to undo next-activn's decay on this node
+    (mx/mset! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT) (/ 1.0 nc/+decay+)) ; Kludge to undo next-activn's decay on this node
     (nn/unmask! (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC))
     (mx/mset! (:analogy-activns pers) ((:id-to-idx analogy-net) :SEMANTIC) 1.0) ; semantic node always has activn = 1
-    (mx/mset! (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC) (/ 1.0 up/decay)) ; Kludge to undo next-activn's decay on this node
+    (mx/mset! (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC) (/ 1.0 nc/+decay+)) ; Kludge to undo next-activn's decay on this node
     (doseq [propn propns] (cc/add-to-propn-net! pers (:id propn)))   ; better to fill propn mask before
     (doseq [propn propns] (cc/try-add-to-analogy-net! pers (:id propn))) ;  analogy mask, so propns are known
     pers))

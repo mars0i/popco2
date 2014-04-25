@@ -1,6 +1,8 @@
 (ns popco.nn.update
   (:use clojure.core.matrix)
   (:require [popco.nn.nets :as nn]
+            [popco.nn.constants :as nc]
+            [popco.core.person :as pers]
             [utils.general :as ug]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26,16 +28,6 @@
          update-person-nets update-nets clip-to-extrema dist-from-max dist-from-min 
          calc-propn-link-wt)
 
-(def settling-iters 5)  ; default number of times to run through the settling algorithm in each tick
-
-(def ^:const decay 0.9) ; amount to decay the old activn before adding inputs from other nodes
-
-(def ^:const +analogy-to-propn-pos-multiplier+ 0.2)
-(def ^:const +analogy-to-propn-neg-multiplier+ 0.025)
-;; For explanation, see section "Belief network concepts and initialization",
-;; page 12, item #1 in the "Moderate Role" paper on popco1.
-;; These vars were called *propn-excit-weight* and *propn-inhib-weight* in popco1.
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
 
@@ -50,9 +42,9 @@
   "Perform one tick's updating of the networks of a single person."
   [pers]
   (-> pers
-    (settle-analogy-net  settling-iters) ; is this step necessary?? only because of cycling??
+    (settle-analogy-net  nc/+settling-iters+) ; is this step necessary?? only because of cycling??
     (update-propn-wts-from-analogy-activns)
-    (settle-propn-net    settling-iters)))
+    (settle-propn-net    nc/+settling-iters+)))
 
 ;; TODO: Deal with semantic-iffs.
 (defn update-propn-wts-from-analogy-activns
@@ -87,8 +79,8 @@
   that the corresponding link in the propn network should get by default."
   [a-activn]
   (if (pos? a-activn)
-    (* a-activn +analogy-to-propn-pos-multiplier+)
-    (* a-activn +analogy-to-propn-neg-multiplier+)))
+    (* a-activn nc/+analogy-to-propn-pos-multiplier+)
+    (* a-activn nc/+analogy-to-propn-neg-multiplier+)))
 
 (defn settle-analogy-net
   "Return person pers with its analogy net updated by 1 or more iters of settling."
@@ -128,7 +120,7 @@
   (let [pos-activns (emap nn/posify activns)] ; Negative activations are ignored as inputs.
     (emul mask
           (emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
-                (add (emul decay activns)                         ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
+                (add (emul nc/+decay+ activns)                         ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
                      (emul (mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
                            (emap dist-from-max activns))          ;  inputs' distances from 1, and
                      (emul (mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
