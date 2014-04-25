@@ -5,7 +5,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NOTES
-;;; See settle.md for more notes, including abbreviations, overview of
+;;; See update.md for more notes, including abbreviations, overview of
 ;;; algorithm, article references, tips, etc.
 
 ;; Note the distinction in clojure.core.matrix between:
@@ -23,11 +23,17 @@
 
 (declare next-activns settle-net settle-analogy-net settle-propn-net
          update-propn-wts-from-analogy-activns update-person-nets update-nets
-         clip-to-extrema dist-from-max dist-from-min)
+         clip-to-extrema dist-from-max dist-from-min calc-propn-link-wt)
 
 (def settling-iters 5)  ; default number of times to run through the settling algorithm in each tick
 
 (def ^:const decay 0.9) ; amount to decay the old activn before adding inputs from other nodes
+
+(def ^:const +analogy-to-propn-pos-multiplier+ 0.2)
+(def ^:const +analogy-to-propn-neg-multiplier+ 0.025)
+;; For explanation, see section "Belief network concepts and initialization",
+;; page 12, item #1 in the "Moderate Role" paper on popco1.
+;; These vars were called *propn-excit-weight* and *propn-inhib-weight* in popco1.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
@@ -47,13 +53,33 @@
     (update-propn-wts-from-analogy-activns)
     (settle-propn-net    settling-iters)))
 
+;; TODO: Deal with semantic-iffs.
 (defn update-propn-wts-from-analogy-activns
-  "Currently a noop; returns the person unchanged."
+  "Updates person pers's propn link weight matrix from activations of
+  proposition map nodes in the analogy network.  i.e. this sets the
+  weight of a propn-to-propn link as a function of the activation of
+  the map node that maps those two propositions, in the analogy network."
   [pers]
-  (let [aidxs-to-pidx (:analogy-idxs-to-propn-idxs pers)
-        anet (:analogy-net pers)
-        pnet (:propn-net pers)]
+  (let [a-net (:analogy-net pers)
+        p-net (:propn-net pers)
+        a-activns (:analogy-activns pers)
+        p-mat (:wt-mat p-net)         ; We want the actual matrix. Safer with the keyword.
+        aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
+        aidxs (keys aidx-to-pidxs)]
+    (doseq [a-idx aidxs
+            :let [a-val (mget a-activns a-idx)
+                  [p-idx1 p-idx2] (aidx-to-pidxs a-idx)]]
+      (mset! p-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
     pers))
+
+;; calc-assoc-weight in imp.lisp in popco1
+(defn calc-propn-link-wt
+  "Given an activation value from the analogy network, calculate the weight
+  that the corresponding link in the propn network should get by default."
+  [a-activn]
+  (if (pos? a-activn)
+    (* a-activn +analogy-to-propn-pos-multiplier+)
+    (* a-activn +analogy-to-propn-neg-multiplier+)))
 
 (defn settle-analogy-net
   "Return person pers with its analogy net updated by 1 or more iters of settling."

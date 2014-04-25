@@ -11,7 +11,8 @@
 ;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [nm 
                    propn-net propn-mask propn-activns 
-                   analogy-net analogy-mask analogy-activns])
+                   analogy-net analogy-mask analogy-activns
+                   analogy-idx-to-propn-idxs])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :nm -              name of person (a keyword)
@@ -36,7 +37,7 @@
   person may modify its own propn weight matrix.  The analogy net can be shared 
   with every other person, however, since this will not be modified.  (The 
   analogy mask might be modified.)"
-  [nm propns propn-net analogy-net analogy-idxs-to-propn-idx]
+  [nm propns propn-net analogy-net]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
@@ -47,7 +48,7 @@
                        analogy-net
                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
-                       (nn/make-analogy-idxs-to-propn-idx analogy-net propn-net))]
+                       (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net))]
     (nn/unmask! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT))
     (mx/mset! (:propn-activns pers) ((:id-to-idx propn-net) :SALIENT) 1.0) ; salient node always has activn = 1
     (mx/mset! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT) (/ 1.0 up/decay)) ; Kludge to undo next-activn's decay on this node

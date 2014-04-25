@@ -16,12 +16,6 @@
 
 (declare posify negify)
 
-(def ^:const +analogy-to-propn-pos-multiplier+ 0.2)
-(def ^:const +analogy-to-propn-neg-multiplier+ 0.025)
-;; For explanation, see section "Belief network concepts and initialization",
-;; page 12, item #1 in the "Moderate Role" paper on popco1.
-;; These vars were called *propn-excit-weight* and *propn-inhib-weight* in popco1.
-
 
 (defprotocol NNMats
   "Protocol for access to matrices in an nnstru, i.e. a neural-network 
@@ -41,6 +35,9 @@
     [nnstru]
     "Returns the nnstru's negative-only weight matrix.")
 )
+
+;; TODO since analogy net doesn't change, maybe I should have a third matrix
+;; so that wt-mat doesn't have to calculate it.
 
 ;; AnalogyNets store weight matrices, node activations, and associated semantic
 ;; information for a proposition network.
@@ -163,7 +160,7 @@
 
 ;; This function concerns the relationship between the analogy net and the proposition
 ;; net, so it doesn't belong in the source file for either, although it uses both.
-(defn make-analogy-idxs-to-propn-idx 
+(defn make-analogy-idx-to-propn-idxs
   "Returns a Clojure map from indexes of proposition mapnodes in the analogy network
   anet to pairs of indexes of nodes in the proposition network pnet.  This can be
   used to update proposition network link weights from analogy network activations."
