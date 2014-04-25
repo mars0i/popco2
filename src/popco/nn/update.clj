@@ -22,7 +22,7 @@
 ;;      matrix.
 
 (declare next-activns settle-net settle-analogy-net settle-propn-net
-         update-propn-wts-from-analogy-activns update-person-nets update-nets
+         update-propn-wts-from-analogy-activns! update-person-nets update-nets
          clip-to-extrema dist-from-max dist-from-min calc-propn-link-wt)
 
 (def settling-iters 5)  ; default number of times to run through the settling algorithm in each tick
@@ -49,27 +49,28 @@
   "Perform one tick's updating of the networks of a single person."
   [pers]
   (-> pers
-    (settle-analogy-net  settling-iters) ; is this step necessary??
-    (update-propn-wts-from-analogy-activns)
+    (settle-analogy-net  settling-iters) ; is this step necessary?? only because of cycling??
+    (update-propn-wts-from-analogy-activns!)
     (settle-propn-net    settling-iters)))
 
 ;; TODO: Deal with semantic-iffs.
 ;; TODO: Maybe I really should just create a brand new matrix every time.  Why not?
-(defn update-propn-wts-from-analogy-activns
+;; TODO: Cloning a 50x50 propn matrix 500,000 times (100 persons in 5000 ticks) 
+;;       takes only 3 seconds on my MBP, according to Criterium.  That's a reasonble
+;;       cost: The entire simulation takes 3 seconds longer.
+(defn update-propn-wts-from-analogy-activns!
   "Updates person pers's propn link weight matrix from activations of
   proposition map nodes in the analogy network.  i.e. this sets the
   weight of a propn-to-propn link as a function of the activation of
   the map node that maps those two propositions, in the analogy network."
   [pers]
-  (let [a-net (:analogy-net pers)
-        p-net (:propn-net pers)
-        a-activns (:analogy-activns pers)
-        p-mat (:wt-mat p-net)         ; We want the actual matrix. Safer with the keyword.
+  (let [a-activns (:analogy-activns pers)
+        p-mat (:wt-mat (:propn-net pers))         ; We want the actual matrix. Safer with the keyword.
         aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
         aidxs (keys aidx-to-pidxs)]
     (doseq [a-idx aidxs
             :let [a-val (mget a-activns a-idx)
-                  [p-idx1 p-idx2] (aidx-to-pidxs a-idx)]]
+                  [p-idx1 p-idx2] (aidx-to-pidxs a-idx)]]  ; CAN I DO THIS AT THE TOP OF THE doseq BY DESTRUCTURING MAP ELEMENTS?
       (mset! p-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
     pers)) ; this version mutates the matrix inside pers, so no need to assoc it into the result
 
