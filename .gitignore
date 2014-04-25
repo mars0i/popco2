@@ -6,3 +6,4 @@ target/
 *.swp
 .nrepl-port
 checkouts
+checkouts.disabled
