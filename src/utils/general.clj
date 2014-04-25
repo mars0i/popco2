@@ -1,5 +1,9 @@
 (ns utils.general ; Utility functions handy for any Clojure program
+  (:use [clojure.repl :only [dir-fn]])
   (:require [clojure.pprint :only [*print-right-margin*]]))
+
+;; dir-fn is useful because dir doseq's println, so you get a long column,
+;; whereas dir-fn gives you a seq you can format however you want.
 
 (defn domap
   ([f coll] (doseq [e coll] (f e)))
