@@ -54,15 +54,22 @@
     (settle-propn-net    settling-iters)))
 
 ;; TODO: Deal with semantic-iffs.
-;; TODO: Maybe I really should just create a brand new matrix every time.  Why not?
-;; TODO: Cloning a 50x50 propn matrix 500,000 times (100 persons in 5000 ticks) 
-;;       takes only 3 seconds on my MBP, according to Criterium.  That's a reasonble
-;;       cost: The entire simulation takes 3 seconds longer.
+;; Note: Cloning a 50x50 propn matrix 500,000 times (100 persons in 5000 ticks) takes only 3 seconds on my MBP. (A reasonable price for peace of mind with laziness.)
+(defn update-propn-wts-from-analogy-activns
+  "Performs a functional update of person pers's propn link weight matrix 
+  from activations of proposition map nodes in the analogy network.  
+  i.e. this updates the weight of a propn-to-propn link as a function of 
+  the activation of the map node that maps those two propositions, in the 
+  analogy network.  Returns the new, updated person."
+  [pers]
+  pers)
+
 (defn update-propn-wts-from-analogy-activns!
-  "Updates person pers's propn link weight matrix from activations of
+  "Mutates person pers's propn link weight matrix from activations of
   proposition map nodes in the analogy network.  i.e. this sets the
   weight of a propn-to-propn link as a function of the activation of
-  the map node that maps those two propositions, in the analogy network."
+  the map node that maps those two propositions, in the analogy network.
+  Returns the original person with its newly-modified propn net"
   [pers]
   (let [a-activns (:analogy-activns pers)
         p-mat (:wt-mat (:propn-net pers))         ; We want the actual matrix. Safer with the keyword.
