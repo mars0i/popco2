@@ -54,6 +54,7 @@
     (settle-propn-net    settling-iters)))
 
 ;; TODO: Deal with semantic-iffs.
+;; TODO: Maybe I really should just create a brand new matrix every time.  Why not?
 (defn update-propn-wts-from-analogy-activns
   "Updates person pers's propn link weight matrix from activations of
   proposition map nodes in the analogy network.  i.e. this sets the
@@ -70,7 +71,7 @@
             :let [a-val (mget a-activns a-idx)
                   [p-idx1 p-idx2] (aidx-to-pidxs a-idx)]]
       (mset! p-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
-    pers))
+    pers)) ; this version mutates the matrix inside pers, so no need to assoc it into the result
 
 ;; calc-assoc-weight in imp.lisp in popco1
 (defn calc-propn-link-wt
