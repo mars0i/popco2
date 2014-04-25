@@ -50,11 +50,10 @@
   [pers]
   (-> pers
     (settle-analogy-net  settling-iters) ; is this step necessary?? only because of cycling??
-    (update-propn-wts-from-analogy-activns!)
+    (update-propn-wts-from-analogy-activns)
     (settle-propn-net    settling-iters)))
 
 ;; TODO: Deal with semantic-iffs.
-;; Note: Cloning a 50x50 propn matrix 500,000 times (100 persons in 5000 ticks) takes only 3 seconds on my MBP. (A reasonable price for peace of mind with laziness.)
 (defn update-propn-wts-from-analogy-activns
   "Performs a functional update of person pers's propn link weight matrix 
   from activations of proposition map nodes in the analogy network.  
