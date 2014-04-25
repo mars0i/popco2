@@ -30,7 +30,7 @@
       (assoc propn-map
              :propn-to-extended-fams-ids (make-propn-to-extended-fams-ids propn-map)))))
 
-(defn clone-propn-net
+(defn clone
   "Make a PropnNet pnet that has its own new copy of pnet's wt-mat matrix, 
   but possibly sharing pnet's other data structures."
   [pnet]

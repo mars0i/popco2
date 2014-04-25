@@ -42,7 +42,7 @@
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
         pers (->Person nm 
-                       (pn/clone-propn-net propn-net)
+                       (pn/clone propn-net)
                        (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
                        (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
                        analogy-net

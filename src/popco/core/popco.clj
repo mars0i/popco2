@@ -1,23 +1,23 @@
 (ns popco.core.popco
-  [:use [clojure.core.matrix :as mx]
-        ;[clojure.data :as da] ; for 'diff'
+  (:use [clojure.core.matrix :as mx]
         popco.core.main
-        popco.core.population
-        popco.core.person
-        popco.core.lot
-        popco.core.communic
-        popco.nn.nets
-        popco.nn.analogy
-        popco.nn.propn
-        popco.nn.update
-        popco.nn.testtools
-        popco.nn.pprint
-        popco.test.popco1comp
-        utils.general]
-  [:import [popco.core.lot Propn Pred Obj]
+        utils.general)
+  ;[clojure.data :as da] ; for 'diff'
+  (:require [popco.core.population :as popn]
+            [popco.core.person :as pers]
+            [popco.core.lot :as lot]
+            [popco.core.communic :as com]
+            [popco.nn.nets :as nn]
+            [popco.nn.analogy :as an]
+            [popco.nn.propn :as pn]
+            [popco.nn.update :as up]
+            [popco.nn.pprint :as pp])
+  ;popco.nn.testtools
+  ;popco.test.popco1comp
+  (:import [popco.core.lot Propn Pred Obj]
            [popco.core.person Person]
            [popco.core.population Population]
-           [popco.nn.nets AnalogyNet PropnNet]])
+           [popco.nn.nets AnalogyNet PropnNet]))
 ;; add :gen-class ?
 
 ;; set pretty-print width to terminal width
