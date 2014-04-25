@@ -28,7 +28,14 @@
                            (concat pns/crime-propns pns/virus-propns) pnet anet))
 
 
-(def popn (pp/->Population 0 [jo job jov]))
+(def popn (pp/->Population 0 
+                           (doall
+                             (concat
+                               [jo job jov]
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old jov))))))
+
 (reset! mn/folks popn)
 ;(swap! mn/folks assoc :members [jo job jov])
 
