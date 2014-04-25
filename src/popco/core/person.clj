@@ -63,7 +63,7 @@
   "Accepts a single argument, a person, and returns a person containing fresh a
   copy of any internal structure one might want to mutate.  (Useful for creating 
   distinct persons rather than to update the same person for a new tick.)"
-  [{nm propn-net :propn-net propn-mask :propn-mask propn-activns :propn-activns
+  [{nm :nm propn-net :propn-net propn-mask :propn-mask propn-activns :propn-activns
     analogy-net :analogy-net analogy-mask :analogy-mask analogy-activns :analogy-activns
     analogy-idx-to-propn-idxs :analogy-idx-to-propn-idxs}]
   (->Person nm
@@ -76,9 +76,10 @@
             analogy-idx-to-propn-idxs)) ; should never change
 
 (defn new-person-from-old
-  "Create a clone of person pers, but with new name."
-  [pers new-name]
-  (assoc :nm new-name (clone pers)))
+  "Create a clone of person pers, but with name new-name, or a generated name,
+  if not."
+  ([pers] (new-person-from-old pers (keyword (gensym (name (:nm pers))))))
+  ([pers new-name] (assoc (clone pers) :nm new-name)))
 
 (defn propn-net-clone
   "Accepts a single argument, a person pers, and returns a person containing
