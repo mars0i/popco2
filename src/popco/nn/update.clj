@@ -60,9 +60,9 @@
   from activations of proposition map nodes in the analogy network.  
   i.e. this updates the weight of a propn-to-propn link as a function of 
   the activation of the map node that maps those two propositions, in the 
-  analogy network.  Returns the new, updated person."
+  analogy network.  Returns the fresh, updated person."
   [pers]
-  pers)
+  (update-propn-wts-from-analogy-activns! (pers/propn-net-clone pers)))
 
 (defn update-propn-wts-from-analogy-activns!
   "Mutates person pers's propn link weight matrix from activations of
