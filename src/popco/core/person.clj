@@ -75,7 +75,7 @@
             (mx/clone analogy-activns)
             analogy-idx-to-propn-idxs)) ; should never change
 
-(defn clone-propn-net
+(defn propn-net-clone
   "Accepts a single argument, a person pers, and returns a person containing
   fresh a copy of its proposition network.  (Useful e.g. for updating pers's
   proposition network as a function of analogy net activations.)"
