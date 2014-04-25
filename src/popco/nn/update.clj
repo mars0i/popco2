@@ -22,8 +22,9 @@
 ;;      matrix.
 
 (declare next-activns settle-net settle-analogy-net settle-propn-net
-         update-propn-wts-from-analogy-activns! update-person-nets update-nets
-         clip-to-extrema dist-from-max dist-from-min calc-propn-link-wt)
+         update-propn-wts-from-analogy-activns update-propn-wts-from-analogy-activns! 
+         update-person-nets update-nets clip-to-extrema dist-from-max dist-from-min 
+         calc-propn-link-wt)
 
 (def settling-iters 5)  ; default number of times to run through the settling algorithm in each tick
 
