@@ -1,4 +1,4 @@
-settle.clj
+update.clj
 =======
 
 **Notes on core.matrix functions**
