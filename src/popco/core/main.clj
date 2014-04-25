@@ -9,7 +9,7 @@
 ;; SEE src/popco/start.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare once once! many-times popco report-popn report-to-console inc-tick report)
+(declare once once! many-times many-times! popco report-popn report-to-console inc-tick report)
 
 (def folks (atom (->Population 0 [])))
 
@@ -32,6 +32,12 @@
   No between-tick reporting is done when the sequence is realized."
   [popn]
   (iterate once popn))
+
+(defn many-times!
+  "Returns a lazy sequence of population states, one for each tick.
+  No between-tick reporting is done when the sequence is realized."
+  [popn]
+  (iterate once! popn))
 
 ;; This should be obvious:
 ;; Any side-effects caused by code in 'once' will occur if it's
