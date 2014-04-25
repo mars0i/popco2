@@ -9,7 +9,7 @@
 ;; SEE src/popco/start.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare once many popco report-popn report-to-console inc-tick report)
+(declare once once! many-times popco report-popn report-to-console inc-tick report)
 
 (def folks (atom (->Population 0 [])))
 
@@ -25,9 +25,9 @@
   between-tick reporting on each realized population state, starting from
   initial population state popn, or folks by default."
   ([] (popco folks))
-  ([popn] (map report-popn (many popn))))
+  ([popn] (map report-popn (many-times popn))))
 
-(defn many
+(defn many-times
   "Returns a lazy sequence of population states, one for each tick.
   No between-tick reporting is done when the sequence is realized."
   [popn]
@@ -39,13 +39,24 @@
 
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
-  Returns the population in its new state."
+  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
   [popn]
   (->Population
     (inc (:tick popn))
     (doall    ; one or both of these steps might not be purely functional:
       (cm/communicate 
         (up/update-nets (:members popn))))))
+
+(defn once!
+  "Implements a single timestep's (tick's) worth of evolution of the population.
+  Returns the population in its new state.  May mutate persons' internal data
+  structures."
+  [popn]
+  (->Population
+    (inc (:tick popn))
+    (doall    ; one or both of these steps might not be purely functional:
+      (cm/communicate 
+        (up/update-nets! (:members popn))))))
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to

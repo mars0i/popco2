@@ -25,8 +25,8 @@
 
 (declare next-activns settle-net settle-analogy-net settle-propn-net
          update-propn-wts-from-analogy-activns update-propn-wts-from-analogy-activns! 
-         update-person-nets update-nets clip-to-extrema dist-from-max dist-from-min 
-         calc-propn-link-wt)
+         update-person-nets update-nets update-person-nets! update-nets!
+         clip-to-extrema dist-from-max dist-from-min calc-propn-link-wt)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
@@ -34,17 +34,33 @@
 (defn update-nets
   "Implements a single timestep's (tick's) worth of network settling and updating of the
   proposition network from the analogy network.  Returns the population in its new state
-  after these processes have been performed."
+  after these processes have been performed.  Should be purely functional."
   [persons]
   (map update-person-nets persons))
 
+(defn update-nets!
+  "Implements a single timestep's (tick's) worth of network settling and updating of the
+  proposition network from the analogy network.  Returns the population in its new state
+  after these processes have been performed.  May mutate internal data structures."
+  [persons]
+  (map update-person-nets! persons))
+
 (defn update-person-nets
-  "Perform one tick's updating of the networks of a single person."
+  "Perform one tick's (functional) updating of the networks of a single person."
   [pers]
   (-> pers
-    (settle-analogy-net  nc/+settling-iters+) ; is this step necessary?? only because of cycling??
+    (settle-analogy-net nc/+settling-iters+) ; is this step necessary?? only because of cycling??
     (update-propn-wts-from-analogy-activns)
-    (settle-propn-net    nc/+settling-iters+)))
+    (settle-propn-net nc/+settling-iters+)))
+
+(defn update-person-nets!
+  "Perform one tick's updating of the networks of a single person, possibly 
+  mutating some internal data structure."
+  [pers]
+  (-> pers
+    (settle-analogy-net nc/+settling-iters+) ; is this step necessary?? only because of cycling??
+    (update-propn-wts-from-analogy-activns!)
+    (settle-propn-net nc/+settling-iters+)))
 
 ;; TODO: Deal with semantic-iffs.
 (defn update-propn-wts-from-analogy-activns

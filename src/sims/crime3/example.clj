@@ -34,6 +34,6 @@
 
 ;(mn/init popn) ; note popn is unchanged, but @folks has been updated.
 
-(def popn-evol (mn/many popn))
+;(def popn-evol (mn/many-times popn))
 ;(def popn-evol (mn/popco popn))
 
