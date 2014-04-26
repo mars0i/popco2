@@ -124,10 +124,11 @@
 ;    (similar 'cause 'prevent (* -1L0 *ident-weight*)) ; avoid mapping cause to prevent
 ;    (semantic-iff 'cb-vpp 'v-ipa -.1L0)
 ;    (semantic-iff 'cv-rpa 'b-abp -.1L0)
-;    (similar 'is-beastly 'is-infected (* -1L0 *ident-weight*))
 ;   ))
 
-(def sem-relats [[-1 :Causal-if :Preventative-if]])
+(def semantic-iffs [[-0.1 :CB-vpp :V-ipa] [-0.1 :CV-rpa :B-abp]])
+
+(def conceptual-relats [[-1.0 :Causal-if :Preventative-if]])
 ;; This specifies mapnodes that should be provided with a link from SEMANTIC.
 ;; Note order of the last two arguments doesn't matter: Both orders are tried.
 ;; The number will be multiplied by the default semantic link weight of

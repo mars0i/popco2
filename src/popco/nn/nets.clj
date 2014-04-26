@@ -55,7 +55,7 @@
 
 ;; PropnNets store a weight matrix, node activations, and associated semantic
 ;; information for a proposition network.
-(defrecord PropnNet [wt-mat node-vec id-to-idx]
+(defrecord PropnNet [wt-mat sem-wt-mat node-vec id-to-idx]
   NNMats
   (wt-mat [nnstru] (:wt-mat nnstru))
   (pos-wt-mat [nnstru] (mx/emap posify (:wt-mat nnstru)))
@@ -67,11 +67,17 @@
   to those documented for make-nn-core:
   :wt-mat -      A core.matrix square matrix with dimensions equal to the number
                  of nodes, representing all links.
+  :sem-wt-mat -  A core.matrix square matrix with dimensions equal to the number
+                 of nodes, representing semantic influences on link weights, and
+                 the influence of what others have said previously.
   :propn-to-descendant-propn-idxs - a map from each propn id to a seq of 
                  of indexes from the propn's descendant propns.
   :propn-to-extended-fams-ids - a map from each propn id to a vec of seqs
                  of indexes from the propn's extended family propns.  Note there
-                 can be more than one such extended family." )
+                 can be more than one such extended family.
+  Note: wt-mat will be a sum of the persistent weights in sem-wt-mat, and 
+  weights determined by activation values in the analogy net (clipped to the min
+  and max).")
 
 (defn posify 
   "Return the non-negative number closest to x, i.e. 0 if x < 0, else x."

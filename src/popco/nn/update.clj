@@ -24,7 +24,7 @@
 ;;      matrix.
 
 (declare next-activns settle-net settle-analogy-net settle-propn-net
-         update-propn-wts-from-analogy-activns update-propn-wts-from-analogy-activns! 
+         update-propn-wts-from-analogy-activns set-propn-wts-from-analogy-activns! 
          update-person-nets update-nets update-person-nets! update-nets! pll-update-nets
          clip-to-extrema dist-from-max dist-from-min calc-propn-link-wt)
 
@@ -38,19 +38,19 @@
   [persons]
   (map update-person-nets persons))
 
-(defn update-nets!
-  "Implements a single timestep's (tick's) worth of network settling and updating of the
-  proposition network from the analogy network.  Returns the population in its new state
-  after these processes have been performed.  May mutate internal data structures."
-  [persons]
-  (map update-person-nets! persons))
-
 (defn pll-update-nets
   "Implements a single timestep's (tick's) worth of network settling and updating of the
   proposition network from the analogy network.  Returns the population in its new state
   after these processes have been performed.  Should be purely functional.  Uses 'pmap'."
   [persons]
   (pmap update-person-nets persons))
+
+;(defn update-nets!
+;  "Implements a single timestep's (tick's) worth of network settling and updating of the
+;  proposition network from the analogy network.  Returns the population in its new state
+;  after these processes have been performed.  May mutate internal data structures."
+;  [persons]
+;  (map update-person-nets! persons))
 
 (defn update-person-nets
   "Perform one tick's (functional) updating of the networks of a single person."
@@ -60,16 +60,19 @@
     (update-propn-wts-from-analogy-activns)
     (settle-propn-net nc/+settling-iters+)))
 
-(defn update-person-nets!
-  "Perform one tick's updating of the networks of a single person, possibly 
-  mutating some internal data structure."
-  [pers]
-  (-> pers
-    (settle-analogy-net nc/+settling-iters+) ; is this step necessary?? only because of cycling??
-    (update-propn-wts-from-analogy-activns!)
-    (settle-propn-net nc/+settling-iters+)))
+;(defn update-person-nets!
+;  "Perform one tick's updating of the networks of a single person, possibly 
+;  mutating some internal data structure."
+;  [pers]
+;  (-> pers
+;    (settle-analogy-net nc/+settling-iters+) ; is this step necessary?? only because of cycling??
+;    (update-propn-wts-from-analogy-activns!)
+;    (settle-propn-net nc/+settling-iters+)))
 
-;; TODO: Deal with semantic-iffs.
+;; TODO: Deal with semantic-iffs and influence from communication.
+;; TODO TODO maybe refactor so that I'm not going in and out of the person repeatedly--
+;; i.e pass around components, and then reconstruct the person at the end.
+;; TODO: fix docstrings
 (defn update-propn-wts-from-analogy-activns
   "Performs a functional update of person pers's propn link weight matrix 
   from activations of proposition map nodes in the analogy network.  
@@ -77,9 +80,12 @@
   the activation of the map node that maps those two propositions, in the 
   analogy network.  Returns the fresh, updated person."
   [pers]
-  (update-propn-wts-from-analogy-activns! (pers/propn-net-clone pers)))
+  (let [updated-pers (set-propn-wts-from-analogy-activns! (pers/propn-net-zeroed pers)) ; make a new wt-mat, then update from analogy net
+        p-mat (:wt-mat (:propn-net updated-pers))]
+    (assoc-in pers [:propn-net :wt-mat]
+              (emap! clip-to-extrema (add! p-mat (:sem-wt-mat pers))))))
 
-(defn update-propn-wts-from-analogy-activns!
+(defn set-propn-wts-from-analogy-activns!
   "Mutates person pers's propn link weight matrix from activations of
   proposition map nodes in the analogy network.  i.e. this sets the
   weight of a propn-to-propn link as a function of the activation of
@@ -94,7 +100,7 @@
             :let [a-val (mget a-activns a-idx)
                   [p-idx1 p-idx2] (aidx-to-pidxs a-idx)]]  ; CAN I DO THIS AT THE TOP OF THE doseq BY DESTRUCTURING MAP ELEMENTS?
       (mset! p-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
-    pers)) ; this version mutates the matrix inside pers, so no need to assoc it into the result
+    pers)) ; this function mutates the matrix inside pers, so no need to assoc it into the result
 
 ;; calc-assoc-weight in imp.lisp in popco1
 (defn calc-propn-link-wt
@@ -132,7 +138,8 @@
 ;; GROSSBERG ALGORITHM SETTLING FUNCTION
 ;; See settle.md for explanation and reference sources, including
 ;; explanation of unidirectional links.
-;; Q: Should I use add-product here for the inner addition of emuls?
+;; TODO: Should I use add-product here for the inner addition of emuls?
+;; TODO: Should I use ! versions of these functions?
 (defn next-activns 
   "Calculate a new set of activations for nodes starting from the current
   activations in vector activns, using network link weights in constraint

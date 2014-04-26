@@ -16,7 +16,7 @@
                                pns/living-propns 
                                an/+pos-link-increment+
                                an/+neg-link-value+
-                               pns/sem-relats))
+                               pns/conceptual-relats))
 
 (def jo (pers/make-person :jo 
                           (concat pns/crime-propns pns/living-propns) pnet anet))

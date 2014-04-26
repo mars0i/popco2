@@ -23,7 +23,8 @@
         nncore (nn/make-nn-core node-seq)
         propn-map (assoc 
                   nncore
-                  :wt-mat (mx/new-matrix num-nodes num-nodes)
+                  :wt-mat (mx/zero-matrix num-nodes num-nodes)
+                  :sem-wt-mat (mx/zero-matrix num-nodes num-nodes)
                   :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
                                                     node-seq (:id-to-idx nncore)))]
     (nn/map->PropnNet

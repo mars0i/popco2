@@ -83,11 +83,21 @@
 
 (defn propn-net-clone
   "Accepts a single argument, a person pers, and returns a person containing
-  fresh a copy of its proposition network.  (Useful e.g. for updating pers's
+  a fresh copy of its proposition network.  (Useful e.g. for updating pers's
   proposition network as a function of analogy net activations.)"
   [pers]
   (assoc pers 
          :propn-net (pn/clone (:propn-net pers))))
+
+(defn propn-net-zeroed
+  "Accepts a single argument, a person pers, and returns a person containing
+  a fresh, zeroed proposition network.  (Useful e.g. for updating pers's
+  proposition network as a function of analogy net activations.)"
+  [pers]
+  (let [p-net (:propn-net pers)
+        num-nodes (count (:node-seq p-net))]
+    (assoc-in pers [:propn-net :wt-mat]
+              (mx/zero-matrix num-nodes num-nodes))))
 
 ;; TEMPORARY
 ;; differs from make-person in using old-add-to-analogy-net as a sanity check
