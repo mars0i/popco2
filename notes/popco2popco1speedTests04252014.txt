@@ -1,0 +1,101 @@
+
+===================================================
+SUMMARY
+
+popco2: 
+The `time` tests are in line with the Criterium tests, so I'll use the former.
+
+many-times for 1000 ticks took 143.2 secs, or 2.39 minutes.
+many-times! for 1000 ticks took 139.1 secs, or 2.32 minutes.
+
+(And for 5000 ticks, that would be about
+
+popco1:
+Took 1209.76 seconds, or 20.16 minutes.
+
+summary:
+Yayy!  popco2 is *lots* faster.  More than 8X faster.
+For 5000 ticks, that would be 12 minutes for popco2 ... vs 1hr 40 mins for popco1.
+Yes!
+
+many-times takes about 1.03 as long as many-times!, i.e. 3% slower.
+(This is more costly than I expected based on a test in isolation from
+the application itself.  3% advantage might be worth keeping, if it ads
+up, with other optimizations.  On the other hand, the overall speed is
+*so* much faster than popco2, that for now, I'm going with the
+functional version.)
+
+===================================================
+POPCO-X/POPCO2:
+With git hist marker 1b7efd8 and crime3/example99.clj:
+
+33 both-biasers job, 33 virus-biasers jov, and 33 beast-biaser job.
+Criterium test for 100 ticks,
+raw time test for 1000 ticks.
+
+popco.core.popco=> (criterium.core/bench (def popn100 (nth (many-times popn) 100)))
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 14.406778 sec
+    Execution time std-deviation : 127.900578 ms
+   Execution time lower quantile : 14.264241 sec ( 2.5%)
+   Execution time upper quantile : 14.757114 sec (97.5%)
+                   Overhead used : 2.520170 ns
+
+Found 23 outliers in 60 samples (38.3333 %)
+	low-severe	 10 (16.6667 %)
+	low-mild	 5 (8.3333 %)
+	high-mild	 8 (13.3333 %)
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+
+
+popco.core.popco=> (criterium.core/bench (def popn100 (nth (many-times! popn) 100)))
+popco.core.popco=> (criterium.core/bench (def popn100bang (nth (many-times! popn) 100)))
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 13.868870 sec
+    Execution time std-deviation : 18.845807 ms
+   Execution time lower quantile : 13.839931 sec ( 2.5%)
+   Execution time upper quantile : 13.914262 sec (97.5%)
+                   Overhead used : 2.520170 ns
+
+Found 2 outliers in 60 samples (3.3333 %)
+	low-severe	 2 (3.3333 %)
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+
+
+popco.core.popco=> (time (def popn100 (nth (many-times popn) 1000))) (time (def popn100bang (nth (many-times! popn) 1000)))
+"Elapsed time: 143202.883 msecs"
+#'popco.core.popco/popn100
+"Elapsed time: 139076.414 msecs"
+#'popco.core.popco/popn100bang
+popco.core.popco=> (/ 143202.883 139076.414)
+1.0296705162386486
+popco.core.popco=> (/ 143202.883 (* 60 1000))
+2.386714716666667
+popco.core.popco=> (* 5 (/ 143202.883 (* 60 1000)))
+11.933573583333335
+popco.core.popco=> (/ 139076.414  (* 60 1000))
+2.317940233333333
+popco.core.popco=> (* 5 (/ 139076.414  (* 60 1000)))
+11.589701166666666
+
+===================================================
+POPCO 1:
+
+4/25/2014 with crime/crime3example99.lisp
+33 both-biasers job, 33 virus-biasers jov, and 33 beast-biaser job:
+
+* (time (popco*))
+
+Running popco with maximum of 5 cycles each in 1000 popco tick(s) ....
+*do-converse* NIL; *do-update-propn-nets-from-analogy-nets* T; *do-report-to-netlogo* NIL; *do-report-propns-to-csv* NIL; *use-new-random-state* T
+1000
+Evaluation took:
+  1212.021 seconds of real time
+  1209.760389 seconds of total run time (1200.559819 user, 9.200570 system)
+  [ Run times consist of 70.328 seconds GC time, and 1139.433 seconds non-GC time. ]
+  99.81% CPU
+  2,787,712,278,274 processor cycles
+  1 page fault
+  526,989,941,696 bytes consed
+
+20.162666
