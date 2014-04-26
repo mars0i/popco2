@@ -25,7 +25,7 @@
 
 (declare next-activns settle-net settle-analogy-net settle-propn-net
          update-propn-wts-from-analogy-activns update-propn-wts-from-analogy-activns! 
-         update-person-nets update-nets update-person-nets! update-nets!
+         update-person-nets update-nets update-person-nets! update-nets! pll-update-nets
          clip-to-extrema dist-from-max dist-from-min calc-propn-link-wt)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -44,6 +44,13 @@
   after these processes have been performed.  May mutate internal data structures."
   [persons]
   (map update-person-nets! persons))
+
+(defn pll-update-nets
+  "Implements a single timestep's (tick's) worth of network settling and updating of the
+  proposition network from the analogy network.  Returns the population in its new state
+  after these processes have been performed.  Should be purely functional.  Uses 'pmap'."
+  [persons]
+  (pmap update-person-nets persons))
 
 (defn update-person-nets
   "Perform one tick's (functional) updating of the networks of a single person."
