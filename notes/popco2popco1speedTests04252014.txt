@@ -99,3 +99,10 @@ Evaluation took:
   526,989,941,696 bytes consed
 
 20.162666
+
+===================================================
+OTHER NOTES
+
+I tried it with ndarray.  Very slow.
+63039.313 milliseconds *for 5 ticks*.
+That's 3.5 hours for 1000 ticks.
