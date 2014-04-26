@@ -79,6 +79,19 @@ popco.core.popco=> (/ 139076.414  (* 60 1000))
 popco.core.popco=> (* 5 (/ 139076.414  (* 60 1000)))
 11.589701166666666
 
+
+Also, here's Criterium on 1000 ticks with many-times!:
+
+popco.core.popco=> (criterium.core/bench (def popn1000 (nth (many-times! popn) 1000)))
+WARNING: Final GC required 4.68358962442443 % of runtime
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 2.357626 min
+    Execution time std-deviation : 51.445795 ms
+   Execution time lower quantile : 2.355941 min ( 2.5%)
+   Execution time upper quantile : 2.359315 min (97.5%)
+                   Overhead used : 2.417913 ns
+nil
+
 ===================================================
 PMAP ON MBP
 
