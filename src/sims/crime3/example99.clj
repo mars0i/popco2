@@ -1,4 +1,4 @@
-(ns sims.crime3.example
+(ns sims.crime3.example99
   (:require [popco.nn.analogy :as an]
             [popco.nn.propn :as pn]
             [popco.core.person :as pers]
