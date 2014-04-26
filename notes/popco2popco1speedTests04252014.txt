@@ -79,6 +79,30 @@ popco.core.popco=> (* 5 (/ 139076.414  (* 60 1000)))
 11.589701166666666
 
 ===================================================
+PMAP
+
+Replacing `map` with `pmap` in popco.nn.update/update-nets produces this:
+
+popco.core.popco=> (time (def popn1000bang (nth (many-times popn) 1000)))
+"Elapsed time: 59307.667 msecs"
+
+That's 1 minute for 1000 ticks!
+
+popco.core.popco=> (time (def popn5000bang (nth (many-times popn) 5000)))
+"Elapsed time: 307048.772 msecs"
+#'popco.core.popco/popn5000bang
+popco.core.popco=> (/ 307.048772 60)
+5.117479533333333
+
+And 5 minutes for 5000 ticks.
+
+CPU usage goes to about 540% during this process.
+
+(Obviously this doesn't help with running multiple simulations.
+Unless the cheaha folks will let me take over the whole cluster....
+But for experimenting, at least ... it's incredible.)
+
+===================================================
 POPCO 1:
 
 4/25/2014 with crime/crime3example99.lisp
