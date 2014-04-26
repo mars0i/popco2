@@ -1,6 +1,7 @@
+TIME TRIALS WITH NET UPDATES ONLY, NO COMMUNICATION, LATE APRIL 2014
 
 ===================================================
-SUMMARY
+SUMMARY ON MY MBP
 
 popco2: 
 The `time` tests are in line with the Criterium tests, so I'll use the former.
@@ -26,7 +27,7 @@ up, with other optimizations.  On the other hand, the overall speed is
 functional version.)
 
 ===================================================
-POPCO-X/POPCO2:
+POPCO-X/POPCO2 ON MBP:
 With git hist marker 1b7efd8 and crime3/example99.clj:
 
 33 both-biasers job, 33 virus-biasers jov, and 33 beast-biaser job.
@@ -79,7 +80,7 @@ popco.core.popco=> (* 5 (/ 139076.414  (* 60 1000)))
 11.589701166666666
 
 ===================================================
-PMAP
+PMAP ON MBP
 
 Replacing `map` with `pmap` in popco.nn.update/update-nets produces this:
 
@@ -103,7 +104,7 @@ Unless the cheaha folks will let me take over the whole cluster....
 But for experimenting, at least ... it's incredible.)
 
 ===================================================
-POPCO 1:
+POPCO 1 ON MBP:
 
 4/25/2014 with crime/crime3example99.lisp
 33 both-biasers job, 33 virus-biasers jov, and 33 beast-biaser job:
@@ -125,7 +126,7 @@ Evaluation took:
 20.162666
 
 ===================================================
-OTHER NOTES
+OTHER NOTES RE MBP
 
 I tried it with ndarray.  Very slow.
 63039.313 milliseconds *for 5 ticks*.
@@ -135,3 +136,37 @@ I tried it with clatrix, but it won't work because at present,
 core.matrix treats clatrix matrices as immutable, because not all
 mutation ops are supported yet.  (But the underlying matrices
 *are* mutable.)
+
+===================================================
+POPCO2 ON MBA, INCLUDING PMAP:
+
+Summary of `time` results for 1000 ticks, with 99 persons:
+
+many-times:     5.18 mins
+many-times!:    5.02 mins
+(again, only 3% difference between the purely functional mutational versions)
+pll-many-times: 3.6 mins (i.e. with pmap)
+(So even on the 4-core (?) MBA, pmap makes a significant difference)
+
+Details:
+
+popco.core.popco=> (time (def yo1000 (nth (many-times popn) 1000)))
+"Elapsed time: 310577.721 msecs"
+#'popco.core.popco/yo1000
+popco.core.popco=> (/ 310.577721 60)
+5.17629535
+
+popco.core.popco=> (time (def yo1000pll (nth (pll-many-times popn) 1000)))
+"Elapsed time: 214108.734 msecs"
+#'popco.core.popco/yo1000pll
+popco.core.popco=> (/ 214.108734 60)
+3.5684789
+
+popco.core.popco=> (time (def yo1000bang (nth (many-times! popn) 1000)))
+"Elapsed time: 301165.998 msecs"
+#'popco.core.popco/yo1000bang
+popco.core.popco=> (/ 301.165998 60)
+5.0194333
+
+popco.core.popco=> (/ 5.17629535 5.0194333)
+1.031250948189709
