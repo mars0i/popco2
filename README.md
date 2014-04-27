@@ -1,6 +1,7 @@
 popco2
 =======
 
+Cultural transmission with analogy biases.
 Rewrite of [POPCO](https://github.com/mars0i/popco) in Clojure.
 
 All of this code is copyright (c) 2013, 2014 by Marshall Abrams.  All rights
