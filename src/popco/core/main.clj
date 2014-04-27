@@ -9,7 +9,10 @@
 ;; SEE src/popco/start.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare once once! pll-once many-times many-times! pll-many-times popco report-popn report-to-console inc-tick report)
+(declare once 
+         pll-once many-times 
+         ;once! many-times! 
+         pll-many-times popco report-popn report-to-console inc-tick report)
 
 (def folks (atom (->Population 0 [])))
 
@@ -33,11 +36,11 @@
   [popn]
   (iterate once popn))
 
-(defn many-times!
-  "Returns a lazy sequence of population states, one for each tick.
-  No between-tick reporting is done when the sequence is realized."
-  [popn]
-  (iterate once! popn))
+;(defn many-times!
+;  "Returns a lazy sequence of population states, one for each tick.
+;  No between-tick reporting is done when the sequence is realized."
+;  [popn]
+;  (iterate once! popn))
 
 (defn pll-many-times
   "Returns a lazy sequence of population states, one for each tick.
@@ -59,16 +62,16 @@
       (cm/communicate 
         (up/update-nets (:members popn))))))
 
-(defn once!
-  "Implements a single timestep's (tick's) worth of evolution of the population.
-  Returns the population in its new state.  May mutate persons' internal data
-  structures."
-  [popn]
-  (->Population
-    (inc (:tick popn))
-    (doall    ; one or both of these steps might not be purely functional:
-      (cm/communicate 
-        (up/update-nets! (:members popn))))))
+;(defn once!
+;  "Implements a single timestep's (tick's) worth of evolution of the population.
+;  Returns the population in its new state.  May mutate persons' internal data
+;  structures."
+;  [popn]
+;  (->Population
+;    (inc (:tick popn))
+;    (doall    ; one or both of these steps might not be purely functional:
+;      (cm/communicate 
+;        (up/update-nets! (:members popn))))))
 
 (defn pll-once
   "Implements a single timestep's (tick's) worth of evolution of the population.

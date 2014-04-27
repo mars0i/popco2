@@ -29,7 +29,7 @@
 
 
 (def popn (pp/->Population 0 
-                           (doall
+                           (vec
                              (concat
                                [jo job jov]
                                (repeatedly 32 #(pers/new-person-from-old jo))
