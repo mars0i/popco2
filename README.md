@@ -3,6 +3,7 @@ popco2
 
 Cultural transmission with analogy biases.  Rewrite of
 [popco](https://github.com/mars0i/popco) in Clojure.  
+This repository was previously called "popco-x".
 
 All of this code is copyright (c) 2013, 2014 by Marshall Abrams.  All rights
 reserved.  That means that the code is not really free for anyone else's
