@@ -23,10 +23,10 @@ popco.nn.analogy/+analogy-max-wt+ = 0.5 for analogy net links.  This
 reduces extreme cyclic activation value fluctuations in some models.
 This limit doesn't apply to proposition networks, however.)
 
-**How were semantic-iffs handled in popco1?**
+**Summary of what needs to be done with semantic-iffs**
 
-* When initializing a person's networks, the following functions were called
-on called on each person's semantic-iff specifications.  (Note that their
- syntax and storage was different than in popco2.)
-`apply-record-raw-make-symlink-if-units`,  `record-raw-make-symlink-if-units`.  The latter 
-made the bidirectional link, and called `mark-constraint-newly-added`.
+* When first initializing a person, create a link weight in sem-wt-mat
+  that's equal to the semantic-iff's weight.
+
+* When updating the propn net, add the current weights in sem-wt-mat to whatever weight
+  is specified by the analogy net activations.
