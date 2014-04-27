@@ -11,8 +11,8 @@ communication.  Semantic iff specifications have the form illustrated here:
 (def semantic-iffs [[-0.1 :CB-vpp :V-ipa]
                     [0.2 :CV-rpa :B-abp]])
 ````
-The first element of each specification is a link weight.  
-The other two are ids of propositions.  Their order doesn't matter.
+The first element of each specification is a link weight.  The other two
+are ids of propositions.  Their order doesn't matter.
 
 These link weights sum with weights caused by other processes. 
 However, link weights are not allowed to exceed the min (-1) and max
@@ -28,5 +28,5 @@ This limit doesn't apply to proposition networks, however.)
 * When initializing a person's networks, the following functions were called
 on called on each person's semantic-iff specifications.  (Note that their
  syntax and storage was different than in popco2.)
-
-````apply-record-raw-make-symlink-if-units --> record-raw-make-symlink-if-units````
+`apply-record-raw-make-symlink-if-units`,  `record-raw-make-symlink-if-units`.  The latter 
+made the bidirectional link, and called `mark-constraint-newly-added`.
