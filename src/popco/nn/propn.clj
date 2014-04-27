@@ -12,21 +12,25 @@
   (:import [popco.core.lot Propn]
            [popco.nn.nets PropnNet]))
 
-(declare make-propn-to-extended-descendant-propn-idxs propn-extended-descendant-propns make-propn-to-extended-fams-ids make-propn-net)
+(declare make-propn-to-extended-descendant-propn-idxs
+         propn-extended-descendant-propns make-propn-to-extended-fams-ids
+         make-propn-net new-sem-wt-mat)
 
+;; TODO APPLY SEMANTIC-IFFS
 (defn make-propn-net
   "Constructs a proposition netword object with fields specified in doctrings
   of ->Propn-net and make-nn-core."
-  [propnseq]
+  [propnseq sem-iffs]
   (let [node-seq (cons {:id :SALIENT} propnseq)
         num-nodes (count node-seq)
         nncore (nn/make-nn-core node-seq)
+        id-to-idx (:id-to-idx nncore)
         propn-map (assoc 
                   nncore
                   :wt-mat (mx/zero-matrix num-nodes num-nodes)
-                  :sem-wt-mat (mx/zero-matrix num-nodes num-nodes)
+                  :sem-wt-mat (new-sem-wt-mat id-to-idx sem-iffs)
                   :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
-                                                    node-seq (:id-to-idx nncore)))]
+                                                    node-seq id-to-idx))]
     (nn/map->PropnNet
       (assoc propn-map
              :propn-to-extended-fams-ids (make-propn-to-extended-fams-ids propn-map)))))
@@ -78,16 +82,13 @@
         (cons (:id propn)
               (fam-propns (:args propn)))))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defn update-propn-links
-  [pers]
-  (let [propn-mask (:propn-mask pers)
-        analogy-mask (:analogy-mask pers)
-        propn-net (:propn-net pers)
-        analogy-net (:analogy-net pers)
-        an-ids-to-idx (:ids-to-idx analogy-net)]
-    ;; find propn mapnodes that are unmasked
-    ;; find the corresponding propn nodes
-    ;; and set the weight of the link between them
-    ))
+(defn new-sem-wt-mat
+  "Creates a new matrix that's zero except for weights of elements chosen by
+  ids in each semantic iff specification.  The new weight overwrites whatever
+  value the element had.  Returns the altered matrix."
+  [id-to-idx sem-iffs]
+  (let [dim (count id-to-idx) ; note count is O(1) on a map
+        mat (mx/zero-matrix dim dim)]
+    (doseq [[wt id1 id2] sem-iffs]
+      (mx/mset! mat (id-to-idx id1) (id-to-idx id2) wt))
+    mat))

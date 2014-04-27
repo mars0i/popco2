@@ -29,7 +29,6 @@
 ;; to involve regularly creating new persons in the middle of simulation runs
 ;; e.g. with natural selection.
 
-;; TODO APPLY SEMANTIC-IFFS
 (defn make-person
   "Creates a person with name (nm), propns with propn-ids, and a pre-constructed
   propn-net and analogy-net.  Uses propns to construct propn-mask and

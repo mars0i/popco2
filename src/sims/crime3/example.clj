@@ -10,7 +10,7 @@
 
 (def propns (concat pns/crime-propns pns/living-propns)) 
 
-(def pnet (pn/make-propn-net propns))
+(def pnet (pn/make-propn-net propns pns/semantic-iffs))
 
 (def anet (an/make-analogy-net pns/crime-propns 
                                pns/living-propns 
