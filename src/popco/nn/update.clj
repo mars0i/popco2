@@ -76,20 +76,21 @@
 ;; The vectorz version calls a vectorz function.
 
 ;; TODO: fix docstrings
-;; TODO WHY ARE THE RESULTING MATRICES ZEROED??
 (defn update-propn-wts-from-analogy-activns
   "Performs a functional update of person pers's propn link weight matrix 
-  from activations of proposition map nodes in the analogy network.  
-  i.e. this updates the weight of a propn-to-propn link as a function of 
-  the activation of the map node that maps those two propositions, in the 
-  analogy network.  Returns the fresh, updated person."
+  from activations of proposition map nodes in the analogy network and from
+  the semantic/conversational weight matrix.  i.e. this updates the weight of
+  a propn-to-propn link as a function of the activation of the map node that 
+  maps those two propositions, in the analogy network, and then adds in the
+  semantic weights and conversationally-derived weights.  Returns updated 
+  person with a new weight matrix."
   [pers]
   (let [sem-wt-mat (:sem-wt-mat (:propn-net pers))
         a-activns (:analogy-activns pers)
         aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
         wt-mat (propn-wts-from-analogy-activns sem-wt-mat a-activns aidx-to-pidxs)] ; rets new mat
     (emap! clip-to-extrema (add! wt-mat sem-wt-mat))
-    (assoc pers :wt-mat wt-mat)))
+    (assoc-in pers [:propn-net :wt-mat] wt-mat)))
 
 (defn propn-wts-from-analogy-activns
   "Generates a new proposition weight matrix from proposition map nodes 
