@@ -10,9 +10,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (declare once 
-         pll-once many-times 
+         pl-once many-times 
          ;once! many-times! 
-         pll-many-times popco report-popn report-to-console inc-tick report)
+         pl-many-times popco report-popn report-to-console inc-tick report)
 
 (def folks (atom (->Population 0 [])))
 
@@ -42,11 +42,11 @@
 ;  [popn]
 ;  (iterate once! popn))
 
-(defn pll-many-times
+(defn pl-many-times
   "Returns a lazy sequence of population states, one for each tick.
   No between-tick reporting is done when the sequence is realized."
   [popn]
-  (iterate pll-once popn))
+  (iterate pl-once popn))
 
 ;; This should be obvious:
 ;; Any side-effects caused by code in 'once' will occur if it's
@@ -73,7 +73,7 @@
 ;      (cm/communicate 
 ;        (up/update-nets! (:members popn))))))
 
-(defn pll-once
+(defn pl-once
   "Implements a single timestep's (tick's) worth of evolution of the population.
   Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
   [popn]
@@ -81,7 +81,7 @@
     (inc (:tick popn))
     (doall    ; one or both of these steps might not be purely functional:
       (cm/communicate 
-        (up/pll-update-nets (:members popn))))))
+        (up/pl-update-nets (:members popn))))))
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to

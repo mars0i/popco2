@@ -25,8 +25,8 @@ This limit doesn't apply to proposition networks, however.)
 
 **Summary of what needs to be done with semantic-iffs**
 
-* When first initializing a person, create a link weight in sem-wt-mat
+* When first initializing a person, create a link weight in linger-wt-mat
   that's equal to the semantic-iff's weight.
 
-* When updating the propn net, add the current weights in sem-wt-mat to whatever weight
+* When updating the propn net, add the current weights in linger-wt-mat to whatever weight
   is specified by the analogy net activations.

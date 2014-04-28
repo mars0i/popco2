@@ -28,7 +28,7 @@
          propn-wts-from-analogy-activns
          update-person-nets update-nets 
          ;update-person-nets!  update-nets! 
-         pll-update-nets clip-to-extrema dist-from-max dist-from-min calc-propn-link-wt)
+         pl-update-nets clip-to-extrema dist-from-max dist-from-min calc-propn-link-wt)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
@@ -40,7 +40,7 @@
   [persons]
   (map update-person-nets persons))
 
-(defn pll-update-nets
+(defn pl-update-nets
   "Implements a single timestep's (tick's) worth of network settling and updating of the
   proposition network from the analogy network.  Returns the population in its new state
   after these processes have been performed.  Should be purely functional.  Uses 'pmap'."
@@ -85,11 +85,11 @@
   semantic weights and conversationally-derived weights.  Returns updated 
   person with a new weight matrix."
   [pers]
-  (let [sem-wt-mat (:sem-wt-mat (:propn-net pers))
+  (let [linger-wt-mat (:linger-wt-mat (:propn-net pers))
         a-activns (:analogy-activns pers)
         aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
-        wt-mat (propn-wts-from-analogy-activns sem-wt-mat a-activns aidx-to-pidxs)] ; rets new mat
-    (emap! clip-to-extrema (add! wt-mat sem-wt-mat))
+        wt-mat (propn-wts-from-analogy-activns linger-wt-mat a-activns aidx-to-pidxs)] ; rets new mat
+    (emap! clip-to-extrema (add! wt-mat linger-wt-mat))
     (assoc-in pers [:propn-net :wt-mat] wt-mat)))
 
 (defn propn-wts-from-analogy-activns
@@ -97,9 +97,9 @@
   in the analogy network.   i.e. this sets the weight of a propn-to-propn 
   link as a function of the activation of the map node that maps those two 
   propositions, in the analogy network."
-  [p-sem-wt-mat a-activns aidx-to-pidxs]
+  [p-linger-wt-mat a-activns aidx-to-pidxs]
   (let [aidxs (keys aidx-to-pidxs)
-        pdim (first (shape p-sem-wt-mat))
+        pdim (first (shape p-linger-wt-mat))
         wt-mat (zero-matrix pdim pdim)] ; make new mat
     (doseq [aidx aidxs
             :let [a-val (mget a-activns aidx)
@@ -120,7 +120,7 @@
 ;  (let [updated-pers (set-propn-wts-from-analogy-activns! (pers/propn-net-zeroed pers)) ; make a new wt-mat, then update from analogy net
 ;        p-mat (:wt-mat (:propn-net updated-pers))]
 ;    (assoc-in pers [:propn-net :wt-mat]
-;              (emap! clip-to-extrema (add! p-mat (:sem-wt-mat pers))))))
+;              (emap! clip-to-extrema (add! p-mat (:linger-wt-mat pers))))))
 ;
 ;(defn old-set-propn-wts-from-analogy-activns!
 ;  "Mutates person pers's propn link weight matrix from activations of

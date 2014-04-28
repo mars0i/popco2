@@ -14,7 +14,7 @@
 
 (declare make-propn-to-extended-descendant-propn-idxs
          propn-extended-descendant-propns make-propn-to-extended-fams-ids
-         make-propn-net new-sem-wt-mat)
+         make-propn-net new-linger-wt-mat)
 
 ;; TODO APPLY SEMANTIC-IFFS
 (defn make-propn-net
@@ -28,7 +28,7 @@
         propn-map (assoc 
                   nncore
                   :wt-mat (mx/zero-matrix num-nodes num-nodes)
-                  :sem-wt-mat (new-sem-wt-mat id-to-idx sem-iffs sem-ifs)
+                  :linger-wt-mat (new-linger-wt-mat id-to-idx sem-iffs sem-ifs)
                   :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
                                                     node-seq id-to-idx))]
     (nn/map->PropnNet
@@ -82,7 +82,7 @@
         (cons (:id propn)
               (fam-propns (:args propn)))))))
 
-(defn new-sem-wt-mat
+(defn new-linger-wt-mat
   "Creates and returns a new matrix that's zero except for weights of elements
   chosen by ids in each semantic iff specification in iffs, and each semantic
   if specifcation in ifs. Specifications have the form [wt id1 id2].  'iff' 
