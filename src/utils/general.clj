@@ -101,6 +101,13 @@
 
 (defn fourth [s] (nth s 3))
 
+(defn nths
+  "Return a list of applications of nth to s and the i's."
+  ([s i] (list (nth s i)))
+  ([s i & is]
+   (cons (nth s i) 
+         (apply nths s is))))
+
 (defn erase-chars
   "Erase up to len characters from the console on the current line."
   [len]
