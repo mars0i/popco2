@@ -20,7 +20,7 @@
 (defn make-propn-net
   "Constructs a proposition netword object with fields specified in doctrings
   of ->Propn-net and make-nn-core."
-  [propnseq sem-iffs]
+  [propnseq sem-iffs sem-ifs]
   (let [node-seq (cons {:id :SALIENT} propnseq)
         num-nodes (count node-seq)
         nncore (nn/make-nn-core node-seq)
@@ -28,7 +28,7 @@
         propn-map (assoc 
                   nncore
                   :wt-mat (mx/zero-matrix num-nodes num-nodes)
-                  :sem-wt-mat (new-sem-wt-mat id-to-idx sem-iffs)
+                  :sem-wt-mat (new-sem-wt-mat id-to-idx sem-iffs sem-ifs)
                   :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
                                                     node-seq id-to-idx))]
     (nn/map->PropnNet
@@ -83,12 +83,18 @@
               (fam-propns (:args propn)))))))
 
 (defn new-sem-wt-mat
-  "Creates a new matrix that's zero except for weights of elements chosen by
-  ids in each semantic iff specification.  The new weight overwrites whatever
-  value the element had.  Returns the altered matrix."
-  [id-to-idx sem-iffs]
+  "Creates and returns a new matrix that's zero except for weights of elements
+  chosen by ids in each semantic iff specification in iffs, and each semantic
+  if specifcation in ifs. Specifications have the form [wt id1 id2].  'iff' 
+  specifications create bidirectional links (symlinks).  'if' specifications 
+  create a directional link from the id2 propn to the id1 propn.  (That may
+  seem backwards, but it matches the direction between matrix indexes given
+  how matrix multiplication is done in popco2."
+  [id-to-idx iffs ifs]
   (let [dim (count id-to-idx) ; note count is O(1) on a map
         mat (mx/zero-matrix dim dim)]
-    (doseq [[wt id1 id2] sem-iffs]
-      (mx/mset! mat (id-to-idx id1) (id-to-idx id2) wt))
+    (doseq [[wt id1 id2] iffs]
+      (nn/symlink! mat (id-to-idx id1) (id-to-idx id2) wt)) ; bidirectional links--activation goes both ways
+    (doseq [[wt id1 id2] ifs]
+      (mx/mset! mat (id-to-idx id1) (id-to-idx id2) wt))    ; unidirectional: activation will flow from the id2 propn to the id1 propn
     mat))
