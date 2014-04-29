@@ -27,6 +27,12 @@ up, with other optimizations.  On the other hand, the overall speed is
 functional version.)
 
 ===================================================
+SUMMARY ON MBA:
+
+popco2 is 10X faster than popco1, using map.
+and pmap is about 70% of the map time.
+
+===================================================
 POPCO-X/POPCO2 ON MBP:
 With git hist marker 1b7efd8 and crime3/example99.clj:
 
@@ -183,3 +189,22 @@ popco.core.popco=> (/ 301.165998 60)
 
 popco.core.popco=> (/ 5.17629535 5.0194333)
 1.031250948189709
+
+FOR POPCO1:
+
+Running popco with maximum of 5 cycles each in 1000 popco tick(s) ....
+*do-converse* NIL; *do-update-propn-nets-from-analogy-nets* T; *do-report-to-netlogo* NIL; *do-report-propns-to-csv* NIL; *use-new-random-state* T
+1000
+Evaluation took:
+  2993.756 seconds of real time
+  2983.515941 seconds of total run time (2959.288025 user, 24.227916 system)
+  [ Run times consist of 184.258 seconds GC time, and 2799.258 seconds non-GC time. ]
+  99.66% CPU
+  4,777,980,534,672 processor cycles
+  5 page faults
+  526,990,014,960 bytes consed
+  
+T
+* (/ 2993.756 60)
+
+49.895935
