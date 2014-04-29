@@ -99,7 +99,8 @@
   [popn]
   (let [tickstr (str (:tick popn))]
     (ug/erase-chars (count tickstr)) ; new tick string is always at least as long as previous
-    (print tickstr)))
+    (print tickstr)
+    (flush)))
 
 (defn inc-tick
   [popn]
