@@ -10,7 +10,10 @@
 
 (def propns (concat pns/crime-propns pns/living-propns)) 
 
-(def pnet (pn/make-propn-net propns pns/semantic-iffs))
+;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
+(def perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/crime-propns))
+
+(def pnet (pn/make-propn-net propns pns/semantic-iffs perception-ifs)) ; second arg is bidirectional link, third is unidirectional
 
 (def anet (an/make-analogy-net pns/crime-propns 
                                pns/living-propns 

@@ -16,19 +16,20 @@
 
 (def folks (atom (->Population 0 [])))
 
-(defn init
-  ([] (init @folks))
-  ([popn]
-   (reset! folks 
-           (assoc popn :members
-                  (map up/settle-analogy-net (:members popn))))))
+;(defn init
+;  ([] (init @folks))
+;  ([popn]
+;   (reset! folks 
+;           (assoc popn :members
+;                  (map up/settle-analogy-net (:members popn))))))
 
+;; DOESN'T WORK?
 (defn popco
   "Returns a lazy sequence of population states, one for each tick, with 
   between-tick reporting on each realized population state, starting from
   initial population state popn, or folks by default."
   ([] (popco folks))
-  ([popn] (map report-popn (many-times popn))))
+  ([popn] (map report-popn (pl-many-times popn))))
 
 (defn many-times
   "Returns a lazy sequence of population states, one for each tick.
