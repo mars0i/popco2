@@ -31,10 +31,9 @@
   ([popn & [{mapfn :mapfn, tick-repts :tick-repts, trans-repts :transm-repts}]]
    (->Population
      (inc (:tick popn))
-     (map (ug/comp* tick-repts)          ; report on state at end of tick
-          (cm/transmit-utterances        ; transmit between persons
-            (map (ug/comp* trans-repts)  ; report on what will be transmitted
-                 (mapfn per-person-fns (:members popn))))))))  ; apply per-person transformations
+     (map (ug/comp* tick-repts) 
+          (cm/communicate (mapfn per-person-fns (:members popn))
+                          (ug/comp* trans-repts))))))
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to

@@ -14,8 +14,9 @@
   "Implements a single timestep's (tick's) worth of communication.  Given a
   sequence of persons, constructs conversations and returns the persons, updated
   to reflect the conversations."
-  [persons]
-  (transmit-utterances persons (choose-conversations persons)))
+  [persons & trans-repts]
+  (transmit-utterances persons 
+                       ((ug/comp* trans-rpts) (choose-conversations persons))))
 
 ;; NOTE transmit-utterances might not be purely functional.
 (defn transmit-utterances
