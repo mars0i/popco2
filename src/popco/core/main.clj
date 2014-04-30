@@ -19,21 +19,23 @@
 (defn many-times
   "Returns a lazy sequence of population states, one for each tick.
   No between-tick reporting is done when the sequence is realized."
-  [popn]
-  (iterate once popn))
+  ([popn] (iterate once popn))
+  ([argmap popn] (iterate (partial argmap) popn)))
 
 (def per-person-fns (comp cm/choose-conversations up/update-person-nets))
 
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
   Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
-  ([popn] (once popn {:mapfn pmap :tick-repts [] :transm-repts []}))
-  ([popn & [{mapfn :mapfn, tick-repts :tick-repts, trans-repts :transm-repts}]]
+  ([popn] (once {:mapfn pmap :tick-repts [] :transm-repts []} popn))
+  ;; BUG NEED TO ASSOC IN MISSING ARGS
+  ([{mapfn :mapfn, tick-repts :tick-repts, trans-repts :transm-repts} 
+    popn]
    (->Population
      (inc (:tick popn))
-     (map (ug/comp* tick-repts) 
+     (map (ug/comp* tick-repts)         ; pmap might reorder output
           (cm/transmit-utterances 
-            (map (ug/comp* trans-repts)
+            (map (ug/comp* trans-repts) ; pmap might reorder output
                  (mapfn per-person-fns (:members popn))))))))
 
 (defn report-popn
