@@ -10,47 +10,51 @@
          propn-already-unmasked? propn-components-already-unmasked? ids-to-poss-mn-id 
          unmask-mapnode-extended-family! transmit-utterances choose-thought)
 
-(defn communicate
-  "Implements a single timestep's (tick's) worth of communication.  Given a
-  sequence of persons, constructs conversations and returns the persons, updated
-  to reflect the conversations."
-  [persons & trans-repts]
-  (transmit-utterances persons 
-                       ((ug/comp* trans-rpts) (choose-conversations persons))))
+;(defn communicate
+;  "Implements a single timestep's (tick's) worth of communication.  Given a
+;  sequence of persons, constructs conversations and returns the persons, updated
+;  to reflect the conversations."
+;  [persons & trans-repts]
+;  (transmit-utterances persons 
+;                       ((ug/comp* trans-repts) (choose-conversations persons))))
 
 ;; NOTE transmit-utterances might not be purely functional.
 (defn transmit-utterances
-  "Currently a noop: Returns the persons unchanged.  Should return a sequence
-  persons updated to reflect the conversations.  (See choose-conversations for
-  the structure of conversations.)  (Note we need the persons
-  argument as well as conversations, so that we don't lose persons that no one 
+  "Currently a noop: Takes persons with specifications of conversations assoc'ed
+  in with :convs, and returns the persons with the conversations stripped out, 
+  but with the persons updated to reflect the conversations.  (See 
+  choose-conversations for the structure of conversations.)  (Note we need the 
+  persons as well as conversations, so that we don't lose persons that no one 
   speaks to.)"
-  [persons conversations]
+  [persons]
   persons)
 
-(defn choose-conversations
-  "Given a sequence of persons, returns a sequence of conversations, i.e.
-  maps with keys :speaker, :listener, and :propn, indicating that speaker
-  will communicate propn to listener."
-  [persons]
-  (map choose-utterance 
-       (mapcat choose-person-conversers persons)))
-
 (defn choose-person-conversers
-  "Currently a noop. Given a person pers, returns a converser-pair, a sequence 
+  "Currently a noop. Given a person pers, returns a converser-pair assoc'ed
+  into a person with :convs.  A converse-pair is a sequence 
   of 2-element maps with keys :speaker and :listener, where :speaker is pers, 
   and :listener is another person."
   [pers]
-  [])
+  pers)
 
 (defn choose-utterance
-  "Currently a noop. Given a converser-pair, a map with keys :speaker and 
+  "NEED REVISION SEE PREVIOUS FNS. Currently a noop. Given a converser-pair, a map with keys :speaker and 
   :listener, chooses a proposition from speaker's beliefs to communicate to 
   listener, and returns a conversation, i.e. a map with the proposition assoc'ed
   into the converser-pair map, with new key :propn"
-  [converser-pair]
-  (assoc converser-pair 
-         :propn (choose-thought (:speaker converser-pair))))
+  [pers]
+  pers)
+;  (assoc converser-pair 
+;         :propn (choose-thought (:speaker converser-pair))))
+
+(def choose-conversations (comp choose-utterance choose-person-conversers))
+;(defn choose-conversations
+;  "Given a sequence of persons, returns a sequence of conversations, i.e.
+;  maps with keys :speaker, :listener, and :propn, indicating that speaker
+;  will communicate propn to listener."
+;  [persons]
+;  (map choose-utterance 
+;       (mapcat choose-person-conversers persons)))
 
 (defn choose-thought
   "Currently a noop: Returns a dummy proposition."

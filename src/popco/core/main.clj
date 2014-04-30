@@ -32,8 +32,9 @@
    (->Population
      (inc (:tick popn))
      (map (ug/comp* tick-repts) 
-          (cm/communicate (mapfn per-person-fns (:members popn))
-                          (ug/comp* trans-repts))))))
+          (cm/transmit-utterances 
+            (map (ug/comp* trans-repts)
+                 (mapfn per-person-fns (:members popn))))))))
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to
