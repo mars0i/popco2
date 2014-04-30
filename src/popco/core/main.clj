@@ -16,73 +16,25 @@
 
 (def folks (atom (->Population 0 [])))
 
-;(defn init
-;  ([] (init @folks))
-;  ([popn]
-;   (reset! folks 
-;           (assoc popn :members
-;                  (map up/settle-analogy-net (:members popn))))))
-
-;; DOESN'T WORK?
-(defn popco
-  "Returns a lazy sequence of population states, one for each tick, with 
-  between-tick reporting on each realized population state, starting from
-  initial population state popn, or folks by default."
-  ([] (popco folks))
-  ([popn] (map report-popn (pl-many-times popn))))
-
 (defn many-times
   "Returns a lazy sequence of population states, one for each tick.
   No between-tick reporting is done when the sequence is realized."
   [popn]
   (iterate once popn))
 
-;(defn many-times!
-;  "Returns a lazy sequence of population states, one for each tick.
-;  No between-tick reporting is done when the sequence is realized."
-;  [popn]
-;  (iterate once! popn))
-
-(defn pl-many-times
-  "Returns a lazy sequence of population states, one for each tick.
-  No between-tick reporting is done when the sequence is realized."
-  [popn]
-  (iterate pl-once popn))
-
-;; This should be obvious:
-;; Any side-effects caused by code in 'once' will occur if it's
-;; called on its own, but not on unrealized calls to it under 'iterate'.
+(def per-person-fns (comp cm/choose-conversations up/update-person-nets))
 
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
   Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
-  [popn]
-  (->Population
-    (inc (:tick popn))
-    (doall    ; one or both of these steps might not be purely functional:
-      (cm/communicate 
-        (up/update-nets (:members popn))))))
-
-;(defn once!
-;  "Implements a single timestep's (tick's) worth of evolution of the population.
-;  Returns the population in its new state.  May mutate persons' internal data
-;  structures."
-;  [popn]
-;  (->Population
-;    (inc (:tick popn))
-;    (doall    ; one or both of these steps might not be purely functional:
-;      (cm/communicate 
-;        (up/update-nets! (:members popn))))))
-
-(defn pl-once
-  "Implements a single timestep's (tick's) worth of evolution of the population.
-  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
-  [popn]
-  (->Population
-    (inc (:tick popn))
-    (doall    ; one or both of these steps might not be purely functional:
-      (cm/communicate 
-        (up/pl-update-nets (:members popn))))))
+  ([popn] (once popn {:mapfn pmap :tick-repts [] :transm-repts []}))
+  ([popn & [{mapfn :mapfn, tick-repts :tick-repts, trans-repts :transm-repts}]]
+   (->Population
+     (inc (:tick popn))
+     (map (ug/comp* tick-repts)          ; report on state at end of tick
+          (cm/transmit-utterances        ; transmit between persons
+            (map (ug/comp* trans-repts)  ; report on what will be transmitted
+                 (mapfn per-person-fns (:members popn))))))))  ; apply per-person transformations
 
 (defn report-popn
   "Wrapper for any between-tick reporting functions: Indicate progress to

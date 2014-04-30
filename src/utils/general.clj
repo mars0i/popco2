@@ -139,6 +139,11 @@
     (recur f (f x) (dec n))
     x))
 
+(defn comp*
+  "Like comp, but expects a sequence of functions.  Applies comp to them."
+  [fs]
+  (apply comp fs))
+
 ;(defn fn-pow2
 ;  "Apply function f to x, then to the result of that, etc., n times.
 ;  If n <= 0, just returns x."
