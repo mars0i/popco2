@@ -21,7 +21,7 @@
   "Constructs a proposition netword object with fields specified in doctrings
   of ->Propn-net and make-nn-core."
   [propnseq sem-iffs sem-ifs]
-  (let [node-seq (cons {:id :SALIENT} propnseq)
+  (let [node-seq (cons {:id :SALIENT} (sort propnseq)) ; sort will put everything in alphabetical order
         num-nodes (count node-seq)
         nncore (nn/make-nn-core node-seq)
         id-to-idx (:id-to-idx nncore)
