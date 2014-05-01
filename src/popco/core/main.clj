@@ -40,10 +40,12 @@
 ;;
 ;; If mapfn = map, it's lazy; iterating through once calls won't realize
 ;; the persons in each tick (until later). Why would we want that, even if
-;; it's useful to iterate through ticks/generations lazily?
-;; So put we put a doall around the guts inside once.  (Maybe this will be
+;; it's useful to iterate through ticks/generations lazily? (Will this become
 ;; irrelevant when transmit-utterances no longer simply passes the population
-;; through?)
+;; through?  Without doall, would it be possible to look only
+;; at once person in generation 500, let's say, and then realize only
+;; its communicative ancestors?  Maybe that would be efficient.  But then
+;; you'd have to wait awhile to realize that one person.)
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
   Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
