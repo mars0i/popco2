@@ -6,7 +6,7 @@
   (:require [popco.core.population :as popn]
             [popco.core.person :as pers]
             [popco.core.lot :as lot]
-            [popco.core.communic :as com]
+            [popco.core.communic :as cm]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
             [popco.nn.propn :as pn]
