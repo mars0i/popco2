@@ -8,6 +8,7 @@
                                   [net.mikera/core.matrix "0.22.1-SNAPSHOT"]
                                   [net.mikera/vectorz-clj "0.20.1-SNAPSHOT"]
                                   [org.clojure/algo.generic "0.1.1"]
+                                  [org.clojure/data.csv "0.1.2"]
                                   ;[org.clojure/math.combinatorics "0.0.7"]
                                   ;[criterium/criterium "0.4.3"]
                                  ]
