@@ -108,6 +108,11 @@
    (cons (nth s i) 
          (apply nths s is))))
 
+(defn thn
+  "Does the same thing as nth, but with argument order swapped."
+  [n xs]
+  (nth xs n))
+
 (defn erase-chars
   "Erase up to len characters from the console on the current line."
   [len]
