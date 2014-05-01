@@ -37,6 +37,13 @@
 
 ;; It's not clear that it will ever be necessary to use 'map' rather than
 ;; 'pmap' for mapfn, except for testing (which should be done, e.g. on Cheaha).
+;;
+;; If mapfn = map, it's lazy; iterating through once calls won't realize
+;; the persons in each tick (until later). Why would we want that, even if
+;; it's useful to iterate through ticks/generations lazily?
+;; So put we put a doall around the guts inside once.  (Maybe this will be
+;; irrelevant when transmit-utterances no longer simply passes the population
+;; through?)
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
   Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
@@ -44,26 +51,9 @@
   ([mapfn popn]
    (->Population
      (inc (:tick popn))
-     (cm/transmit-utterances 
-       (mapfn per-person-fns (:members popn))))))
-
-(defn yonce
-  "Implements a single timestep's (tick's) worth of evolution of the population.
-  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
-  [popn] 
-  (->Population
-    (inc (:tick popn))
-    (cm/transmit-utterances 
-      (map per-person-fns (:members popn)))))
-
-(defn pyonce
-  "Implements a single timestep's (tick's) worth of evolution of the population.
-  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
-  [popn]
-  (->Population
-    (inc (:tick popn))
-    (cm/transmit-utterances 
-      (pmap per-person-fns (:members popn)))))
+     (doall
+       (cm/transmit-utterances 
+         (mapfn per-person-fns (:members popn)))))))
 
 (defn ticker
   "Prints tick number to console, erasing previous tick number, and returns
