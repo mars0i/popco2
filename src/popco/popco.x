@@ -253,3 +253,62 @@
        ((ug/comp* comm-repts))
        (cm/transmit-utterances)
        (map (ug/comp* tick-repts))))))
+
+(defn once
+  "Implements a single timestep's (tick's) worth of evolution of the population.
+  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
+  ([popn] (once {:mapfn pmap :tick-repts [] :transm-repts []} popn))
+  ;; BUG NEED TO ASSOC IN MISSING ARGS
+  ([{mapfn :mapfn, tick-repts :tick-repts, trans-repts :transm-repts} 
+    popn]
+   (->Population
+     (inc (:tick popn))
+     (map (ug/comp* tick-repts)         ; pmap might reorder output
+          (cm/transmit-utterances 
+            (map (ug/comp* trans-repts) ; pmap might reorder output
+                 (mapfn per-person-fns (:members popn))))))))
+
+(defn many-times
+  "Returns a lazy sequence of population states, one for each tick.
+  No between-tick reporting is done when the sequence is realized."
+  ([popn] (iterate once popn))
+  ([optmap popn] (iterate (partial once optmap) popn)))
+
+(def per-person-fns (comp cm/choose-conversations up/update-person-nets))
+
+(defn once
+  "Implements a single timestep's (tick's) worth of evolution of the population.
+  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
+  ([popn] (once {} popn))
+  ([optmap popn]
+   (let [{:keys [mapfn tick-repts trans-repts]} 
+         (merge {:mapfn pmap :tick-repts [] :trans-repts []} optmap)]
+     (->Population
+       (inc (:tick popn))
+       (map (ug/comp* tick-repts)         ; pmap might reorder output
+            (cm/transmit-utterances 
+              (map (ug/comp* trans-repts) ; pmap might reorder output
+                   (mapfn per-person-fns (:members popn)))))))))
+
+(defn many-times
+  "Returns a lazy sequence of population states, one for each tick.
+  No between-tick reporting is done when the sequence is realized."
+  ([popn] (iterate once popn))
+  ([optmap popn] (iterate (partial once optmap) popn)))
+
+(def per-person-fns (comp cm/choose-conversations up/update-person-nets))
+
+(defn once
+  "Implements a single timestep's (tick's) worth of evolution of the population.
+  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
+  ([popn] (once {} popn))
+  ([optmap popn]
+   (let [{:keys [mapfn tick-repts trans-repts] 
+          :or {mapfn pmap tick-repts [identity] trans-repts [identity]}}
+         optmap]
+     (->Population
+       (inc (:tick popn))
+       ((apply comp tick-repts)         ; pmap might reorder output
+          (cm/transmit-utterances 
+            ((apply comp trans-repts) ; pmap might reorder output
+               (mapfn per-person-fns (:members popn)))))))))
