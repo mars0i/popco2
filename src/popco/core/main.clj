@@ -47,6 +47,24 @@
      (cm/transmit-utterances 
        (mapfn per-person-fns (:members popn))))))
 
+(defn yonce
+  "Implements a single timestep's (tick's) worth of evolution of the population.
+  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
+  [popn] 
+  (->Population
+    (inc (:tick popn))
+    (cm/transmit-utterances 
+      (map per-person-fns (:members popn)))))
+
+(defn pyonce
+  "Implements a single timestep's (tick's) worth of evolution of the population.
+  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
+  [popn]
+  (->Population
+    (inc (:tick popn))
+    (cm/transmit-utterances 
+      (pmap per-person-fns (:members popn)))))
+
 (defn ticker
   "Prints tick number to console, erasing previous tick number, and returns
   the population unchanged."
@@ -63,10 +81,6 @@
   (print ".")
   (flush)
   popn)
-
-(defn inc-tick
-  [popn]
-  (assoc popn :tick (inc (:tick popn))))
 
 ;; Notes:
 
