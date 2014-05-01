@@ -9,10 +9,7 @@
 ;; SEE src/popco/start.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare once 
-         pl-once many-times 
-         ;once! many-times! 
-         pl-many-times popco report-popn report-to-console inc-tick report)
+(declare once many-times unparalleled-many-times ticker inc-tick)
 
 (def folks (atom (->Population 0 [])))
 
@@ -22,8 +19,24 @@
   ([popn] (iterate once popn))
   ([report-fn popn] (iterate (comp report-fn once) popn)))
 
+;; It's not clear that it will ever be necessary to use 'map' rather than
+;; 'pmap' for mapfn, except for testing (which should be done, e.g. on Cheaha).
+;; TODO 'ticker' doesn't work right with this.
+(defn unparalleled-many-times
+  "Returns a lazy sequence of population states, one for each tick.
+  No between-tick reporting is done when the sequence is realized."
+  ([popn] (iterate (partial once map) popn))
+  ([report-fn popn] (iterate (comp report-fn (partial once map)) popn)))
+
+;; Note: There's no need to provide for the possibility of turning off
+;; the conversation functions.  They can be disabled simply by putting
+;; each individual in a distinct group.  (It should be possible to
+;; change group membership over time, too.)
+
 (def per-person-fns (comp cm/choose-conversations up/update-person-nets))
 
+;; It's not clear that it will ever be necessary to use 'map' rather than
+;; 'pmap' for mapfn, except for testing (which should be done, e.g. on Cheaha).
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
   Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
@@ -34,23 +47,22 @@
      (cm/transmit-utterances 
        (mapfn per-person-fns (:members popn))))))
 
-(defn report-popn
-  "Wrapper for any between-tick reporting functions: Indicate progress to
-  console, record activations to a file, update a plot, etc.  Should return
-  the population unchanged.  Note that report functions on internal popco 
-  processes such as communication must be inserted elsewhere."
-  [popn]
-  (report-to-console popn)
-  ;; add other optional report functions here
-  popn)
-
-(defn report-to-console
-  "Prints current tick to console after erasing the previous tick string."
+(defn ticker
+  "Prints tick number to console, erasing previous tick number, and returns
+  the population unchanged."
   [popn]
   (let [tickstr (str (:tick popn))]
     (ug/erase-chars (count tickstr)) ; new tick string is always at least as long as previous
     (print tickstr)
-    (flush)))
+    (flush))
+  popn)
+
+(defn dotter
+  "Prints dots to console, and returns the population unchanged."
+  [popn]
+  (print ".")
+  (flush)
+  popn)
 
 (defn inc-tick
   [popn]
