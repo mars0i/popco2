@@ -37,7 +37,16 @@
                                (repeatedly 32 #(pers/new-person-from-old job))
                                (repeatedly 32 #(pers/new-person-from-old jov))))))
 
-;; Populations for testing hypothesis that pmap breaks sequences into 32-element chunks,
+(reset! mn/folks popn)
+;(swap! mn/folks assoc :members [jo job jov])
+
+;(mn/init popn) ; note popn is unchanged, but @folks has been updated.
+
+;(def popn-evol (mn/many-times popn))
+;(def popn-evol (mn/popco popn))
+
+
+;; POPULATIONS FOR TESTING HYPOTHESIS THAT pmap BREAKS SEQUENCES INTO 32-ELEMENT CHUNKS,
 ;; so that up to the level of available cores, map/pmap speed will be equal to the
 ;; number of chunks.
 ;; On MBP:
@@ -48,68 +57,59 @@
 ;; but at a slower rate.  The result is that the ratio is less than the number
 ;; of chunks for larger numbers of chunks.
 
-(def popn2chunk (pp/->Population 0 
-                           (vec
-                             (concat
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old jov))))))
-
-(def popn3chunk (pp/->Population 0 
-                           (vec
-                             (concat
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old jov))))))
-
-(def popn4chunk (pp/->Population 0 
-                           (vec
-                             (concat
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old jov))))))
-
-(def popn5chunk (pp/->Population 0 
-                           (vec
-                             (concat
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old jov))))))
-
-(def popn6chunk (pp/->Population 0 
-                           (vec
-                             (concat
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old jov))
-                               (repeatedly 32 #(pers/new-person-from-old jov))))))
-
-;; More than the 8 cores on my MBP:
-(def popn12chunk (pp/->Population 0 
-                           (vec
-                             (concat
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old jov))
-                               (repeatedly 32 #(pers/new-person-from-old jov))
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old jo))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old job))
-                               (repeatedly 32 #(pers/new-person-from-old jov))
-                               (repeatedly 32 #(pers/new-person-from-old jov))))))
-
-(reset! mn/folks popn)
-;(swap! mn/folks assoc :members [jo job jov])
-
-;(mn/init popn) ; note popn is unchanged, but @folks has been updated.
-
-;(def popn-evol (mn/many-times popn))
-;(def popn-evol (mn/popco popn))
-
+; (def popn2chunk (pp/->Population 0 
+;                            (vec
+;                              (concat
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))))))
+; 
+; (def popn3chunk (pp/->Population 0 
+;                            (vec
+;                              (concat
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))))))
+; 
+; (def popn4chunk (pp/->Population 0 
+;                            (vec
+;                              (concat
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))))))
+; 
+; (def popn5chunk (pp/->Population 0 
+;                            (vec
+;                              (concat
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))))))
+; 
+; (def popn6chunk (pp/->Population 0 
+;                            (vec
+;                              (concat
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))))))
+; 
+; ;; More than the 8 cores on my MBP:
+; (def popn12chunk (pp/->Population 0 
+;                            (vec
+;                              (concat
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old jo))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old job))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))
+;                                (repeatedly 32 #(pers/new-person-from-old jov))))))
