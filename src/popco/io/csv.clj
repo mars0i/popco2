@@ -104,12 +104,45 @@
       (doall
         (map write-row rows)))))
 
+;; THIS ONE WORKS.  It adds doall, just like the mwe.
+(defn many-times-with-csv4
+  [popn]
+  (with-open [w (io/writer "popco.csv")] 
+    (let [persons (:members popn)
+          write-data-row (fn [popn]
+                           (csv/write-csv w (data-row (:members popn)))
+                           popn)]
+      (csv/write-csv w (field-names persons))
+      (doall
+        (take 10
+              (map (comp write-data-row mn/ticker)
+                   (mn/many-times popn)))))))
+
+;; THIS ONE FAILS.  It has no doall.
+(defn mwe2 []
+  (with-open [w (io/writer "foo.csv")] 
+    (let [rows (repeatedly 3 #(vector (range 4)))
+          write-row (fn [row] (csv/write-csv w row))]
+      (map write-row rows))))
+
+;; LESSON:
+;; Embedding a stream in a closure that's embedded in a lazy sequence
+;; will fail if the lazy-sequence escapes out of the with-open block
+;; without being fully realized, and you then try to realize part
+;; of the sequence outside of the with-open block.
+
+;; SUGGESTION:
+;; Create the lazy popn sequence.  Then pass it to a function
+;; that will realize and write, maybe mapping with doall up to
+;; tick n, or or doseq-ing or dotimes-ing until tick n.
+;; (Try to save the head if you want to do other stuff with it.)
+
 
 ;; THIS WORKS--i.e. as far as the printing part goes.
 ;; Because it doesn't use a closure, but rather visible scope??
 ;; Also I'm not making it return the next popn--it just runs
 ;; through them.
-(defn many-times-with-csv4
+(defn many-times-with-csv
   [popn]
   (with-open [w (io/writer "popco.csv")] 
     (let [persons (:members popn)
