@@ -5,40 +5,28 @@
             [popco.core.main :as mn] ;; temporary for testing?
             ))
 
-;; Based on https://github.com/clojure/data.csv.
-
-;(defn example1
-;  [pers]
-;  (with-open [w (io/writer "out-file.csv")] 
-;    (csv/write-csv w 
-;                   (vector 
-;                     (map name (:id-vec (:propn-net pers)))
-;                     (mx/matrix :persistent-vector (:propn-activns pers))))))
-;
-;
-;(defn example2
-;  [pers]
-;  (with-open [w (io/writer "out-file.csv")] 
-;    (csv/write-csv w 
-;                   [(map name (:id-vec (:propn-net pers)))
-;                     (mx/matrix :persistent-vector (:propn-activns pers))])))
-;
-;(defn example3
-;  [pers]
-;  (with-open [w (io/writer "out-file.csv")] 
-;    (csv/write-csv w [(map name (:id-vec (:propn-net pers)))])
-;    (csv/write-csv w [(mx/matrix :persistent-vector (:propn-activns pers))])))
-;
-;(defn example4
-;  [persons]
-;  (with-open [w (io/writer "out-file.csv")] 
-;    (csv/write-csv w [(map name (:id-vec (:propn-net (first persons))))])
-;    (doseq [pers persons]
-;      (csv/write-csv w [(mx/matrix :persistent-vector (:propn-activns pers))]))))
 
 ;; ARE THESE FUNCTIONS EFFICIENT ENOUGH?
+
+;; LESSON FROM EXPERIMENTS:
+;; Embedding a stream in a closure that's embedded in a lazy sequence
+;; will fail if the lazy-sequence escapes out of the with-open block
+;; without being fully realized, and you subsequently try to realize part
+;; of the sequence outside of the with-open block.
+
+;; SUGGESTION:
+;; Create the lazy popn sequence.  Then pass it to a function
+;; that will realize and write, maybe mapping with doall up to
+;; tick n, or or doseq-ing or dotimes-ing until tick n.
+;; (Try to save the head if you want to do other stuff with it.)
  
-(defn field-names
+(defn person-propn-names
+  "Given a sequence of persons, return a sequence of strings containing
+  \"personalized\" proposition names, i.e. with the person's name appended
+  to the front of the proposition id string, with the form \"person_propn\".
+  These are suitable for use as column names in a csv file containing data
+  on proposition activations for all of the persons.  Note that the number
+  of strings returned will be (number of persons X number of propositions)."
   [persons]
   (let [name-strs (map (comp name :nm) persons)
         id-strs (map name (rest (:id-vec (:propn-net (first persons)))))]
@@ -48,7 +36,11 @@
               id-str id-strs]
           (str name-str "_" id-str))))))
 
-(defn person-data
+;; TODO ? NOTE THIS ASSUMES THAT SALIENT IS FIRST. SHOULD I INSTEAD LOOK UP SALIENT'S LOCATION??
+(defn person-propn-activns
+  "Given a person, returns the activation values of its propositions other
+  than SALIENT in the form of a Clojure vector.  Assumes that SALIENT is
+  the first node."
   [pers]
   (rest 
     (mx/matrix :persistent-vector 
@@ -56,99 +48,16 @@
 
 (defn data-row
   [persons]
-  (vector  ; write-csv wants a vector of vectors
-    (mapcat person-data persons)))
+  (vector  ; write-csv wants a vector of vectors each time it's called
+    (mapcat person-propn-activns persons)))
 
-;; ATTEMPTS AT FULLY-FUNCTIONAL EXPERIMENTS:
-
-;; DOESN'T WORK Throws closed stream exception
-;; i.e. you can't embed a stream in a closure??
-(defn many-times-with-csv1
-  [popn]
-  (with-open [w (io/writer "popco.csv")] 
-    (let [persons (:members popn)
-          write-data-row (fn [popn]
-                           (csv/write-csv w (data-row (:members popn)))
-                           popn)]
-      (csv/write-csv w (field-names persons))
-      (mn/many-times (comp write-data-row mn/ticker) popn))))
-
-;; This one throws the closed stream exception, too.
-(defn many-times-with-csv2
-  [popn]
-  (with-open [w (io/writer "popco.csv")] 
-    (let [persons (:members popn)
-          write-data-row (fn [popn]
-                           (csv/write-csv w (data-row (:members popn)))
-                           popn)]
-      (csv/write-csv w (field-names persons))
-      (map write-data-row
-           (mn/many-times popn)))))
-
-;; this one has same problem
-(defn many-times-with-csv3
-  [popn]
-  (with-open [w (io/writer "popco.csv")] 
-    (let [persons (:members popn)
-          write-data-row (fn [popn]
-                           (csv/write-csv w (data-row (:members popn)))
-                           popn)]
-      (csv/write-csv w (field-names persons))
-      (mn/many-times write-data-row popn))))
-
-;; IN THIS ONE THE CLOSURE SEEMS TO WORK.  What??
-(defn mwe []
-  (with-open [w (io/writer "foo.csv")] 
-    (let [rows (repeatedly 3 #(vector (range 4)))
-          write-row (fn [row] (csv/write-csv w row))]
-      (doall
-        (map write-row rows)))))
-
-;; THIS ONE WORKS.  It adds doall, just like the mwe.
-(defn many-times-with-csv4
-  [popn]
-  (with-open [w (io/writer "popco.csv")] 
-    (let [persons (:members popn)
-          write-data-row (fn [popn]
-                           (csv/write-csv w (data-row (:members popn)))
-                           popn)]
-      (csv/write-csv w (field-names persons))
-      (doall
-        (take 10
-              (map (comp write-data-row mn/ticker)
-                   (mn/many-times popn)))))))
-
-;; THIS ONE FAILS.  It has no doall.
-(defn mwe2 []
-  (with-open [w (io/writer "foo.csv")] 
-    (let [rows (repeatedly 3 #(vector (range 4)))
-          write-row (fn [row] (csv/write-csv w row))]
-      (map write-row rows))))
-
-;; LESSON:
-;; Embedding a stream in a closure that's embedded in a lazy sequence
-;; will fail if the lazy-sequence escapes out of the with-open block
-;; without being fully realized, and you then try to realize part
-;; of the sequence outside of the with-open block.
-
-;; SUGGESTION:
-;; Create the lazy popn sequence.  Then pass it to a function
-;; that will realize and write, maybe mapping with doall up to
-;; tick n, or or doseq-ing or dotimes-ing until tick n.
-;; (Try to save the head if you want to do other stuff with it.)
-
-
-;; THIS WORKS--i.e. as far as the printing part goes.
-;; Because it doesn't use a closure, but rather visible scope??
-;; Also I'm not making it return the next popn--it just runs
-;; through them.
-(defn many-times-with-csv
-  [popn]
-  (with-open [w (io/writer "popco.csv")] 
-    (let [persons (:members popn)
-          popns (mn/many-times popn)]
-      (csv/write-csv w (field-names persons))
-      (doseq [popn popns]
-        (csv/write-csv w (data-row (:members popn)))
-        (mn/ticker popn)))))
-;; note nothing useful returned here
+;; TODO Add tick number column
+(defn write-propn-activns-csv
+  ([popns]
+   (write-propn-activns-csv popns false))
+  ([popns append?]
+   (with-open [w (io/writer "activns.csv" :append append?)] 
+     (when-not append?
+       (csv/write-csv w (person-propn-names (:members (first popns)))))
+     (doseq [popn popns]
+       (csv/write-csv w (data-row (:members popn)))))))
