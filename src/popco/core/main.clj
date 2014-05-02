@@ -5,33 +5,36 @@
             [popco.core.communic :as cm]
             [utils.general :as ug]))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; SEE src/popco/start.md for notes. ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(declare once many-times unparalleled-many-times ticker inc-tick)
-
-(def folks (atom (->Population 0 [])))
-
-(defn many-times
-  "Returns a lazy sequence of population states, one for each tick.
-  No between-tick reporting is done when the sequence is realized."
-  ([popn] (iterate once popn))
-  ([report-fn popn] (iterate (comp report-fn once) popn)))
-
-;; It's not clear that it will ever be necessary to use 'map' rather than
-;; 'pmap' for mapfn, except for testing (which should be done, e.g. on Cheaha).
-;; TODO 'ticker' doesn't work right with this.
-(defn unparalleled-many-times
-  "Returns a lazy sequence of population states, one for each tick.
-  No between-tick reporting is done when the sequence is realized."
-  ([popn] (iterate (partial once map) popn))
-  ([report-fn popn] (iterate (comp report-fn (partial once map)) popn)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; SEE src/popco/start.md and src/popco/core/main.md for notes. ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Note: There's no need to provide for the possibility of turning off
 ;; the conversation functions.  They can be disabled simply by putting
 ;; each individual in a distinct group.  (It should be possible to
 ;; change group membership over time, too.)
+
+(declare once many-times unparalleled-many-times ticker inc-tick)
+
+(def folks (atom (->Population 0 [])))
+
+;; An earlier version included a report-fn argument.  I now think it's
+;; better to just map or doseq such functions, externally, over the
+;; lazy sequence returned by this function.
+(defn many-times
+  "Returns a lazy sequence of population states, one for each tick.
+  No between-tick reporting is done when the sequence is realized."
+  [popn]
+  (iterate once popn))
+
+;; It's not clear that it will ever be necessary to use 'map' rather than
+;; 'pmap' for mapfn, except for testing (which should be done, e.g. on Cheaha).
+;; See comment on many-times about earlier, more complicated versions.
+(defn unparalleled-many-times
+  "Returns a lazy sequence of population states, one for each tick.
+  No between-tick reporting is done when the sequence is realized."
+  [popn]
+  (iterate (partial once map) popn))
 
 (def per-person-fns (comp cm/choose-conversations up/update-person-nets))
 
