@@ -37,6 +37,74 @@
                                (repeatedly 32 #(pers/new-person-from-old job))
                                (repeatedly 32 #(pers/new-person-from-old jov))))))
 
+;; Populations for testing hypothesis that pmap breaks sequences into 32-element chunks,
+;; so that up to the level of available cores, map/pmap speed will be equal to the
+;; number of chunks.
+;; On MBP:
+;; The hypothesis seems to hold only for 2 or 3 chunks.  The overall speed using
+;; pmap with more chunks is not the same; there appears to be more overhead from
+;; combining the chunks, or other parts of the program.  So while the
+;; map version scales linearly with the number of chunks, the pmap version increases,
+;; but at a slower rate.  The result is that the ratio is less than the number
+;; of chunks for larger numbers of chunks.
+
+(def popn2chunk (pp/->Population 0 
+                           (vec
+                             (concat
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old jov))))))
+
+(def popn3chunk (pp/->Population 0 
+                           (vec
+                             (concat
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old jov))))))
+
+(def popn4chunk (pp/->Population 0 
+                           (vec
+                             (concat
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old jov))))))
+
+(def popn5chunk (pp/->Population 0 
+                           (vec
+                             (concat
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old jov))))))
+
+(def popn6chunk (pp/->Population 0 
+                           (vec
+                             (concat
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old jov))
+                               (repeatedly 32 #(pers/new-person-from-old jov))))))
+
+;; More than the 8 cores on my MBP:
+(def popn12chunk (pp/->Population 0 
+                           (vec
+                             (concat
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old jov))
+                               (repeatedly 32 #(pers/new-person-from-old jov))
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old jo))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old job))
+                               (repeatedly 32 #(pers/new-person-from-old jov))
+                               (repeatedly 32 #(pers/new-person-from-old jov))))))
+
 (reset! mn/folks popn)
 ;(swap! mn/folks assoc :members [jo job jov])
 
