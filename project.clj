@@ -10,11 +10,14 @@
                                   [org.clojure/algo.generic "0.1.1"]
                                   [org.clojure/data.csv "0.1.2"]
                                   ;[org.clojure/math.combinatorics "0.0.7"]
-                                  ;[criterium/criterium "0.4.3"]
+                                  [criterium/criterium "0.4.3"]
                                  ]
                    :source-paths ["src"] ; where load will look for source files
                    }}
-   :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"]
-   ;:jvm-opts ["-XX:TieredStopAtLevel=4"]
-   ;:jvm-opts ["-server"]
+   :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"] ; FASTER, and may be useful to debuggers. see https://groups.google.com/forum/#!msg/clojure/8a1FjNvh-ZQ/DzqDz4oKMj0J
+   ;:jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true" "-Xmx2m"] ; doesn't work
+   ;:jvm-opts ["-Xmx2m"]
+   ;:jvm-opts ["-XX:+TieredCompilation" "-XX:TieredStopAtLevel=1"] ; setting this to 1 will produce faster startup but will disable extra optimization of long-running processes
+   ;:jvm-opts ["-XX:TieredStopAtLevel=4"] ; more optimization (?)
+   ;:jvm-opts ["-server"] ; more optimization, slower startup, but supposed to be on by default except in 32-bit Windows machines
 )
