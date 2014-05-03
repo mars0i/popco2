@@ -46,11 +46,13 @@
         (mx/matrix :persistent-vector 
                    (:propn-activns pers))))
 
+;; CONSIDER CHANGING map TO pmap, AND LIKEWISE FOR mapcat
 (defn data-row
   [popn]
   (cons (:tick popn) 
         (mapcat person-propn-activns (:members popn))))
 
+;; CONSIDER CHANGING map TO pmap, AND LIKEWISE FOR mapcat
 (defn data-vec-of-rows
   [popns]
   (map 
@@ -69,6 +71,7 @@
      (doseq [popn popns]
        (csv/write-csv w (vector (data-row popn)))))))
 
+;; WHAT ABOUT APPENDING ROWS? DON'T WANT HEADERS AGAIN.
 (defn vec-of-rows
   "Creates a sequence of sequences of activns, one inner sequence for each tick,
   from popns in an input sequence.  Writes a header row first."
@@ -77,11 +80,9 @@
     (column-names (first popns))
     (data-vec-of-rows popns)))
 
-;; currently mis-named/mis-functioned
 (defn spit-csv
   "Given a sequence of sequences of data, opens a file and writes to it
-  using write-csv."
-  ([rows] (spit-csv rows false))
-  ([rows append?]
-   (with-open [w (io/writer "activns.csv" :append append?)] 
-     (csv/write-csv w rows))))
+  using write-csv.  Options are those that can be passed to spit or writer."
+  [f rows & options]
+   (with-open [w (apply io/writer f options)]
+     (csv/write-csv w rows)))
