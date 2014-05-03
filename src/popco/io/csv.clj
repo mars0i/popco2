@@ -31,11 +31,10 @@
   (let [persons (:members popn)
         name-strs (map (comp name :nm) persons)
         id-strs (map name (rest (:id-vec (:propn-net (first persons)))))]
-    (vector         ; write-csv wants a vector of vectors
-      (cons "tick"
-            (for [name-str name-strs
-                  id-str id-strs]
-              (str name-str "_" id-str))))))
+    (cons "tick"
+          (for [name-str name-strs
+                id-str id-strs]
+            (str name-str "_" id-str)))))
 
 ;; TODO ? NOTE THIS ASSUMES THAT SALIENT IS FIRST. SHOULD I INSTEAD LOOK UP SALIENT'S LOCATION??
 (defn person-propn-activns
@@ -44,23 +43,45 @@
   the first node."
   [pers]
   (rest   ; strip SALIENT node
-    (mx/matrix :persistent-vector 
-               (:propn-activns pers))))
+        (mx/matrix :persistent-vector 
+                   (:propn-activns pers))))
 
 (defn data-row
   [popn]
-  (vector  ; write-csv wants a vector of vectors each time it's called
-    (cons (:tick popn) 
-          (mapcat person-propn-activns (:members popn)))))
+  (cons (:tick popn) 
+        (mapcat person-propn-activns (:members popn))))
 
-(defn write-propn-activns-csv
+(defn data-vec-of-rows
+  [popns]
+  (map 
+    #(cons (:tick %) (mapcat person-propn-activns (:members %)))
+    popns))
+
+(defn write-propn-activns-lines-csv
+  "Reads activns tick by tick from popns in a sequence, writing a row for each
+  popn.  Writes a header row first."
   ([popns]
-   (write-propn-activns-csv popns false))
+   (write-propn-activns-lines-csv popns false))
   ([popns append?]
    (with-open [w (io/writer "activns.csv" :append append?)] 
      (when-not append?
-       (csv/write-csv w (column-names (first popns))))
+       (csv/write-csv w (vector (column-names (first popns)))))
      (doseq [popn popns]
-       (csv/write-csv w (data-row popn))))))
+       (csv/write-csv w (vector (data-row popn)))))))
 
+(defn vec-of-rows
+  "Creates a sequence of sequences of activns, one inner sequence for each tick,
+  from popns in an input sequence.  Writes a header row first."
+  [popns]
+  (cons 
+    (column-names (first popns))
+    (data-vec-of-rows popns)))
 
+;; currently mis-named/mis-functioned
+(defn spit-csv
+  "Given a sequence of sequences of data, opens a file and writes to it
+  using write-csv."
+  ([rows] (spit-csv rows false))
+  ([rows append?]
+   (with-open [w (io/writer "activns.csv" :append append?)] 
+     (csv/write-csv w rows))))
