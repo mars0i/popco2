@@ -508,3 +508,35 @@
 
 
 
+
+(defn old-spit-propn-activns-csv
+  "Collects reads activns from a sequence of popns into a large seq of seqs, and
+  then writes them all at once into a csv file.  Writes a header row first."
+  [popns append? & other-options]
+  (let [data (data-vec-of-rows popns) 
+        rows (if append?
+               data 
+               (cons (column-names (first popns)) ; if not appending, add header row
+                     data))]
+    (apply spit-csv "activns.csv" rows :append append? other-options)))
+
+(defn old-write-propn-activns-csv-by-line
+  "Reads activns tick by tick from popns in a sequence, writing a row for each
+  popn.  Writes a header row first unless append? is true."
+  ([popns]
+   (write-propn-activns-csv-by-line popns false))
+  ([popns append?]
+   (with-open [w (io/writer "activns.csv" :append append?)] 
+     (when-not append?
+       (csv/write-csv w (vector (column-names (first popns)))))
+     (doseq [popn popns]
+       (csv/write-csv w (vector (data-row popn)))))))
+
+;; WHAT ABOUT APPENDING ROWS? DON'T WANT HEADERS AGAIN.
+;(defn vec-of-rows
+;  "Creates a sequence of sequences of activns, one inner sequence for each tick,
+;  from popns in an input sequence.  Writes a header row first."
+;  [popns]
+;  (cons 
+;    (column-names (first popns))
+;    (data-vec-of-rows popns)))

@@ -46,39 +46,17 @@
         (mx/matrix :persistent-vector 
                    (:propn-activns pers))))
 
-;; CONSIDER CHANGING map TO pmap, AND LIKEWISE FOR mapcat
-(defn data-row
+;; Consider redefining mapcat in terms of pmap??
+(defn propn-activns-row
   [popn]
   (cons (:tick popn) 
         (mapcat person-propn-activns (:members popn))))
 
-;; CONSIDER CHANGING map TO pmap, AND LIKEWISE FOR mapcat
-(defn data-vec-of-rows
-  [popns]
-  (map 
-    #(cons (:tick %) (mapcat person-propn-activns (:members %)))
-    popns))
-
-(defn write-propn-activns-lines-csv
-  "Reads activns tick by tick from popns in a sequence, writing a row for each
-  popn.  Writes a header row first."
-  ([popns]
-   (write-propn-activns-lines-csv popns false))
-  ([popns append?]
-   (with-open [w (io/writer "activns.csv" :append append?)] 
-     (when-not append?
-       (csv/write-csv w (vector (column-names (first popns)))))
-     (doseq [popn popns]
-       (csv/write-csv w (vector (data-row popn)))))))
-
-;; WHAT ABOUT APPENDING ROWS? DON'T WANT HEADERS AGAIN.
-(defn vec-of-rows
-  "Creates a sequence of sequences of activns, one inner sequence for each tick,
-  from popns in an input sequence.  Writes a header row first."
-  [popns]
-  (cons 
-    (column-names (first popns))
-    (data-vec-of-rows popns)))
+;(defn propn-activn-tick-rows
+;  [popns]
+;  (map 
+;    #(cons (:tick %) (mapcat person-propn-activns (:members %)))
+;    popns))
 
 (defn spit-csv
   "Given a sequence of sequences of data, opens a file and writes to it
@@ -86,3 +64,58 @@
   [f rows & options]
    (with-open [w (apply io/writer f options)]
      (csv/write-csv w rows)))
+
+;; I BELIEVE that write-propn-activns-csv roughly writes line by line, similar to write-propn-activns-csv-by-line.
+;; This is explicity in the latter, since it doseq's through the ticks, writing a line
+;; each time.  But in the spit version:
+;; (a) spit-csv uses write-csv
+;; (b) write-csv uses write-csv* which uses loop/recur to go through the rows: https://github.com/clojure/data.csv/blob/b70b33d56c239972f3e1c53c3c4f1b786909e93f/src/main/clojure/clojure/data/csv.clj#L123
+;; (c) I use map to iterate through ticks, i.e. lazily
+;;     (also propn-activns-row uses mapcat to put together data from persons in a tick, which is lazy)
+;; So it's only at when write-csv* loops through the rows that the ticks are realized.
+;; So that even though it looks like write-propn-activns-csv collects all of the data at once before writing it, it doesn't.
+;;
+;; TODO: CHANGE MAP TO PMAP?
+(defn write-propn-activns-csv
+  "Collects reads activns from a sequence of popns into a large seq of seqs, and
+  then writes them all at once into a csv file.  Writes a header row first."
+  [popns & options]
+  (let [append? (when options ((apply hash-map options) :append)) ; get val of :append if present, else nil
+        data (map propn-activns-row popns) ; pmap wouldn't help, because the popns comes from iterate, so you need earlier elements to get later ones (unless you doall it first)
+        rows (if append?
+               data 
+               (cons (column-names (first popns)) ; if not appending, add header row
+                     data))]
+    (apply spit-csv "activns.csv" rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
+
+;(defn write-propn-activns-csv-by-line
+;  "Reads activns tick by tick from popns in a sequence, writing a row for each
+;  popn.  Writes a header row first unless append? is true."
+;  ([popns]
+;   (write-propn-activns-csv-by-line popns false))
+;  ([popns append?]
+;   (with-open [w (io/writer "activns.csv" :append append?)] 
+;     (when-not append?
+;       (csv/write-csv w (vector (column-names (first popns)))))
+;     (doseq [popn popns]
+;       (csv/write-csv w (vector (propn-activns-row popn)))))))
+
+;(defn old-write-propn-activns-csv
+;  "Collects reads activns from a sequence of popns into a large seq of seqs, and
+;  then writes them all at once into a csv file.  Writes a header row first."
+;  [popns append? & other-options]
+;  (let [data (propn-activn-tick-rows popns) 
+;        rows (if append?
+;               data 
+;               (cons (column-names (first popns)) ; if not appending, add header row
+;                     data))]
+;    (apply spit-csv "activns.csv" rows :append append? other-options)))
+
+;; WHAT ABOUT APPENDING ROWS? DON'T WANT HEADERS AGAIN.
+;(defn vec-of-rows
+;  "Creates a sequence of sequences of activns, one inner sequence for each tick,
+;  from popns in an input sequence.  Writes a header row first."
+;  [popns]
+;  (cons 
+;    (column-names (first popns))
+;    (propn-activn-tick-rows popns)))
