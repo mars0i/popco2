@@ -20,21 +20,22 @@
 ;; tick n, or or doseq-ing or dotimes-ing until tick n.
 ;; (Try to save the head if you want to do other stuff with it.)
  
-(defn person-propn-names
+(defn column-names
   "Given a sequence of persons, return a sequence of strings containing
   \"personalized\" proposition names, i.e. with the person's name appended
   to the front of the proposition id string, with the form \"person_propn\".
   These are suitable for use as column names in a csv file containing data
   on proposition activations for all of the persons.  Note that the number
   of strings returned will be (number of persons X number of propositions)."
-  [persons]
-  (let [name-strs (map (comp name :nm) persons)
+  [popn]
+  (let [persons (:members popn)
+        name-strs (map (comp name :nm) persons)
         id-strs (map name (rest (:id-vec (:propn-net (first persons)))))]
-    (vector    ; write-csv wants a vector of vectors
-      (concat 
-        (for [name-str name-strs
-              id-str id-strs]
-          (str name-str "_" id-str))))))
+    (vector         ; write-csv wants a vector of vectors
+      (cons "tick"
+            (for [name-str name-strs
+                  id-str id-strs]
+              (str name-str "_" id-str))))))
 
 ;; TODO ? NOTE THIS ASSUMES THAT SALIENT IS FIRST. SHOULD I INSTEAD LOOK UP SALIENT'S LOCATION??
 (defn person-propn-activns
@@ -42,22 +43,24 @@
   than SALIENT in the form of a Clojure vector.  Assumes that SALIENT is
   the first node."
   [pers]
-  (rest 
+  (rest   ; strip SALIENT node
     (mx/matrix :persistent-vector 
                (:propn-activns pers))))
 
 (defn data-row
-  [persons]
+  [popn]
   (vector  ; write-csv wants a vector of vectors each time it's called
-    (mapcat person-propn-activns persons)))
+    (cons (:tick popn) 
+          (mapcat person-propn-activns (:members popn)))))
 
-;; TODO Add tick number column
 (defn write-propn-activns-csv
   ([popns]
    (write-propn-activns-csv popns false))
   ([popns append?]
    (with-open [w (io/writer "activns.csv" :append append?)] 
      (when-not append?
-       (csv/write-csv w (person-propn-names (:members (first popns)))))
+       (csv/write-csv w (column-names (first popns))))
      (doseq [popn popns]
-       (csv/write-csv w (data-row (:members popn)))))))
+       (csv/write-csv w (data-row popn))))))
+
+
