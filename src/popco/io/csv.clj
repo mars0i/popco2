@@ -76,9 +76,12 @@
 ;; So that even though it looks like write-propn-activns-csv collects all of the data at once before writing it, it doesn't.
 ;;
 (defn write-propn-activns-csv
-  "Collects reads activns from a sequence of popns into a large seq of seqs, and
-  then writes them all at once into a csv file.  Writes a header row first if 
-  ':append true' is an option.  Returns the (realized) sequence of populations."
+  "Collects reads activns from a sequence of opulations into a large seq of 
+  seqs, and then writes them all at once into a csv file.  Writes a header row
+  first if ':append true' is an option.  (Does not return the popns: Since this
+  function realizes the lazy seq of popns, not returning the sequence allows
+  you to lose the head, etc.--less memory use, more speed.  If you want to use
+  the sequence again, hold on to it elsewhere.)"
   [popns & options]
   (let [append? (when options ((apply hash-map options) :append)) ; get val of :append if present, else nil
         data (map propn-activns-row popns) ; pmap wouldn't help, because the popns comes from iterate, so you need earlier elements to get later ones (unless you doall it first)
@@ -86,8 +89,7 @@
                data 
                (cons (column-names (first popns)) ; if not appending, add header row
                      data))]
-    (apply spit-csv "activns.csv" rows options)) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
-  popns)
+    (apply spit-csv "activns.csv" rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
 
 ;(defn write-propn-activns-csv-by-line
 ;  "Reads activns tick by tick from popns in a sequence, writing a row for each
