@@ -65,7 +65,8 @@
    (with-open [w (apply io/writer f options)]
      (csv/write-csv w rows)))
 
-;; I BELIEVE that write-propn-activns-csv roughly writes line by line, similar to write-propn-activns-csv-by-line.
+;; NOTE:
+;; write-propn-activns-csv roughly writes line by line, similar to write-propn-activns-csv-by-line.
 ;; This is explicity in the latter, since it doseq's through the ticks, writing a line
 ;; each time.  But in the spit version:
 ;; (a) spit-csv uses write-csv
@@ -90,35 +91,3 @@
                (cons (column-names (first popns)) ; if not appending, add header row
                      data))]
     (apply spit-csv "activns.csv" rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
-
-;(defn write-propn-activns-csv-by-line
-;  "Reads activns tick by tick from popns in a sequence, writing a row for each
-;  popn.  Writes a header row first unless append? is true."
-;  ([popns]
-;   (write-propn-activns-csv-by-line popns false))
-;  ([popns append?]
-;   (with-open [w (io/writer "activns.csv" :append append?)] 
-;     (when-not append?
-;       (csv/write-csv w (vector (column-names (first popns)))))
-;     (doseq [popn popns]
-;       (csv/write-csv w (vector (propn-activns-row popn)))))))
-
-;(defn old-write-propn-activns-csv
-;  "Collects reads activns from a sequence of popns into a large seq of seqs, and
-;  then writes them all at once into a csv file.  Writes a header row first."
-;  [popns append? & other-options]
-;  (let [data (propn-activn-tick-rows popns) 
-;        rows (if append?
-;               data 
-;               (cons (column-names (first popns)) ; if not appending, add header row
-;                     data))]
-;    (apply spit-csv "activns.csv" rows :append append? other-options)))
-
-;; WHAT ABOUT APPENDING ROWS? DON'T WANT HEADERS AGAIN.
-;(defn vec-of-rows
-;  "Creates a sequence of sequences of activns, one inner sequence for each tick,
-;  from popns in an input sequence.  Writes a header row first."
-;  [popns]
-;  (cons 
-;    (column-names (first popns))
-;    (propn-activn-tick-rows popns)))
