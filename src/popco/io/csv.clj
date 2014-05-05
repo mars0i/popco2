@@ -31,10 +31,10 @@
   (let [persons (:members popn)
         name-strs (map (comp name :nm) persons)
         id-strs (map name (rest (:id-vec (:propn-net (first persons)))))]
-    (cons "tick"
+    ;(cons "tick"
           (for [name-str name-strs
                 id-str id-strs]
-            (str name-str "_" id-str)))))
+            (str name-str "_" id-str))));)
 
 ;; TODO ? NOTE THIS ASSUMES THAT SALIENT IS FIRST. SHOULD I INSTEAD LOOK UP SALIENT'S LOCATION??
 (defn person-propn-activns
@@ -49,8 +49,8 @@
 ;; Consider redefining mapcat in terms of pmap??
 (defn propn-activns-row
   [popn]
-  (cons (:tick popn) 
-        (mapcat person-propn-activns (:members popn))))
+  ;(cons (:tick popn) 
+        (mapcat person-propn-activns (:members popn)));)
 
 ;(defn propn-activn-tick-rows
 ;  [popns]
