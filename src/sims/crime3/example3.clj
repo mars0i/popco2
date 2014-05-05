@@ -1,4 +1,4 @@
-(ns sims.crime3.example
+(ns sims.crime3.example3
   (:require [popco.nn.analogy :as an]
             [popco.nn.propn :as pn]
             [popco.core.person :as pers]
@@ -11,7 +11,7 @@
 ;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
 (def perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/crime-propns))
 
-(def pnet (pn/make-propn-net propns pns/semantic-iffs perception-ifs)) ; second arg is bidirectional link, third is unidirectional
+(def pnet (pn/make-propn-net propns pns/semantic-iffs perception-ifs)) ; second arg is bidirectional links; third is unidirectional
 
 (def anet (an/make-analogy-net pns/crime-propns 
                                pns/living-propns 
@@ -30,11 +30,4 @@
 
 (def popn (pp/->Population 0 [jo job jov]))
 
-(reset! mn/folks popn)
-;(swap! mn/folks assoc :members [jo job jov])
-
 ;(mn/init popn) ; note popn is unchanged, but @folks has been updated.
-
-;(def popn-evol (mn/many-times popn))
-;(def popn-evol (mn/popco popn))
-
