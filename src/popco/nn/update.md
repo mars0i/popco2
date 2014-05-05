@@ -1,7 +1,51 @@
-update.clj
+Notes on update.clj
 =======
 
-**Notes on core.matrix functions**
+### Overview
+
+update.clj contains functions for updating neural networks in popco.
+
+"Update" in this sense usually means changing activation values of
+nodes, which means updating a core.matrix vector containing those
+activation values.  There are matrices that are used to calculate these
+activation values from the activation values on the previous timestep
+(tick).  The matrices represent weights on links between the nodes
+whose activation values are represented in the vector.
+
+However, popco2 also updates link weights in the proposition network in
+each tick--i.e. the proposition weight matrix is changed.  Functions for
+this purpose are in update.clj as well.
+
+Link weights in the analogy network aren't changed after initialization.
+
+Whether a node "exists" is governed by the analogy and proposition mask vectors.
+See person.clj, propn.clj, analogy.clj, and communic.clj.
+
+
+### Directional links
+
+The matrix multiplication in the main network settling fucntion,
+`next-activns`,  uses matrix multiplication in the form `(mmul
+<matrix> <vector>)`. Here <vector> is 1D and is treated as a column
+vector.  This means that the weight at index i,j represents the
+directional link from node j to node i, since j is the column (input)
+index, and i is the row index.  Doesn't matter for symmetric links,
+since for the there will be identical weights at i,j and j,i, but
+matters for assymetric, directional links. 
+
+For example, to cause the 0th, SEMANTIC node to send input to other
+nodes, but to never receive inputs, there should be nonzero weights in
+column 0 but not row 0, and this is how the weight matrix should be set
+up.
+
+However: `next-activns` would still change the SEMANTIC node over time,
+because it decays all nodes, wehther they get input or not.  To undo
+this, we put a special value > 1.0 in the analogy mask in `make-person`,
+i.e. 1/decay, that will undo the decay.  (This is a kludge that is split
+between two different files.  Maybe there's a better way.)
+
+
+### Some notes on core.matrix functions
 
 Note the distinction in clojure.core.matrix between:
 
@@ -36,16 +80,17 @@ True column vectors, which have shape = [n 1], and which can be created
 e.g. by `(matrix [[1] [2] [3]])`.
 
 
-**Network settling (with Grossberg algorithm):**
+### Network settling (with Grossberg algorithm)
 
-The Grossberg algorithm does no normalization in anything like
-the probabilistic sense: That is, outputs are outputs; they're not scaled
-relative to other signals coming into the same node:  The only "averaging"
-comes from the weighting across links due to the network, and the scaling
-by distance from max and min.  Moreover, the link weights are absolute
-numbers; they are not themselves scaled relative to other link weights.
-(In essence, it's the job of the neural net settling process to do 
-something analogous to probabilistic normalization.)
+The Grossberg algorithm implemented by `next-activns` does no
+normalization in anything like the probabilistic sense: That is, outputs
+are outputs; they're not scaled relative to other signals coming into
+the same node:  The only "averaging" comes from the weighting across
+links due to the network, and the scaling by distance from max and min.
+Moreover, the link weights are absolute numbers; they are not themselves
+scaled relative to other link weights.  (In essence, it's the job of the
+neural net settling process to do something analogous to probabilistic
+normalization.)
 
 (Qualification: For the proposition network there is a kludgey method of
 scaling negative links relative to positive links since there are more
@@ -85,31 +130,14 @@ have to be resettled whenever beliefs are added to a person.
 
 Also, because the settling algorithm is a bit complex, I don't think we can
 take the shortcut of simply multipling the weight matrix by itself many
-times.  (Maybe this is incorrect, though.)`
+times.  (Maybe this is incorrect, though.)
 
 
 Note: The proposition networks, by contrast, can't be treated this way,
 because they acquire new links between old nodes.
 
-NOTE: For This way of doing matrix multiplication using (mmul <matrix> <vector>),
-<vector> is 1D and is treated as a column vector.  This means that the weight
-at index i,j represents the directional link from node j to node i, since j is
-the column (input) index, and i is the row index.  Doesn't matter for symmetric
-links, since for the there will be identical weights at i,j and j,i, but matters
-for assymetric, directional links.  
 
-For example, to cause the 0th, SEMANTIC node to send input to other
-nodes, but to never receive inputs, there should be nonzero weights in
-column 0 but not row 0, and this is how we are setting up the weight matrix.
-
-However, `next-activns` would still change the SEMANTIC node over time,
-because it decays all nodes, wehther they get input or not.  To undo
-this, we put a special value > 1.0 in the analogy mask in `make-person`,
-i.e. 1/decay, that will undo the decay.  This is a kludge that is split
-between two different files.  Maybe there's a better way.
-
-
-**References:**
+### References
 
 1. network.lisp in POPCO, which is based on Thagard's ACME network.lisp.
 
