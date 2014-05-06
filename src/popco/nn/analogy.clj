@@ -22,14 +22,14 @@
 
 (def ^:const +pos-link-increment+ 0.1)
 (def ^:const +neg-link-value+ -0.2)
-(def ^:const +sem-similarity-link-value+ 0.1)
+(def ^:const +sem-similarity-link-value+ 0.1) ; *ident-weight* in POPCO1: max abs wt for predicate semantic similarity
 (def ^:const +analogy-max-wt+ 0.5) ; As in popco1: forces weights to be <= 0.5 as a kludge to avoid extreme cycling.
 ;(def ^:const +analogy-max-wt+ 1.0)
 
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat match-propns propns-match? match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
          sum-wts-to-mat! write-wts-to-mat! matched-idx-fams competing-mapnode-fams competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs 
-         pred-mapnode? dupe-pred-mapnode? write-semantic-links! sem-specs-to-idx-multiplier-pairs dupe-pred-idx-multiplier-pairs)
+         pred-mapnode? dupe-pred-mapnode? write-semantic-links! conc-specs-to-idx-multiplier-pairs dupe-pred-idx-multiplier-pairs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -64,7 +64,7 @@
  ; :propn-mn-to-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
  ;               associated component mapnodes, i.e. of the propn mapnode's 'family'.
  ;               Note: Has no entry for the SEMANTIC node.
-  [propnseq1 propnseq2 pos-increment neg-increment sem-specs]
+  [propnseq1 propnseq2 pos-increment neg-increment conc-specs]
   (let [propn-pairs (match-propns propnseq1 propnseq2) ; match propns
         propn-pair-ids (map #(map :id %) propn-pairs)  ; get their ids
         fams (match-propn-components propn-pairs)      ; match their components
@@ -79,18 +79,19 @@
         analogy-map (assoc nn-map
                            :pos-wt-mat pos-wt-mat
                            :neg-wt-mat neg-wt-mat
-                           ; :propn-mn-to-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx fams)  ; TODO UNTESTED [NOT NEEDED?]
                            :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams)
                            :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ]
     (sum-wts-to-mat! pos-wt-mat   ; add pos wts between mapnodes in same family
                      (matched-idx-fams fams id-to-idx) 
                      pos-increment)
+    ;; TODO TODO TODO BUG(?):
+    ;; I may be passing in negative weights in conc-specs, but here I'm adding them to the pos-wt-mat:
     (write-semantic-links! pos-wt-mat   ; add pos wts to mapnodes for semantically related predicates
-                           +sem-similarity-link-value+ 
+                           +sem-similarity-link-value+ ; max abs weight for semantically related predicates
                            (id-to-idx :SEMANTIC) 
-                           (concat 
+                           (concat      ; indexes and weights for semantically related predicates
                              (dupe-pred-idx-multiplier-pairs node-seq id-to-idx)
-                             (sem-specs-to-idx-multiplier-pairs id-to-idx sem-specs)))
+                             (conc-specs-to-idx-multiplier-pairs id-to-idx conc-specs)))
     (write-wts-to-mat! neg-wt-mat  ; add neg wts between mapnodes that compete
                        (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
                        neg-increment)
@@ -359,24 +360,24 @@
   The weight of the links is sem-sim-wt times multiplier.  Typically sem-sim-wt 
   should be the top-level variable nn.analogy/+sem-similarity-link-value+.
   Usually, the semantically related predicates are (a) those that are identical,
-  and (b) those specified to be related in the sem-specs argument to 
+  and (b) those specified to be related in the conc-specs argument to 
   make-analogy-net, typically collected from a variable named sem-relats.
   (See settle.md for notes about order of indexes in assymetric links.)"
   [mat sem-sim-wt semnode-idx idx-multiplier-pairs]
   (doseq [[mplier idx] idx-multiplier-pairs]
     (mx/mset! mat idx semnode-idx (* mplier sem-sim-wt)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
 
-(defn sem-specs-to-idx-multiplier-pairs
+(defn conc-specs-to-idx-multiplier-pairs
   "ADD DOCSTRING"
-  [id-to-idx sem-specs]
+  [id-to-idx conc-specs]
   (filter identity ; strip the nils
           (concat
             (map
               (fn [[mplier lot-id1 lot-id2]] [mplier (id-to-idx (ids-to-mapnode-id lot-id1 lot-id2))])
-              sem-specs)
+              conc-specs)
             (map
               (fn [[mplier lot-id1 lot-id2]] [mplier (id-to-idx (ids-to-mapnode-id lot-id2 lot-id1))])
-              sem-specs))))
+              conc-specs))))
 
 
 (defn dupe-pred-idx-multiplier-pairs
