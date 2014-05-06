@@ -33,19 +33,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
 
-(defn update-nets
-  "Implements a single timestep's (tick's) worth of network settling and updating of the
-  proposition network from the analogy network.  Returns the population in its new state
-  after these processes have been performed.  Should be purely functional."
-  [persons]
-  (map update-person-nets persons))
-
-(defn pl-update-nets
-  "Implements a single timestep's (tick's) worth of network settling and updating of the
-  proposition network from the analogy network.  Returns the population in its new state
-  after these processes have been performed.  Should be purely functional.  Uses 'pmap'."
-  [persons]
-  (pmap update-person-nets persons))
+;(defn update-nets
+;  "Implements a single timestep's (tick's) worth of network settling and updating of the
+;  proposition network from the analogy network.  Returns the population in its new state
+;  after these processes have been performed.  Should be purely functional."
+;  [persons]
+;  (map update-person-nets persons))
+;
+;(defn pl-update-nets
+;  "Implements a single timestep's (tick's) worth of network settling and updating of the
+;  proposition network from the analogy network.  Returns the population in its new state
+;  after these processes have been performed.  Should be purely functional.  Uses 'pmap'."
+;  [persons]
+;  (pmap update-person-nets persons))
 
 ;(defn update-nets!
 ;  "Implements a single timestep's (tick's) worth of network settling and updating of the
