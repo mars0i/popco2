@@ -66,6 +66,10 @@ Evaluation count : 60 in 60 samples of 1 calls.
    Execution time lower quantile : 8.541575 sec ( 2.5%)
    Execution time upper quantile : 8.914888 sec (97.5%)
                    Overhead used : 2.462255 ns
+[NOTE THIS TIME WENT UP TO 8.969728 AFTER BUGFIXES 5/5/2014.]
+[Also that at that time I also did the same test with
+unparalleled-many-times, i.e. using map rather than pmap, and
+that took about twice as long.]
 
 Found 1 outliers in 60 samples (1.6667 %)
 	low-severe	 1 (1.6667 %)
