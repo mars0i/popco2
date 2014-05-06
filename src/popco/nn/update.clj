@@ -86,9 +86,10 @@
   person with a new weight matrix."
   [pers]
   (let [linger-wt-mat (:linger-wt-mat (:propn-net pers))
+        dim (first (shape linger-wt-mat))
         a-activns (:analogy-activns pers)
         aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
-        wt-mat (propn-wts-from-analogy-activns linger-wt-mat a-activns aidx-to-pidxs)] ; rets new mat
+        wt-mat (propn-wts-from-analogy-activns dim a-activns aidx-to-pidxs)] ; rets new mat
     (emap! clip-to-extrema (add! wt-mat linger-wt-mat))
     (assoc-in pers [:propn-net :wt-mat] wt-mat)))
 
@@ -97,14 +98,13 @@
   in the analogy network.   i.e. this sets the weight of a propn-to-propn 
   link as a function of the activation of the map node that maps those two 
   propositions, in the analogy network."
-  [p-linger-wt-mat a-activns aidx-to-pidxs]
+  [pdim a-activns aidx-to-pidxs]
   (let [aidxs (keys aidx-to-pidxs)
-        pdim (first (shape p-linger-wt-mat))
         wt-mat (zero-matrix pdim pdim)] ; make new mat
     (doseq [aidx aidxs
             :let [a-val (mget a-activns aidx)
                   [p-idx1 p-idx2] (aidx-to-pidxs aidx)]]
-      (mset! wt-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
+      (nn/symlink! wt-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
     wt-mat))
 
 ;; TODO: Deal with semantic-iffs and influence from communication.
