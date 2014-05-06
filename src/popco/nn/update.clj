@@ -33,27 +33,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
 
-;(defn update-nets
-;  "Implements a single timestep's (tick's) worth of network settling and updating of the
-;  proposition network from the analogy network.  Returns the population in its new state
-;  after these processes have been performed.  Should be purely functional."
-;  [persons]
-;  (map update-person-nets persons))
-;
-;(defn pl-update-nets
-;  "Implements a single timestep's (tick's) worth of network settling and updating of the
-;  proposition network from the analogy network.  Returns the population in its new state
-;  after these processes have been performed.  Should be purely functional.  Uses 'pmap'."
-;  [persons]
-;  (pmap update-person-nets persons))
-
-;(defn update-nets!
-;  "Implements a single timestep's (tick's) worth of network settling and updating of the
-;  proposition network from the analogy network.  Returns the population in its new state
-;  after these processes have been performed.  May mutate internal data structures."
-;  [persons]
-;  (map update-person-nets! persons))
-
 (defn update-person-nets
   "Perform one tick's (functional) updating of the networks of a single person."
   [pers]
@@ -61,15 +40,6 @@
     (settle-analogy-net nc/+settling-iters+) ; is this step necessary?? only because of cycling??
     (update-propn-wts-from-analogy-activns)
     (settle-propn-net nc/+settling-iters+)))
-
-;(defn update-person-nets!
-;  "Perform one tick's updating of the networks of a single person, possibly 
-;  mutating some internal data structure."
-;  [pers]
-;  (-> pers
-;    (settle-analogy-net nc/+settling-iters+) ; is this step necessary?? only because of cycling??
-;    (update-propn-wts-from-analogy-activns!)
-;    (settle-propn-net nc/+settling-iters+)))
 
 ;; Note 
 ;; default impl of mx/add! just emaps! +
