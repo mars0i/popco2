@@ -1,0 +1,11 @@
+NODES SHOWING POPCO2 - POPCO1 DIFFERENCE > 0.01:
+	jo_B-cpb->-b-abp
+	jo_V-ia->v-ha
+	jo_V-ica->-v-ipa->v-na
+	jo_V-qp->-v-ipa->v-na
+
+These just duplication those nodes in jo that job and jov are capable of:
+	job_B-cpb->-b-abp
+	jov_V-ia->v-ha
+	jov_V-ica->-v-ipa->v-na
+	jov_V-qp->-v-ipa->v-na
