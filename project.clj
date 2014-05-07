@@ -1,5 +1,5 @@
-(defproject popco-x "0.0.1-SNAPSHOT"
-  :url "https://github.com/mars0i/popco-x"
+(defproject popco2 "0.0.1-SNAPSHOT"
+  :url "https://github.com/mars0i/popco2"
   :license {:name "to be filled in"
             :url "to be filled in"}
   :dependencies [[org.clojure/clojure "1.6.0"]]
