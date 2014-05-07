@@ -25,11 +25,10 @@
 ;; set pretty-print width to terminal width
 (set-pprint-width (Integer/valueOf (System/getenv "COLUMNS"))) ; or read-string
 
-(mx/set-current-implementation :vectorz)
 ;; use one of these:
+(mx/set-current-implementation :vectorz)
 ;(mx/set-current-implementation :persistent-vector)
 ;(mx/set-current-implementation :ndarray)
-;(mx/set-current-implementation :vectorz)
 ;(mx/set-current-implementation :clatrix)
 
 (defn -main

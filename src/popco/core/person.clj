@@ -49,12 +49,12 @@
                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net))]
-    (nn/unmask! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT))
-    (mx/mset! (:propn-activns pers) ((:id-to-idx propn-net) :SALIENT) 1.0) ; salient node always has activn = 1
-    (mx/mset! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT) (/ 1.0 nc/+decay+)) ; Kludge to undo next-activn's decay on this node
-    (nn/unmask! (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC))
-    (mx/mset! (:analogy-activns pers) ((:id-to-idx analogy-net) :SEMANTIC) 1.0) ; semantic node always has activn = 1
-    (mx/mset! (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC) (/ 1.0 nc/+decay+)) ; Kludge to undo next-activn's decay on this node
+    (nn/unmask!     (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT))
+    (nn/set-activn! (:propn-activns pers) ((:id-to-idx propn-net) :SALIENT) 1.0) ; salient node always has activn = 1
+    (nn/set-mask!   (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT) (/ 1.0 nc/+decay+)) ; Kludge to undo next-activn's decay on this node
+    (nn/unmask!     (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC))
+    (nn/set-activn! (:analogy-activns pers) ((:id-to-idx analogy-net) :SEMANTIC) 1.0) ; semantic node always has activn = 1
+    (nn/set-mask!   (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC) (/ 1.0 nc/+decay+)) ; Kludge to undo next-activn's decay on this node
     (doseq [propn-id propn-ids] (cc/add-to-propn-net! pers propn-id))   ; better to fill propn mask before
     (doseq [propn-id propn-ids] (cc/try-add-to-analogy-net! pers propn-id)) ;  analogy mask, so propns are known
     pers))

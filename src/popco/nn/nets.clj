@@ -13,7 +13,8 @@
 ;; proposition net structure are :node-vec and :id-to-idx.  However, they
 ;; share the accessors wt-mat, pos-wt-mat, and neg-wt-mat.  
 
-;; NOTE All uses of mset! should be combined to this file.
+;; NOTE All uses of mset! should be confined to this file.
+;; There are also some core.matrix ! ops in update.clj.
 
 (declare posify negify)
 
@@ -123,11 +124,25 @@
      :id-vec (vec (map :id node-seq))
      :id-to-idx id-to-idx } ))
 
+;; These next two are functionally identical wrappers for mset!:
+
+(defn set-activn!
+  "Given a core.matrix vector representing a set of activations,
+  and an index into the vector, set the indexed element to value v."
+  [activn-mat idx v]
+  (mx/mset! activn-mat idx v))
+
+(defn set-mask!
+  "Given a core.matrix vector representing a mask, and an index
+  into the mask, set the indexed element of the mask to value v."
+  [mask idx v]
+  (mx/mset! mask idx v))
+
 (defn unmask!
   "Given a core.matrix vector representing a mask, and an index
   into the mask, set the indexed element of the mask to 1."
   [mask idx]
-    (mx/mset! mask idx 1.0))
+  (set-mask! mask idx 1.0))
 
 (defn node-unmasked?
   "Given a core.matrix vector representing a mask, and an index
