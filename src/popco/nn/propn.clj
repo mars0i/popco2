@@ -96,5 +96,5 @@
     (doseq [[wt id1 id2] iffs]
       (nn/symlink! mat (id-to-idx id1) (id-to-idx id2) wt)) ; bidirectional links--activation goes both ways
     (doseq [[wt id1 id2] ifs]
-      (mx/mset! mat (id-to-idx id1) (id-to-idx id2) wt))    ; unidirectional: activation will flow from the id2 propn to the id1 propn
+      (nn/dirlink! mat (id-to-idx id1) (id-to-idx id2) wt))    ; unidirectional: activation will flow from the id2 propn to the id1 propn
     mat))

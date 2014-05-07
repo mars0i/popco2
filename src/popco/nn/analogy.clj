@@ -301,7 +301,7 @@
     (doseq [i fam
             j fam]
       (when-not (= i j)
-        (mx/mset! mat i j 
+        (nn/dirlink! mat i j 
                   (min +analogy-max-wt+  ;; in popco1, this prevented extreme cycling (called *acme-max-weight*)
                        (op wt-val (mx/mget mat i j)))))))
   mat)
@@ -363,7 +363,7 @@
   (See settle.md for notes about order of indexes in assymetric links.)"
   [mat semnode-idx idx-multiplier-pairs]
   (doseq [[mplier idx] idx-multiplier-pairs]
-    (mx/mset! mat idx semnode-idx (* mplier +sem-similarity-link-value+)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
+    (nn/dirlink! mat idx semnode-idx (* mplier +sem-similarity-link-value+)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
 
 (defn conc-specs-to-idx-multiplier-pairs
   "ADD DOCSTRING"

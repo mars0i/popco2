@@ -106,7 +106,7 @@
 ;    (doseq [a-idx aidxs
 ;            :let [a-val (mget a-activns a-idx)
 ;                  [p-idx1 p-idx2] (aidx-to-pidxs a-idx)]]  ; CAN I DO THIS AT THE TOP OF THE doseq BY DESTRUCTURING MAP ELEMENTS?
-;      (mset! p-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
+;      (nn/dirlink! p-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
 ;    pers)) ; this function mutates the matrix inside pers, so no need to assoc it into the result
 
 ;; calc-assoc-weight in imp.lisp in popco1

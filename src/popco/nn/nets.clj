@@ -13,6 +13,7 @@
 ;; proposition net structure are :node-vec and :id-to-idx.  However, they
 ;; share the accessors wt-mat, pos-wt-mat, and neg-wt-mat.  
 
+;; NOTE All uses of mset! should be combined to this file.
 
 (declare posify negify)
 
@@ -157,6 +158,16 @@
   [mat i j wt-val]
   (mx/mset! mat i j wt-val)
   (mx/mset! mat j i wt-val))
+
+;; This is nothing more than a wrapper around mset!.  However, it allows
+;; temporarily replacing its contents with mset in cases in which it's useful
+;; e.g. to experiment with using persistent-vector rather than vectorz.
+(defn dirlink!
+  "Create a directional link by setting mat to wt-val from from j to i.
+  (See update.md for discussion of directionality).  Normally, this is
+  just a wrapper around core.matrix/mset! ."
+  [mat i j wt-val]
+  (mx/mset! mat i j wt-val))
 
 (defn symlink-to-idxs!
   "Create symmetric links between index i and every element in js by setting
