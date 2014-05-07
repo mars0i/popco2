@@ -60,11 +60,7 @@
   :propn-to-analogs -  A map from ids of propns to ids of their analogs--i.e.
                 of the propns that are the other sides of mapnodes.
   Also see docstring for write-semantic-links!."
- ; REMOVED FROM DOCSTRING:
- ; :propn-mn-to-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
- ;               associated component mapnodes, i.e. of the propn mapnode's 'family'.
- ;               Note: Has no entry for the SEMANTIC node.
-  [propnseq1 propnseq2 pos-increment neg-increment conc-specs]
+  [propnseq1 propnseq2 conc-specs]
   (let [propn-pairs (match-propns propnseq1 propnseq2) ; match propns
         propn-pair-ids (map #(map :id %) propn-pairs)  ; get their ids
         fams (match-propn-components propn-pairs)      ; match their components
@@ -83,7 +79,7 @@
                            :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ]
     (sum-wts-to-mat! pos-wt-mat   ; add pos wts between mapnodes in same family
                      (matched-idx-fams fams id-to-idx) 
-                     pos-increment)
+                     +pos-link-increment+)
     ;; TODO TODO TODO BUG(?):
     ;; I may be passing in negative weights in conc-specs, but here I'm adding them to the pos-wt-mat:
     ;; I have some negative weights in SEMANTIC directional links:
@@ -101,7 +97,7 @@
                              (conc-specs-to-idx-multiplier-pairs id-to-idx conc-specs)))
     (write-wts-to-mat! neg-wt-mat  ; add neg wts between mapnodes that compete
                        (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
-                       neg-increment)
+                       +neg-link-value+)
     (nn/map->AnalogyNet analogy-map)))
 
 
