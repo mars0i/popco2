@@ -90,7 +90,6 @@
     ;; ((:id-vec anet) 190)
     ;; ==> :Causal-if=Preventative-if
     (write-semantic-links! pos-wt-mat   ; add pos wts to mapnodes for semantically related predicates
-                           +sem-similarity-link-value+ ; max abs weight for semantically related predicates
                            (id-to-idx :SEMANTIC) 
                            (concat      ; indexes and weights for semantically related predicates
                              (dupe-pred-idx-multiplier-pairs node-seq id-to-idx)
@@ -366,9 +365,9 @@
   and (b) those specified to be related in the conc-specs argument to 
   make-analogy-net, typically collected from a variable named sem-relats.
   (See settle.md for notes about order of indexes in assymetric links.)"
-  [mat sem-sim-wt semnode-idx idx-multiplier-pairs]
+  [mat semnode-idx idx-multiplier-pairs]
   (doseq [[mplier idx] idx-multiplier-pairs]
-    (mx/mset! mat idx semnode-idx (* mplier sem-sim-wt)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
+    (mx/mset! mat idx semnode-idx (* mplier +sem-similarity-link-value+)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
 
 (defn conc-specs-to-idx-multiplier-pairs
   "ADD DOCSTRING"
