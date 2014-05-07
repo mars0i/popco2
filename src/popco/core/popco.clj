@@ -27,10 +27,10 @@
 
 (mx/set-current-implementation :vectorz)
 ;; use one of these:
-;(set-current-implementation :persistent-vector)
-;(set-current-implementation :ndarray)
-;(set-current-implementation :vectorz)
-;(set-current-implementation :clatrix)
+;(mx/set-current-implementation :persistent-vector)
+;(mx/set-current-implementation :ndarray)
+;(mx/set-current-implementation :vectorz)
+;(mx/set-current-implementation :clatrix)
 
 (defn -main
   "I don't do a whole lot ... yet."
