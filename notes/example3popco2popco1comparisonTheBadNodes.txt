@@ -1,8 +1,23 @@
 NODES SHOWING POPCO2 - POPCO1 DIFFERENCE > 0.01:
-	jo_B-cpb->-b-abp
-	jo_V-ia->v-ha
+
 	jo_V-ica->-v-ipa->v-na
 	jo_V-qp->-v-ipa->v-na
+These last two have links to exactly the same propns:
+	([31 :CV-ip->-cv-rpa->cv-na] [37 :CV-sa->-cv-rpa->cv-na])
+in popco1, the links are the same, although the weights are
+a little bit off from those in popco2.  But close.
+
+	jo_V-ia->v-ha
+That one has one link in both popco2 and popco1:
+	([26 :CV-ca->cv-ha])
+The weights are pretty close.
+
+	jo_B-cpb->-b-abp
+This one has a single link in both versions of popco:
+	([16 :CB-cpc->-cb-vpp 0.1464044113587105])
+Weight is close but not identical in popco1.
+
+--------------------------------------
 
 These just duplication those nodes in jo that job and jov are capable of:
 	job_B-cpb->-b-abp
