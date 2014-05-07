@@ -24,7 +24,7 @@
 (def ^:const +neg-link-value+ -0.2)
 (def ^:const +sem-similarity-link-value+ 0.1) ; *ident-weight* in POPCO1: max abs wt for predicate semantic similarity
 (def ^:const +analogy-max-wt+ 0.5) ; As in popco1: forces weights to be <= 0.5 as a kludge to avoid extreme cycling.
-;(def ^:const +analogy-max-wt+ 1.0)
+(def ^:const +semantic-node-index+ 0)
 
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat match-propns propns-match? match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
@@ -41,27 +41,29 @@
   neural-net structure produced by make-nn-core (q.v.), with these changes that
   are specific to an analogy network:
   :pos-wt-mat - A core.matrix square matrix with dimensions equal to the number
-                of nodes.  This will represent positively weighted links.
+  of nodes.  This will represent positively weighted links.
   :neg-wt-mat - A core.matrix square matrix with dimensions equal to the number
-                of nodes.  This will represent negatively weighted links.
+  of nodes.  This will represent negatively weighted links.
   :id-to-idx -   A Clojure map from ids of the same data items to integers, 
-                 allowing lookup of a node's index from its id.
+  allowing lookup of a node's index from its id.
   :ids-to-idx - This does roughly the same thing as :id-to-idx. The latter
-                maps mapnode ids to indexes into the node vector (or rows, or 
-                columns of the matrices).  :ids-to-idx, by contrast, maps
-                vector pairs containing the ids of the two sides (from which
-                the mapnode id is constructed).  This is redundant information,
-                but convenient. Note: The SEMANTIC node will have the key [nil nil]
-                since it's not built from analogs.
+  maps mapnode ids to indexes into the node vector (or rows, or 
+  columns of the matrices).  :ids-to-idx, by contrast, maps
+  vector pairs containing the ids of the two sides (from which
+  the mapnode id is constructed).  This is redundant information,
+  but convenient. Note: The SEMANTIC node will have the key [nil nil]
+  since it's not built from analogs.
   :propn-mn-to-ext-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
-                associated component mapnodes, components of argument propn-mapnodes, etc.
-                all the say down--i.e. of the propn-mapnode's 'extended family'.
-                Note: Has no entry for the SEMANTIC node.
+  associated component mapnodes, components of argument propn-mapnodes, etc.
+  all the say down--i.e. of the propn-mapnode's 'extended family'.
+  Note: Has no entry for the SEMANTIC node.
   :propn-to-analogs -  A map from ids of propns to ids of their analogs--i.e.
-                of the propns that are the other sides of mapnodes.
+  of the propns that are the other sides of mapnodes.
   Also see docstring for write-semantic-links!."
   [propnseq1 propnseq2 conc-specs]
-  (let [propn-pairs (match-propns propnseq1 propnseq2) ; match propns
+  (let [pos-conc-specs (filter (comp pos? first) conc-specs) ; conceptual specs with positive weight
+        neg-conc-specs (filter (comp neg? first) conc-specs) ; conceptual specs with negative weight
+        propn-pairs (match-propns propnseq1 propnseq2) ; match propns
         propn-pair-ids (map #(map :id %) propn-pairs)  ; get their ids
         fams (match-propn-components propn-pairs)      ; match their components
         ext-fams (match-propn-components-deeply propn-pairs) ; match into proposition args
@@ -91,9 +93,11 @@
     ;; ==> :Causal-if=Preventative-if
     (write-semantic-links! pos-wt-mat   ; add pos wts to mapnodes for semantically related predicates
                            (id-to-idx :SEMANTIC) 
-                           (concat      ; indexes and weights for semantically related predicates
-                             (dupe-pred-idx-multiplier-pairs node-seq id-to-idx)
-                             (conc-specs-to-idx-multiplier-pairs id-to-idx conc-specs)))
+                           (concat (dupe-pred-idx-multiplier-pairs node-seq id-to-idx)             ; indexes and weights for semantically related predicates
+                                   (conc-specs-to-idx-multiplier-pairs id-to-idx pos-conc-specs))) ; ditto
+    (write-semantic-links! neg-wt-mat   ; add pos wts to mapnodes for semantically related predicates
+                           (id-to-idx :SEMANTIC) 
+                           (conc-specs-to-idx-multiplier-pairs id-to-idx pos-conc-specs)); indexes and weights for semantically related predicates
     (write-wts-to-mat! neg-wt-mat  ; add neg wts between mapnodes that compete
                        (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
                        +neg-link-value+)
