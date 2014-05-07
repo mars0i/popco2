@@ -86,6 +86,13 @@
                      pos-increment)
     ;; TODO TODO TODO BUG(?):
     ;; I may be passing in negative weights in conc-specs, but here I'm adding them to the pos-wt-mat:
+    ;; I have some negative weights in SEMANTIC directional links:
+    ;; (for [i (range 263) j (range 263) :let [v (mget pmat i j)] :when (neg? v)] [i j v])
+    ;; ==> ([116 0 -0.1] [190 0 -0.1])
+    ;; ((:id-vec anet) 116)
+    ;; ==> :Preventative-if=Causal-if
+    ;; ((:id-vec anet) 190)
+    ;; ==> :Causal-if=Preventative-if
     (write-semantic-links! pos-wt-mat   ; add pos wts to mapnodes for semantically related predicates
                            +sem-similarity-link-value+ ; max abs weight for semantically related predicates
                            (id-to-idx :SEMANTIC) 
