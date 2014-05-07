@@ -3,7 +3,7 @@
   :license {:name "to be filled in"
             :url "to be filled in"}
   :dependencies [[org.clojure/clojure "1.6.0"]]
-  :main popco.core.popco ; this is what lein run will look for -main in
+  :main popco.core.popco ; will be run automatically in the repl
   :profiles {:dev {:dependencies [;[slingshot "0.10.3"][org.jblas/jblas "1.2.3"][mars0i/clatrix "0.4.0-SNAPSHOT"]
                                   [net.mikera/core.matrix "0.22.1-SNAPSHOT"]
                                   [net.mikera/vectorz-clj "0.20.1-SNAPSHOT"]
