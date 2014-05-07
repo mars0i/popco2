@@ -82,25 +82,17 @@
     (sum-wts-to-mat! pos-wt-mat   ; add pos wts between mapnodes in same family
                      (matched-idx-fams fams id-to-idx) 
                      +pos-link-increment+)
-    ;; TODO TODO TODO BUG(?):
-    ;; I may be passing in negative weights in conc-specs, but here I'm adding them to the pos-wt-mat:
-    ;; I have some negative weights in SEMANTIC directional links:
-    ;; (for [i (range 263) j (range 263) :let [v (mget pmat i j)] :when (neg? v)] [i j v])
-    ;; ==> ([116 0 -0.1] [190 0 -0.1])
-    ;; ((:id-vec anet) 116)
-    ;; ==> :Preventative-if=Causal-if
-    ;; ((:id-vec anet) 190)
-    ;; ==> :Causal-if=Preventative-if
+    (write-wts-to-mat! neg-wt-mat  ; add neg wts between mapnodes that compete
+                       (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
+                       +neg-link-value+)
+    ;; Write one-way links from SEMANTIC node. These wont' conflict with preceding links.
     (write-semantic-links! pos-wt-mat   ; add pos wts to mapnodes for semantically related predicates
                            (id-to-idx :SEMANTIC) 
                            (concat (dupe-pred-idx-multiplier-pairs node-seq id-to-idx)             ; indexes and weights for semantically related predicates
                                    (conc-specs-to-idx-multiplier-pairs id-to-idx pos-conc-specs))) ; ditto
     (write-semantic-links! neg-wt-mat   ; add pos wts to mapnodes for semantically related predicates
                            (id-to-idx :SEMANTIC) 
-                           (conc-specs-to-idx-multiplier-pairs id-to-idx pos-conc-specs)); indexes and weights for semantically related predicates
-    (write-wts-to-mat! neg-wt-mat  ; add neg wts between mapnodes that compete
-                       (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
-                       +neg-link-value+)
+                           (conc-specs-to-idx-multiplier-pairs id-to-idx neg-conc-specs)); indexes and weights for semantically related predicates
     (nn/map->AnalogyNet analogy-map)))
 
 
