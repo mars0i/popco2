@@ -38,8 +38,8 @@
         num-nodes (count id-vec)]
     (for [i (range num-nodes)
           j (range i num-nodes)
-          :when (and (== 1.0 (mx/mget mask i))
-                     (== 1.0 (mx/mget mask j))
+          :when (and (<= 1.0 (mx/mget mask i)) ; <= rather than == because mask value for special nodes may be > 1
+                     (<= 1.0 (mx/mget mask j))
                      (or (not (== (mx/mget mat i j) 0.0))   ; there is no not== function
                          (not (== (mx/mget mat j i) 0.0))))]
         [(id-vec i) (id-vec j) (mx/mget mat i j) (mx/mget mat j i)])))
