@@ -26,12 +26,12 @@
   (list-links (:propn-net pers) (:propn-mask pers)))
 
 (defn list-links
-  "[REVISE DOCSTRING] Return a seq of all node pairs that are linked in nnstru's matrix.
+  "Return a seq of all node pairs that are linked in nnstru's matrix.
   Each link is represented in the output as a seq [id1 id2 wt1 wt2],
   where id* are node ids, and wt* are link weights in either direction,
   i.e. wt1 = wt2 for bidirectional links (the usual case).
   BUGS: Actually just checks whether weights are nonzero; zero-weight
-  links will be ignored.  And assumes that all links are bidirectional."
+  links will be ignored."
   [nnstru mask]
   (let [mat (nn/wt-mat nnstru)
         id-vec (:id-vec nnstru)
