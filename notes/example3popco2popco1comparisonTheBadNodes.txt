@@ -17,6 +17,15 @@ This one has a single link in both versions of popco:
 	([16 :CB-cpc->-cb-vpp 0.1464044113587105])
 Weight is close but not identical in popco1.
 
+
+NOTE: I've verified, using test/crime3.clj, that the analogy links
+are indeed the same in popco1 and popco2.  That suggests that either
+there's something wrong with the process of updating the propn net
+from the analogy net, there's something wrong with the settling
+algorithm, or (most likely) the discrepancies are solely due to
+float founding differences because the calculations in popco1 and
+popco2 use completely different algorithms.
+
 --------------------------------------
 
 These just duplication those nodes in jo that job and jov are capable of:
