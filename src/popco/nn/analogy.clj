@@ -5,8 +5,10 @@
 
 (ns popco.nn.analogy
   (:use popco.core.lot)
-  (:require [popco.nn.nets :as nn]
-            [utils.general :as ug]
+  (:require [utils.general :as ug]
+            [popco.core.constants :as cn]
+            [popco.nn.nets :as nn]
+            [popco.nn.matrix :as pmx]
             [clojure.core.matrix :as mx]
             [clojure.algo.generic.functor :as gf])
   (:import [popco.core.lot Propn Pred Obj]
@@ -75,10 +77,10 @@
                            :propn-to-analogs (make-propn-to-analogs propn-pair-ids)) ]
     (sum-wts-to-mat! pos-wt-mat   ; add pos wts between mapnodes in same family
                      (matched-idx-fams fams id-to-idx) 
-                     +pos-link-increment+)
+                     cn/+pos-link-increment+)
     (write-wts-to-mat! neg-wt-mat  ; add neg wts between mapnodes that compete
                        (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
-                       +neg-link-value+)
+                       cn/+neg-link-value+)
     ;; Write one-way links from SEMANTIC node. These wont' conflict with preceding links.
     (write-semantic-links! pos-wt-mat   ; add pos wts to mapnodes for semantically related predicates
                            (id-to-idx :SEMANTIC) 
@@ -104,12 +106,12 @@
   to represent activation values of nodes.  Each person has its own 
   activation vector."
   [len]
-  (mx/zero-vector len))
+  (pmx/zero-vector len))
 
 (defn make-wt-mat
   "Returns a core.matrix square matrix with dimension dim, filled with zeros."
   [dim]
-  (mx/zero-matrix dim dim))
+  (pmx/zero-matrix dim dim))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 1
@@ -296,7 +298,7 @@
             j fam]
       (when-not (= i j)
         (nn/dirlink! mat i j 
-                  (min +analogy-max-wt+  ;; in popco1, this prevented extreme cycling (called *acme-max-weight*)
+                  (min cn/+analogy-max-wt+  ;; in popco1, this prevented extreme cycling (called *acme-max-weight*)
                        (op wt-val (mx/mget mat i j)))))))
   mat)
 
@@ -350,14 +352,14 @@
   never be affected by other nodes.  The pairs are ones in which the first 
   element is a multiplier in [-1,1], and the second is an index of a node.  
   The weight of the links is sem-sim-wt times multiplier.  Typically sem-sim-wt 
-  should be the top-level variable nn.analogy/+sem-similarity-link-value+.
+  should be the top-level variable +sem-similarity-link-value+.
   Usually, the semantically related predicates are (a) those that are identical,
   and (b) those specified to be related in the conc-specs argument to 
   make-analogy-net, typically collected from a variable named sem-relats.
   (See settle.md for notes about order of indexes in assymetric links.)"
   [mat semnode-idx idx-multiplier-pairs]
   (doseq [[mplier idx] idx-multiplier-pairs]
-    (nn/dirlink! mat idx semnode-idx (* mplier +sem-similarity-link-value+)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
+    (nn/dirlink! mat idx semnode-idx (* mplier cn/+sem-similarity-link-value+)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
 
 (defn conc-specs-to-idx-multiplier-pairs
   "ADD DOCSTRING"

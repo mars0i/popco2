@@ -1,8 +1,10 @@
 (ns popco.nn.update
-  (:use clojure.core.matrix)
-  (:require [popco.nn.nets :as nn]
+  (:require [utils.general :as ug]
             [popco.core.person :as pers]
-            [utils.general :as ug]))
+            [popco.core.constants :as cn]
+            [popco.nn.nets :as nn]
+            [popco.nn.matrix :as pmx]
+            [clojure.core.matrix :as mx]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NOTES
@@ -36,9 +38,9 @@
   "Perform one tick's (functional) updating of the networks of a single person."
   [pers]
   (-> pers
-    (settle-analogy-net nc/+settling-iters+) ; is this step necessary?? only because of cycling??
+    (settle-analogy-net cn/+settling-iters+) ; is this step necessary?? only because of cycling??
     (update-propn-wts-from-analogy-activns)
-    (settle-propn-net nc/+settling-iters+)))
+    (settle-propn-net cn/+settling-iters+)))
 
 ;; Note 
 ;; default impl of mx/add! just emaps! +
@@ -55,11 +57,11 @@
   person with a new weight matrix."
   [pers]
   (let [linger-wt-mat (:linger-wt-mat (:propn-net pers))
-        dim (first (shape linger-wt-mat))
+        dim (first (mx/shape linger-wt-mat))
         a-activns (:analogy-activns pers)
         aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
         wt-mat (propn-wts-from-analogy-activns dim a-activns aidx-to-pidxs)] ; rets new mat
-    (emap! clip-to-extrema (add! wt-mat linger-wt-mat))
+    (mx/emap! clip-to-extrema (mx/add! wt-mat linger-wt-mat))
     (assoc-in pers [:propn-net :wt-mat] wt-mat)))
 
 (defn propn-wts-from-analogy-activns
@@ -69,9 +71,9 @@
   propositions, in the analogy network."
   [pdim a-activns aidx-to-pidxs]
   (let [aidxs (keys aidx-to-pidxs)
-        wt-mat (zero-matrix pdim pdim)] ; make new mat
+        wt-mat (pmx/zero-matrix pdim pdim)] ; make new mat
     (doseq [aidx aidxs
-            :let [a-val (mget a-activns aidx)
+            :let [a-val (mx/mget a-activns aidx)
                   [p-idx1 p-idx2] (aidx-to-pidxs aidx)]]
       (nn/symlink! wt-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
     wt-mat))
@@ -114,8 +116,8 @@
   that the corresponding link in the propn network should get by default."
   [a-activn]
   (if (pos? a-activn)
-    (* a-activn nc/+analogy-to-propn-pos-multiplier+)
-    (* a-activn nc/+analogy-to-propn-neg-multiplier+)))
+    (* a-activn cn/+analogy-to-propn-pos-multiplier+)
+    (* a-activn cn/+analogy-to-propn-neg-multiplier+)))
 
 (defn settle-analogy-net
   "Return person pers with its analogy net updated by 1 or more iters of settling."
@@ -153,14 +155,14 @@
   algorithm as described in Holyoak & Thagard's (1989) \"Analogue Retrieval
   by Constraint Satisfaction\"."
   [net mask activns]
-  (let [pos-activns (emap nn/posify activns)] ; Negative activations are ignored as inputs.
-    (emul mask
-          (emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
-                (add (emul nc/+decay+ activns)                         ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
-                     (emul (mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
-                           (emap dist-from-max activns))          ;  inputs' distances from 1, and
-                     (emul (mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
-                           (emap dist-from-min activns)))))))     ;  inputs' distances from -1.
+  (let [pos-activns (mx/emap nn/posify activns)] ; Negative activations are ignored as inputs.
+    (mx/emul mask
+             (mx/emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
+                      (mx/add (mx/emul cn/+decay+ activns)                         ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
+                              (mx/emul (mx/mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
+                                       (mx/emap dist-from-max activns))          ;  inputs' distances from 1, and
+                              (mx/emul (mx/mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
+                                       (mx/emap dist-from-min activns)))))))     ;  inputs' distances from -1.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions
@@ -168,13 +170,13 @@
 (defn clip-to-extrema
   "Returns -1 if x < -1, 1 if x > 1, and x otherwise."
   [x]
-  (max -1 (min 1 x)))
+  (max cn/+neg-one+ (min cn/+one+ x)))
 
 (defn dist-from-max
   "Return the distance of activn from 1.  Note return value will be > 1
   if activn < 0."
   [activn]
-  (- 1.0 activn))
+  (- cn/+one+ activn))
 
 (defn dist-from-min 
   "Return the distance of activn from 1.  Note return value will be > 1

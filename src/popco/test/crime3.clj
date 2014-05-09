@@ -3,10 +3,11 @@
         popco.test.popco1comp
         sims.crime3.propns)
   (:require [popco.core.person :as pers]
+            [popco.core.constants :as cn]
             [popco.nn.analogy :as an]
             [popco.nn.propn :as pn]))
 
-(def perception-ifs (map #(vector 1.0 (:id %) :SALIENT) crime-propns))
+(def perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) crime-propns))
 
 (def a-net (an/make-analogy-net crime-propns living-propns conceptual-relats))
 (def p-net (pn/make-propn-net (concat crime-propns living-propns) semantic-iffs perception-ifs))

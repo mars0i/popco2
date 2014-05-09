@@ -1,9 +1,7 @@
 (ns popco.io.csv
   (:require [clojure.data.csv :as csv]
             [clojure.java.io :as io]
-            [clojure.core.matrix :as mx] ;; temporary for testing?
-            [popco.core.main :as mn] ;; temporary for testing?
-            ))
+            [clojure.core.matrix :as mx]))
 
 
 ;; ARE THESE FUNCTIONS EFFICIENT ENOUGH?

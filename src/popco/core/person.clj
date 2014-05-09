@@ -4,6 +4,7 @@
             [popco.core.constants :as cn]
             [popco.nn.nets :as nn]
             [popco.nn.propn :as pn]
+            [popco.nn.matrix :as pmx]
             [clojure.core.matrix :as mx]))
 
 ;; Definition of person and related functions
@@ -43,18 +44,18 @@
         propn-ids (map :id propns)
         pers (->Person nm 
                        (pn/clone propn-net)
-                       (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
-                       (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
+                       (pmx/zero-vector num-poss-propn-nodes)     ; propn-mask
+                       (pmx/zero-vector num-poss-propn-nodes)     ; propn-activns
                        analogy-net
-                       (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
-                       (mx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
+                       (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
+                       (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net))]
     (nn/unmask!     (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT))
     (nn/set-activn! (:propn-activns pers) ((:id-to-idx propn-net) :SALIENT) cn/+one+) ; salient node always has activn = 1
-    (nn/set-mask!   (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT) (/ cn/+one+ nc/+decay+)) ; Kludge to undo next-activn's decay on this node
+    (nn/set-mask!   (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT) (/ cn/+one+ cn/+decay+)) ; Kludge to undo next-activn's decay on this node
     (nn/unmask!     (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC))
     (nn/set-activn! (:analogy-activns pers) ((:id-to-idx analogy-net) :SEMANTIC) cn/+one+) ; semantic node always has activn = 1
-    (nn/set-mask!   (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC) (/ cn/+one+ nc/+decay+)) ; Kludge to undo next-activn's decay on this node
+    (nn/set-mask!   (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC) (/ cn/+one+ cn/+decay+)) ; Kludge to undo next-activn's decay on this node
     (doseq [propn-id propn-ids] (cc/add-to-propn-net! pers propn-id))   ; better to fill propn mask before
     (doseq [propn-id propn-ids] (cc/try-add-to-analogy-net! pers propn-id)) ;  analogy mask, so propns are known
     pers))
@@ -97,7 +98,7 @@
   (let [p-net (:propn-net pers)
         num-nodes (count (:node-seq p-net))]
     (assoc-in pers [:propn-net :wt-mat]
-              (mx/zero-matrix num-nodes num-nodes))))
+              (pmx/zero-matrix num-nodes num-nodes))))
 
 ;; TEMPORARY
 ;; differs from make-person in using old-add-to-analogy-net as a sanity check
