@@ -5,7 +5,8 @@
   :dependencies [[org.clojure/clojure "1.6.0"]]
   :main popco.core.popco ; will be run automatically in the repl
   :profiles {:dev {:dependencies [;[slingshot "0.10.3"][org.jblas/jblas "1.2.3"][mars0i/clatrix "0.4.0-SNAPSHOT"]
-                                  [net.mikera/core.matrix "0.22.1-SNAPSHOT"]
+                                  ;[net.mikera/core.matrix "0.22.1-SNAPSHOT"]
+                                  [net.mikera/core.matrix "0.22.1-OTHERZEROS"]
                                   [net.mikera/vectorz-clj "0.20.1-SNAPSHOT"]
                                   [org.clojure/algo.generic "0.1.1"]
                                   [org.clojure/data.csv "0.1.2"]
