@@ -16,7 +16,7 @@
 
 (declare once many-times unparalleled-many-times ticker inc-tick)
 
-(def folks (atom (->Population 0 [])))
+(def folks (atom (->Population 0 []))) ; ok to use Long for tick
 
 ;; An earlier version included a report-fn argument.  I now think it's
 ;; better to just map or doseq such functions, externally, over the

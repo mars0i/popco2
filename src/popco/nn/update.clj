@@ -1,7 +1,6 @@
 (ns popco.nn.update
   (:use clojure.core.matrix)
   (:require [popco.nn.nets :as nn]
-            [popco.nn.constants :as nc]
             [popco.core.person :as pers]
             [utils.general :as ug]))
 

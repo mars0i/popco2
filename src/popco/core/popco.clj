@@ -11,7 +11,7 @@
             [popco.nn.analogy :as an]
             [popco.nn.propn :as pn]
             [popco.nn.update :as up]
-            [popco.nn.constants :as nc]
+            [popco.core.constants :as nc]
             [popco.nn.pprint :as pp]
             [popco.io.csv :as csv])
   ;popco.nn.testtools
@@ -26,9 +26,9 @@
 (set-pprint-width (Integer/valueOf (System/getenv "COLUMNS"))) ; or read-string
 
 ;; use one of these:
-(mx/set-current-implementation :vectorz)
+;(mx/set-current-implementation :vectorz)
 ;(mx/set-current-implementation :persistent-vector)
-;(mx/set-current-implementation :ndarray)
+(mx/set-current-implementation :ndarray)
 ;(mx/set-current-implementation :clatrix)
 
 (defn -main
