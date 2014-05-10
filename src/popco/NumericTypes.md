@@ -12,8 +12,10 @@ in the source:
 1. In popco/core/popco.clj, comment out the first of these lines, and uncomment
 the other one:
 
+````
     (mx/set-current-implementation :vectorz)
     ;(mx/set-current-implementation :ndarray)
+````
 
 2. In popco/core/constants.clj, comment/uncomment lines so that all of
 the constants are of the same numeric type.
