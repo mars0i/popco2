@@ -27,10 +27,8 @@
 (set-pprint-width (Integer/valueOf (System/getenv "COLUMNS"))) ; or read-string
 
 ;; use one of these:
-;(mx/set-current-implementation :vectorz)
-;(mx/set-current-implementation :persistent-vector)
-(mx/set-current-implementation :ndarray)
-;(mx/set-current-implementation :clatrix)
+(mx/set-current-implementation :vectorz)
+;(mx/set-current-implementation :ndarray)
 
 (defn -main
   "I don't do a whole lot ... yet."
