@@ -1,6 +1,7 @@
 (ns popco.nn.nets
   (:require [utils.general :as ug]
             [popco.core.lot :as lot]
+            [popco.core.constants :as cn]
             [clojure.core.matrix :as mx]))
 
 ;; Definitions of neural-net data types and related functions.
@@ -86,12 +87,12 @@
 (defn posify 
   "Return the non-negative number closest to x, i.e. 0 if x < 0, else x."
   [x]
-  (max 0 x))
+  (max cn/+zero+ x))
 
 (defn negify
   "Return the non-positive number closest to x, i.e. 0 if x > 0, else x."
   [x]
-  (min 0 x))
+  (min cn/+zero+ x))
 
 (defn make-id-to-idx-map
   "Given a sequence of things, returns a map from things to indexes.  
@@ -142,21 +143,21 @@
   "Given a core.matrix vector representing a mask, and an index
   into the mask, set the indexed element of the mask to 1."
   [mask idx]
-  (set-mask! mask idx 1.0))
+  (set-mask! mask idx cn/+one+))
 
 (defn node-unmasked?
   "Given a core.matrix vector representing a mask, and an index
   into the mask, return true if the mask is 1 at that index;
   otherwise false."
   [mask idx]
-  (= 1.0 (mx/mget mask idx)))
+  (= cn/+one+ (mx/mget mask idx)))
 
 (defn node-masked?
   "Given a core.matrix vector representing a mask, and an index
   into the mask, return true if the mask is 0 at that index;
   otherwise false."
   [mask idx]
-  (= 0.0 (mx/mget mask idx)))
+  (= cn/+zero+ (mx/mget mask idx)))
 
 (defn mask-matrix
   "Given a weight matrix and a mask vector (1-dimensional, i.e. not a 1xN row 

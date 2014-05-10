@@ -3,7 +3,6 @@
             [popco.nn.propn :as pn]
             [popco.core.person :as pers]
             [popco.core.population :as pp]
-            [popco.core.main :as mn]
             [popco.core.constants :as cn]
             [sims.crime3.propns :as pns]))
 

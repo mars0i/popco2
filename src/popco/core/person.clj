@@ -1,6 +1,6 @@
 (ns popco.core.person
   (:require [utils.general :as ug]
-            [popco.core.communic :as cc]
+            [popco.core.communic :as cm]
             [popco.core.constants :as cn]
             [popco.nn.nets :as nn]
             [popco.nn.propn :as pn]
@@ -56,8 +56,8 @@
     (nn/unmask!     (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC))
     (nn/set-activn! (:analogy-activns pers) ((:id-to-idx analogy-net) :SEMANTIC) cn/+one+) ; semantic node always has activn = 1
     (nn/set-mask!   (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC) (/ cn/+one+ cn/+decay+)) ; Kludge to undo next-activn's decay on this node
-    (doseq [propn-id propn-ids] (cc/add-to-propn-net! pers propn-id))   ; better to fill propn mask before
-    (doseq [propn-id propn-ids] (cc/try-add-to-analogy-net! pers propn-id)) ;  analogy mask, so propns are known
+    (doseq [propn-id propn-ids] (cm/add-to-propn-net! pers propn-id))   ; better to fill propn mask before
+    (doseq [propn-id propn-ids] (cm/try-add-to-analogy-net! pers propn-id)) ;  analogy mask, so propns are known
     pers))
 
 (defn clone
@@ -120,6 +120,6 @@
 ;                        analogy-net
 ;                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
 ;                        (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
-;     (doseq [propn propns] (cc/add-to-propn-net pers (:id propn)))   ; better to fill propn mask before
-;     (doseq [propn propns] (cc/old-add-to-analogy-net pers (:id propn))) ;  analogy mask, so propns are known
+;     (doseq [propn propns] (cm/add-to-propn-net pers (:id propn)))   ; better to fill propn mask before
+;     (doseq [propn propns] (cm/old-add-to-analogy-net pers (:id propn))) ;  analogy mask, so propns are known
 ;     pers))
