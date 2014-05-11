@@ -60,6 +60,17 @@
        (cm/transmit-utterances 
          (mapfn per-person-fns (:members popn)))))))
 
+(defn once-no-communic-popco1-style
+  "Implements a single timestep's (tick's) worth of evolution of the population,
+  without communication.  Returns the population in its new state.  Implements 
+  non-communication steps in the same order as popco1 for comparison with it."
+  [popn]
+  (->Population
+    (inc (:tick popn))
+    (doall
+      (pmap up/update-person-nets-popco1-style (:members popn)))))
+
+
 (defn ticker
   "Prints tick number to console, erasing previous tick number, and returns
   the population unchanged."

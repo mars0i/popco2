@@ -42,6 +42,16 @@
     (update-propn-wts-from-analogy-activns)
     (settle-propn-net cn/+settling-iters+)))
 
+(defn update-person-nets-popco1-style
+  "Perform one tick's (functional) updating of the networks of a single person,
+  in the order in which popco1 did it.  i.e. does, per-person, what popco1 did
+  with settle-nets and update-propn-nets-from-analogy-nets."
+  [pers]
+  (-> pers
+    (settle-analogy-net cn/+settling-iters+)
+    (settle-propn-net cn/+settling-iters+)    ; popco1 settled the two disjuoint nets simultaneously
+    (update-propn-wts-from-analogy-activns)))
+
 ;; Note 
 ;; default impl of mx/add! just emaps! +
 ;; The vectorz version calls a vectorz function.
