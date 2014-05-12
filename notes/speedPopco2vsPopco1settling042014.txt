@@ -142,8 +142,6 @@ Evaluation took:
   1 page fault
   526,989,941,696 bytes consed
 
-20.162666
-
 ===================================================
 OTHER NOTES RE MBP
 
