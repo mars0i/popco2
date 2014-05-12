@@ -35,3 +35,34 @@ NOTE: 1209.760389 seconds is 20.16267315 minutes.
 
 ===================================================
 POPCO 2 ON MBP:
+
+git hist id 9cad085
+Clojure 1.6.0
+java version "1.6.0_65"
+Java(TM) SE Runtime Environment (build 1.6.0_65-b14-462-10M4609)
+Java HotSpot(TM) 64-Bit Server VM (build 20.65-b04-462, mixed mode)
+2GB max heap
+(But java only went up to 441.8MB, because I just used nth instead
+of trying to collect the entire sequence (which is appropriate for
+comparison with popco1).)
+
+The code run:
+
+(use '[criterium.core :only [bench]])
+(use 'sims.crime3.example99)
+(bench (def _ (nth (unparalleled-many-times popn) 1000)))
+[NOTE this uses map rather than pmap]
+
+Criterium's output:
+
+WARNING: Final GC required 4.790693885765076 % of runtime
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 1.921737 min
+    Execution time std-deviation : 753.913115 ms
+   Execution time lower quantile : 1.915311 min ( 2.5%)
+   Execution time upper quantile : 1.955896 min (97.5%)
+                   Overhead used : 2.412322 ns
+
+Found 7 outliers in 60 samples (11.6667 %)
+	low-severe	 7 (11.6667 %)
+ Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
