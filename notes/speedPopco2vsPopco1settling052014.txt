@@ -8,30 +8,45 @@ speed notes file.
 ===================================================
 SUMMARY ON MY MBP
 
+popco2 is slightly more than 10X faster than popco1 with no parallelism
+in Clojure (i.e. map rather than pmap) for 1000 ticks, 99 persons, no
+communication.  More precisely, the ratio between the popco1 time and
+the popco2 criterium average was about 10.2134.
+
+
+(Note that I only ran popco1 one time, so it's possible that this was
+a little bit of an outlier, but SBCL times should be more reliable
+than Clojure-without-Criterium.)
+
 
 ===================================================
 POPCO 1 ON MBP:
 
-4/25/2014 with crime/crime3example99.lisp
+5/12/2014 with crime/crime3example99.lisp
 33 both-biasers job, 33 virus-biasers jov, and 33 beast-biaser job:
-
-* (time (popco*))
-[popco* was a short-lived function--I deleted it--that, under the
-right circumstances, would run popco without writing a random state file.]
+Using the extremal-numbers git branch: i.e. just like the standard
+version, but putting max, min activation at 1.0, -1.0, rather than
+0.99, -0.99.
 
 Running popco with maximum of 5 cycles each in 1000 popco tick(s) ....
 *do-converse* NIL; *do-update-propn-nets-from-analogy-nets* T; *do-report-to-netlogo* NIL; *do-report-propns-to-csv* NIL; *use-new-random-state* T
 1000
 Evaluation took:
-  1212.021 seconds of real time
-  1209.760389 seconds of total run time (1200.559819 user, 9.200570 system)
-  [ Run times consist of 70.328 seconds GC time, and 1139.433 seconds non-GC time. ]
-  99.81% CPU
-  2,787,712,278,274 processor cycles
-  1 page fault
-  526,989,941,696 bytes consed
+  1180.224 seconds of real time
+  1177.649528 seconds of total run time (1168.861966 user, 8.787562 system)
+  [ Run times consist of 64.022 seconds GC time, and 1113.628 seconds non-GC time. ]
+  99.78% CPU
+  2,714,579,249,652 processor cycles
+  5 page faults
+  526,989,881,968 bytes consed
 
-NOTE: 1209.760389 seconds is 20.16267315 minutes.
+[That's 19.62749213 minutes.]
+
+[SBCL didn't go above 200MB, I think.]
+
+[Interestingly(?), this is a little faster than the last time I did a
+similar time test, using the 0.99, -0.99 max/min values.  Then the time
+was 1209.760389 seconds, or more than 20 mins.]
 
 ===================================================
 POPCO 2 ON MBP:
@@ -45,6 +60,8 @@ Java HotSpot(TM) 64-Bit Server VM (build 20.65-b04-462, mixed mode)
 (But java only went up to 441.8MB, because I just used nth instead
 of trying to collect the entire sequence (which is appropriate for
 comparison with popco1).)
+
+SINGLE-THREADED CODE:
 
 The code run:
 
@@ -66,3 +83,5 @@ Evaluation count : 60 in 60 samples of 1 calls.
 Found 7 outliers in 60 samples (11.6667 %)
 	low-severe	 7 (11.6667 %)
  Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
+
+MULTI-THREADED CODE:
