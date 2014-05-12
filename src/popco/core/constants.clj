@@ -16,12 +16,13 @@
 ;; (These vars were called *propn-excit-weight* and *propn-inhib-weight* in popco1.)
 (def ^:const +analogy-to-propn-pos-multiplier+ 0.2)    ; *propn-excit-weight* in popco1
 (def ^:const +analogy-to-propn-neg-multiplier+ 0.025)  ; *propn-inhib-weight* in popco1
+(def ^:const +semantic-node-index+ 0)
+(def ^:const +salient-node-index+ 0)
 ;; These next few intended to be used *only* in popco.nn.analogy:
 (def ^:const +pos-link-increment+ 0.1)
 (def ^:const +neg-link-value+ -0.2)
 (def ^:const +sem-similarity-link-value+ 0.1) ; *ident-weight* in POPCO1: max abs wt for predicate semantic similarity
 (def ^:const +analogy-max-wt+ 0.5) ; As in popco1: forces weights to be <= 0.5 as a kludge to avoid extreme cycling.
-(def ^:const +semantic-node-index+ 0)
 (def ^:const +analogy-node-initial-activn+ 0.01)    ; *init-activ* in popco1.  Used by note-unit by default, but here used only for analogy net.
 ;; To be used *only* in popco.nn.propn:
 (def ^:const +propn-node-initial-activn+ 0.0)       ; *propn-init-activ* in popco1.
