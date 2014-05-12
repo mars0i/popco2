@@ -35,7 +35,7 @@
                                (repeatedly 32 #(pers/new-person-from-old job))
                                (repeatedly 32 #(pers/new-person-from-old jov))))))
 
-(reset! mn/folks popn)
+;(reset! mn/folks popn)
 ;(swap! mn/folks assoc :members [jo job jov])
 
 ;(mn/init popn) ; note popn is unchanged, but @folks has been updated.
