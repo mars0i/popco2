@@ -63,7 +63,8 @@
 (defn once-no-communic-popco1-style
   "Implements a single timestep's (tick's) worth of evolution of the population,
   without communication.  Returns the population in its new state.  Implements 
-  non-communication steps in the same order as popco1 for comparison with it."
+  non-communication steps in the same order as popco1 for comparison with it.
+  DOESN'T WORK--OUTPUT IS NOT LIKE POPCO1"
   [popn]
   (->Population
     (inc (:tick popn))
