@@ -126,7 +126,7 @@
 ;    (semantic-iff 'cv-rpa 'b-abp -.1L0)
 ;   ))
 
-(def semantic-iffs [[cn/+neg-one+ :CB-vpp :V-ipa] [cn/+neg-one+ :CV-rpa :B-abp]])
+(def semantic-iffs [[(/ cn/+neg-one+ 10) :CB-vpp :V-ipa] [(/ cn/+neg-one+ 10) :CV-rpa :B-abp]])
 
 (def conceptual-relats [[cn/+neg-one+ :Causal-if :Preventative-if]])
 ;; This specifies mapnodes that should be provided with a link from SEMANTIC.
