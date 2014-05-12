@@ -23,9 +23,9 @@
 (def ^:const +neg-link-value+ -0.2)
 (def ^:const +sem-similarity-link-value+ 0.1) ; *ident-weight* in POPCO1: max abs wt for predicate semantic similarity
 (def ^:const +analogy-max-wt+ 0.5) ; As in popco1: forces weights to be <= 0.5 as a kludge to avoid extreme cycling.
-(def ^:const +analogy-node-initial-activn+ 0.01)    ; *init-activ* in popco1.  Used by note-unit by default, but here used only for analogy net.
+(def ^:const +analogy-node-init-activn+ 0.01)    ; *init-activ* in popco1.  Used by note-unit by default, but here used only for analogy net.
 ;; To be used *only* in popco.nn.propn:
-(def ^:const +propn-node-initial-activn+ 0.0)       ; *propn-init-activ* in popco1.
+(def ^:const +propn-node-init-activn+ 0.0)       ; *propn-init-activ* in popco1.
 
 ;; java.math.BigDecimal:
 ;(def ^:const +zero+ 0.0M)
