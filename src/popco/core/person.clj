@@ -51,27 +51,17 @@
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net))]
 
-    ;; OLD VERSION
-;    (nn/unmask! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT))
-;    (nn/set-activn! (:propn-activns pers) ((:id-to-idx propn-net) :SALIENT) cn/+one+) ; salient node always has activn = 1
-;    (nn/set-mask! (:propn-mask pers) ((:id-to-idx propn-net) :SALIENT) (/ cn/+one+ cn/+decay+)) ; Kludge to undo next-activn's decay on this node
-;    (nn/unmask! (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC))
-;    (nn/set-activn! (:analogy-activns pers) ((:id-to-idx analogy-net) :SEMANTIC) cn/+one+) ; semantic node always has activn = 1
-;    (nn/set-mask! (:analogy-mask pers) ((:id-to-idx analogy-net) :SEMANTIC) (/ cn/+one+ cn/+decay+)) ; Kludge to undo next-activn's decay on this node
-;    (doseq [propn-id propn-ids] (cm/add-to-propn-net! pers propn-id)) ; better to fill propn mask before
-;    (doseq [propn-id propn-ids] (cm/try-add-to-analogy-net! pers propn-id)) ; analogy mask, so prop
-
     ;; NEW VERSION
     ;; set up propn net and associated vectors:
     (doseq [propn-id propn-ids] (cm/add-to-propn-net! pers propn-id))                        ; unmask propn nodes
     (nn/set-mask! (:propn-mask pers) cn/+salient-node-index+ (/ cn/+one+ cn/+decay+))        ; special mask val to undo next-activn's decay on this node
-;    (mx/add! (:propn-activns pers) (mx/emul (:propn-mask pers) cn/+propn-node-init-activn+))       ; initial activns for unmasked propns
+    (mx/add! (:propn-activns pers) (mx/emul (:propn-mask pers) cn/+propn-node-init-activn+))       ; initial activns for unmasked propns
     (nn/set-activn! (:propn-activns pers) cn/+salient-node-index+ cn/+one+)                  ; salient node always has activn = 1
 
     ;; set up analogy net and associated vectors:
     (doseq [propn-id propn-ids] (cm/try-add-to-analogy-net! pers propn-id))                  ; unmask analogy nodes (better to fill propn mask first)
     (nn/set-mask! (:analogy-mask pers) cn/+semantic-node-index+ (/ cn/+one+ cn/+decay+))     ; special mask val to undo next-activn's decay on this node
-;    (mx/add! (:analogy-activns pers) (mx/emul (:analogy-mask pers) cn/+analogy-node-init-activn+)) ; initial activns for unmasked analogy nodes
+    (mx/add! (:analogy-activns pers) (mx/emul (:analogy-mask pers) cn/+analogy-node-init-activn+)) ; initial activns for unmasked analogy nodes
     (nn/set-activn! (:analogy-activns pers) cn/+semantic-node-index+ cn/+one+)               ; semantic node always has activn = 1
 
     pers))
