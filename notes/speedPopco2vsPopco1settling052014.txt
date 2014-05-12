@@ -1,0 +1,37 @@
+TIME TRIALS WITH NET UPDATES ONLY, NO COMMUNICATION, MID MAY 2014
+
+I fixed some bugs in popco2 since the April trials, so I'm redoing
+the popco2 trials.  The popco1 data below was copied from the April
+speed notes file.
+
+
+===================================================
+SUMMARY ON MY MBP
+
+
+===================================================
+POPCO 1 ON MBP:
+
+4/25/2014 with crime/crime3example99.lisp
+33 both-biasers job, 33 virus-biasers jov, and 33 beast-biaser job:
+
+* (time (popco*))
+[popco* was a short-lived function--I deleted it--that, under the
+right circumstances, would run popco without writing a random state file.]
+
+Running popco with maximum of 5 cycles each in 1000 popco tick(s) ....
+*do-converse* NIL; *do-update-propn-nets-from-analogy-nets* T; *do-report-to-netlogo* NIL; *do-report-propns-to-csv* NIL; *use-new-random-state* T
+1000
+Evaluation took:
+  1212.021 seconds of real time
+  1209.760389 seconds of total run time (1200.559819 user, 9.200570 system)
+  [ Run times consist of 70.328 seconds GC time, and 1139.433 seconds non-GC time. ]
+  99.81% CPU
+  2,787,712,278,274 processor cycles
+  1 page fault
+  526,989,941,696 bytes consed
+
+NOTE: 1209.760389 seconds is 20.16267315 minutes.
+
+===================================================
+POPCO 2 ON MBP:
