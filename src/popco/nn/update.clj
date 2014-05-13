@@ -158,7 +158,25 @@
 ;; explanation of unidirectional links.
 ;; TODO: Should I use add-product here for the inner addition of emuls?
 ;; TODO: Should I use ! versions of these functions?
-(defn next-activns 
+
+(defn mutating-next-activns 
+  "Calculate a new set of activations for nodes starting from the current
+  activations in vector activns, using network link weights in constraint
+  network net to update activations from neighbors using the Grossberg (1978) 
+  algorithm as described in Holyoak & Thagard's (1989) \"Analogue Retrieval
+  by Constraint Satisfaction\"."
+  [net mask activns]
+  (let [pos-activns (mx/emap nn/posify activns)] ; Negative activations are ignored as inputs.
+    (mx/emul!
+      (mx/emap! clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
+                (mx/add! (mx/emul cn/+decay+ activns)                        ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
+                         (mx/emul! (mx/mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
+                                   (mx/emap dist-from-max activns))          ;  inputs' distances from 1, and
+                         (mx/emul! (mx/mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
+                                   (mx/emap dist-from-min activns))))        ;  inputs' distances from -1.
+      mask)))
+
+(defn purely-functional-next-activns 
   "Calculate a new set of activations for nodes starting from the current
   activations in vector activns, using network link weights in constraint
   network net to update activations from neighbors using the Grossberg (1978) 
@@ -168,11 +186,13 @@
   (let [pos-activns (mx/emap nn/posify activns)] ; Negative activations are ignored as inputs.
     (mx/emul mask
              (mx/emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
-                      (mx/add (mx/emul cn/+decay+ activns)                         ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
+                      (mx/add (mx/emul cn/+decay+ activns)                       ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
                               (mx/emul (mx/mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
                                        (mx/emap dist-from-max activns))          ;  inputs' distances from 1, and
                               (mx/emul (mx/mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
                                        (mx/emap dist-from-min activns)))))))     ;  inputs' distances from -1.
+
+(def next-activns purely-functional-next-activns)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions
