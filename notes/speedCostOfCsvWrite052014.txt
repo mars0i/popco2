@@ -9,6 +9,10 @@ pmap without csv	1.047259 min
 pmap with csv		1.258039 min
 i.e. csv adds 20% to the time
 
+In popco1, writing the csv file adds no significant amount of time
+to a run, but that's probably because the rest of the program is so
+slow.  (Still, I wonder if I can speed up the csv writer in popco2.)
+
 
 ------------------------------------------
 CSV WITH PMAP
@@ -31,3 +35,15 @@ Found 1 outliers in 60 samples (1.6667 %)
 	low-severe	 1 (1.6667 %)
  Variance from outliers : 11.0311 % Variance is moderately inflated by outliers
 
+------------------------------------------
+CSV in POPCO1
+
+3 trials with crime3example99.lisp with csv enabled
+
+1192.523444 seconds
+1176.827936
+1176.715870
+
+mean: 1182.0224167
+i.e. 19.700 minutes
+That's barely distinguishable from the times without writing the csv.
