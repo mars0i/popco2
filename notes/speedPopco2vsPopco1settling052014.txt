@@ -26,19 +26,41 @@ ratio between (with upper/left):
 
  	popco1		map		pmap
 
-popco1			0.0979		18.7418
+popco1			0.1001		0.0546
 
-map	10.2134				0.5449
+map	 9.9896				0.5449
 
-pmap	0.05336		1.8350	
-
-
-
+pmap	18.3310		1.8350
 
 ===================================================
 POPCO 1 ON MBP:
 
-5/12/2014 with crime/crime3example99.lisp
+5/13/2014 with crime/crime3example99.lisp in master branch, results
+from 10 trials:
+
+33 both-biasers job, 33 virus-biasers jov, and 33 beast-biaser job:
+Using the master-numbers git branch, with max, min activation at 0.99,
+-0.99.
+
+1153.538910 seconds of total run time (1146.088979 user, 7.449931 system)
+1152.336889 seconds of total run time (1144.923266 user, 7.413623 system)
+1153.485681 seconds of total run time (1145.981973 user, 7.503708 system)
+1160.166090 seconds of total run time (1152.713173 user, 7.452917 system)
+1152.820598 seconds of total run time (1145.331846 user, 7.488752 system)
+1153.066353 seconds of total run time (1145.539320 user, 7.527033 system)
+1144.543700 seconds of total run time (1138.012924 user, 6.530776 system)
+1145.645193 seconds of total run time (1139.111524 user, 6.533669 system)
+1158.882110 seconds of total run time (1151.413136 user, 7.468974 system)
+1143.904976 seconds of total run time (1137.338839 user, 6.566137 system)
+
+Average of the 10 trials: 1151.83905 seconds (of total run time)
+i.e. 19.1973175 minutes
+
+........
+
+5/12/2014 with crime/crime3example99.lisp in extremal-numbers branch,
+one trial:
+
 33 both-biasers job, 33 virus-biasers jov, and 33 beast-biaser job:
 Using the extremal-numbers git branch: i.e. just like the standard
 version, but putting max, min activation at 1.0, -1.0, rather than
