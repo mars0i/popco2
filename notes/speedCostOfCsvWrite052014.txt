@@ -1,0 +1,33 @@
+Trials to estimate the cost of writing proposition data to a csv file in popco2
+
+From speedPopco2vsPopco1settling052014.txt I have Criterium averages on
+running popco2 without writing the csv file:
+
+map without csv		1.921737 min
+
+pmap without csv	1.047259 min
+pmap with csv		1.258039 min
+i.e. csv adds 20% to the time
+
+
+------------------------------------------
+CSV WITH PMAP
+
+This test took about an hour and a half to run:
+
+(use '[criterium.core :only [bench]])
+(use 'sims.crime3.example99)
+(time (bench (csv/write-propn-activns-csv (take 1000 (many-times popn)))))
+
+WARNING: Final GC required 4.773932992973588 % of runtime
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 1.258039 min
+    Execution time std-deviation : 1.782625 sec
+   Execution time lower quantile : 1.226820 min ( 2.5%)
+   Execution time upper quantile : 1.315355 min (97.5%)
+                   Overhead used : 2.315322 ns
+
+Found 1 outliers in 60 samples (1.6667 %)
+	low-severe	 1 (1.6667 %)
+ Variance from outliers : 11.0311 % Variance is moderately inflated by outliers
+
