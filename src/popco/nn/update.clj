@@ -158,7 +158,9 @@
 ;; explanation of unidirectional links.
 ;; TODO: Should I use add-product here for the inner addition of emuls?
 ;; TODO: Should I use ! versions of these functions?
-(defn next-activns 
+
+;; Uses no ! operators from core.matrix
+(defn purely-functional-next-activns 
   "Calculate a new set of activations for nodes starting from the current
   activations in vector activns, using network link weights in constraint
   network net to update activations from neighbors using the Grossberg (1978) 
@@ -168,11 +170,38 @@
   (let [pos-activns (mx/emap nn/posify activns)] ; Negative activations are ignored as inputs.
     (mx/emul mask
              (mx/emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
-                      (mx/add (mx/emul cn/+decay+ activns)                         ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
+                      (mx/add (mx/emul cn/+decay+ activns)                       ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
                               (mx/emul (mx/mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
                                        (mx/emap dist-from-max activns))          ;  inputs' distances from 1, and
                               (mx/emul (mx/mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
                                        (mx/emap dist-from-min activns)))))))     ;  inputs' distances from -1.
+
+;; This version mutates new matrices created inside this function.  It seems to be slightly faster.
+;; The general principle was to modify the old version of next-activns only by adding "!" when
+;; the previous operations had created a new matrix that could therefore be mutated.  This requires
+;; some care, but the output turns out to be the same, as expected.  Note that I reversed the order
+;; of arguments for the outer emul by mask in order to take advantage of this scheme there.
+;; Note that at present (5/2014), I could actually use mmul! for the inner mmul on pos/neg-wt-mat
+;; *when it comes from the propn net*, but not when it comes from the analogy net.
+(defn mutating-next-activns 
+  "Calculate a new set of activations for nodes starting from the current
+  activations in vector activns, using network link weights in constraint
+  network net to update activations from neighbors using the Grossberg (1978) 
+  algorithm as described in Holyoak & Thagard's (1989) \"Analogue Retrieval
+  by Constraint Satisfaction\"."
+  [net mask activns]
+  (let [pos-activns (mx/emap nn/posify activns)] ; Negative activations are ignored as inputs.
+    (mx/emul!
+      (mx/emap! clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
+                (mx/add! (mx/emul cn/+decay+ activns)                        ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
+                         (mx/emul! (mx/mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
+                                   (mx/emap dist-from-max activns))          ;  inputs' distances from 1, and
+                         (mx/emul! (mx/mmul (nn/neg-wt-mat net) pos-activns) ; negatively weighted inputs scaled by
+                                   (mx/emap dist-from-min activns))))        ;  inputs' distances from -1.
+      mask)))
+
+
+(def next-activns purely-functional-next-activns)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions
