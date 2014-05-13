@@ -53,8 +53,12 @@ Using the master-numbers git branch, with max, min activation at 0.99,
 1158.882110 seconds of total run time (1151.413136 user, 7.468974 system)
 1143.904976 seconds of total run time (1137.338839 user, 6.566137 system)
 
-Average of the 10 trials: 1151.83905 seconds (of total run time)
-i.e. 19.1973175 minutes
+Average of the 10 trials: 1151.83905 seconds (of total run time), i.e.
+
+mean	19.1973 minutes
+
+min	19.0650 minutes
+max	19.3361 minutes
 
 ........
 
