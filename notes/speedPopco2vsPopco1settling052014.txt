@@ -1,4 +1,4 @@
-TIME TRIALS WITH NET UPDATES ONLY, NO COMMUNICATION, MID MAY 2014
+TIME TRIALS WITH NEURALNET-UPDATING ONLY, i.e. NO COMMUNICATION, MID MAY 2014
 
 I fixed some bugs in popco2 since the April trials, so I'm redoing
 the popco2 trials.  The popco1 data below was copied from the April
@@ -13,10 +13,26 @@ in Clojure (i.e. map rather than pmap) for 1000 ticks, 99 persons, no
 communication.  More precisely, the ratio between the popco1 time and
 the popco2 criterium average was about 10.2134.
 
+With pmap, popco2 is close to 2X faster than without it (with this
+simulation, on the MBP).  
 
 (Note that I only ran popco1 one time, so it's possible that this was
 a little bit of an outlier, but SBCL times should be more reliable
 than Clojure-without-Criterium.)
+
+Summary:
+
+ratio between (with upper/left):
+
+ 	popco1		map		pmap
+
+popco1			0.0979		18.7418
+
+map	10.2134				0.5449
+
+pmap	0.05336		1.8350	
+
+
 
 
 ===================================================
