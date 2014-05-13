@@ -61,9 +61,9 @@ Java HotSpot(TM) 64-Bit Server VM (build 20.65-b04-462, mixed mode)
 of trying to collect the entire sequence (which is appropriate for
 comparison with popco1).)
 
-SINGLE-THREADED CODE:
+SINGLE-THREADED:
 
-The code run:
+The code that I ran:
 
 (use '[criterium.core :only [bench]])
 (use 'sims.crime3.example99)
@@ -84,4 +84,25 @@ Found 7 outliers in 60 samples (11.6667 %)
 	low-severe	 7 (11.6667 %)
  Variance from outliers : 1.6389 % Variance is slightly inflated by outliers
 
-MULTI-THREADED CODE:
+MULTI-THREADED:
+
+The code that I ran:
+
+(use '[criterium.core :only [bench]])
+(use 'sims.crime3.example99)
+(time (bench (def _ (nth (many-times popn) 1000))))
+
+Criterium's output:
+
+WARNING: Final GC required 4.838320105087719 % of runtime
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 1.047259 min
+    Execution time std-deviation : 2.353198 sec
+   Execution time lower quantile : 1.005404 min ( 2.5%)
+   Execution time upper quantile : 1.105262 min (97.5%)
+                   Overhead used : 2.426912 ns
+
+time's output:
+"Elapsed time: 4460354.172 msecs"
+
+
