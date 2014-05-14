@@ -1,7 +1,38 @@
 Notes on parts of communic.clj
 =======
 
-**add-to-analogy-net:**
+### High-level plan (5/2014):
+
+1. For each speaker, choose zero or more listeners.
+
+2. For each such speaker/listener pair, choose a proposition known by the
+speaker.
+
+3. For each listener, there will be zero or more instances of 
+<speaker, proposition, activation>.
+
+In order to pass this information from one step to the other, the
+additional information:
+
+1. Could be stored in the Population structure.  i.e. store a collection
+of <speaker, proposition, activation, listener> tuples.  That means that
+when the collection is being written, we should probably be outside of
+parallel processing, even if the update is purely functional.  However,
+when the collection is merely being read, that can be done in parallel.
+
+2. Or it could be stored in speakers at an earlier stage (i.e. store
+<listener, proposition, activation> pairs [this can be done in
+parallel]), and/or in listeners, at a later stage (either <speaker,
+proposition, activation>, or simply <proposition, activation>).
+Transition from one to the other data structure shouldn't be done in
+parallel.  Although maybe having multiple speakers updating a collection
+in a listener would be OK?  As long as there's no possibility of two
+identical entries, or dupes are preserved.  The reason this could be OK,
+I think, is that typically only a few speakers would talk to a single
+listener.  Unless we do a simulation with everyone talking to everyone,
+or if you have an anti-pundit who listens to everyone.
+
+### add-to-analogy-net:
 
 Background: All legal mappings between lot-elements are found by
 make-analogy-net, in analogy.clj, along with their links.
