@@ -10,7 +10,7 @@
 ;; Definition of person and related functions
 
 ;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
-(defrecord Person [nm 
+(defrecord Person [id 
                    propn-net propn-mask propn-activns 
                    analogy-net analogy-mask analogy-activns
                    analogy-idx-to-propn-idxs talk-to-groups talk-to-persons])
@@ -37,18 +37,18 @@
 ;; e.g. with natural selection.
 
 (defn make-person
-  "Creates a person with name (nm), propns with propn-ids, and a pre-constructed
+  "Creates a person with name (id), propns with propn-ids, and a pre-constructed
   propn-net and analogy-net.  Uses propns to construct propn-mask and
   analogy-mask.  The propn-net passed in will not be used directly, but will be
   copied to make a propn-net with a new weight matrix (:wt-mat), since each 
   person may modify its own propn weight matrix.  The analogy net can be shared 
   with every other person, however, since this will not be modified.  (The 
   analogy mask might be modified.)"
-  [nm propns propn-net analogy-net]
+  [id propns propn-net analogy-net]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
-        pers (->Person nm 
+        pers (->Person id 
                        (pn/clone propn-net)
                        (pmx/zero-vector num-poss-propn-nodes)     ; propn-mask
                        (pmx/zero-vector num-poss-propn-nodes)     ; propn-activns
@@ -80,10 +80,10 @@
   "Accepts a single argument, a person, and returns a person containing fresh a
   copy of any internal structure one might want to mutate.  (Useful for creating 
   distinct persons rather than to update the same person for a new tick.)"
-  [{nm :id propn-net :propn-net propn-mask :propn-mask propn-activns :propn-activns
+  [{id :id propn-net :propn-net propn-mask :propn-mask propn-activns :propn-activns
     analogy-net :analogy-net analogy-mask :analogy-mask analogy-activns :analogy-activns
     analogy-idx-to-propn-idxs :analogy-idx-to-propn-idxs}]
-  (->Person nm
+  (->Person id
             (pn/clone propn-net)
             (mx/clone propn-mask)
             (mx/clone propn-activns)
@@ -119,17 +119,17 @@
 ;; TEMPORARY
 ;; differs from make-person in using old-add-to-analogy-net as a sanity check
 ; (defn old-make-person
-;   "Creates a person with name (nm), propns with propn-ids, and a pre-constructed
+;   "Creates a person with name (id), propns with propn-ids, and a pre-constructed
 ;   propn-net and analogy-net.  Uses propns to construct propn-mask and
 ;   analogy-mask.  Important: The propn-net passed in should be new, with a fresh
 ;   weight matrix (:wt-mat), since each person may modify its own propn weight
 ;   matrix.  The analogy net can be shared with every other person, however, since
 ;   this will not be modified.  (The analogy mask might be modified.)"
-;   [nm propns propn-net analogy-net]
+;   [id propns propn-net analogy-net]
 ;   (let [num-poss-propn-nodes (count (:node-vec propn-net))
 ;         num-poss-analogy-nodes (count (:node-vec analogy-net))
 ;         propn-ids (map :id propns)
-;         pers (->Person nm 
+;         pers (->Person id 
 ;                        propn-net
 ;                        (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
 ;                        (mx/zero-vector num-poss-propn-nodes)     ; propn-activns

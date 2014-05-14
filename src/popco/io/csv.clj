@@ -54,7 +54,7 @@
   of strings returned will be (number of persons X number of propositions)."
   [popn]
   (let [persons (:members popn)
-        name-strs (map (comp name :nm) persons)
+        name-strs (map (comp name :id) persons)
         id-strs (map name (rest (:id-vec (:propn-net (first persons)))))]
     (for [name-str name-strs
           id-str id-strs]
