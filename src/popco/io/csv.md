@@ -49,8 +49,6 @@ version might be very slightly faster.
 ;; ALTERNATE VERSIONS OF propn-activns-row
 
 (defn alt0-propn-activns-row
-  "Construct a sequence of activations representing all propn activns of all 
-  persons at one tick."
   [popn]
   (vec
     (concat 
@@ -58,8 +56,6 @@ version might be very slightly faster.
         person-propn-activns (:members popn)))))
 
 (defn alt1-propn-activns-row
-  "Construct a sequence of activations representing all propn activns of all 
-  persons at one tick."
   [popn]
   (let [activn-vecs (map :propn-activns (:members popn))
         len-1 (dec (first (mx/shape (first activn-vecs))))] ; or use .length.  we can assume all vecs same length.
@@ -68,12 +64,7 @@ version might be very slightly faster.
                  (map #(mx/subvector % 1 len-1) ; assumes SALIENT nodes are index 0
                       activn-vecs))))) 
 
-;; ANOTHER NEW VERSION
-;; Note: as of 5/2104, join in vectorz, i.e. in matrix_api.clj, appears to
-;; convert into Clojure vectors and then use concat.
 (defn alt2-propn-activns-row
-  "Construct a sequence of activations representing all propn activns of all 
-  persons at one tick."
   [popn]
   (mx/join 
     (map (comp vec
@@ -83,8 +74,6 @@ version might be very slightly faster.
          (:members popn))))
 
 (defn alt3-propn-activns-row
-  "Construct a sequence of activations representing all propn activns of all 
-  persons at one tick."
   [popn]
   (let [activn-vecs (map :propn-activns (:members popn))
         len-1 (dec (first (mx/shape (first activn-vecs))))] ; or use .length.  we can assume all vecs same length.
