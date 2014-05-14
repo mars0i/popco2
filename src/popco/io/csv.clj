@@ -29,15 +29,13 @@
                      data))]
     (apply spit-csv "activns.csv" rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
 
-;; ORIGINAL VERSION uses person-propn-activns
 (defn propn-activns-row
   "Construct a sequence of activations representing all propn activns of all 
   persons at one tick."
   [popn]
   (mapcat person-propn-activns (:members popn)))
 
-;; NOTE THIS ASSUMES THAT SALIENT IS FIRST. There is a check for this
-;; assumption in write-propn-activns-csv.
+;; NOTE THIS ASSUMES THAT SALIENT IS FIRST. There is a check for this assumption in write-propn-activns-csv.
 (defn person-propn-activns
   "Given a person, returns the activation values of its propositions other
   than SALIENT in the form of a Clojure vector.  Assumes that SALIENT is
@@ -68,5 +66,3 @@
   [f rows & options]
    (with-open [w (apply io/writer f options)]
      (csv/write-csv w rows)))
-
-
