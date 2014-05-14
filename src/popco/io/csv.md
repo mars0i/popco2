@@ -50,25 +50,23 @@ version might be very slightly faster.
 
 (defn alt0-propn-activns-row
   [popn]
-  (vec
-    (concat 
+    (apply concat 
       (pmap
-        person-propn-activns (:members popn)))))
+        person-propn-activns (:members popn))))
 
 (defn alt1-propn-activns-row
   [popn]
   (let [activn-vecs (map :propn-activns (:members popn))
         len-1 (dec (first (mx/shape (first activn-vecs))))] ; or use .length.  we can assume all vecs same length.
     (mx/matrix :persistent-vector
-               (mx/join 
+               (apply mx/join 
                  (map #(mx/subvector % 1 len-1) ; assumes SALIENT nodes are index 0
                       activn-vecs))))) 
 
 (defn alt2-propn-activns-row
   [popn]
-  (mx/join 
-    (map (comp vec
-               rest ; strip SALIENT nodes
+  (apply mx/join 
+    (map (comp rest ; strip SALIENT nodes
                (partial mx/matrix :persistent-vector) 
                :propn-activns)
          (:members popn))))
@@ -77,8 +75,7 @@ version might be very slightly faster.
   [popn]
   (let [activn-vecs (map :propn-activns (:members popn))
         len-1 (dec (first (mx/shape (first activn-vecs))))] ; or use .length.  we can assume all vecs same length.
-    (vec
-      (concat
+      (apply concat
         (map #(mx/subvector % 1 len-1) ; strip SALIENT nodes (assumes they have index 0)
-             activn-vecs)))))
+             activn-vecs))))
 ````
