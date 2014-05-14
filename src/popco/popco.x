@@ -540,3 +540,11 @@
 ;  (cons 
 ;    (column-names (first popns))
 ;    (data-vec-of-rows popns)))
+
+(defn alt-propn-activns-row
+  "Construct a sequence of activations representing all propn activns of all 
+  persons at one tick."
+  [popn]
+  (let [activn-vecs (map :propn-activns (:members popn))
+        num-vecs (count activn-vecs)
+        vec-len (first (shape (first activn-vecs)))]  ; .length works with impls as of 5/2014, but not part of the core.matrix interface
