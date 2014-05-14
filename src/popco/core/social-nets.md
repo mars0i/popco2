@@ -1,6 +1,30 @@
 social-nets.clj
 =======
 
+**The social network and communication group code is derived from
+Kristen Hammack's excellent design for similar functionality in
+popco1.**
+
+### General ideas
+
+The following principles come from Kristen Hammack's code for popco1:
+
+Each person is a member of one or more groups.  These group memberships
+determines who can talk to that person.
+
+Each person has zero or more groups that it talks to, which is to say
+that it may talk to any member of those groups, but not to anyone else.
+
+A directed graph between persons representing directions in which
+utterances are sent from person to person (perhaps including
+bidirectional links) can be defined by putting each person in its own
+group, and then letting each person talk to zero or more of those
+groups.
+
+Such directed graph schemes can be mixed with schemes involving larger
+groups.
+
+
 ### Notes
 
 Use Kristen Hammack's overall design from popco1, but try to front-load
