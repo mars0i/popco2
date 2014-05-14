@@ -38,6 +38,30 @@ version might be very slightly faster.
   [popn]
   (mapcat person-propn-activns (:members popn)))
 
+(defn person-propn-activns
+  "Given a person, returns the activation values of its propositions other
+  than SALIENT in the form of a Clojure vector.  Assumes that SALIENT is
+  the first node."
+  [pers]
+  (rest   ; strip SALIENT node
+        (mx/matrix :persistent-vector 
+                   (:propn-activns pers))))
+ 
+(defn column-names
+  "Given a sequence of persons, return a sequence of strings containing
+  \"personalized\" proposition names, i.e. with the person's name appended
+  to the front of the proposition id string, with the form \"person_propn\".
+  These are suitable for use as column names in a csv file containing data
+  on proposition activations for all of the persons.  Note that the number
+  of strings returned will be (number of persons X number of propositions)."
+  [popn]
+  (let [persons (:members popn)
+        name-strs (map (comp name :nm) persons)
+        id-strs (map name (rest (:id-vec (:propn-net (first persons)))))]
+    (for [name-str name-strs
+          id-str id-strs]
+      (str name-str "_" id-str))))
+
 ;; ALTERNATE VERSIONS OF propn-activns-row
 
 (defn alt0-propn-activns-row
