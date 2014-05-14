@@ -29,8 +29,7 @@ with `time` suggest that there is no significant difference between them
 worth exploring with Criterium.  If anything, it looks like the original
 version might be very slightly faster.
 
-````
-
+````clojure
 ;; ORIGINAL VERSION uses person-propn-activns
 (defn propn-activns-row
   "Construct a sequence of activations representing all propn activns of all 
@@ -47,21 +46,6 @@ version might be very slightly faster.
         (mx/matrix :persistent-vector 
                    (:propn-activns pers))))
  
-(defn column-names
-  "Given a sequence of persons, return a sequence of strings containing
-  \"personalized\" proposition names, i.e. with the person's name appended
-  to the front of the proposition id string, with the form \"person_propn\".
-  These are suitable for use as column names in a csv file containing data
-  on proposition activations for all of the persons.  Note that the number
-  of strings returned will be (number of persons X number of propositions)."
-  [popn]
-  (let [persons (:members popn)
-        name-strs (map (comp name :nm) persons)
-        id-strs (map name (rest (:id-vec (:propn-net (first persons)))))]
-    (for [name-str name-strs
-          id-str id-strs]
-      (str name-str "_" id-str))))
-
 ;; ALTERNATE VERSIONS OF propn-activns-row
 
 (defn alt0-propn-activns-row
@@ -108,5 +92,4 @@ version might be very slightly faster.
       (concat
         (map #(mx/subvector % 1 len-1) ; strip SALIENT nodes (assumes they have index 0)
              activn-vecs)))))
-
 ````
