@@ -16,7 +16,7 @@
                    analogy-idx-to-propn-idxs talk-to-groups talk-to-persons])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
-   :nm -              name of person (a keyword)
+   :id -              name of person (a keyword)
    :propn-net -       PropnNet for this person
    :propn-mask -      vector of 1's (propn is entertained) and 0's (it isn't)
    :propn-activns -   vector of activation values for nodes in propn net
@@ -80,7 +80,7 @@
   "Accepts a single argument, a person, and returns a person containing fresh a
   copy of any internal structure one might want to mutate.  (Useful for creating 
   distinct persons rather than to update the same person for a new tick.)"
-  [{nm :nm propn-net :propn-net propn-mask :propn-mask propn-activns :propn-activns
+  [{nm :id propn-net :propn-net propn-mask :propn-mask propn-activns :propn-activns
     analogy-net :analogy-net analogy-mask :analogy-mask analogy-activns :analogy-activns
     analogy-idx-to-propn-idxs :analogy-idx-to-propn-idxs}]
   (->Person nm
@@ -95,8 +95,8 @@
 (defn new-person-from-old
   "Create a clone of person pers, but with name new-name, or a generated name,
   if not."
-  ([pers] (new-person-from-old pers (keyword (gensym (name (:nm pers))))))
-  ([pers new-name] (assoc (clone pers) :nm new-name)))
+  ([pers] (new-person-from-old pers (keyword (gensym (name (:id pers))))))
+  ([pers new-name] (assoc (clone pers) :id new-name)))
 
 (defn propn-net-clone
   "Accepts a single argument, a person pers, and returns a person containing
