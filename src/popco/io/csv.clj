@@ -20,7 +20,7 @@
   the sequence again, hold on to it elsewhere.)"
   [popns & options]
   (when-not (== 0 cn/+salient-node-index+) ; sanity check for person-propn-activns
-    (throw (Exception. (format "This code assumes salient node = 0, but it's not."))))
+    (throw (Exception. (format "This code assumes SALIENT node index is 0, but it's not."))))
   (let [append? (when options ((apply hash-map options) :append)) ; get val of :append if present, else nil
         data (map propn-activns-row popns) ; pmap wouldn't help, because the popns comes from iterate, so you need earlier elements to get later ones (unless you doall it first)
         rows (if append?
@@ -41,7 +41,7 @@
   than SALIENT in the form of a Clojure vector.  Assumes that SALIENT is
   the first node."
   [pers]
-  (rest   ; strip SALIENT node
+  (rest   ; strip SALIENT node (see sanity check exception in write-propn-activns-csv)
         (mx/matrix :persistent-vector 
                    (:propn-activns pers))))
  
