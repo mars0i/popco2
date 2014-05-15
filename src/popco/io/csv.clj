@@ -33,7 +33,7 @@
   "Construct a sequence of activations representing all propn activns of all 
   persons at one tick."
   [popn]
-  (mapcat person-propn-activns (:members popn)))
+  (mapcat person-propn-activns (:persons popn)))
 
 ;; NOTE THIS ASSUMES THAT SALIENT IS FIRST. There is a check for this assumption in write-propn-activns-csv.
 (defn person-propn-activns
@@ -53,7 +53,7 @@
   on proposition activations for all of the persons.  Note that the number
   of strings returned will be (number of persons X number of propositions)."
   [popn]
-  (let [persons (:members popn)
+  (let [persons (:persons popn)
         name-strs (map (comp name :id) persons)
         id-strs (map name (rest (:id-vec (:propn-net (first persons)))))]
     (for [name-str name-strs

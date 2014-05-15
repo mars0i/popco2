@@ -58,7 +58,7 @@
      (inc (:tick popn))
      (doall
        (cm/transmit-utterances 
-         (mapfn per-person-fns (:members popn)))))))
+         (mapfn per-person-fns (:persons popn)))))))
 
 (defn once-no-communic-popco1-style
   "Implements a single timestep's (tick's) worth of evolution of the population,
@@ -69,7 +69,7 @@
   (->Population
     (inc (:tick popn))
     (doall
-      (pmap up/update-person-nets-popco1-style (:members popn)))))
+      (pmap up/update-person-nets-popco1-style (:persons popn)))))
 
 
 (defn ticker

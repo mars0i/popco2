@@ -14,5 +14,5 @@
 (defn doublify-popn-propn-activns
   [popn]
   (assoc popn
-         :members 
-         (map doublify-pers-propn-activns (:members popn))))
+         :persons 
+         (map doublify-pers-propn-activns (:persons popn))))
