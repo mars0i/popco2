@@ -24,6 +24,34 @@ groups.
 Such directed graph schemes can be mixed with schemes involving larger
 groups.
 
+### A proposal for implementing what's described below
+
+**Persons to group membership (i.e. *talked*-to) is many-to-many.**
+It's convenient to see who's in a group, so maybe a group-to-person-set
+hashmap would be useful, but to look up a person's groups, it's easier
+to use a person-to-group-set hashmap.  So maybe do both (and not a real
+database table, of course).
+
+**Persons to talked-to groups is many-to-many.**  So same ideas apply.
+
+These structures--some of them--could go in the persons, but don't put them,
+there, since they won't be used at run-time.  Just give each person a
+list of persons that it talks to.
+
+**So store the group structures in the Population**.  Might as well put them
+there.
+
+**During initalization, create the group structures first, using id's of
+planned persons.  Then pass into `make-person`:**
+
+1. A group-membership group-to-persons hashmap
+
+2. A list of groups that that person can talk to.  (Or an entire
+hashmap, and then make-person will find that person's entry?)
+
+And then `make-person` will construct the list of persons that the person
+can talk to, and fill the `talks-to` field.  The person won't have any
+other info about who it talks to.
 
 ### Notes
 
