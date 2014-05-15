@@ -13,7 +13,7 @@
 (defrecord Person [id 
                    propn-net propn-mask propn-activns 
                    analogy-net analogy-mask analogy-activns
-                   analogy-idx-to-propn-idxs talk-to-groups talk-to-persons])
+                   analogy-idx-to-propn-idxs talk-to])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
@@ -25,9 +25,7 @@
    :analogy-activns - activation values of nodes in analogy net
    :analogy-idxs-to-propn-idx - map from propn mapnode indexes in analogy net
                                 to corresponding propn index pairs in propn net.
-   :talk-to-groups  - Groups that this person talks to.  Should be used mainly
-                      during initialization, and for information to user.
-   :talk-to-persons - Other persons that this person talks to, determined by the
+   :talk-to         - Other persons that this person talks to, determined by the
                       specification, at initalization, of the groups that this
                       person talks to.  i.e. this contains all members of the
                       groups in talk-to-groups.")
@@ -56,7 +54,6 @@
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net)
-                       nil ; temporary
                        nil ; temporary
                        )]
 
