@@ -28,7 +28,9 @@
 
 (def persons [jo job jov])
 
-(def popn (make-population persons {:everyone persons}
+(def popn (pp/make-population persons 
+                           {:everyone persons}
+                           (apply merge (map #(hash-map % :everyone) persons))))
 
 ;(def popn (pp/->Population 0 persons)
 ;(def popn* (pp/->Population 0 (map popco.nn.update/update-person-nets [jo job jov])))

@@ -16,7 +16,7 @@
 
 (declare once many-times unparalleled-many-times ticker inc-tick)
 
-(def folks (atom (->Population 0 []))) ; ok to use Long for tick
+;(def folks (atom (->Population 0 []))) ; ok to use Long for tick
 
 ;; An earlier version included a report-fn argument.  I now think it's
 ;; better to just map or doseq such functions, externally, over the
@@ -54,22 +54,11 @@
   Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
   ([popn] (once pmap popn))
   ([mapfn popn]
-   (->Population
-     (inc (:tick popn))
-     (doall
-       (cm/transmit-utterances 
-         (mapfn per-person-fns (:persons popn)))))))
-
-(defn once-no-communic-popco1-style
-  "Implements a single timestep's (tick's) worth of evolution of the population,
-  without communication.  Returns the population in its new state.  Implements 
-  non-communication steps in the same order as popco1 for comparison with it.
-  DOESN'T WORK--OUTPUT IS NOT LIKE POPCO1"
-  [popn]
-  (->Population
-    (inc (:tick popn))
-    (doall
-      (pmap up/update-person-nets-popco1-style (:persons popn)))))
+   (assoc popn
+          :tick (inc (:tick popn))
+          :persons (doall
+                     (cm/transmit-utterances 
+                       (mapfn per-person-fns (:persons popn)))))))
 
 
 (defn ticker
