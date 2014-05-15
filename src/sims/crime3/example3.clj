@@ -26,7 +26,11 @@
 (def jov (pers/make-person :jov 
                            (concat pns/crime-propns pns/virus-propns) pnet anet))
 
-(def popn (pp/->Population 0 [jo job jov]))
+(def persons [jo job jov])
+
+(def popn (make-population persons {:everyone persons}
+
+;(def popn (pp/->Population 0 persons)
 ;(def popn* (pp/->Population 0 (map popco.nn.update/update-person-nets [jo job jov])))
 ;(def popn+ (pp/->Population 0 (map #(popco.nn.update/settle-analogy-net % popco.nn.constants/+settling-iters+) [jo job jov])))
 
