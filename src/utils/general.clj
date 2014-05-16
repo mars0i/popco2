@@ -1,6 +1,7 @@
 (ns utils.general ; Utility functions handy for any Clojure program
   (:use [clojure.repl :only [dir-fn]])
-  (:require [clojure.pprint :only [*print-right-margin*]]))
+  (:require [clojure.pprint :only [*print-right-margin*]]
+            [clojure.set :as st]))
 
 ;; dir-fn is useful because dir doseq's println, so you get a long column,
 ;; whereas dir-fn gives you a seq you can format however you want.
@@ -148,6 +149,39 @@
   "Like comp, but expects a sequence of functions.  Applies comp to them."
   [fs]
   (apply comp fs))
+
+(defn join-pair-seq
+  "Given a map whose values are collections, return a sequence of maps each
+  of which has a key from the original map, and one of the members of the 
+  collection that was its value.  This is essentially a join table of all
+  unique pairs licensed by the original map."
+  [m]
+  (mapcat 
+    (fn [[k vs]]
+      (map #(hash-map k %) vs))
+    m))
+
+(defn invert-coll-map
+  "Given a map whose values are collections, return a map of the same sort,
+  but in which each val member is now a key, and the members of their val
+  collections are the keys for the current vals' former collections."
+  [m]
+  (apply merge-with 
+         (comp flatten vector)
+         (map st/map-invert 
+              (join-pair-seq m))))
+
+;(defn invert-coll-map2
+;  [m]
+;  (let [v-elts (set (apply concat (vals m)))
+;        init-maps (map #(hash-map % []) v-elts) ; we need maps with empty colls as keys, so conj will work
+;        data-maps (for [[k v] m              ; a coll of maps from elts in val colls, to the keys of those colls
+;                        elt v-elts           ; actually this does the same thing as join-pair-seq
+;                        :when (contains? (set v) elt)] {elt k})] ; (set v) to make contains? work
+;    (apply merge-with conj 
+;           (concat init-maps
+;                   data-maps))))
+
 
 ;(defn fn-pow2
 ;  "Apply function f to x, then to the result of that, etc., n times.
