@@ -548,3 +548,85 @@
   (let [activn-vecs (map :propn-activns (:members popn))
         num-vecs (count activn-vecs)
         vec-len (first (shape (first activn-vecs)))]  ; .length works with impls as of 5/2014, but not part of the core.matrix interface
+
+;(defn invert-coll-map2
+;  [m]
+;  (let [v-elts (set (apply concat (vals m)))
+;        init-maps (map #(hash-map % []) v-elts) ; we need maps with empty colls as keys, so conj will work
+;        data-maps (for [[k v] m              ; a coll of maps from elts in val colls, to the keys of those colls
+;                        elt v-elts           ; actually this does the same thing as join-pair-seq
+;                        :when (contains? (set v) elt)] {elt k})] ; (set v) to make contains? work
+;    (apply merge-with conj 
+;           (concat init-maps
+;                   data-maps))))
+
+
+;(defn fn-pow2
+;  "Apply function f to x, then to the result of that, etc., n times.
+;  If n <= 0, just returns x."
+;  [f x n]
+;  (if (> n 0) 
+;    (recur f (f x) (dec n))
+;    x))
+
+;(defn fn-pow1
+;  "Apply function f to x, then to the result of that, etc., n times.
+;  If n <= 0, just returns x."
+;  [f x n]
+;  (loop [x x 
+;         n n]
+;    (if (<= n 0) 
+;      x
+;      (recur (f x) (dec n)))))
+
+;(defn fn-pow2
+;  "Apply function f to x, then to the result of that, etc., n times.
+;  If n <= 0, just returns x."
+;  [f x n]
+;  (if (<= n 0) 
+;    x
+;    (recur f (f x) (dec n))))
+
+;(defn fn-pow0
+;  [f x n]
+;  (take
+;    (iterate f x)
+;    n))
+
+;(defn skip-realized?
+;  "Tests whether the first LazySeq instance in the sequence xs has been 
+;  realized, skipping over e.g. Cons's before that point.  (e.g. 'iterate'
+;  returns a Cons followed by a LazySeq.  If you want to know whether it's 
+;  realized beyond the Cons, you have to check its rest.)"
+;  [xs]
+;  (if (instance? clojure.lang.IPending xs)
+;    (realized? xs)
+;    (if (empty? xs)
+;      true
+;      (recur (rest xs)))))
+
+;; Compare skip-realized? with the follwoing, which tests whether there's any unrealized part anywhere down the line.
+;; By A. Webb in response to a question of mine, at https://groups.google.com/d/msg/clojure/5rwZA-Bzp9A/dgChQhbeF_AJ
+;(defn seq-realized?
+;  "Returns false if there is an unrealized tail in the sequence,
+;  otherwise true."
+;  [s]
+;  (if (instance? clojure.lang.IPending s)
+;    (if (realized? s)
+;      (if (seq s)
+;        (recur (rest s))
+;        true)
+;      false)
+;    (if (seq s)
+;      (recur (rest s))
+;      true)))
+
+(defn old-invert-vec-map
+  "Given a map whose values are collections, return a map of the same sort,
+  but in which each val member is now a key, and the members of their val
+  collections are the keys for the current vals' former collections."
+  [m]
+  (apply merge-with 
+         (comp flatten vector)
+         (map st/map-invert 
+              (vec-map-to-join-pairs m))))
