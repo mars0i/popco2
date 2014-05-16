@@ -42,7 +42,7 @@
   person may modify its own propn weight matrix.  The analogy net can be shared 
   with every other person, however, since this will not be modified.  (The 
   analogy mask might be modified.)"
-  [id propns propn-net analogy-net]
+  [id propns propn-net analogy-net talk-to-groups group-to-persons]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
@@ -54,8 +54,7 @@
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net)
-                       nil ; temporary
-                       )]
+                       (mapcat group-to-persons talk-to-groups))]
 
     ;; NEW VERSION
     ;; set up propn net and associated vectors:

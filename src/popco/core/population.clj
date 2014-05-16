@@ -4,8 +4,7 @@
 
 (defrecord Population [tick 
                        persons
-                       group-to-persons
-                       person-talk-to-groups])
+                       group-to-persons])
 
 (ug/add-to-docstr ->Population
   "\n  tick: timestep.
