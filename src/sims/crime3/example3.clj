@@ -27,12 +27,17 @@
                            (concat pns/crime-propns pns/virus-propns) pnet anet))
 
 (def persons [jo job jov])
+(def person-ids (map :id persons))
 
-(def popn (pp/make-population persons 
-                           {:everyone persons}
-                           (apply merge (map #(hash-map % :everyone) persons))))
+;(def popn (pp/make-population persons 
+;                           {:everyone persons}
+;                           (apply merge (map #(hash-map % :everyone) persons))))
 
-;(def popn (pp/->Population 0 persons)
+(def popn (pp/->Population 0 
+                           persons
+                           {:everyone person-ids}
+                           (zipmap person-ids (repeat [:everyone]))))
+
 ;(def popn* (pp/->Population 0 (map popco.nn.update/update-person-nets [jo job jov])))
 ;(def popn+ (pp/->Population 0 (map #(popco.nn.update/settle-analogy-net % popco.nn.constants/+settling-iters+) [jo job jov])))
 
