@@ -13,7 +13,8 @@
 (defrecord Person [id 
                    propn-net propn-mask propn-activns 
                    analogy-net analogy-mask analogy-activns
-                   analogy-idx-to-propn-idxs talk-to])
+                   analogy-idx-to-propn-idxs 
+                   groups talk-to-groups talk-to-persons])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
@@ -25,7 +26,10 @@
    :analogy-activns - activation values of nodes in analogy net
    :analogy-idxs-to-propn-idx - map from propn mapnode indexes in analogy net
                                 to corresponding propn index pairs in propn net.
-   :talk-to         - Other persons that this person talks to, determined by the
+   :groups          - Groups of which this person is a member, i.e. in virtue of
+                      which someone might talk to the person.
+   :talk-to-groups  - Groups whose members this person is willing to talk to.
+   :talk-to-persons - Other persons that this person talks to, determined by the
                       specification, at initalization, of the groups that this
                       person talks to.  i.e. this contains all members of the
                       groups in talk-to-groups.")
@@ -42,7 +46,7 @@
   person may modify its own propn weight matrix.  The analogy net can be shared 
   with every other person, however, since this will not be modified.  (The 
   analogy mask might be modified.)"
-  [id propns propn-net analogy-net talk-to-groups group-to-persons]
+  [id propns propn-net analogy-net groups talk-to-groups num-listeners]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
@@ -50,12 +54,14 @@
                        (pn/clone propn-net)
                        (pmx/zero-vector num-poss-propn-nodes)     ; propn-mask
                        (pmx/zero-vector num-poss-propn-nodes)     ; propn-activns
-                       analogy-net
+                       analogy-net                                ; yup, analogy-net
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
-                       (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net)
-                       (mapcat group-to-persons talk-to-groups))]
-
+                       (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net) ; yes, analogy-idx-to-propn-idxs
+                       groups
+                       talk-to-groups
+                       nil)] ; talk-to-persons will get filled by init-popn
+ 
     ;; NEW VERSION
     ;; set up propn net and associated vectors:
     (doseq [propn-id propn-ids] (cm/add-to-propn-net! pers propn-id))                        ; unmask propn nodes
@@ -112,26 +118,10 @@
     (assoc-in pers [:propn-net :wt-mat]
               (pmx/zero-matrix num-nodes num-nodes))))
 
-;; TEMPORARY
-;; differs from make-person in using old-add-to-analogy-net as a sanity check
-; (defn old-make-person
-;   "Creates a person with name (id), propns with propn-ids, and a pre-constructed
-;   propn-net and analogy-net.  Uses propns to construct propn-mask and
-;   analogy-mask.  Important: The propn-net passed in should be new, with a fresh
-;   weight matrix (:wt-mat), since each person may modify its own propn weight
-;   matrix.  The analogy net can be shared with every other person, however, since
-;   this will not be modified.  (The analogy mask might be modified.)"
-;   [id propns propn-net analogy-net]
-;   (let [num-poss-propn-nodes (count (:node-vec propn-net))
-;         num-poss-analogy-nodes (count (:node-vec analogy-net))
-;         propn-ids (map :id propns)
-;         pers (->Person id 
-;                        propn-net
-;                        (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
-;                        (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
-;                        analogy-net
-;                        (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
-;                        (mx/zero-vector num-poss-analogy-nodes))] ; analogy-activns
-;     (doseq [propn propns] (cm/add-to-propn-net pers (:id propn)))   ; better to fill propn mask before
-;     (doseq [propn propns] (cm/old-add-to-analogy-net pers (:id propn))) ;  analogy mask, so propns are known
-;     pers))
+(defn update-person-talk-to
+  "Fill person's talk-to-persons field based on its talk-to-groups field
+  and the map group-to-persons that maps groups to their members."
+  [group-to-persons pers]
+  (assoc pers 
+         :talk-to-persons
+         (vec (mapcat group-to-persons (:talk-to-groups pers)))))

@@ -17,25 +17,29 @@
                                pns/living-propns 
                                pns/conceptual-relats))
 
-(def persons [jo job jov])
-(def person-ids (map :id persons))
-
-(def group-to-persons {:everyone person-ids})
+;(def group-to-persons {:everyone [:jo :job :jov]})
 
 (def jo (pers/make-person :jo 
-                          (concat pns/crime-propns pns/living-propns) pnet anet [:everyone] group-to-persons))
+                          (concat pns/crime-propns pns/living-propns)
+                          pnet anet [:everyone] [:everyone] 1))
 
 (def job (pers/make-person :job 
-                           (concat pns/crime-propns pns/beast-propns) pnet anet [:everyone] group-to-persons))
+                           (concat pns/crime-propns pns/beast-propns)
+                           pnet anet [:everyone] [:everyone] 1))
 
 (def jov (pers/make-person :jov 
-                           (concat pns/crime-propns pns/virus-propns) pnet anet [:everyone] group-to-persons))
+                           (concat pns/crime-propns pns/virus-propns)
+                           pnet anet [:everyone] [:everyone] 1))
+
+;(def persons [jo job jov])
+
+(def popn (pp/make-population [jo job jov]))
+
+;(def popn (pp/init-popn (pp/->Population 0 persons nil)))
 
 ;(def popn (pp/make-population persons 
 ;                           {:everyone persons}
 ;                           (apply merge (map #(hash-map % :everyone) persons))))
-
-(def popn (pp/->Population 0 persons group-to-persons))
 
 ;(def popn* (pp/->Population 0 (map popco.nn.update/update-person-nets [jo job jov])))
 ;(def popn+ (pp/->Population 0 (map #(popco.nn.update/settle-analogy-net % popco.nn.constants/+settling-iters+) [jo job jov])))
