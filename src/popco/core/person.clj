@@ -11,10 +11,10 @@
 
 ;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [id 
-                   propn-net propn-mask propn-activns 
-                   analogy-net analogy-mask analogy-activns
+                   propn-net    propn-mask    propn-activns 
+                   analogy-net  analogy-mask  analogy-activns
                    analogy-idx-to-propn-idxs 
-                   groups talk-to-groups talk-to-persons])
+                   groups  talk-to-groups  talk-to-persons])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
@@ -82,17 +82,23 @@
   "Accepts a single argument, a person, and returns a person containing fresh a
   copy of any internal structure one might want to mutate.  (Useful for creating 
   distinct persons rather than to update the same person for a new tick.)"
-  [{id :id propn-net :propn-net propn-mask :propn-mask propn-activns :propn-activns
-    analogy-net :analogy-net analogy-mask :analogy-mask analogy-activns :analogy-activns
-    analogy-idx-to-propn-idxs :analogy-idx-to-propn-idxs}]
+  [{:keys [id 
+           propn-net    propn-mask    propn-activns 
+           analogy-net  analogy-mask  analogy-activns
+           analogy-idx-to-propn-idxs 
+           groups  talk-to-groups  talk-to-persons]}]
   (->Person id
             (pn/clone propn-net)
             (mx/clone propn-mask)
             (mx/clone propn-activns)
-            analogy-net                 ; should never change
+            analogy-net                ; should never change
             (mx/clone analogy-mask)
             (mx/clone analogy-activns)
-            analogy-idx-to-propn-idxs)) ; should never change
+            analogy-idx-to-propn-idxs  ; should never change
+            groups                     ; These last three are normal Clojure vecs, so
+            talk-to-groups             ;  if we ever want to change them at runtime,
+            talk-to-persons))          ;  they'll have to be replaced anyway.
+
 
 (defn new-person-from-old
   "Create a clone of person pers, but with name new-name, or a generated name,
