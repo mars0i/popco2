@@ -124,4 +124,4 @@
   [group-to-persons pers]
   (assoc pers 
          :talk-to-persons
-         (vec (mapcat group-to-persons (:talk-to-groups pers)))))
+         (vec (set (mapcat group-to-persons (:talk-to-groups pers))))))
