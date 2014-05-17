@@ -17,15 +17,9 @@
 
 (defn make-population
   [members]
-  (init-popn (->Population 0 members nil)))
-
-(defn init-popn
-  [popn]
-  (let [members (:persons popn)
-        person-to-groups (apply hash-map 
+  (let [person-to-groups (apply hash-map 
                                 (mapcat #(vector (:id %) (:groups %))
                                         members))
         groups (ug/invert-coll-map person-to-groups)
-        updated-members (map (partial pers/update-person-talk-to groups)
-                             members)]
-    (assoc popn :persons updated-members :groups groups)))
+        updated-members (map (partial pers/update-person-talk-to groups) members)]
+    (->Population 0 updated-members groups)))
