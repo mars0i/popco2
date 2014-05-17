@@ -150,18 +150,18 @@
   [fs]
   (apply comp fs))
 
-(defn vec-map-to-join-pairs
+(defn coll-map-to-join-pairs
   "Given a map whose values are collections, return a sequence of maps each
   of which has a key from the original map and val one of the members of the 
   collection that was that keys' value.  This is essentially a join table of 
   all unique pairs licensed by the original map."
-  [vec-map]
+  [coll-map]
   (mapcat 
     (fn [[k vs]]
       (map #(hash-map k %) vs))
-    vec-map))
+    coll-map))
 
-(defn join-pairs-to-vec-map
+(defn join-pairs-to-coll-map
   "Given sequence of maps each of which has a single key/val pair, and in
   which keys may be duplicates, in which values are sequences that collect
   vals that had the same key in the original sequence of maps."
@@ -170,11 +170,11 @@
          (comp vec flatten vector)
          join-pair-coll))
 
-(defn invert-vec-map
+(defn invert-coll-map
   "Given a map whose values are collections, return a map of the same sort,
   but in which each val member is now a key, and the members of their val
   collections are the keys for the current vals' former collections."
-  [vec-map]
-  (join-pairs-to-vec-map
+  [coll-map]
+  (join-pairs-to-coll-map
     (map st/map-invert 
-         (vec-map-to-join-pairs vec-map))))
+         (coll-map-to-join-pairs coll-map))))
