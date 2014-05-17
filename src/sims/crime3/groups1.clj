@@ -45,4 +45,4 @@
                                      (repeatedly 1 #(pers/new-person-from-old e))))))
 
 ;; Useful in order to see what's going on:
-; (do (println "\n" (:group-to-persons popn) "\n") (domap #(do (println (:id %) (:talk-to-groups %)) (println (:talk-to-persons %) "\n")) (sort-by :id (:persons popn))))
+; (do (println "\n" (:groups popn) "\n") (domap #(do (println (:id %) (:talk-to-groups %)) (println (:talk-to-persons %) "\n")) (sort-by :id (:persons popn))))
