@@ -28,7 +28,8 @@
                                 to corresponding propn index pairs in propn net.
    :groups          - Groups of which this person is a member, i.e. in virtue of
                       which someone might talk to the person.
-   :talk-to-groups  - Groups whose members this person is willing to talk to.
+   :talk-to-groups  - Groups whose members this person is willing to talk to
+                      (talks-to in popco1).
    :talk-to-persons - Other persons that this person talks to, determined by the
                       specification, at initalization, of the groups that this
                       person talks to.  i.e. this contains all members of the
@@ -124,10 +125,12 @@
     (assoc-in pers [:propn-net :wt-mat]
               (pmx/zero-matrix num-nodes num-nodes))))
 
-(defn update-person-talk-to
+(defn update-talk-to-persons
   "Fill person's talk-to-persons field based on its talk-to-groups field
   and the map group-to-persons that maps groups to their members."
   [group-to-persons pers]
   (assoc pers 
          :talk-to-persons
-         (vec (set (mapcat group-to-persons (:talk-to-groups pers))))))
+         (vec 
+           (set 
+             (mapcat group-to-persons (:talk-to-groups pers))))))

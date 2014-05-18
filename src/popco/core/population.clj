@@ -2,7 +2,7 @@
   (:require [utils.general :as ug]
             [popco.core.person :as pers]))
 
-(declare make-population update-person-talk-to init-popn make-population)
+(declare make-population init-popn make-population)
 
 (defrecord Population [tick 
                        persons
@@ -21,5 +21,5 @@
                                 (mapcat #(vector (:id %) (:groups %))
                                         members))
         groups (ug/invert-coll-map person-to-groups)
-        updated-members (map (partial pers/update-person-talk-to groups) members)]
+        updated-members (map (partial pers/update-talk-to-persons groups) members)]
     (->Population 0 updated-members groups)))
