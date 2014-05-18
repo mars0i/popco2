@@ -14,7 +14,8 @@
                    propn-net    propn-mask    propn-activns 
                    analogy-net  analogy-mask  analogy-activns
                    analogy-idx-to-propn-idxs 
-                   groups  talk-to-groups  talk-to-persons])
+                   groups  talk-to-groups  talk-to-persons
+                   max-talk-to])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
@@ -27,13 +28,16 @@
    :analogy-idxs-to-propn-idx - map from propn mapnode indexes in analogy net
                                 to corresponding propn index pairs in propn net.
    :groups          - Groups of which this person is a member, i.e. in virtue of
-                      which someone might talk to the person.
-   :talk-to-groups  - Groups whose members this person is willing to talk to
-                      (talks-to in popco1).
+                      which someone might talk to the person. (popco1: groups)
+   :talk-to-groups  - Groups whose members this person is willing to talk to.
+                      (popco1: talks-to)
    :talk-to-persons - Other persons that this person talks to, determined by the
                       specification, at initalization, of the groups that this
                       person talks to.  i.e. this contains all members of the
-                      groups in talk-to-groups.")
+                      groups in talk-to-groups. (no equivalent in popco1)
+   :max-talk-to     - Maximum number of people that this person will talk to in
+                      any one tick.  If >= (count talk-to-persons), has no 
+                      effect.(popco1: num-listeners)")
 
 ;; MAYBE: Consider making code below more efficient if popco is extended
 ;; to involve regularly creating new persons in the middle of simulation runs
@@ -47,7 +51,7 @@
   person may modify its own propn weight matrix.  The analogy net can be shared 
   with every other person, however, since this will not be modified.  (The 
   analogy mask might be modified.)"
-  [id propns propn-net analogy-net groups talk-to-groups num-listeners]
+  [id propns propn-net analogy-net groups talk-to-groups max-talk-to]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
@@ -61,7 +65,8 @@
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net) ; yes, analogy-idx-to-propn-idxs
                        groups
                        talk-to-groups
-                       nil)] ; talk-to-persons will get filled by init-popn
+                       nil
+                       max-talk-to)] ; talk-to-persons will get filled by init-popn
  
     ;; NEW VERSION
     ;; set up propn net and associated vectors:
@@ -87,7 +92,8 @@
            propn-net    propn-mask    propn-activns 
            analogy-net  analogy-mask  analogy-activns
            analogy-idx-to-propn-idxs 
-           groups  talk-to-groups  talk-to-persons]}]
+           groups  talk-to-groups  talk-to-persons
+           max-talk-to]}]
   (->Person id
             (pn/clone propn-net)
             (mx/clone propn-mask)
@@ -98,7 +104,8 @@
             analogy-idx-to-propn-idxs  ; should never change
             groups                     ; These last three are normal Clojure vecs, so
             talk-to-groups             ;  if we ever want to change them at runtime,
-            talk-to-persons))          ;  they'll have to be replaced anyway.
+            talk-to-persons            ;  they'll have to be replaced anyway.
+            max-talk-to))
 
 
 (defn new-person-from-old
