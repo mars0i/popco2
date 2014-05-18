@@ -3,7 +3,8 @@
             ;[clojure.pprint :as pp] ; only if needed for cl-format
             [popco.core.lot :as lot]
             [popco.nn.nets :as nn]
-            [popco.nn.analogy :as an]))
+            [popco.nn.analogy :as an]
+            [incanter.stats :as incant]))
 
 (declare communicate choose-conversations choose-person-conversers choose-utterance
          receive-propn! add-to-propn-net! try-add-to-analogy-net! propn-still-masked?
@@ -17,6 +18,20 @@
 ;  [persons & trans-repts]
 ;  (transmit-utterances persons 
 ;                       ((ug/comp* trans-repts) (choose-conversations persons))))
+
+(defn person-choose-listeners
+  "Given a person as argument, return a sequence of persons to whom
+  the argument person wants to talk on this tick."
+  [{:keys [talk-to-persons max-talk-to]}]
+  (if (>= max-talk-to (count talk-to-persons))
+    talk-to-persons
+    (incant/sample talk-to-persons :size max-talk-to :replacement false)))
+
+(defn choose-propn-to-utter
+  [{:keys [propn-net propn-mask propn-activns]}]
+  :NO-OP) ; TODO
+
+
 
 ;; NOTE transmit-utterances might not be purely functional.
 (defn transmit-utterances
