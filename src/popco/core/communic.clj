@@ -27,9 +27,10 @@
     talk-to-persons
     (incant/sample talk-to-persons :size max-talk-to :replacement false)))
 
-(defn choose-propn-to-utter
-  [{:keys [propn-net propn-mask propn-activns]}]
-  :NO-OP) ; TODO
+; obsolete
+;(defn choose-propn-to-utter
+;  [{:keys [propn-net propn-mask propn-activns]}]
+;  :NO-OP) ; TODO
 
 
 
