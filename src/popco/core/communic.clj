@@ -52,15 +52,21 @@
   [pers]
   pers)
 
+(defn seems-worth-saying
+  [pers propns]
+  true) ; FIXME
+
 (defn choose-utterance
   "NEED REVISION SEE PREVIOUS FNS. Currently a noop. Given a converser-pair, a map with keys :speaker and 
   :listener, chooses a proposition from speaker's beliefs to communicate to 
   listener, and returns a conversation, i.e. a map with the proposition assoc'ed
   into the converser-pair map, with new key :propn"
   [pers]
-  pers)
-;  (assoc converser-pair 
-;         :propn (choose-thought (:speaker converser-pair))))
+  (if-let [poss-utterances (filter (partial seems-worth-saying pers)
+                                   (:utterable pers))]
+    (incant/sample poss-utterances :size 1)
+    nil))
+
 
 (def choose-conversations (comp choose-utterance choose-person-conversers))
 ;(defn choose-conversations
