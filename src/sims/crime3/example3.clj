@@ -7,6 +7,7 @@
             [sims.crime3.propns :as pns]))
 
 (def propns (concat pns/crime-propns pns/living-propns)) 
+(def crime-ids (map :id pns/crime-propns))
 
 ;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
 (def perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) pns/crime-propns))
@@ -19,17 +20,11 @@
 
 ;(def group-to-persons {:everyone [:jo :job :jov]})
 
-(def jo (pers/make-person :jo 
-                          (concat pns/crime-propns pns/living-propns)
-                          pnet anet [:everyone] [:everyone] 1))
+(def jo (pers/make-person :jo propns pnet anet crime-ids [:everyone] [:everyone] 1))
 
-(def job (pers/make-person :job 
-                           (concat pns/crime-propns pns/beast-propns)
-                           pnet anet [:everyone] [:everyone] 1))
+(def job (pers/make-person :job propns pnet anet crime-ids [:everyone] [:everyone] 1))
 
-(def jov (pers/make-person :jov 
-                           (concat pns/crime-propns pns/virus-propns)
-                           pnet anet [:everyone] [:everyone] 1))
+(def jov (pers/make-person :jov propns pnet anet crime-ids [:everyone] [:everyone] 1))
 
 ;(def persons [jo job jov])
 

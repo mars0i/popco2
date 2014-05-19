@@ -8,6 +8,7 @@
             [sims.crime3.propns :as pns]))
 
 (def propns (concat pns/crime-propns pns/living-propns)) 
+(def crime-ids (map :id pns/crime-propns))
 
 ;; PECEPTION-IFS
 ;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
@@ -21,28 +22,20 @@
                                pns/living-propns 
                                pns/conceptual-relats))
 
-(def c (pers/make-person :c 
-                          (concat pns/crime-propns pns/living-propns)
-                          pnet anet [:central] [:central :west :east] 1))
+(def c (pers/make-person :c propns pnet anet crime-ids [:central] [:central :west :east] 1))
 
-(def split (pers/make-person :split
-                          (concat pns/crime-propns pns/living-propns)
-                          pnet anet [:west :east] [:central] 1))
+(def w (pers/make-person :w propns pnet anet crime-ids [:west] [:west :east] 1))
 
-(def w (pers/make-person :w 
-                           (concat pns/crime-propns pns/beast-propns)
-                           pnet anet [:west] [:west :east] 1))
+(def e (pers/make-person :e propns pnet anet crime-ids [:east] [:east :west] 1))
 
-(def e (pers/make-person :e 
-                           (concat pns/crime-propns pns/virus-propns)
-                           pnet anet [:east] [:east :west] 1))
+(def s (pers/make-person :s propns pnet anet crime-ids [:west :east] [:central] 1)) ;"s": split
 
 (def popn (pp/make-population (vec (concat
-                                     [c split w e]
+                                     [c w e s]
                                      (repeatedly 1 #(pers/new-person-from-old c))
-                                     (repeatedly 1 #(pers/new-person-from-old split))
                                      (repeatedly 1 #(pers/new-person-from-old w))
-                                     (repeatedly 1 #(pers/new-person-from-old e))))))
+                                     (repeatedly 1 #(pers/new-person-from-old e))
+                                     (repeatedly 1 #(pers/new-person-from-old s))))))
 
 ;; Useful in order to see what's going on:
 ; (do (println "\n" (:groups popn) "\n") (domap #(do (println (:id %) (:talk-to-groups %)) (println (:talk-to-persons %) "\n")) (sort-by :id (:persons popn))))

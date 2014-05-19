@@ -13,7 +13,7 @@
 (defrecord Person [id 
                    propn-net    propn-mask    propn-activns 
                    analogy-net  analogy-mask  analogy-activns
-                   analogy-idx-to-propn-idxs 
+                   analogy-idx-to-propn-idxs utterable
                    groups  talk-to-groups  talk-to-persons
                    max-talk-to])
 (ug/add-to-docstr ->Person
@@ -27,6 +27,8 @@
    :analogy-activns - activation values of nodes in analogy net
    :analogy-idxs-to-propn-idx - map from propn mapnode indexes in analogy net
                                 to corresponding propn index pairs in propn net.
+   :utterable       - Ids of propositions that person is willing to communicate
+                      to others.
    :groups          - Groups of which this person is a member, i.e. in virtue of
                       which someone might talk to the person. (popco1: groups)
    :talk-to-groups  - Groups whose members this person is willing to talk to.
@@ -51,7 +53,7 @@
   person may modify its own propn weight matrix.  The analogy net can be shared 
   with every other person, however, since this will not be modified.  (The 
   analogy mask might be modified.)"
-  [id propns propn-net analogy-net groups talk-to-groups max-talk-to]
+  [id propns propn-net analogy-net utterable groups talk-to-groups max-talk-to]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
@@ -63,10 +65,11 @@
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net) ; yes, analogy-idx-to-propn-idxs
+                       utterable
                        groups
                        talk-to-groups
-                       nil
-                       max-talk-to)] ; talk-to-persons will get filled by init-popn
+                       nil  ; talk-to-persons will get filled by init-popn
+                       max-talk-to)]
  
     ;; NEW VERSION
     ;; set up propn net and associated vectors:
@@ -91,7 +94,7 @@
   [{:keys [id 
            propn-net    propn-mask    propn-activns 
            analogy-net  analogy-mask  analogy-activns
-           analogy-idx-to-propn-idxs 
+           analogy-idx-to-propn-idxs  utterable
            groups  talk-to-groups  talk-to-persons
            max-talk-to]}]
   (->Person id
@@ -102,10 +105,11 @@
             (mx/clone analogy-mask)
             (mx/clone analogy-activns)
             analogy-idx-to-propn-idxs  ; should never change
-            groups                     ; These last three are normal Clojure vecs, so
-            talk-to-groups             ;  if we ever want to change them at runtime,
-            talk-to-persons            ;  they'll have to be replaced anyway.
-            max-talk-to))
+            utterable                  ; These last few are normal Clojure vecs, so
+            groups                     ;  if we ever want to change them at runtime,
+            talk-to-groups             ;  they'll have to be replaced anyway.           
+            talk-to-persons
+            max-talk-to))  ; an integer
 
 
 (defn new-person-from-old
