@@ -663,3 +663,12 @@
 ;  [persons]
 ;  (map choose-utterance 
 ;       (mapcat choose-person-conversers persons)))
+
+(defn choose-conversations (comp choose-utterance choose-person-conversers))
+(defn choose-person-conversers
+  "Currently a noop. Given a person pers, returns a converser-pair assoc'ed
+  into a person with :convs.  A converse-pair is a sequence 
+  of 2-element maps with keys :speaker and :listener, where :speaker is pers, 
+  and :listener is another person."
+  [pers]
+  pers)

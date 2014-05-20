@@ -18,10 +18,7 @@
   [{:keys [talk-to-persons max-talk-to]}]
   (if (>= max-talk-to (count talk-to-persons))
     talk-to-persons
-    ;; TODO use clojure.core/rand-nth ?
     (incant/sample talk-to-persons :size max-talk-to :replacement false)))
-
-
 
 ;; NOTE transmit-utterances might not be purely functional.
 (defn transmit-utterances
@@ -33,14 +30,6 @@
   speaks to.)"
   [persons]
   persons)
-
-(defn choose-person-conversers
-  "Currently a noop. Given a person pers, returns a converser-pair assoc'ed
-  into a person with :convs.  A converse-pair is a sequence 
-  of 2-element maps with keys :speaker and :listener, where :speaker is pers, 
-  and :listener is another person."
-  [pers]
-  pers)
 
 (defn utterances-worth-saying
   [{:keys [propn-net propn-mask propn-activns utterable-mask]}]
@@ -73,7 +62,9 @@
     ;; now return them as trios of some kind
     ))
 
-(def choose-conversations (comp choose-utterance choose-person-conversers))
+(defn choose-conversations 
+  [x]
+  x)
 
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to
