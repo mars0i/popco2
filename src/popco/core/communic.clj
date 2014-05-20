@@ -4,24 +4,15 @@
             [popco.core.lot :as lot]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
-            [clojure.core.matrix :as mx]
-            [incanter.stats :as incant]))
+            [clojure.core.matrix :as mx]))
 
 (declare communicate choose-conversations choose-person-conversers choose-utterance
          receive-propn! add-to-propn-net! try-add-to-analogy-net! propn-still-masked?
          propn-already-unmasked? propn-components-already-unmasked? ids-to-poss-mn-id 
          unmask-mapnode-extended-family! transmit-utterances choose-thought)
 
-(defn choose-listeners
-  "Given a person as argument, return a sequence of persons to whom
-  the argument person wants to talk on this tick."
-  [{:keys [talk-to-persons max-talk-to]}]
-  (if (>= max-talk-to (count talk-to-persons))
-    talk-to-persons
-    (incant/sample talk-to-persons :size max-talk-to :replacement false)))
-
 ;; NOTE transmit-utterances might not be purely functional.
-(defn transmit-utterances
+(defn transmit
   "Currently a noop: Takes persons with specifications of conversations assoc'ed
   in with :convs, and returns the persons with the conversations stripped out, 
   but with the persons updated to reflect the conversations.  (See 
@@ -31,40 +22,45 @@
   [persons]
   persons)
 
-(defn utterances-worth-saying
+(defn choose-listeners
+  "Given a person as argument, return a sequence of persons to whom
+  the argument person wants to talk on this tick."
+  [{:keys [talk-to-persons max-talk-to]}]
+  (if (>= max-talk-to (count talk-to-persons))
+    talk-to-persons
+    (ug/sample talk-to-persons :size max-talk-to :replacement false)))
+
+(defn worth-saying-idxs
+  "ADD DOCSTRING"
   [{:keys [propn-net propn-mask propn-activns utterable-mask]}]
   ;; absolute values of activns of unmasked utterable propns:
-  (let [utterable-abs-activns (mx/abs (mx/emul propn-mask utterable-mask propn-activns))
-        propn-id-vec (:id-vec propn-net)]
-    (for [i (range (dimension-count utterable-abs-activns))
+  (let [propn-id-vec (:id-vec propn-net)
+        utterable-abs-activns (mx/abs
+                                (mx/emul propn-mask utterable-mask propn-activns))]
+    (for [i (range (mx/dimension-count utterable-abs-activns 0))
           :when #(< (rand) (mx/mget utterable-abs-activns i))]
-      (nth propn-id-vec i))))
+      i)))
 
-;; TODO should I pass out the activns here too?
-
-(defn choose-utterances
-  "NEED REVISION SEE PREVIOUS FNS. Currently a noop. Given a converser-pair, a map with keys :speaker and 
+(defn choose-what-to-say-idxs
+  "FIX DOCSTRING: Given a converser-pair, a map with keys :speaker and 
   :listener, chooses a proposition from speaker's beliefs to communicate to 
   listener, and returns a conversation, i.e. a map with the proposition assoc'ed
   into the converser-pair map, with new key :propn"
   [pers num-utterances]
-  (if-let [poss-utterances (utterances-worth-saying pers)]
-    (incant/sample poss-utterances :size num-utterances :replacement true)
+  (if-let [poss-utterance-idxs (worth-saying-idxs pers)]
+    (ug/sample poss-utterance-idxs :size num-utterances :replacement true)
     nil))
 
-;; TODO
 (defn choose-transmissions
+  "ADD DOCSTRING"
   [pers]
-  (let [listeners (choose-listeners pers)
-        propns (choose-utterances pers (count listeners))
-        ;; now get activns
-        ]
-    ;; now return them as trios of some kind
-    ))
-
-(defn choose-conversations 
-  [x]
-  x)
+  (let [id-to-idx (:id-to-idx (:propn-net pers))
+        propn-activns (:propn-activns pers)
+        listeners (choose-listeners pers)
+        to-say-idxs (choose-what-to-say-idxs pers (count listeners))
+        to-say-activns (map #(mx/mget propn-activns %) to-say-idxs)]
+    (interleave listeners to-say-idxs to-say-activns)) ; is there a more efficient by reorg preceding?
+  pers) ;; TODO TEMP KLUDGE - need to coordinate with main.clj
 
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to

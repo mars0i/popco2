@@ -36,7 +36,7 @@
   [popn]
   (iterate (partial once map) popn))
 
-(def per-person-fns (comp cm/choose-conversations up/update-person-nets))
+(def per-person-fns (comp cm/choose-transmissions up/update-person-nets))
 
 ;; It's not clear that it will ever be necessary to use 'map' rather than
 ;; 'pmap' for mapfn, except for testing (which should be done, e.g. on Cheaha).
@@ -57,7 +57,7 @@
    (assoc popn
           :tick (inc (:tick popn))
           :persons (doall
-                     (cm/transmit-utterances 
+                     (cm/transmit
                        (mapfn per-person-fns (:persons popn)))))))
 
 
