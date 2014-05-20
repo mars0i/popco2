@@ -42,7 +42,6 @@
   [pers]
   pers)
 
-
 (defn utterances-worth-saying
   [{:keys [propn-net propn-mask propn-activns utterable-mask]}]
   ;; absolute values of activns of unmasked utterable propns:
@@ -75,13 +74,6 @@
     ))
 
 (def choose-conversations (comp choose-utterance choose-person-conversers))
-;(defn choose-conversations
-;  "Given a sequence of persons, returns a sequence of conversations, i.e.
-;  maps with keys :speaker, :listener, and :propn, indicating that speaker
-;  will communicate propn to listener."
-;  [persons]
-;  (map choose-utterance 
-;       (mapcat choose-person-conversers persons)))
 
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to

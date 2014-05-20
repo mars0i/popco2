@@ -656,3 +656,10 @@
 ;  [pers]
 ;  (lot/->Propn (lot/->Pred :TODO) [] :TODO))
   
+;(defn choose-conversations
+;  "Given a sequence of persons, returns a sequence of conversations, i.e.
+;  maps with keys :speaker, :listener, and :propn, indicating that speaker
+;  will communicate propn to listener."
+;  [persons]
+;  (map choose-utterance 
+;       (mapcat choose-person-conversers persons)))
