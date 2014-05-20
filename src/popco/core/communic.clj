@@ -12,14 +12,6 @@
          propn-already-unmasked? propn-components-already-unmasked? ids-to-poss-mn-id 
          unmask-mapnode-extended-family! transmit-utterances choose-thought)
 
-;(defn communicate
-;  "Implements a single timestep's (tick's) worth of communication.  Given a
-;  sequence of persons, constructs conversations and returns the persons, updated
-;  to reflect the conversations."
-;  [persons & trans-repts]
-;  (transmit-utterances persons 
-;                       ((ug/comp* trans-repts) (choose-conversations persons))))
-
 (defn choose-listeners
   "Given a person as argument, return a sequence of persons to whom
   the argument person wants to talk on this tick."
@@ -28,11 +20,6 @@
     talk-to-persons
     ;; TODO use clojure.core/rand-nth ?
     (incant/sample talk-to-persons :size max-talk-to :replacement false)))
-
-; obsolete
-;(defn choose-propn-to-utter
-;  [{:keys [propn-net propn-mask propn-activns]}]
-;  :NO-OP) ; TODO
 
 
 
@@ -87,8 +74,6 @@
     ;; now return them as trios of some kind
     ))
 
-
-
 (def choose-conversations (comp choose-utterance choose-person-conversers))
 ;(defn choose-conversations
 ;  "Given a sequence of persons, returns a sequence of conversations, i.e.
@@ -97,12 +82,6 @@
 ;  [persons]
 ;  (map choose-utterance 
 ;       (mapcat choose-person-conversers persons)))
-
-;(defn choose-thought
-;  "Currently a noop: Returns a dummy proposition."
-;  [pers]
-;  (lot/->Propn (lot/->Pred :TODO) [] :TODO))
-  
 
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to
