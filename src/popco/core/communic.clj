@@ -4,6 +4,7 @@
             [popco.core.lot :as lot]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
+            [core.matrix :as mx]
             [incanter.stats :as incant]))
 
 (declare communicate choose-conversations choose-person-conversers choose-utterance
@@ -25,6 +26,7 @@
   [{:keys [talk-to-persons max-talk-to]}]
   (if (>= max-talk-to (count talk-to-persons))
     talk-to-persons
+    ;; TODO use clojure.core/rand-nth ?
     (incant/sample talk-to-persons :size max-talk-to :replacement false)))
 
 ; obsolete
@@ -53,9 +55,15 @@
   [pers]
   pers)
 
-(defn seems-worth-saying
-  [pers propns]
-  true) ; FIXME
+;; TODO COMPLETELY CONFUSED
+(defn utterances-worth-saying
+  [{:keys [propn-net propn-mask propn-activns utterable-idxs]}]
+  (let [curr-utterable-idxs (mx/emul propn-max utterable-idxs propn-activns)
+        utterable-abs-activns (mx/abs (mx/emul curr-utterable-idxs propn-activns))]
+    (for [i (range (first (shape propn-mask)))
+          :when #(< (rand) (mget utterable-activns i))]
+      (map (:id-vec propn-net) nil))))
+
 
 (defn choose-utterance
   "NEED REVISION SEE PREVIOUS FNS. Currently a noop. Given a converser-pair, a map with keys :speaker and 
@@ -63,8 +71,7 @@
   listener, and returns a conversation, i.e. a map with the proposition assoc'ed
   into the converser-pair map, with new key :propn"
   [pers]
-  (if-let [poss-utterances (filter (partial seems-worth-saying pers)
-                                   (:utterable pers))]
+  (if-let [poss-utterances (utterances-worth-saying pers)]
     (incant/sample poss-utterances :size 1)
     nil))
 
@@ -78,10 +85,10 @@
 ;  (map choose-utterance 
 ;       (mapcat choose-person-conversers persons)))
 
-(defn choose-thought
-  "Currently a noop: Returns a dummy proposition."
-  [pers]
-  (lot/->Propn (lot/->Pred :TODO) [] :TODO))
+;(defn choose-thought
+;  "Currently a noop: Returns a dummy proposition."
+;  [pers]
+;  (lot/->Propn (lot/->Pred :TODO) [] :TODO))
   
 
 ;; TODO this or some other function will eventually have to add in other effects
