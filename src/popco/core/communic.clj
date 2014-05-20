@@ -4,7 +4,7 @@
             [popco.core.lot :as lot]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
-            [core.matrix :as mx]
+            [clojure.core.matrix :as mx]
             [incanter.stats :as incant]))
 
 (declare communicate choose-conversations choose-person-conversers choose-utterance
@@ -58,10 +58,10 @@
 ;; TODO COMPLETELY CONFUSED
 (defn utterances-worth-saying
   [{:keys [propn-net propn-mask propn-activns utterable-idxs]}]
-  (let [curr-utterable-idxs (mx/emul propn-max utterable-idxs propn-activns)
+  (let [curr-utterable-idxs (mx/emul propn-mask utterable-idxs propn-activns)
         utterable-abs-activns (mx/abs (mx/emul curr-utterable-idxs propn-activns))]
-    (for [i (range (first (shape propn-mask)))
-          :when #(< (rand) (mget utterable-activns i))]
+    (for [i (range (first (mx/shape propn-mask)))
+          :when #(< (rand) (mx/mget utterable-abs-activns i))]
       (map (:id-vec propn-net) nil))))
 
 
