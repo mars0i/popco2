@@ -1,10 +1,20 @@
 (ns utils.general ; Utility functions handy for any Clojure program
   (:use [clojure.repl :only [dir-fn]])
   (:require [clojure.pprint :only [*print-right-margin*]]
-            [clojure.set :as st]))
+            [clojure.set :as st]
+            [incanter.stats :as incant]))
 
 ;; dir-fn is useful because dir doseq's println, so you get a long column,
 ;; whereas dir-fn gives you a seq you can format however you want.
+
+(defn sample
+  "Just like incanter.stats/sample (q.v.), but if :size is 1, returns
+  a collection rather than the sampled element."
+  [& args]
+  (let [res (apply incant/sample args)]
+    (if (coll? res)
+      res
+      (list res))))
 
 (defn domap
   ([f coll] (doseq [e coll] (f e)))
