@@ -13,7 +13,7 @@
 (defrecord Person [id 
                    propn-net    propn-mask    propn-activns 
                    analogy-net  analogy-mask  analogy-activns
-                   analogy-idx-to-propn-idxs utterable-ids utterable-idxs
+                   analogy-idx-to-propn-idxs utterable-ids utterable-mask
                    groups  talk-to-groups  talk-to-persons
                    max-talk-to])
 (ug/add-to-docstr ->Person
@@ -28,7 +28,7 @@
    :analogy-idxs-to-propn-idx - map from propn mapnode indexes in analogy net
                                 to corresponding propn index pairs in propn net.
    :utterable-ids   - Ids of propositions that person is willing to say to others.
-   :utterable-idxs  - Indexes of propositions that person is willing to say to others.
+   :utterable-mask  - Indexes of propositions that person is willing to say to others.
    :groups          - Groups of which this person is a member, i.e. in virtue of
                       which someone might talk to the person. (popco1: groups)
    :talk-to-groups  - Groups whose members this person is willing to talk to.
@@ -66,10 +66,10 @@
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net) ; yes, analogy-idx-to-propn-idxs
                        utterable-ids
-                       (let [utterable-idxs (pmx/zero-vector num-poss-propn-nodes)] ; utterable-idxs is a core.matrix vector
+                       (let [utterable-mask (pmx/zero-vector num-poss-propn-nodes)] ; utterable-mask is a core.matrix vector
                          (doseq [i (map (:id-to-idx propn-net) utterable-ids)]
-                           (nn/unmask! utterable-idxs i))
-                         utterable-idxs)
+                           (nn/unmask! utterable-mask i))
+                         utterable-mask)
                        groups
                        talk-to-groups
                        nil  ; talk-to-persons will get filled by init-popn
@@ -98,7 +98,7 @@
   [{:keys [id 
            propn-net    propn-mask    propn-activns 
            analogy-net  analogy-mask  analogy-activns
-           analogy-idx-to-propn-idxs  utterable-ids  utterable-idxs
+           analogy-idx-to-propn-idxs  utterable-ids  utterable-mask
            groups  talk-to-groups  talk-to-persons
            max-talk-to]}]
   (->Person id
@@ -110,7 +110,7 @@
             (mx/clone analogy-activns)
             analogy-idx-to-propn-idxs  ; should never change
             utterable-ids              ; These last few are normal Clojure vecs,
-            utterable-idxs             ;  so
+            utterable-mask             ;  so
             groups                     ;  if we ever want to change them at runtime,
             talk-to-groups             ;  they'll have to be replaced anyway.           
             talk-to-persons

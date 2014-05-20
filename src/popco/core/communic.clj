@@ -20,7 +20,7 @@
 ;  (transmit-utterances persons 
 ;                       ((ug/comp* trans-repts) (choose-conversations persons))))
 
-(defn person-choose-listeners
+(defn choose-listeners
   "Given a person as argument, return a sequence of persons to whom
   the argument person wants to talk on this tick."
   [{:keys [talk-to-persons max-talk-to]}]
@@ -55,25 +55,38 @@
   [pers]
   pers)
 
-;; TODO COMPLETELY CONFUSED
+
 (defn utterances-worth-saying
-  [{:keys [propn-net propn-mask propn-activns utterable-idxs]}]
-  (let [curr-utterable-idxs (mx/emul propn-mask utterable-idxs propn-activns)
-        utterable-abs-activns (mx/abs (mx/emul curr-utterable-idxs propn-activns))]
-    (for [i (range (first (mx/shape propn-mask)))
+  [{:keys [propn-net propn-mask propn-activns utterable-mask]}]
+  ;; absolute values of activns of unmasked utterable propns:
+  (let [utterable-abs-activns (mx/abs (mx/emul propn-mask utterable-mask propn-activns))
+        propn-id-vec (:id-vec propn-net)]
+    (for [i (range (dimension-count utterable-abs-activns))
           :when #(< (rand) (mx/mget utterable-abs-activns i))]
-      (map (:id-vec propn-net) nil))))
+      (nth propn-id-vec i))))
 
+;; TODO should I pass out the activns here too?
 
-(defn choose-utterance
+(defn choose-utterances
   "NEED REVISION SEE PREVIOUS FNS. Currently a noop. Given a converser-pair, a map with keys :speaker and 
   :listener, chooses a proposition from speaker's beliefs to communicate to 
   listener, and returns a conversation, i.e. a map with the proposition assoc'ed
   into the converser-pair map, with new key :propn"
-  [pers]
+  [pers num-utterances]
   (if-let [poss-utterances (utterances-worth-saying pers)]
-    (incant/sample poss-utterances :size 1)
+    (incant/sample poss-utterances :size num-utterances :replacement true)
     nil))
+
+;; TODO
+(defn choose-transmissions
+  [pers]
+  (let [listeners (choose-listeners pers)
+        propns (choose-utterances pers (count listeners))
+        ;; now get activns
+        ]
+    ;; now return them as trios of some kind
+    ))
+
 
 
 (def choose-conversations (comp choose-utterance choose-person-conversers))
