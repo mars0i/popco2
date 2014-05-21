@@ -630,3 +630,45 @@
          (comp flatten vector)
          (map st/map-invert 
               (vec-map-to-join-pairs m))))
+
+
+
+
+;(defn communicate
+;  "Implements a single timestep's (tick's) worth of communication.  Given a
+;  sequence of persons, constructs conversations and returns the persons, updated
+;  to reflect the conversations."
+;  [persons & trans-repts]
+;  (transmit-utterances persons 
+;                       ((ug/comp* trans-repts) (choose-conversations persons))))
+
+
+
+; obsolete
+;(defn choose-propn-to-utter
+;  [{:keys [propn-net propn-mask propn-activns]}]
+;  :NO-OP) ; TODO
+
+
+
+;(defn choose-thought
+;  "Currently a noop: Returns a dummy proposition."
+;  [pers]
+;  (lot/->Propn (lot/->Pred :TODO) [] :TODO))
+  
+;(defn choose-conversations
+;  "Given a sequence of persons, returns a sequence of conversations, i.e.
+;  maps with keys :speaker, :listener, and :propn, indicating that speaker
+;  will communicate propn to listener."
+;  [persons]
+;  (map choose-utterance 
+;       (mapcat choose-person-conversers persons)))
+
+(defn choose-conversations (comp choose-utterance choose-person-conversers))
+(defn choose-person-conversers
+  "Currently a noop. Given a person pers, returns a converser-pair assoc'ed
+  into a person with :convs.  A converse-pair is a sequence 
+  of 2-element maps with keys :speaker and :listener, where :speaker is pers, 
+  and :listener is another person."
+  [pers]
+  pers)

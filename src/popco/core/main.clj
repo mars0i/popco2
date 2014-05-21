@@ -24,7 +24,7 @@
   [popn]
   (iterate (partial once map) popn))
 
-(def per-person-fns (comp cs/choose-conversations up/update-person-nets))
+(def per-person-fns (comp cs/choose-transmissions up/update-person-nets))
 
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
@@ -34,7 +34,7 @@
    (assoc popn
           :tick (inc (:tick popn))
           :persons (doall
-                     (cr/transmit-utterances 
+                     (cr/transmit
                        (mapfn per-person-fns (:persons popn)))))))
 
 

@@ -7,10 +7,20 @@
             [clojure.core.matrix :as mx]
             [incanter.stats :as incant]))
 
-(declare receive-propn! add-to-propn-net! try-add-to-analogy-net!
-         propn-still-masked? propn-already-unmasked?
-         propn-components-already-unmasked? ids-to-poss-mn-id
-         unmask-mapnode-extended-family!)
+(declare transmit receive-propn! add-to-propn-net! try-add-to-analogy-net!
+         propn-still-masked? propn-already-unmasked? propn-components-already-unmasked?
+         ids-to-poss-mn-id unmask-mapnode-extended-family!)
+
+;; NOTE transmit-utterances might not be purely functional.
+(defn transmit
+  "Currently a noop: Takes persons with specifications of conversations assoc'ed
+  in with :convs, and returns the persons with the conversations stripped out, 
+  but with the persons updated to reflect the conversations.  (See 
+  choose-conversations for the structure of conversations.)  (Note we need the 
+  persons as well as conversations, so that we don't lose persons that no one 
+  speaks to.)"
+  [persons]
+  persons)
 
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to
