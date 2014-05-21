@@ -34,9 +34,11 @@
    (assoc popn
           :tick (inc (:tick popn))
           :persons (doall
-                     (cr/receive-transmissions
-                       (mapfn per-person-fns (:persons popn)))))))
-
+                     (let [[persons transmissions] (ug/split-elements 
+                                                     (mapfn per-person-fns (:persons popn)))
+                           transmission-map (ug/join-pairs-to-coll-map (apply concat transmissions))] ; TODO: are there faster methods at http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
+                       (mapfn (partial cr/receive-transmissions transmission-map)
+                              persons))))))
 
 (defn ticker
   "Prints tick number to console, erasing previous tick number, and returns
