@@ -39,13 +39,13 @@
     (ug/sample poss-utterance-idxs :size num-utterances :replacement true)
     nil))
 
-(defn choose-transmissions
+(defn transmit-utterances
   "ADD DOCSTRING"
   [pers]
   (let [id-to-idx (:id-to-idx (:propn-net pers))
         propn-activns (:propn-activns pers)
         listeners (choose-listeners pers)
         to-say-idxs (choose-what-to-say-idxs pers (count listeners))
-        to-say-activns (map #(mx/mget propn-activns %) to-say-idxs)]
-    (interleave listeners to-say-idxs to-say-activns)) ; is there a more efficient by reorg preceding?
-  pers) ;; TODO TEMP KLUDGE - need to coordinate with main.clj
+        to-say-idx-activn-pairs (map #(vector % (mx/mget propn-activns %)) 
+                                     to-say-idxs)]
+    [pers (map hash-map listeners to-say-idx-activn-pairs)]))

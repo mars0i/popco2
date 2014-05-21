@@ -172,14 +172,15 @@
     coll-map))
 
 (defn join-pairs-to-coll-map
-  "Given sequence of maps each of which has a single key/val pair, and in
-  which keys may be duplicates, in which values are sequences that collect
-  vals that had the same key in the original sequence of maps."
+  "Given a sequence of maps each of which has a single key/val pair, and in
+  which keys may be duplicates, return a map in which values are sequences 
+  that collect vals that had the same key in the original sequence of maps."
   [join-pair-coll]
   (apply merge-with 
          (comp vec flatten vector)
          join-pair-coll))
 
+;; Consider using http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps instead:
 (defn invert-coll-map
   "Given a map whose values are collections, return a map of the same sort,
   but in which each val member is now a key, and the members of their val
@@ -188,3 +189,46 @@
   (join-pairs-to-coll-map
     (map st/map-invert 
          (coll-map-to-join-pairs coll-map))))
+
+(defn split-elements
+  "Given a collection of pairs, returns a pair of two sequences, one containing
+  the first elements of the pairs, in order, and the other containing the
+  second elements of the pairs, in order.  Note that if the input collection
+  is empty, split-elements returns a pair containing two empty sequences."
+  [pairs]
+  (loop [prs pairs
+         firsts []
+         seconds []]
+    (if (empty? prs)
+      (list firsts seconds)
+      (let [[fst snd] (first prs)]
+        (recur (rest prs) (conj firsts fst) (conj seconds snd))))))
+
+;; Quick tests show suggest that this may be only slightly slower than the non-lazy version,
+;; even though it has to traverse the input twice--and even if you map doall over the result.
+;; Doing something like the recur version with lazy-seq embedded in it seems slower than this one.
+;(defn lazy-split-elements
+;  "Given a collection of pairs, returns a pair of two sequences, one containing
+;  the first elements of the pairs, in order, and the other containing the
+;  second elements of the pairs, in order.  Note that if the input collection
+;  is empty, split-elements returns a pair containing two empty sequences."
+;  [pairs]
+;  (list (map first pairs) (map second pairs)))
+
+;; Version with recur and lazy split
+;(defn lazy-split-elements2
+;  "Given a collection of pairs, returns a pair of two sequences, one containing
+;  the first elements of the pairs, in order, and the other containing the
+;  second elements of the pairs, in order.  Note that if the input collection
+;  is empty, split-elements returns a pair containing two empty sequences."
+;  [pairs]
+;  (loop [prs pairs
+;         firsts []
+;         seconds []]
+;    (if (empty? prs)
+;      (list firsts seconds)
+;      (let [[fst snd] (first prs)]
+;        (recur (rest prs)
+;               (cons fst (lazy-seq firsts))
+;               (cons snd (lazy-seq seconds)) )))))
+

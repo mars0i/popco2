@@ -672,3 +672,20 @@
   and :listener is another person."
   [pers]
   pers)
+
+(defn lazy-split-elements2
+  "Given a collection of pairs, returns a pair of two sequences, one containing
+  the first elements of the pairs, in order, and the other containing the
+  second elements of the pairs, in order.  Note that if the input collection
+  is empty, split-elements returns a pair containing two empty sequences."
+  [pairs]
+  (loop [prs pairs
+         firsts []
+         seconds []]
+    (if (empty? prs)
+      (list firsts seconds)
+      (let [[fst snd] (first prs)]
+        (recur (rest prs)
+               (cons fst (lazy-seq firsts))
+               (cons snd (lazy-seq seconds)) )))))
+

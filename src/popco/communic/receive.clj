@@ -12,15 +12,21 @@
          ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
 ;; NOTE transmit-utterances might not be purely functional.
-(defn transmit
+(defn receive-transmissions
   "Currently a noop: Takes persons with specifications of conversations assoc'ed
   in with :convs, and returns the persons with the conversations stripped out, 
   but with the persons updated to reflect the conversations.  (See 
   choose-conversations for the structure of conversations.)  (Note we need the 
   persons as well as conversations, so that we don't lose persons that no one 
   speaks to.)"
-  [persons]
-  persons)
+  [persons-and-transmissions]
+  (let [[persons transmissions] (ug/split-elements persons-and-transmissions)
+        transmission-map (ug/join-pairs-to-coll-map (apply concat transmissions))] ; TODO: are there faster methods at http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
+    ;; ADD TRANSMISSION STEP
+    ;; Maybe something like:
+    ;; (pmap persons #(domap (comp apply receive-propn!) (transmission-map person)))
+    persons)) ; TODO TEMPORARY
+    
 
 ;; TODO this or some other function will eventually have to add in other effects
 ;; on the proposition network in order to add/subtract activation via weight to
