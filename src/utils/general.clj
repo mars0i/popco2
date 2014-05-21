@@ -4,9 +4,7 @@
             [clojure.set :as st]
             [incanter.stats :as incant]))
 
-;; dir-fn is useful because dir doseq's println, so you get a long column,
-;; whereas dir-fn gives you a seq you can format however you want.
-
+;; Wrapper around incanter.stats/sample
 (defn sample
   "Just like incanter.stats/sample (q.v.), but if :size is 1, returns
   a collection rather than the sampled element."
