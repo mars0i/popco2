@@ -40,7 +40,9 @@
     nil))
 
 (defn transmit-utterances
-  "ADD DOCSTRING"
+  "Given a person, returns a pair containing the person, unchanged, and a
+  Clojure map from the person's id to a pair containing the index of a 
+  proposition, and its current activation in the person."
   [pers]
   (let [id-to-idx (:id-to-idx (:propn-net pers))
         propn-activns (:propn-activns pers)
