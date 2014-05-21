@@ -2,7 +2,8 @@
   (:use popco.core.population)
   (:require [popco.nn.update :as up]
             [popco.nn.nets :as nn]
-            [popco.core.communic :as cm]
+            [popco.communic.receive :as cr]
+            [popco.communic.send :as cs]
             [utils.general :as ug]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23,7 +24,7 @@
   [popn]
   (iterate (partial once map) popn))
 
-(def per-person-fns (comp cm/choose-conversations up/update-person-nets))
+(def per-person-fns (comp cs/choose-conversations up/update-person-nets))
 
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
@@ -33,7 +34,7 @@
    (assoc popn
           :tick (inc (:tick popn))
           :persons (doall
-                     (cm/transmit-utterances 
+                     (cr/transmit-utterances 
                        (mapfn per-person-fns (:persons popn)))))))
 
 
