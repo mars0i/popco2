@@ -4,6 +4,7 @@
             [popco.core.constants :as cn]
             [popco.nn.nets :as nn]
             [popco.nn.propn :as pn]
+            [popco.nn.analogy :as an]
             [popco.nn.matrix :as pmx]
             [clojure.core.matrix :as mx]))
 
@@ -130,6 +131,14 @@
   [pers]
   (assoc pers 
          :propn-net (pn/clone (:propn-net pers))))
+
+(defn masks-clone
+  "Accepts a single argument, a person pers, and returns a person containing
+  a fresh copy of its analogy and proposition masks."
+  [pers]
+  (assoc pers 
+         :analogy-mask (pn/clone (:analogy-mask pers))
+         :propn-mask (pn/clone (:propn-mask pers))))
 
 (defn propn-net-zeroed
   "Accepts a single argument, a person pers, and returns a person containing
