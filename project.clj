@@ -17,7 +17,8 @@
                                  ]
                    :source-paths ["src"] ; where load will look for source files
                    }}
-   :jvm-opts ["-Xmx1g" "-Dclojure.compiler.disable-locals-clearing=true"]
+   :jvm-opts ["-Xmx1g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
+   ; "-Djava.awt.headless=true" Keep Incanter's Swing libs from opening
    ;:jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"] ; FASTER, and may be useful to debuggers. see https://groups.google.com/forum/#!msg/clojure/8a1FjNvh-ZQ/DzqDz4oKMj0J
    ;:jvm-opts ["-Xmx2g"]
    ;:jvm-opts ["-XX:+TieredCompilation" "-XX:TieredStopAtLevel=1"] ; setting this to 1 will produce faster startup but will disable extra optimization of long-running processes
