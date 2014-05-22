@@ -34,6 +34,7 @@
   (let [pers-id (:id pers)
         tranmissions (transmission-map pers-id)]
     :TODO) ; TODO
+  ;; QUESTION: do I have to reapply semantic-iffs here??
   pers)
 
 (defn kludge-masks-clone ; FIXME temp to get around a cyclic dependence for testing
