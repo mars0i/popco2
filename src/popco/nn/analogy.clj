@@ -31,6 +31,7 @@
 ;; ALL STEPS - put it all together
 ;; ...
 
+;; non-lazy
 (defn make-analogy-net
   "Make an ACME analogy neural-net structure, i.e. a structure that represents
   an ACME analogy constraint satisfaction network.  This is a standard 

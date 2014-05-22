@@ -17,7 +17,7 @@
          propn-extended-descendant-propns make-propn-to-extended-fams-ids
          make-propn-net new-linger-wt-mat)
 
-;; TODO APPLY SEMANTIC-IFFS
+;; non-lazy
 (defn make-propn-net
   "Constructs a proposition netword object with fields specified in doctrings
   of ->Propn-net and make-nn-core."

@@ -46,6 +46,7 @@
 ;; to involve regularly creating new persons in the middle of simulation runs
 ;; e.g. with natural selection.
 
+;; non-lazy
 (defn make-person
   "Creates a person with name (id), propns with propn-ids, and a pre-constructed
   propn-net and analogy-net.  Uses propns to construct propn-mask and
@@ -66,14 +67,14 @@
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
                        (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net) ; yes, analogy-idx-to-propn-idxs
-                       utterable-ids
+                       (vec utterable-ids)
                        (let [utterable-mask (pmx/zero-vector num-poss-propn-nodes)] ; utterable-mask is a core.matrix vector
                          (doseq [i (map (:id-to-idx propn-net) utterable-ids)]
                            (nn/unmask! utterable-mask i))
                          utterable-mask)
-                       groups
-                       talk-to-groups
-                       nil  ; talk-to-persons will get filled by init-popn
+                       (vec groups)
+                       (vec talk-to-groups)
+                       nil  ; talk-to-persons will get filled when make-population calls update-talk-to-persons
                        max-talk-to)]
  
     ;; NEW VERSION
