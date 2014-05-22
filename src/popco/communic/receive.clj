@@ -2,6 +2,8 @@
   (:require [utils.general :as ug]
             ;[clojure.pprint :as pp] ; only if needed for cl-format
             [popco.core.lot :as lot]
+            [popco.nn.propn :as pn]
+            ;[popco.core.person :as prs]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
             [clojure.core.matrix :as mx]
@@ -33,22 +35,48 @@
         tranmissions (transmission-map pers-id)]
     :TODO) ; TODO
   pers)
-    
 
-;; TODO this or some other function will eventually have to add in other effects
-;; on the proposition network in order to add/subtract activation via weight to
-;; the SALIENT node.
-(defn receive-propn!
+(defn kludge-masks-clone ; FIXME temp to get around a cyclic dependence for testing
+  "Accepts a single argument, a person pers, and returns a person containing
+  a fresh copy of its analogy and proposition masks."
+  [pers]
+  (assoc pers 
+         :analogy-mask (pn/clone (:analogy-mask pers))
+         :propn-mask (pn/clone (:propn-mask pers))))
+
+(defn unmask-for-new-propns
+  [original-pers new-propns]
+  (let [pers (kludge-masks-clone original-pers)]
+    (doseq [new-propn new-propns]
+      (add-to-propn-net! pers new-propn)
+      (let [propn-to-extended-fams (:propn-to-extended-famss (:propn-net pers))
+            fams (propn-to-extended-fams new-propn)]
+        (doseq [fam fams                           ; loop through all extended fams containing this propn
+                propn fam]                         ; and each propn in that family
+          (try-add-to-analogy-net! pers propn))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
+    pers))
+
+(defn kludge-propn-net-clone ; FIXME temp to get around a cyclic dependence for testing
+  "Accepts a single argument, a person pers, and returns a person containing
+  a fresh copy of its proposition network.  (Useful e.g. for updating pers's
+  proposition network as a function of analogy net activations.)"
+  [pers]
+  (assoc pers 
+         :propn-net (pn/clone (:propn-net pers))))
+    
+(defn update-propn-net-from-transmissions
+  [pers transmission]
+  (kludge-propn-net-clone pers)) ; FIXME actually update the propnnet. does this *have* to be purely functional...?
+
+(defn receive-propn
   "ADD DOCSTRING"
-  [pers recd-propn-id]
-  (when (propn-still-masked? pers recd-propn-id) ; if recd propn already unmasked, the rest is already done
-    (add-to-propn-net! pers recd-propn-id)
-    (let [propn-to-extended-fams-ids (:propn-to-extended-fams-ids (:propn-net pers))
-          fams (propn-to-extended-fams-ids recd-propn-id)]
-      (doseq [fam fams                           ; loop through all extended fams containing this propn
-              propn fam]                         ; and each propn in that family
-        (try-add-to-analogy-net! pers propn)))))  ; see whether we can now add analogies using it
-;; This last loop redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time
+  [pers transmissions]
+  (let [propns (map first transmissions)
+        new-propns (filter (partial propn-still-masked? pers) propns)
+        pers (if new-propns
+               (unmask-for-new-propns pers new-propns)
+               pers)]
+    (update-propn-net-from-transmissions pers transmissions)))
 
 (defn add-to-propn-net!
   "ADD DOCSTRING"
