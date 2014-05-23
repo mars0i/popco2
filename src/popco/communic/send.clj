@@ -7,7 +7,7 @@
             [clojure.core.matrix :as mx]
             [incanter.stats :as incant]))
 
-(declare choose-listeners worth-saying-idxs choose-what-to-say-idxs 
+(declare choose-listeners worth-saying-ids choose-what-to-say-ids 
          choose-transmissions)
 
 (defn choose-listeners
@@ -18,7 +18,7 @@
     talk-to-persons
     (ug/sample talk-to-persons :size max-talk-to :replacement false)))
 
-(defn worth-saying-idxs
+(defn worth-saying-ids
   "ADD DOCSTRING"
   [{:keys [propn-net propn-mask propn-activns utterable-mask]}]
   ;; absolute values of activns of unmasked utterable propns:
@@ -27,23 +27,23 @@
                                 (mx/emul propn-mask utterable-mask propn-activns))]
     (for [i (range (mx/dimension-count utterable-abs-activns 0))
           :when #(< (rand) (mx/mget utterable-abs-activns i))]
-      i)))
+      (propn-id-vec i))))
 
-(defn choose-what-to-say-idxs
+(defn choose-propn-ids-to-say
   "FIX DOCSTRING: Given a converser-pair, a map with keys :speaker and 
   :listener, chooses a proposition from speaker's beliefs to communicate to 
   listener, and returns a conversation, i.e. a map with the proposition assoc'ed
   into the converser-pair map, with new key :propn"
   [pers num-utterances]
-  (if-let [poss-utterance-idxs (worth-saying-idxs pers)]
-    (ug/sample poss-utterance-idxs :size num-utterances :replacement true)
+  (if-let [poss-utterance-ids (worth-saying-ids pers)]  ; since sample throws exception on empty coll
+    (ug/sample poss-utterance-ids :size num-utterances :replacement true)
     nil))
 
 (defn make-utterances
   "Given a person, returns a Clojure map representing utterances to
   persons, i.e. a map from persons who are listeners--i.e. persons
   who the current person is trying to speak to--to utterances to be
-  conveyed from the current person to each of those listeners.
+  conveyed from the current person to each of those listener.
   Utterances are sequences in which the first element represents
   a proposition [TODO: as id, or index?], and the second element
   captures the way in which the proposition should influence the
@@ -52,9 +52,11 @@
   (let [id-to-idx (:id-to-idx (:propn-net pers))
         propn-activns (:propn-activns pers)
         listeners (choose-listeners pers)
-        to-say-idxs (choose-what-to-say-idxs pers (count listeners))
-        to-say-idx-activn-pairs (map #(vector % (mx/mget propn-activns %)) to-say-idxs)]
-    (map hash-map listeners to-say-idx-activn-pairs)))
+        to-say-ids (choose-propn-ids-to-say pers (count listeners))
+        to-say-id-activn-pairs (map #(vector % 
+                                             (mx/mget propn-activns (id-to-idx %)))
+                                    to-say-ids)]
+    (map hash-map listeners to-say-id-activn-pairs)))
 
 (defn speaker-plus-utterances
   [pers]
