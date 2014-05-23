@@ -142,4 +142,5 @@
          :talk-to-persons
          (vec 
            (set 
-             (mapcat group-to-persons (:talk-to-groups pers))))))
+             (remove #(identical? % (:id pers))  ; people don't talk to themselves in popco
+                     (mapcat group-to-persons (:talk-to-groups pers)))))))
