@@ -24,11 +24,11 @@
 
 (def c (pers/make-person :c propns pnet anet crime-ids [:central] [:central :west :east] 1))
 
-(def w (pers/make-person :w propns pnet anet crime-ids [:west] [:west :east] 1))
+(def e (pers/make-person :e propns pnet anet crime-ids [:east] [:east :west] 2))
 
-(def e (pers/make-person :e propns pnet anet crime-ids [:east] [:east :west] 1))
+(def s (pers/make-person :s propns pnet anet crime-ids [:west :east] [:central] 3)) ;"s": split
 
-(def s (pers/make-person :s propns pnet anet crime-ids [:west :east] [:central] 1)) ;"s": split
+(def w (pers/make-person :w propns pnet anet crime-ids [:west] [:west :east] 4))
 
 (def popn (pp/make-population (vec (concat
                                      [c w e s]
