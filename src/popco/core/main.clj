@@ -35,7 +35,9 @@
           :tick (inc (:tick popn))
           :persons (doall
                      (let [[persons transmissions] (ug/split-elements (mapfn per-person-fns (:persons popn)))
+                           ;_ (clojure.pprint/pprint transmissions) ; DEBUG
                            transmission-map (ug/join-pairs-to-coll-map (apply concat transmissions))] ; TODO: are there faster methods at http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
+                       ;(clojure.pprint/pprint transmission-map) ; DEBUG
                        (mapfn (partial cr/receive-transmissions transmission-map)
                               persons))))))
 

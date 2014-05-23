@@ -202,6 +202,8 @@
       (let [[fst snd] (first prs)]
         (recur (rest prs) (conj firsts fst) (conj seconds snd))))))
 
+(defn sign-of [x] (if (neg? x) -1 1))
+
 ;; Quick tests show suggest that this may be only slightly slower than the non-lazy version,
 ;; even though it has to traverse the input twice--and even if you map doall over the result.
 ;; Doing something like the recur version with lazy-seq embedded in it seems slower than this one.

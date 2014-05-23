@@ -118,28 +118,11 @@
             talk-to-persons
             max-talk-to))  ; an integer
 
-
 (defn new-person-from-old
   "Create a clone of person pers, but with name new-name, or a generated name,
   if not."
   ([pers] (new-person-from-old pers (keyword (gensym (name (:id pers))))))
   ([pers new-name] (assoc (clone pers) :id new-name)))
-
-(defn propn-net-clone
-  "Accepts a single argument, a person pers, and returns a person containing
-  a fresh copy of its proposition network.  (Useful e.g. for updating pers's
-  proposition network as a function of analogy net activations.)"
-  [pers]
-  (assoc pers 
-         :propn-net (pn/clone (:propn-net pers))))
-
-(defn masks-clone
-  "Accepts a single argument, a person pers, and returns a person containing
-  a fresh copy of its analogy and proposition masks."
-  [pers]
-  (assoc pers 
-         :analogy-mask (pn/clone (:analogy-mask pers))
-         :propn-mask (pn/clone (:propn-mask pers))))
 
 (defn propn-net-zeroed
   "Accepts a single argument, a person pers, and returns a person containing

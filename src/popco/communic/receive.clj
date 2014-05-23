@@ -3,41 +3,50 @@
             ;[clojure.pprint :as pp] ; only if needed for cl-format
             [popco.core.lot :as lot]
             [popco.nn.propn :as pn]
-            ;[popco.core.person :as prs]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
             [clojure.core.matrix :as mx]
             [incanter.stats :as incant]))
 
-(declare transmit receive-propn! add-to-propn-net! try-add-to-analogy-net!
-         propn-still-masked? propn-already-unmasked? propn-components-already-unmasked?
+(declare update-propn-net-from-transmissions receive-transmissions
+         person-propn-net-clone person-masks-clone
+         unmask-for-new-propns add-to-propn-net!
+         try-add-to-analogy-net!  propn-still-masked?
+         propn-already-unmasked?  propn-components-already-unmasked?
          ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
-;; NOTE transmit-utterances might not be purely functional.
-;(defn receive-transmissions
-;  "Currently a noop: Takes persons with specifications of conversations assoc'ed
-;  in with :convs, and returns the persons with the conversations stripped out, 
-;  but with the persons updated to reflect the conversations.  (See 
-;  choose-conversations for the structure of conversations.)  (Note we need the 
-;  persons as well as conversations, so that we don't lose persons that no one 
-;  speaks to.)"
-;  [persons-and-transmissions]
-;  (let [[persons transmissions] (ug/split-elements persons-and-transmissions)
-;        transmission-map (ug/join-pairs-to-coll-map (apply concat transmissions))] ; TODO: are there faster methods at http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
-;    ;; ADD TRANSMISSION STEP
-;    ;; Maybe something like:
-;    ;; (pmap persons #(domap (comp apply receive-propn!) (transmission-map person)))
-;    persons)) ; TODO TEMPORARY
+(defn person-propn-net-clone
+  "Accepts a single argument, a person pers, and returns a person containing
+  a fresh copy of its proposition network.  (Useful e.g. for updating pers's
+  proposition network as a function of analogy net activations.)"
+  [pers]
+  (assoc pers 
+         :propn-net (pn/clone (:propn-net pers))))
 
+(defn update-propn-net-from-transmissions
+  [pers transmissions]
+ ; (println transmissions) ; DEBUG
+;  (let [pers (person-propn-net-clone)
+;        propn-mat (:wt-mat (:propn-net pers))] ; propn-nets have unified wt-mat
+;    (doseq [transmission transmissions]
+;      ;(mx/mset! propn-mat (* (ug/sign-of cn/+trust+)))
+      )
+
+;; entry point from main.clj
+;; QUESTION: do I have to reapply semantic-iffs here??
 (defn receive-transmissions
+  "ADD DOCSTRING"
   [transmission-map pers]
-  (let [pers-id (:id pers)
-        tranmissions (transmission-map pers-id)]
-    :TODO) ; TODO
-  ;; QUESTION: do I have to reapply semantic-iffs here??
-  pers)
+  ;(clojure.pprint/pprint transmission-map) ; DEBUG
+  (let [transmissions (transmission-map (:id pers))
+        propns (map first transmissions)
+        new-propns (filter (partial propn-still-masked? pers) propns)
+        pers (if new-propns
+               (unmask-for-new-propns pers new-propns)
+               pers)]
+    (update-propn-net-from-transmissions pers transmissions)))
 
-(defn kludge-masks-clone ; FIXME temp to get around a cyclic dependence for testing
+(defn person-masks-clone
   "Accepts a single argument, a person pers, and returns a person containing
   a fresh copy of its analogy and proposition masks."
   [pers]
@@ -47,7 +56,7 @@
 
 (defn unmask-for-new-propns
   [original-pers new-propns]
-  (let [pers (kludge-masks-clone original-pers)]
+  (let [pers (person-masks-clone original-pers)] ; TODO Is this really necesary?
     (doseq [new-propn new-propns]
       (add-to-propn-net! pers new-propn)
       (let [propn-to-extended-fams (:propn-to-extended-famss (:propn-net pers))
@@ -56,28 +65,6 @@
                 propn fam]                         ; and each propn in that family
           (try-add-to-analogy-net! pers propn))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
     pers))
-
-(defn kludge-propn-net-clone ; FIXME temp to get around a cyclic dependence for testing
-  "Accepts a single argument, a person pers, and returns a person containing
-  a fresh copy of its proposition network.  (Useful e.g. for updating pers's
-  proposition network as a function of analogy net activations.)"
-  [pers]
-  (assoc pers 
-         :propn-net (pn/clone (:propn-net pers))))
-    
-(defn update-propn-net-from-transmissions
-  [pers transmission]
-  (kludge-propn-net-clone pers)) ; FIXME actually update the propnnet. does this *have* to be purely functional...?
-
-(defn receive-propn
-  "ADD DOCSTRING"
-  [pers transmissions]
-  (let [propns (map first transmissions)
-        new-propns (filter (partial propn-still-masked? pers) propns)
-        pers (if new-propns
-               (unmask-for-new-propns pers new-propns)
-               pers)]
-    (update-propn-net-from-transmissions pers transmissions)))
 
 (defn add-to-propn-net!
   "ADD DOCSTRING"
