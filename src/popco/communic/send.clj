@@ -39,15 +39,23 @@
     (ug/sample poss-utterance-idxs :size num-utterances :replacement true)
     nil))
 
-(defn transmit-utterances
-  "Given a person, returns a pair containing the person, unchanged, and a
-  Clojure map from the person's id to a pair containing the index of a 
-  proposition, and its current activation in the person."
+(defn make-utterances
+  "Given a person, returns a Clojure map representing utterances to
+  persons, i.e. a map from persons who are listeners--i.e. persons
+  who the current person is trying to speak to--to utterances to be
+  conveyed from the current person to each of those listeners.
+  Utterances are sequences in which the first element represents
+  a proposition [TODO: as id, or index?], and the second element
+  captures the way in which the proposition should influence the
+  listener [TODO: raw or cooked activation?]." ; FIXME
   [pers]
   (let [id-to-idx (:id-to-idx (:propn-net pers))
         propn-activns (:propn-activns pers)
         listeners (choose-listeners pers)
         to-say-idxs (choose-what-to-say-idxs pers (count listeners))
-        to-say-idx-activn-pairs (map #(vector % (mx/mget propn-activns %)) 
-                                     to-say-idxs)]
-    [pers (map hash-map listeners to-say-idx-activn-pairs)]))
+        to-say-idx-activn-pairs (map #(vector % (mx/mget propn-activns %)) to-say-idxs)]
+    (map hash-map listeners to-say-idx-activn-pairs)))
+
+(defn speaker-plus-utterances
+  [pers]
+  [pers (make-utterances pers)])
