@@ -21,7 +21,7 @@
   [popns & options]
   (when-not (== 0 cn/+salient-node-index+) ; sanity check for person-propn-activns
     (throw (Exception. (format "This code assumes SALIENT node index is 0, but it's not."))))
-  (let [append? (when options ((apply hash-map options) :append)) ; get val of :append if present, else nil
+  (let [append? (if options ((apply hash-map options) :append) nil)
         data (map propn-activns-row popns) ; pmap wouldn't help, because the popns comes from iterate, so you need earlier elements to get later ones (unless you doall it first)
         rows (if append?
                data 
