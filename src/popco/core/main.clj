@@ -4,7 +4,8 @@
             [popco.nn.nets :as nn]
             [popco.communic.receive :as cr]
             [popco.communic.send :as cs]
-            [utils.general :as ug]))
+            [utils.general :as ug]
+            [clojure.core.matrix :as mx])) ; for transpose
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; SEE src/popco/start.md and src/popco/core/main.md for notes. ;;
@@ -24,8 +25,6 @@
   [popn]
   (iterate (partial once map) popn))
 
-(def per-person-fns (comp cs/transmit-utterances up/update-person-nets))
-
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
   Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
@@ -34,10 +33,10 @@
    (assoc popn
           :tick (inc (:tick popn))
           :persons (doall
-                     (let [[persons transmissions] (ug/split-elements (mapfn per-person-fns (:persons popn)))
-                           ;_ (clojure.pprint/pprint transmissions) ; DEBUG
-                           transmission-map (ug/join-pairs-to-coll-map (apply concat transmissions))] ; TODO: are there faster methods at http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
-                       ;(clojure.pprint/pprint transmission-map) ; DEBUG
+                     (let [[persons transmissions] (mx/transpose     ; change sequence of <person,transmission> pairs into pair of sequences
+                                                     (mapfn (comp cs/speaker-plus-utterances up/update-person-nets)
+                                                            (:persons popn)))
+                           transmission-map (ug/join-pairs-to-coll-map (apply concat transmissions))] ; TODO: faster methods for join-pairs-...? cf. http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
                        (mapfn (partial cr/receive-transmissions transmission-map)
                               persons))))))
 

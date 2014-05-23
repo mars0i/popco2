@@ -712,3 +712,31 @@
 ;    ;; Maybe something like:
 ;    ;; (pmap persons #(domap (comp apply receive-propn!) (transmission-map person)))
 ;    persons)) ; TODO TEMPORARY
+
+;; obsolete: just core.matrix/transpose
+(defn split-elements
+  "Given a collection of pairs, returns a pair of two sequences, one containing
+  the first elements of the pairs, in order, and the other containing the
+  second elements of the pairs, in order.  Note that if the input collection
+  is empty, split-elements returns a pair containing two empty sequences."
+  [pairs]
+  (loop [prs pairs
+         firsts []
+         seconds []]
+    (if (empty? prs)
+      (list firsts seconds)
+      (let [[fst snd] (first prs)]
+        (recur (rest prs) (conj firsts fst) (conj seconds snd))))))
+
+(defn transmit-utterances
+  "Given a person, returns a pair containing the person, unchanged, and a
+  Clojure map from the person's id to a pair containing the index of a 
+  proposition, and its current activation in the person."
+  [pers]
+  (let [id-to-idx (:id-to-idx (:propn-net pers))
+        propn-activns (:propn-activns pers)
+        listeners (choose-listeners pers)
+        to-say-idxs (choose-what-to-say-idxs pers (count listeners))
+        to-say-idx-activn-pairs (map #(vector % (mx/mget propn-activns %)) 
+                                     to-say-idxs)]
+    [pers (map hash-map listeners to-say-idx-activn-pairs)]))
