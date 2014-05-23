@@ -34,8 +34,8 @@
   :listener, chooses a proposition from speaker's beliefs to communicate to 
   listener, and returns a conversation, i.e. a map with the proposition assoc'ed
   into the converser-pair map, with new key :propn"
-  [pers num-utterances]
-  (if-let [poss-utterance-ids (worth-saying-ids pers)]  ; since sample throws exception on empty coll
+  [speaker num-utterances]
+  (if-let [poss-utterance-ids (worth-saying-ids speaker)]  ; since sample throws exception on empty coll
     (ug/sample poss-utterance-ids :size num-utterances :replacement true)
     nil))
 
@@ -48,13 +48,14 @@
   a proposition [TODO: as id, or index?], and the second element
   captures the way in which the proposition should influence the
   listener [TODO: raw or cooked activation?]." ; FIXME
-  [pers]
-  (let [id-to-idx (:id-to-idx (:propn-net pers))
-        propn-activns (:propn-activns pers)
-        listeners (choose-listeners pers)
-        to-say-ids (choose-propn-ids-to-say pers (count listeners))
+  [speaker]
+  (let [id-to-idx (:id-to-idx (:propn-net speaker))
+        propn-activns (:propn-activns speaker)
+        listeners (choose-listeners speaker)
+        to-say-ids (choose-propn-ids-to-say speaker (count listeners))
         to-say-id-activn-pairs (map #(vector % 
-                                             (mx/mget propn-activns (id-to-idx %)))
+                                             (mx/mget propn-activns (id-to-idx %))
+                                             (:id speaker))
                                     to-say-ids)]
     (map hash-map listeners to-say-id-activn-pairs)))
 
