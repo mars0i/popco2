@@ -16,13 +16,12 @@
          propn-already-unmasked?  propn-components-already-unmasked?
          ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
-;(defn person-propn-net-clone
-;  "Accepts a single argument, a person pers, and returns a person containing
-;  a fresh copy of its proposition network.  (Useful e.g. for updating pers's
-;  proposition network as a function of analogy net activations.)"
-;  [pers]
-;  (assoc pers 
-;         :propn-net (pn/clone (:propn-net pers))))
+(defn combine-speaker-utterance-maps
+  "Given a collection of maps from listener ids to collections of Utterances,
+  combine them into a single map of the same kind, concat'ing together
+  values with the same key."
+  [utterance-maps]
+  (apply merge-with (comp vec concat) utterance-maps))
 
 ;; TODO maybe create clone the net inside this function, and use it directly
 (defn update-propn-net-from-utterances
