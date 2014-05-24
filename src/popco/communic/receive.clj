@@ -27,29 +27,29 @@
 ;; TODO maybe create clone the net inside this function, and use it directly
 (defn update-propn-net-from-utterances
   "ADD TO DOCSTRING. Note utterances is a collection of Utterances."
-  [pers utterances]
-  (let [id-to-idx (:id-to-idx pers)
-        propn-net (pn/clone (:propn-net pers)) ; make new net to be assoc'ed into person (or not, to make it mutating)
+  [listener utterances]
+  (let [id-to-idx (:id-to-idx listener)
+        propn-net (pn/clone (:propn-net listener)) ; make new net to be assoc'ed into person (or not, to make it mutating)
         propn-mat (:wt-mat propn-net)] ; propn-nets have unified wt-mat
     (doseq [utterance utterances]
       (mx/mset! propn-mat  ; here we are mutating the propn matrix that's still referenced in propn-net
                 (id-to-idx (:propn-id utterance))
                 cn/+salient-node-index+
-                (* cn/+trust+ (:valence utterance))))
-    (assoc pers :propn-net propn-net)))
+                (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
+    (assoc listener :propn-net propn-net)))
 
 ;; entry point from main.clj
 ;; TODO QUESTION: do I have to reapply semantic-iffs here??
 (defn receive-transmissions
   "ADD DOCSTRING"
-  [utterance-map pers]
-  (let [utterances (utterance-map (:id pers))
+  [utterance-map listener]
+  (let [utterances (utterance-map (:id listener))
         propns (map :propn-id utterances)
-        new-propns (filter (partial propn-still-masked? pers) propns)
-        pers (if new-propns
-               (unmask-for-new-propns pers new-propns)
-               pers)]
-    (update-propn-net-from-utterances pers utterances)))
+        new-propns (filter (partial propn-still-masked? listener) propns)
+        listener (if new-propns
+               (unmask-for-new-propns listener new-propns)
+               listener)]
+    (update-propn-net-from-utterances listener utterances)))
 
 (defn person-masks-clone
   "Accepts a single argument, a person pers, and returns a person containing
