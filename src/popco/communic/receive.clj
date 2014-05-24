@@ -39,7 +39,7 @@
 
 ;; entry point from main.clj
 ;; TODO QUESTION: do I have to reapply semantic-iffs here??
-(defn receive-transmissions
+(defn receive-utterances
   "ADD DOCSTRING"
   [utterance-map listener]
   (let [utterances (utterance-map (:id listener))

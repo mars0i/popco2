@@ -39,7 +39,7 @@
                      (let [[persons utterance-maps] (mx/transpose ; combine firsts, seconds from [pers utterance-map] pairs produced by speaker-plus-utterances
                                                       (mapfn (comp cs/speaker-plus-utterances up/update-person-nets) (:persons popn)))]
                        ;; communication crossover point: switch from mapping over speakers to mapping over listeners
-                       (mapfn (partial cr/receive-transmissions 
+                       (mapfn (partial cr/receive-utterances 
                                        (cr/combine-speaker-utterance-maps utterance-maps))
                               persons))))))
 
