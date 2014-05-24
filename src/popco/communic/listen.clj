@@ -15,8 +15,9 @@
          propn-already-unmasked?  propn-components-already-unmasked?
          ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
-;; entry point from main.clj
-;; TODO QUESTION: do I have to reapply semantic-iffs here??
+;; Entry point from main.clj. Purely functional since unmask-for-new-propns
+;; and update-propn-net-from-utterances are purely functional.
+;; TODO QUESTION: DO I HAVE TO REAPPLY SEMANTIC-IFFS HERE???
 (defn receive-utterances
   "ADD DOCSTRING"
   [utterance-map listener]
@@ -28,7 +29,7 @@
                    listener)]
     (update-propn-net-from-utterances listener utterances)))
 
-;; TODO maybe create clone the net inside this function, and use it directly
+;; This function is purely functional despite calling mutational functions
 (defn update-propn-net-from-utterances
   "ADD TO DOCSTRING. Note utterances is a collection of Utterances."
   [listener utterances]
@@ -49,6 +50,7 @@
   [utterance-maps]
   (apply merge-with (comp vec concat) utterance-maps))
 
+;; This function is purely functional despite calling mutational functions
 (defn unmask-for-new-propns
   [original-pers new-propns]
   (let [pers (person-masks-clone original-pers)] ; TODO Is this really necesary?
