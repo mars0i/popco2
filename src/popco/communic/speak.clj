@@ -1,4 +1,4 @@
-(ns popco.communic.send
+(ns popco.communic.speak
   (:require [utils.general :as ug]
             ;[clojure.pprint :as pp] ; only if needed for cl-format
             [popco.core.lot :as lot]

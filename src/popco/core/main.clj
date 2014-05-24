@@ -2,8 +2,8 @@
   (:use popco.core.population)
   (:require [popco.nn.update :as up]
             [popco.nn.nets :as nn]
-            [popco.communic.receive :as cr]
-            [popco.communic.send :as cs]
+            [popco.communic.listen :as cl]
+            [popco.communic.speak :as cs]
             [utils.general :as ug]
             [clojure.core.matrix :as mx])) ; for transpose
 
@@ -39,8 +39,8 @@
                      (let [[persons utterance-maps] (mx/transpose ; combine firsts, seconds from [pers utterance-map] pairs produced by speaker-plus-utterances
                                                       (mapfn (comp cs/speaker-plus-utterances up/update-person-nets) (:persons popn)))]
                        ;; communication crossover point: switch from mapping over speakers to mapping over listeners
-                       (mapfn (partial cr/receive-utterances 
-                                       (cr/combine-speaker-utterance-maps utterance-maps))
+                       (mapfn (partial cl/receive-utterances 
+                                       (cl/combine-speaker-utterance-maps utterance-maps))
                               persons))))))
 
 (defn ticker

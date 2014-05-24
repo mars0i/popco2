@@ -1,6 +1,6 @@
 (ns popco.core.person
   (:require [utils.general :as ug]
-            [popco.communic.receive :as cr]
+            [popco.communic.listen :as cl]
             [popco.core.constants :as cn]
             [popco.nn.nets :as nn]
             [popco.nn.propn :as pn]
@@ -79,13 +79,13 @@
  
     ;; NEW VERSION
     ;; set up propn net and associated vectors:
-    (doseq [propn-id propn-ids] (cr/add-to-propn-net! pers propn-id))                        ; unmask propn nodes
+    (doseq [propn-id propn-ids] (cl/add-to-propn-net! pers propn-id))                        ; unmask propn nodes
     (nn/set-mask! (:propn-mask pers) cn/+salient-node-index+ (/ cn/+one+ cn/+decay+))        ; special mask val to undo next-activn's decay on this node
     (mx/add! (:propn-activns pers) (mx/emul (:propn-mask pers) cn/+propn-node-init-activn+))       ; initial activns for unmasked propns
     (nn/set-activn! (:propn-activns pers) cn/+salient-node-index+ cn/+one+)                  ; salient node always has activn = 1
 
     ;; set up analogy net and associated vectors:
-    (doseq [propn-id propn-ids] (cr/try-add-to-analogy-net! pers propn-id))                  ; unmask analogy nodes (better to fill propn mask first)
+    (doseq [propn-id propn-ids] (cl/try-add-to-analogy-net! pers propn-id))                  ; unmask analogy nodes (better to fill propn mask first)
     (nn/set-mask! (:analogy-mask pers) cn/+semantic-node-index+ (/ cn/+one+ cn/+decay+))     ; special mask val to undo next-activn's decay on this node
     (mx/add! (:analogy-activns pers) (mx/emul (:analogy-mask pers) cn/+analogy-node-init-activn+)) ; initial activns for unmasked analogy nodes
     (nn/set-activn! (:analogy-activns pers) cn/+semantic-node-index+ cn/+one+)               ; semantic node always has activn = 1
