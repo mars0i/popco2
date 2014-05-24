@@ -27,7 +27,10 @@
 
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
-  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
+  Returns the population in its new state.  popn is the popn before applying
+  this function.  mapfn is either Clojure's pmap (default) or map.
+  (Tip: If stacktrace doesn't show any popco functions, try using map instead
+  of pmap.) Supposed to be purely functional.  (TODO: Is it?)"
   ([popn] (once pmap popn))
   ([mapfn popn]
    (assoc popn
