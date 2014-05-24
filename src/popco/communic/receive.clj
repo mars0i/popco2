@@ -28,11 +28,11 @@
 (defn update-propn-net-from-utterances
   "ADD TO DOCSTRING. Note utterances is a collection of Utterances."
   [listener utterances]
-  (let [id-to-idx (:id-to-idx listener)
-        propn-net (pn/clone (:propn-net listener)) ; make new net to be assoc'ed into person (or not, to make it mutating)
+  (let [propn-net (pn/clone (:propn-net listener)) ; make new net to be assoc'ed into person (or not, to make it mutating)
+        id-to-idx (:id-to-idx propn-net)
         propn-mat (:wt-mat propn-net)] ; propn-nets have unified wt-mat
     (doseq [utterance utterances]
-      (mx/mset! propn-mat  ; here we are mutating the propn matrix that's still referenced in propn-net
+      (mx/mset! propn-mat  ; here we are mutating the propn matrix that's still referenced in newly-created propn-net
                 (id-to-idx (:propn-id utterance))
                 cn/+salient-node-index+
                 (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
@@ -56,8 +56,8 @@
   a fresh copy of its analogy and proposition masks."
   [pers]
   (assoc pers 
-         :analogy-mask (pn/clone (:analogy-mask pers))
-         :propn-mask (pn/clone (:propn-mask pers))))
+         :analogy-mask (mx/clone (:analogy-mask pers))
+         :propn-mask (mx/clone (:propn-mask pers))))
 
 (defn unmask-for-new-propns
   [original-pers new-propns]
