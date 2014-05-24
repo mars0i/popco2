@@ -8,8 +8,8 @@
             [clojure.core.matrix :as mx]
             [incanter.stats :as incant]))
 
-(declare choose-listeners worth-saying-ids choose-what-to-say-ids 
-         choose-transmissions)
+(declare choose-listeners worth-saying-ids choose-propn-ids-to-say
+         make-utterances speaker-plus-utterances)
 
 (defn choose-listeners
   "Given a person as argument, return a sequence of persons to whom
