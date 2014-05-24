@@ -4,6 +4,7 @@
             [popco.core.lot :as lot]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
+            [popco.communic.utterance :as ut]
             [clojure.core.matrix :as mx]
             [incanter.stats :as incant]))
 
@@ -25,7 +26,7 @@
   (let [propn-id-vec (:id-vec propn-net)
         utterable-abs-activns (mx/abs
                                 (mx/emul propn-mask utterable-mask propn-activns))]
-    (for [i (range (mx/dimension-count utterable-abs-activns 0))
+    (for [i (range (mx/dimension-count utterable-abs-activns 0)) ; (dimension-count ... 0) returns length
           :when #(< (rand) (mx/mget utterable-abs-activns i))]
       (propn-id-vec i))))
 
@@ -35,10 +36,13 @@
   listener, and returns a conversation, i.e. a map with the proposition assoc'ed
   into the converser-pair map, with new key :propn"
   [speaker num-utterances]
-  (if-let [poss-utterance-ids (worth-saying-ids speaker)]  ; since sample throws exception on empty coll
-    (ug/sample poss-utterance-ids :size num-utterances :replacement true)
+  (if (pos? num-utterances)
+    (if-let [poss-utterance-ids (worth-saying-ids speaker)]  ; since sample throws exception on empty coll
+      (ug/sample poss-utterance-ids :size num-utterances :replacement true)
+      nil)
     nil))
 
+;; TODO: filter out SALIENT--don't send it
 (defn make-utterances
   "Given a person, returns a Clojure map representing utterances to
   persons, i.e. a map from persons who are listeners--i.e. persons
@@ -49,16 +53,14 @@
   captures the way in which the proposition should influence the
   listener [TODO: raw or cooked activation?]." ; FIXME
   [speaker]
-  (let [id-to-idx (:id-to-idx (:propn-net speaker))
-        propn-activns (:propn-activns speaker)
-        listeners (choose-listeners speaker)
-        to-say-ids (choose-propn-ids-to-say speaker (count listeners))
-        to-say-id-activn-pairs (map #(vector % 
-                                             (mx/mget propn-activns (id-to-idx %))
-                                             (:id speaker))
-                                    to-say-ids)]
-    (map hash-map listeners to-say-id-activn-pairs)))
+  (let [listeners (choose-listeners speaker) ; may be empty
+        to-say-ids (choose-propn-ids-to-say speaker (count listeners))] ; nil if no listeners, possibly nil if so
+    (if to-say-ids
+      (zipmap listeners 
+              (map #(vector (ut/make-utterance speaker %)) to-say-ids))
+      [{}])))
 
+;; So person will get passed through
 (defn speaker-plus-utterances
   [pers]
   [pers (make-utterances pers)])

@@ -22,20 +22,20 @@
                                pns/living-propns 
                                pns/conceptual-relats))
 
-(def c (pers/make-person :c propns pnet anet crime-ids [:central] [:central :west :east] 1))
+(def c1 (pers/make-person :c1 propns pnet anet crime-ids [:central] [:central :west :east] 1))
 
-(def e (pers/make-person :e propns pnet anet crime-ids [:east] [:east :west] 2))
+(def e1 (pers/make-person :e1 propns pnet anet crime-ids [:east] [:east :west] 2))
 
-(def s (pers/make-person :s propns pnet anet crime-ids [:west :east] [:central] 3)) ;"s": split
+(def s1 (pers/make-person :s1 propns pnet anet crime-ids [:west :east] [:central] 3)) ;"s1": split
 
-(def w (pers/make-person :w propns pnet anet crime-ids [:west] [:west :east] 4))
+(def w1 (pers/make-person :w1 propns pnet anet crime-ids [:west] [:west :east] 4))
 
 (def popn (pp/make-population (vec (concat
-                                     [c w e s]
-                                     (repeatedly 1 #(pers/new-person-from-old c))
-                                     (repeatedly 1 #(pers/new-person-from-old w))
-                                     (repeatedly 1 #(pers/new-person-from-old e))
-                                     (repeatedly 1 #(pers/new-person-from-old s))))))
+                                     [c1 w1 e1 s1]
+                                     (repeatedly 1 #(pers/new-person-from-old c1 :c2))
+                                     (repeatedly 1 #(pers/new-person-from-old w1 :w2))
+                                     (repeatedly 1 #(pers/new-person-from-old e1 :e2))
+                                     (repeatedly 1 #(pers/new-person-from-old s1 :s2))))))
 
-;; Useful in order to see what's going on:
+;; Useful in order to see what's1 going on:
 ; (do (println "\n" (:groups popn) "\n") (domap #(do (println (:id %) (:talk-to-groups %)) (println (:talk-to-persons %) "\n")) (sort-by :id (:persons popn))))

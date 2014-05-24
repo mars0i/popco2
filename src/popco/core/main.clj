@@ -33,11 +33,12 @@
    (assoc popn
           :tick (inc (:tick popn))
           :persons (doall
-                     (let [[persons transmissions] (mx/transpose     ; change sequence of <person,transmission> pairs into pair of sequences
+                     (let [[persons utterance-maps] (mx/transpose
                                                      (mapfn (comp cs/speaker-plus-utterances up/update-person-nets)
                                                             (:persons popn)))
-                           transmission-map (ug/join-pairs-to-coll-map (apply concat transmissions))] ; TODO: faster methods for join-pairs-...? cf. http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
-                       (mapfn (partial cr/receive-transmissions transmission-map)
+                           utterance-map (apply merge-with (comp vec concat) utterance-maps)] ; TODO: faster methods for join-pairs-...? cf. http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
+                       ;(clojure.pprint/pprint utterance-map)(flush)
+                       (mapfn (partial cr/receive-transmissions utterance-map)
                               persons))))))
 
 (defn ticker

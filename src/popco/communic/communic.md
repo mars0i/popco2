@@ -5,11 +5,12 @@ Notes on parts of communic.clj
 
 1. For each speaker, choose zero or more listeners.
 
-2. For each such speaker/listener pair, choose a proposition known by the
-speaker.
+2. For each such speaker/listener pair, choose a single proposition
+known by the speaker, whose activation is sufficiently far from 0.
+This depends on a random factor for each instance.
 
-3. For each listener, there will be zero or more instances of 
-<speaker, proposition, activation>.
+3. For each listener, there will be thus be zero or more instances of
+<speaker, proposition, valence>.
 
 In order to pass this information from one step to the other, the
 additional information:

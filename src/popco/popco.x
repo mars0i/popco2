@@ -740,3 +740,26 @@
         to-say-idx-activn-pairs (map #(vector % (mx/mget propn-activns %)) 
                                      to-say-idxs)]
     [pers (map hash-map listeners to-say-idx-activn-pairs)]))
+
+(defn make-utterances
+  "Given a person, returns a Clojure map representing utterances to
+  persons, i.e. a map from persons who are listeners--i.e. persons
+  who the current person is trying to speak to--to utterances to be
+  conveyed from the current person to each of those listener.
+  Utterances are sequences in which the first element represents
+  a proposition [TODO: as id, or index?], and the second element
+  captures the way in which the proposition should influence the
+  listener [TODO: raw or cooked activation?]." ; FIXME
+  [speaker]
+  (let [id-to-idx (:id-to-idx (:propn-net speaker))
+        propn-activns (:propn-activns speaker)
+        listeners (choose-listeners speaker)
+        to-say-ids (choose-propn-ids-to-say speaker (count listeners))
+        utterances (map #(->Utterance % (utterance-valence speaker %) (:id speaker))
+                        to-say-ids)]
+
+        to-say-id-activn-pairs (map #(vector % 
+                                             (mx/mget propn-activns (id-to-idx %))
+                                             (:id speaker))
+                                    to-say-ids)]
+    (map hash-map listeners to-say-id-activn-pairs)))

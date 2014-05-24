@@ -64,6 +64,7 @@
   (pos-wt-mat [nnstru] (mx/emap posify (:wt-mat nnstru)))
   (neg-wt-mat [nnstru] (mx/emap negify (:wt-mat nnstru))))
 
+;; TODO DOCSTRING IS OBSOLETE?
 (ug/add-to-docstr ->PropnNet
   "Makes a proposition neural-net structure, i.e. a structure that represents a
   POPCO proposition constraint satisfaction network.  Has these fields in addition

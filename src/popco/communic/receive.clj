@@ -124,7 +124,6 @@
   (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
     (nn/unmask! analogy-mask idx)))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TEMPORARY DEFS FOR TESTING
 ; (def net-has-node? nn/node-unmasked?)
