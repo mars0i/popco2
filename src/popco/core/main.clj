@@ -35,8 +35,9 @@
           :persons (doall
                      (let [[persons transmissions] (mx/transpose     ; change sequence of <person,transmission> pairs into pair of sequences
                                                      (mapfn (comp cs/speaker-plus-utterances up/update-person-nets)
-                                                            (:persons popn)))
-                           transmission-map (ug/join-pairs-to-coll-map (apply concat transmissions))] ; TODO: faster methods for join-pairs-...? cf. http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
+                                                            (:persons popn))))
+                           ;; WHY CAN'T I USE merge-with FOR THIS?  Was join-pairs-to-coll-map:
+                           transmission-map (merge-with concat (apply concat transmissions))] ; TODO: faster methods for join-pairs-...? cf. http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
                        (mapfn (partial cr/receive-transmissions transmission-map)
                               persons))))))
 
