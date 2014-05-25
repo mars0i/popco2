@@ -186,6 +186,10 @@
   [mat i j wt-val]
   (mx/mset! mat i j wt-val))
 
+(defn link-from-feeder-node!
+  [mat i wt-val]
+  (dirlink! mat i cn/+feeder-node-idx+ wt-val))
+
 (defn symlink-to-idxs!
   "Create symmetric links between index i and every element in js by setting
   mat to wt-val between i and j in js, and between j and i."

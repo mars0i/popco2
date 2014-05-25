@@ -19,7 +19,7 @@
   you to lose the head, etc.--less memory use, more speed.  If you want to use
   the sequence again, hold on to it elsewhere.)"
   [popns & options]
-  (when-not (== 0 cn/+salient-node-index+) ; sanity check for person-propn-activns
+  (when-not (== 0 cn/+feeder-node-idx+) ; sanity check for person-propn-activns
     (throw (Exception. (format "This code assumes SALIENT node index is 0, but it's not."))))
   (let [append? (if options ((apply hash-map options) :append) nil)
         data (map propn-activns-row popns) ; pmap wouldn't help, because the popns comes from iterate, so you need earlier elements to get later ones (unless you doall it first)

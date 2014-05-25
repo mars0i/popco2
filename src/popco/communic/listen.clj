@@ -37,10 +37,9 @@
         id-to-idx (:id-to-idx propn-net)
         propn-mat (:wt-mat propn-net)] ; propn-nets have unified wt-mat
     (doseq [utterance utterances]
-      (mx/mset! propn-mat  ; here we are mutating the propn matrix that's still referenced in newly-created propn-net
-                (id-to-idx (:propn-id utterance))
-                cn/+salient-node-index+
-                (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
+      (nn/link-from-feeder-node! propn-mat  ; here we are mutating the propn matrix that's still referenced in newly-created propn-net
+                                 (id-to-idx (:propn-id utterance))
+                                 (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
     (assoc listener :propn-net propn-net)))
 
 (defn combine-speaker-utterance-maps
