@@ -22,8 +22,7 @@
 ;; (These vars were called *propn-excit-weight* and *propn-inhib-weight* in popco1.)
 (def ^:const +analogy-to-propn-pos-multiplier+ 0.2)    ; *propn-excit-weight* in popco1
 (def ^:const +analogy-to-propn-neg-multiplier+ 0.025)  ; *propn-inhib-weight* in popco1
-(def ^:const +semantic-node-index+ 0)
-(def ^:const +salient-node-index+ 0)
+(def ^:const +feeder-node-idx+ 0) ; "feeder", i.e. only for sending activn, i.e. index of SALIENT in propn net and SEMANTIC in analogy net
 
 ;; These next few intended to be used *only* in popco.nn.analogy:
 (def ^:const +pos-link-increment+ 0.1)

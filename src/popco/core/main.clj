@@ -2,8 +2,8 @@
   (:use popco.core.population)
   (:require [popco.nn.update :as up]
             [popco.nn.nets :as nn]
-            [popco.communic.receive :as cr]
-            [popco.communic.send :as cs]
+            [popco.communic.listen :as cl]
+            [popco.communic.speak :as cs]
             [utils.general :as ug]
             [clojure.core.matrix :as mx])) ; for transpose
 
@@ -27,18 +27,21 @@
 
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
-  Returns the population in its new state.  Supposed to be purely functional. (TODO: Is it?)"
+  Returns the population in its new state.  popn is the popn before applying
+  this function.  mapfn is either Clojure's pmap (default) or map.
+  (Tip: If there's an exception, and the stacktrace doesn't show any popco
+  functions, try using map instead of pmap.) Supposed to be purely functional."
   ([popn] (once pmap popn))
   ([mapfn popn]
    (assoc popn
           :tick (inc (:tick popn))
           :persons (doall
-                     (let [[persons transmissions] (mx/transpose     ; change sequence of <person,transmission> pairs into pair of sequences
-                                                     (mapfn (comp cs/speaker-plus-utterances up/update-person-nets)
-                                                            (:persons popn))))
-                           ;; WHY CAN'T I USE merge-with FOR THIS?  Was join-pairs-to-coll-map:
-                           transmission-map (merge-with concat (apply concat transmissions))] ; TODO: faster methods for join-pairs-...? cf. http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps
-                       (mapfn (partial cr/receive-transmissions transmission-map)
+                     ;; Note speaker-plus-utterances merely passes through persons from update-person-nets.  This avoids restarting pmap.
+                     (let [[persons utterance-maps] (mx/transpose ; Combine firsts, seconds from [pers utterance-map] pairs produced by speaker-plus-utterances.
+                                                                  (mapfn (comp cs/speaker-plus-utterances up/update-person-nets) (:persons popn)))]
+                       ;; Communication crossover point: switch from mapping over speakers to mapping over listeners.
+                       (mapfn (partial cl/receive-utterances 
+                                       (cl/combine-speaker-utterance-maps utterance-maps))
                               persons))))))
 
 (defn ticker
@@ -52,7 +55,7 @@
   popn)
 
 (defn dotter
-  "Prints dots to console, and returns the population unchanged."
+  "Prints a period to console and returns the population unchanged."
   [popn]
   (print ".")
   (flush)

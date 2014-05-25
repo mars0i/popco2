@@ -1,59 +1,55 @@
-(ns popco.communic.receive
+(ns popco.communic.listen
   (:require [utils.general :as ug]
             ;[clojure.pprint :as pp] ; only if needed for cl-format
             [popco.core.lot :as lot]
+            [popco.core.constants :as cn]
             [popco.nn.propn :as pn]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
             [clojure.core.matrix :as mx]
             [incanter.stats :as incant]))
 
-(declare update-propn-net-from-transmissions receive-transmissions
-         person-propn-net-clone person-masks-clone
-         unmask-for-new-propns add-to-propn-net!
-         try-add-to-analogy-net!  propn-still-masked?
+(declare combine-speaker-utterance-maps update-propn-net-from-utterances
+         receive-utterances person-masks-clone unmask-for-new-propns
+         add-to-propn-net!  try-add-to-analogy-net!  propn-still-masked?
          propn-already-unmasked?  propn-components-already-unmasked?
          ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
-(defn person-propn-net-clone
-  "Accepts a single argument, a person pers, and returns a person containing
-  a fresh copy of its proposition network.  (Useful e.g. for updating pers's
-  proposition network as a function of analogy net activations.)"
-  [pers]
-  (assoc pers 
-         :propn-net (pn/clone (:propn-net pers))))
-
-(defn update-propn-net-from-transmissions
-  [pers transmissions]
- ; (println transmissions) ; DEBUG
-;  (let [pers (person-propn-net-clone)
-;        propn-mat (:wt-mat (:propn-net pers))] ; propn-nets have unified wt-mat
-;    (doseq [transmission transmissions]
-;      ;(mx/mset! propn-mat (* (ug/sign-of cn/+trust+)))
-      )
-
-;; entry point from main.clj
-;; QUESTION: do I have to reapply semantic-iffs here??
-(defn receive-transmissions
+;; Entry point from main.clj. Purely functional since unmask-for-new-propns
+;; and update-propn-net-from-utterances are purely functional.
+;; TODO QUESTION: DO I HAVE TO REAPPLY SEMANTIC-IFFS HERE???
+(defn receive-utterances
   "ADD DOCSTRING"
-  [transmission-map pers]
-  ;(clojure.pprint/pprint transmission-map) ; DEBUG
-  (let [transmissions (transmission-map (:id pers))
-        propns (map first transmissions)
-        new-propns (filter (partial propn-still-masked? pers) propns)
-        pers (if new-propns
-               (unmask-for-new-propns pers new-propns)
-               pers)]
-    (update-propn-net-from-transmissions pers transmissions)))
+  [utterance-map listener]
+  (let [utterances (utterance-map (:id listener))
+        propns (map :propn-id utterances)
+        new-propns (filter (partial propn-still-masked? listener) propns)
+        listener (if new-propns
+                   (unmask-for-new-propns listener new-propns)
+                   listener)]
+    (update-propn-net-from-utterances listener utterances)))
 
-(defn person-masks-clone
-  "Accepts a single argument, a person pers, and returns a person containing
-  a fresh copy of its analogy and proposition masks."
-  [pers]
-  (assoc pers 
-         :analogy-mask (pn/clone (:analogy-mask pers))
-         :propn-mask (pn/clone (:propn-mask pers))))
+;; This function is purely functional despite calling mutational functions
+(defn update-propn-net-from-utterances
+  "ADD TO DOCSTRING. Note utterances is a collection of Utterances."
+  [listener utterances]
+  (let [propn-net (pn/clone (:propn-net listener)) ; make new net to be assoc'ed into person (or not, to make it mutating)
+        id-to-idx (:id-to-idx propn-net)
+        propn-mat (:wt-mat propn-net)] ; propn-nets have unified wt-mat
+    (doseq [utterance utterances]
+      (nn/link-from-feeder-node! propn-mat  ; here we are mutating the propn matrix that's still referenced in newly-created propn-net
+                                 (id-to-idx (:propn-id utterance))
+                                 (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
+    (assoc listener :propn-net propn-net)))
 
+(defn combine-speaker-utterance-maps
+  "Given a collection of maps from listener ids to collections of Utterances,
+  combine them into a single map of the same kind, concat'ing together
+  values with the same key."
+  [utterance-maps]
+  (apply merge-with (comp vec concat) utterance-maps))
+
+;; This function is purely functional despite calling mutational functions
 (defn unmask-for-new-propns
   [original-pers new-propns]
   (let [pers (person-masks-clone original-pers)] ; TODO Is this really necesary?
@@ -65,6 +61,14 @@
                 propn fam]                         ; and each propn in that family
           (try-add-to-analogy-net! pers propn))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
     pers))
+
+(defn person-masks-clone
+  "Accepts a single argument, a person pers, and returns a person containing
+  a fresh copy of its analogy and proposition masks."
+  [pers]
+  (assoc pers 
+         :analogy-mask (mx/clone (:analogy-mask pers))
+         :propn-mask (mx/clone (:propn-mask pers))))
 
 (defn add-to-propn-net!
   "ADD DOCSTRING"
@@ -123,38 +127,3 @@
    mn-id]
   (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
     (nn/unmask! analogy-mask idx)))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; TEMPORARY DEFS FOR TESTING
-; (def net-has-node? nn/node-unmasked?)
-;; Keeping around as a sanity check of the new version above.
-; (defn old-add-to-analogy-net
-;   [pers propn]
-;   (let [analogy-mask (:analogy-mask pers)
-;         anet (:analogy-net pers)
-;         aid-to-idx (:id-to-idx anet)
-;         aid-to-ext-fam-idxs (:propn-mn-to-ext-fam-idxs anet)
-;         analog-propns ((:propn-to-analogs anet) propn)
-; 
-;         propn-mask (:propn-mask pers)
-;         pnet (:propn-net pers)
-;         pid-to-idx (:id-to-idx pnet)
-;         pid-to-propn-idxs (:propn-to-descendant-propn-idxs pnet) 
-;         
-;         propn-net-has-node? (partial net-has-node? propn-mask)
-;         unmask-mapnode! (partial nn/unmask! analogy-mask) ]
-; 
-;     ;(pp/cl-format true "propn: ~s~%" propn) ; DEBUG
-;     (when (every? propn-net-has-node? (pid-to-propn-idxs propn)) ; if sent propn missing extended-family propns, can't match
-;       (doseq [a-propn analog-propns]                         ; now check any possible matches to sent propn
-;         ;(pp/cl-format true "\ta-propn: ~s ~s ~s~%" a-propn (pid-to-idx a-propn) (propn-net-has-node? (pid-to-idx a-propn))) ; DEBUG
-;         ;(pp/cl-format true "\tsub-a-propns propn-net-has-node?: ~s ~s~%" (pid-to-propn-idxs a-propn) (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; DEBUG
-;         (when (and 
-;                 (propn-net-has-node? (pid-to-idx a-propn))                ; pers has this analog propn
-;                 (every? propn-net-has-node? (pid-to-propn-idxs a-propn))) ; and its extended-family-propns 
-;           ;; Then we can unmask all mapnodes corresponding to this propn pair:
-;           (let [aid (or (an/ids-to-poss-mapnode-id a-propn propn aid-to-idx)   ; MAYBE: replace the OR by passing in the analog-struct?
-;                         (an/ids-to-poss-mapnode-id propn a-propn aid-to-idx))]
-;             ;(pp/cl-format true "\t\taid + idxs: ~s~%" aid (aid-to-ext-fam-idxs aid)) ; DEBUG
-;             (ug/domap unmask-mapnode! (aid-to-ext-fam-idxs aid)))))))) ; unmask propn mapnode, pred mapnode, object mapnodes, recurse into arg propn mapnodes

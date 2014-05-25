@@ -26,17 +26,18 @@ See person.clj, propn.clj, analogy.clj, and communic.clj.
 
 The matrix multiplication in the main network settling fucntion,
 `next-activns`,  uses matrix multiplication in the form `(mmul
-<matrix> <vector>)`. Here <vector> is 1D and is treated as a column
+<matrix> <vector>)`. Here `<vector>` is 1D and is treated as a column
 vector.  This means that the weight at index i,j represents the
 directional link from node j to node i, since j is the column (input)
 index, and i is the row index.  Doesn't matter for symmetric links,
 since for the there will be identical weights at i,j and j,i, but
 matters for assymetric, directional links. 
 
-For example, to cause the 0th, SEMANTIC node to send input to other
-nodes, but to never receive inputs, there should be nonzero weights in
-column 0 but not row 0, and this is how the weight matrix should be set
-up.
+For example, to cause the 0-index, SEMANTIC or SALIENT node to send input to
+other nodes, but to never receive inputs, there should be nonzero
+weights in column 0 but not row 0, and this is how the weight matrix
+should be set up. i.e. if the index of the other node is i, the
+indexes should be i,0.
 
 However: `next-activns` would still change the SEMANTIC node over time,
 because it decays all nodes, wehther they get input or not.  To undo

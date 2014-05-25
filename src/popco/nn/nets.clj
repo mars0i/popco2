@@ -64,6 +64,7 @@
   (pos-wt-mat [nnstru] (mx/emap posify (:wt-mat nnstru)))
   (neg-wt-mat [nnstru] (mx/emap negify (:wt-mat nnstru))))
 
+;; TODO DOCSTRING IS OBSOLETE?
 (ug/add-to-docstr ->PropnNet
   "Makes a proposition neural-net structure, i.e. a structure that represents a
   POPCO proposition constraint satisfaction network.  Has these fields in addition
@@ -184,6 +185,10 @@
   just a wrapper around core.matrix/mset! ."
   [mat i j wt-val]
   (mx/mset! mat i j wt-val))
+
+(defn link-from-feeder-node!
+  [mat i wt-val]
+  (dirlink! mat i cn/+feeder-node-idx+ wt-val))
 
 (defn symlink-to-idxs!
   "Create symmetric links between index i and every element in js by setting
