@@ -30,19 +30,22 @@
   Returns the population in its new state.  popn is the popn before applying
   this function.  mapfn is either Clojure's pmap (default) or map.
   (Tip: If there's an exception, and the stacktrace doesn't show any popco
-  functions, try using map instead of pmap.) Supposed to be purely functional."
+  functions, try using map instead of pmap.) Should be purely functional."
   ([popn] (once pmap popn))
   ([mapfn popn]
-   (assoc popn
-          :tick (inc (:tick popn))
-          :persons (doall
-                     ;; Note speaker-plus-utterances merely passes through persons from update-person-nets.  This avoids restarting pmap.
-                     (let [[persons utterance-maps] (mx/transpose ; Combine firsts, seconds from [pers utterance-map] pairs produced by speaker-plus-utterances.
-                                                                  (mapfn (comp cs/speaker-plus-utterances up/update-person-nets) (:persons popn)))]
-                       ;; Communication crossover point: switch from mapping over speakers to mapping over listeners.
-                       (mapfn (partial cl/receive-utterances 
-                                       (cl/combine-speaker-utterance-maps utterance-maps))
-                              persons))))))
+   ;; Note speaker-plus-utterances merely passes through persons from update-person-nets. (Avoids restarting pmap.)
+   (let [[pre-communic-persons utterance-maps] (mx/transpose
+                                                    (mapfn (comp cs/speaker-plus-utterances up/update-person-nets)
+                                                           (:persons popn)))
+         ;; Communication crossover: switch from mapping over speakers to mapping over listeners.
+         post-communic-persons (mapfn (partial cl/receive-utterances 
+                                                (cl/combine-speaker-utterance-maps utterance-maps))
+                                       pre-communic-persons)]
+     (assoc popn
+            :tick (inc (:tick popn))
+            :persons post-communic-persons))))
+
+ ; Combine firsts, seconds from [pers, utterance-map] pairs produced by speaker-plus-utterances.
 
 (defn ticker
   "Prints tick number to console, erasing previous tick number, and returns
