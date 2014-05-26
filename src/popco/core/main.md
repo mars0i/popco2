@@ -3,10 +3,17 @@ main.clj
 
 ### How to turn off conversation
 
-Note: There's no need to provide for the possibility of turning off
-the conversation functions.  They can be disabled simply by putting
-each individual in a distinct group.  (It should be possible to change
-group membership over time, too.)
+Conversation can be disabled simply by setting talk-to-groups to an
+empty collection.
+
+(It should be possible to change group membership over time, too.  Not
+sure if this works.)
+
+(I see no need pressing to provide a switch variable that turns
+conversation functions on and off, as there was in popco1.  (However, if
+in the future, it's desirable to allow a naive user to turn conversation
+off and then back on, the current scheme would require saving and
+restoring the old group memberships.))
 
 ### `many-times`
 
@@ -35,7 +42,7 @@ irrelevant when transmit-utterances no longer simply passes the population
 through?  Without doall, would it be possible to look only
 once person in generation 500, let's say, and then realize only
 its communicative ancestors?  Maybe that would be efficient.  But then
-you'd have to wait awhile to realize that one person.)
+you'd have to wait a while to realize that one person.)
 
 
 ### Misc notes
