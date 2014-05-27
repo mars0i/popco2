@@ -6,7 +6,8 @@
 
 (defrecord Population [tick 
                        persons
-                       groups])
+                       groups
+                       utterance-map])
 
 (ug/add-to-docstr ->Population
   "\n  tick: timestep.
@@ -16,6 +17,7 @@
   person-talk-to-groups: map from person id to groups of persons to whom person talks.")
 
 ;; non-lazy
+;; utterance-map left empty at first
 (defn make-population
   [members]
   (let [person-to-groups (apply hash-map 
@@ -23,4 +25,4 @@
                                         members))
         groups (ug/invert-coll-map person-to-groups)
         updated-members (vec (map (partial pers/update-talk-to-persons groups) members))] ; vec: simply to constrain the dimensions of laziness in popco2
-    (->Population 0 updated-members groups)))
+    (->Population 0 updated-members groups nil)))  ; utterance-map empty at first

@@ -34,16 +34,17 @@
   ([popn] (once pmap popn))
   ([mapfn popn]
    ;; Note speaker-plus-utterances merely passes through persons from update-person-nets. (Avoids restarting pmap.)
-   (let [[pre-communic-persons utterance-maps] (mx/transpose
-                                                    (mapfn (comp cs/speaker-plus-utterances up/update-person-nets)
-                                                           (:persons popn)))
+   (let [[pre-communic-persons speaker-utterance-maps] (mx/transpose
+                                                         (mapfn (comp cs/speaker-plus-utterances up/update-person-nets)
+                                                                (:persons popn)))
+         utterance-map (cl/combine-speaker-utterance-maps speaker-utterance-maps)
          ;; Communication crossover: switch from mapping over speakers to mapping over listeners.
-         post-communic-persons (mapfn (partial cl/receive-utterances 
-                                                (cl/combine-speaker-utterance-maps utterance-maps))
+         post-communic-persons (mapfn (partial cl/receive-utterances utterance-map)
                                        pre-communic-persons)]
      (assoc popn
             :tick (inc (:tick popn))
-            :persons post-communic-persons))))
+            :persons post-communic-persons
+            :utterance-map utterance-map))))
 
  ; Combine firsts, seconds from [pers, utterance-map] pairs produced by speaker-plus-utterances.
 
