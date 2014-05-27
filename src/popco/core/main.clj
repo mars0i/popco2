@@ -1,5 +1,5 @@
 (ns popco.core.main
-  (:use popco.core.population)
+;  (:use popco.core.population)
   (:require [popco.nn.update :as up]
             [popco.nn.nets :as nn]
             [popco.communic.listen :as cl]
@@ -35,14 +35,6 @@
   ([mapfn popn]
    ;; Note speaker-plus-utterances merely passes through persons from update-person-nets. (Avoids restarting pmap.)
    (let [[pre-communic-persons utterance-maps] (mx/transpose
-                                                 ; Getting error
-                                                 ;  RuntimeException Can't convert to persistent vector array: inconsistent shape.
-                                                 ; here from transpose.  I think it's that seeing a lazy seq outside triggers a call
-                                                 ; to core.matrix internal function convert-to-nested-vectors in persistent-vector.clj.
-                                                 ; And I think that doesn't like something about different dimensionalities inside.
-                                                 ; i.e. because you have persons on one side and vectors of maps on the other.
-                                                 ; you can fix this by mapping seq over the next line, but then 
-                                                 ; combine-speaker-utterance-maps is unhappy.
                                                     (mapfn (comp cs/speaker-plus-utterances up/update-person-nets)
                                                            (:persons popn)))
          ;; Communication crossover: switch from mapping over speakers to mapping over listeners.
