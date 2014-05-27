@@ -58,7 +58,7 @@
     (if to-say-ids
       (zipmap listeners 
               (map #(vector (ut/make-utterance speaker %)) to-say-ids))
-      [{}])))
+      {})))
 
 ;; So person will get passed through
 (defn speaker-plus-utterances
