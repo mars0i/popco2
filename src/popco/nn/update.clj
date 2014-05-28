@@ -70,9 +70,9 @@
         dim (first (mx/shape linger-wt-mat))
         a-activns (:analogy-activns pers)
         aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
-        wt-mat (propn-wts-from-analogy-activns dim a-activns aidx-to-pidxs)] ; rets new mat
-    (mx/emap! clip-to-extrema (mx/add! wt-mat linger-wt-mat))
-    (assoc-in pers [:propn-net :wt-mat] wt-mat)))
+        propn-from-analogy-wt-mat (propn-wts-from-analogy-activns dim a-activns aidx-to-pidxs)] ; rets new mat
+    (mx/emap! clip-to-extrema (mx/add! propn-from-analogy-wt-mat linger-wt-mat))
+    (assoc-in pers [:propn-net :wt-mat] propn-from-analogy-wt-mat)))
 
 (defn propn-wts-from-analogy-activns
   "Generates a new proposition weight matrix from proposition map nodes 
