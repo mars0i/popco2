@@ -7,6 +7,7 @@
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
             [clojure.core.matrix :as mx]
+            [clojure.pprint :as pp]
             [incanter.stats :as incant]))
 
 (declare combine-speaker-utterance-maps update-propn-net-from-utterances
@@ -127,3 +128,11 @@
    mn-id]
   (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
     (nn/unmask! analogy-mask idx)))
+
+(defn display-utterances
+  "Display the utterance-map from the last tick that was stored 
+  in the population, and return the population unchanged."
+  [popn]
+  (pp/pprint (:utterance-map popn))
+  (flush)
+  popn)
