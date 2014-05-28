@@ -38,6 +38,7 @@
         id-to-idx (:id-to-idx propn-net)
         propn-mat (:wt-mat propn-net)] ; propn-nets have unified wt-mat
     (doseq [utterance utterances]
+      ;(print "->" (:id listener) "from" utterance)(flush) ; DEBUG
       (nn/link-from-feeder-node! propn-mat  ; here we are mutating the propn matrix that's still referenced in newly-created propn-net
                                  (id-to-idx (:propn-id utterance))
                                  (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
