@@ -128,6 +128,11 @@
 
 ;; These next two are functionally identical wrappers for mset!:
 
+(defn clip-to-extrema
+  "Returns -1 if x < -1, 1 if x > 1, and x otherwise."
+  [x]
+  (max cn/+neg-one+ (min cn/+one+ x)))
+
 (defn set-activn!
   "Given a core.matrix vector representing a set of activations,
   and an index into the vector, set the indexed element to value v."
@@ -189,6 +194,13 @@
 (defn link-from-feeder-node!
   [mat i wt-val]
   (dirlink! mat i cn/+feeder-node-idx+ wt-val))
+
+(defn add-from-feeder-node!
+  [mat i wt-val]
+  (link-from-feeder-node! mat i 
+                          (clip-to-extrema 
+                            (+ wt-val 
+                               (mx/mget mat i cn/+feeder-node-idx+)))))
 
 (defn symlink-to-idxs!
   "Create symmetric links between index i and every element in js by setting
