@@ -34,15 +34,19 @@
 (defn update-propn-net-from-utterances
   "ADD TO DOCSTRING. Note utterances is a collection of Utterances."
   [listener utterances]
-  (let [propn-net (pn/clone (:propn-net listener)) ; make new net to be assoc'ed into person (or not, to make it mutating)
+  (let [propn-net (:propn-net listener)
         id-to-idx (:id-to-idx propn-net)
-        propn-mat (:wt-mat propn-net)] ; propn-nets have unified wt-mat
+        linger-wt-mat (mx/clone (:linger-wt-mat propn-net))]
+    ;; would it be better to just set into a blank matrix, and then add it to linger-wt-mat and clip the whole thing??
     (doseq [utterance utterances]
       ;(print "->" (:id listener) "from" utterance)(flush) ; DEBUG
-      (nn/link-from-feeder-node! propn-mat  ; here we are mutating the propn matrix that's still referenced in newly-created propn-net
-                                 (id-to-idx (:propn-id utterance))
-                                 (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
-    (assoc listener :propn-net propn-net)))
+      ; TODO next line clips to extrema, but that will happen later in update.clj.  Is that redundant?
+      (nn/add-from-feeder-node! linger-wt-mat
+                                (id-to-idx (:propn-id utterance))
+                                (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
+    (assoc listener
+           :propn-net (assoc propn-net
+                             :linger-wt-mat linger-wt-mat))))
 
 (defn combine-speaker-utterance-maps
   "Given a collection of maps from listener ids to collections of Utterances,
