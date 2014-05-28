@@ -28,7 +28,7 @@
 ;; Two populations:
 
 ;; These people never talk:
-(def hermits (pp/make-population [(pers/make-person :fred       ; name
+(def silent (pp/make-population [(pers/make-person :fred       ; name
                                                     all-propns  ; all of the propns I might know
                                                     pnet        ; proposition network structure
                                                     anet        ; analogy network structure
@@ -46,7 +46,7 @@
                                                     1)]))
 
 ;; Both people talk to each other:
-(def talkers (pp/make-population [(pers/make-person :fred       ; name
+(def talking (pp/make-population [(pers/make-person :fred       ; name
                                                     all-propns  ; all of the propns I might know
                                                     pnet        ; proposition network structure
                                                     anet        ; analogy network structure
