@@ -29,7 +29,7 @@
          propn-wts-from-analogy-activns
          update-person-nets update-nets 
          ;update-person-nets!  update-nets! 
-         pl-update-nets clip-to-extrema dist-from-max dist-from-min calc-propn-link-wt)
+         pl-update-nets dist-from-max dist-from-min calc-propn-link-wt)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Network settling (with Grossberg algorithm)
@@ -71,7 +71,7 @@
         a-activns (:analogy-activns pers)
         aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
         propn-from-analogy-wt-mat (propn-wts-from-analogy-activns dim a-activns aidx-to-pidxs)] ; rets new mat
-    (mx/emap! clip-to-extrema (mx/add! propn-from-analogy-wt-mat linger-wt-mat))
+    (mx/emap! nn/clip-to-extrema (mx/add! propn-from-analogy-wt-mat linger-wt-mat))
     (assoc-in pers [:propn-net :wt-mat] propn-from-analogy-wt-mat)))
 
 (defn propn-wts-from-analogy-activns
@@ -101,7 +101,7 @@
 ;  (let [updated-pers (set-propn-wts-from-analogy-activns! (pers/propn-net-zeroed pers)) ; make a new wt-mat, then update from analogy net
 ;        p-mat (:wt-mat (:propn-net updated-pers))]
 ;    (assoc-in pers [:propn-net :wt-mat]
-;              (emap! clip-to-extrema (add! p-mat (:linger-wt-mat pers))))))
+;              (emap! nn/clip-to-extrema (add! p-mat (:linger-wt-mat pers))))))
 ;
 ;(defn old-set-propn-wts-from-analogy-activns!
 ;  "Mutates person pers's propn link weight matrix from activations of
@@ -169,7 +169,7 @@
   [net mask activns]
   (let [pos-activns (mx/emap nn/posify activns)] ; Negative activations are ignored as inputs.
     (mx/emul mask
-             (mx/emap clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
+             (mx/emap nn/clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
                       (mx/add (mx/emul cn/+decay+ activns)                       ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
                               (mx/emul (mx/mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
                                        (mx/emap dist-from-max activns))          ;  inputs' distances from 1, and
@@ -192,7 +192,7 @@
   [net mask activns]
   (let [pos-activns (mx/emap nn/posify activns)] ; Negative activations are ignored as inputs.
     (mx/emul!
-      (mx/emap! clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
+      (mx/emap! nn/clip-to-extrema                     ; Values outside [-1,1] are clipped to -1, 1.
                 (mx/add! (mx/emul cn/+decay+ activns)                        ; (decay def'ed above) Sum into decayed activations ... [note must be undone for special nodes]
                          (mx/emul! (mx/mmul (nn/pos-wt-mat net) pos-activns) ; positively weighted inputs scaled by
                                    (mx/emap dist-from-max activns))          ;  inputs' distances from 1, and
@@ -205,11 +205,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scalar functions
-
-(defn clip-to-extrema
-  "Returns -1 if x < -1, 1 if x > 1, and x otherwise."
-  [x]
-  (max cn/+neg-one+ (min cn/+one+ x)))
 
 (defn dist-from-max
   "Return the distance of activn from 1.  Note return value will be > 1
