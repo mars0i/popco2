@@ -25,22 +25,40 @@
                                pns/living-propns       ; second analogue
                                pns/conceptual-relats)) ; related predicates
 
-(def fred (pers/make-person :fred         ; name
-                            all-propns  ; all of the propns I might know
-                            pnet        ; proposition network structure
-                            anet        ; analogy network structure
-                            crime-ids   ; utterable-ids - ids of propns I'm willing to talk about
-                            [:everyone] ; groups - what groups am I in
-                            [] ; talk-to-groups groups whose members I am willing to talk to
-                            1))         ; max-talk-to: max number of people I'll say something to per tick
+;; Two populations:
 
-(def joanne (pers/make-person :joanne 
-                            all-propns
-                            pnet
-                            anet
-                            living-ids
-                            [:everyone]
-                            []
-                            1))
+;; These people never talk:
+(def hermits (pp/make-population [(pers/make-person :fred       ; name
+                                                    all-propns  ; all of the propns I might know
+                                                    pnet        ; proposition network structure
+                                                    anet        ; analogy network structure
+                                                    crime-ids   ; utterable-ids - ids of propns I'm willing to talk about
+                                                    [:everyone] ; groups - what groups am I in
+                                                    []          ; talk-to-groups groups whose members I am willing to talk to
+                                                    1)          ; max-talk-to: max number of people I'll say something to per tick
+                                  (pers/make-person :joanne 
+                                                    all-propns
+                                                    pnet
+                                                    anet
+                                                    living-ids
+                                                    [:everyone]
+                                                    []
+                                                    1)]))
 
-(def popn (pp/make-population [fred joanne]))
+;; Both people talk to each other:
+(def talkers (pp/make-population [(pers/make-person :fred       ; name
+                                                    all-propns  ; all of the propns I might know
+                                                    pnet        ; proposition network structure
+                                                    anet        ; analogy network structure
+                                                    crime-ids   ; utterable-ids - ids of propns I'm willing to talk about
+                                                    [:everyone] ; groups - what groups am I in
+                                                    [:everyone]          ; talk-to-groups groups whose members I am willing to talk to
+                                                    1)          ; max-talk-to: max number of people I'll say something to per tick
+                                  (pers/make-person :joanne 
+                                                    all-propns
+                                                    pnet
+                                                    anet
+                                                    living-ids
+                                                    [:everyone]
+                                                    [:everyone]
+                                                    1)]))
