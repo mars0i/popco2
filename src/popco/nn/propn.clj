@@ -41,8 +41,8 @@
   but possibly sharing pnet's other data structures."
   [pnet]
   (assoc pnet 
-         :wt-mat 
-         (mx/matrix (:wt-mat pnet))))
+         :wt-mat        (mx/matrix (:wt-mat pnet))
+         :linger-wt-mat (mx/matrix (:linger-wt-mat pnet))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
