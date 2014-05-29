@@ -10,11 +10,19 @@
             [clojure.pprint :as pp]
             [incanter.stats :as incant]))
 
-(declare combine-speaker-utterance-maps update-propn-net-from-utterances
-         receive-utterances person-masks-clone unmask-for-new-propns
-         add-to-propn-net!  try-add-to-analogy-net!  propn-still-masked?
-         propn-already-unmasked?  propn-components-already-unmasked?
-         ids-to-poss-mn-id unmask-mapnode-extended-family!)
+(declare receive-utterances update-propn-net-from-utterances
+         combine-speaker-utterance-maps unmask-for-new-propns
+         person-masks-clone add-to-propn-net! try-add-to-analogy-net!
+         propn-still-masked? propn-already-unmasked?
+         propn-components-already-unmasked? ids-to-poss-mn-id
+         unmask-mapnode-extended-family! display-utterances)
+
+(defn display-utterances
+  "Display the utterance-map from the last tick that was stored 
+  in the population, and return the population unchanged."
+  [popn]
+  (pp/pprint (:utterance-map popn)) (flush)
+  popn)
 
 ;; Entry point from main.clj. Purely functional since unmask-for-new-propns
 ;; and update-propn-net-from-utterances are purely functional.
@@ -133,11 +141,3 @@
    mn-id]
   (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
     (nn/unmask! analogy-mask idx)))
-
-(defn display-utterances
-  "Display the utterance-map from the last tick that was stored 
-  in the population, and return the population unchanged."
-  [popn]
-  (pp/pprint (:utterance-map popn))
-  (flush)
-  popn)
