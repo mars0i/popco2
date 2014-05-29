@@ -17,6 +17,14 @@
          propn-extended-descendant-propns make-propn-to-extended-fams-ids
          make-propn-net new-linger-wt-mat)
 
+(defn display-propn-salient-wts
+  "Display the utterance-map from the last tick that was stored 
+  in the population, and return the population unchanged."
+  [popn]
+  (mx/pm (pmx/col1 (wt-mat (:propn-net popn))))
+  (println)
+  popn)
+
 ;; non-lazy
 (defn make-propn-net
   "Constructs a proposition netword object with fields specified in doctrings
