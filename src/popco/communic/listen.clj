@@ -26,7 +26,6 @@
 
 ;; Entry point from main.clj. Purely functional since unmask-for-new-propns
 ;; and update-propn-net-from-utterances are purely functional.
-;; TODO QUESTION: DO I HAVE TO REAPPLY SEMANTIC-IFFS HERE???
 (defn receive-utterances
   "ADD DOCSTRING"
   [utterance-map listener]
@@ -38,7 +37,9 @@
                    listener)]
     (update-propn-net-from-utterances listener utterances)))
 
-;; This function is purely functional despite calling mutational functions
+;; Note: This function is purely functional despite calling mutational functions
+;; Question: Do I have to reapply semantic-iffs here?
+;; Answer:   This is done by adding into linger-wt-mat rather than overwriting it.
 (defn update-propn-net-from-utterances
   "ADD TO DOCSTRING. Note utterances is a collection of Utterances."
   [listener utterances]
