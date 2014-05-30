@@ -11,6 +11,11 @@
   [m]
   (first (mx/rows m)))
 
+(defn pm-with-breaks
+  [m]
+  (mx/pm m)
+  (println)
+  (flush))
 
 ;; vectorz only supports Doubles, and ndarray defaults to Doubles.
 ;; If I want something else with ndarray, I need to replace some of
