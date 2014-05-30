@@ -2,6 +2,7 @@
   (:require [utils.general :as ug]
             [popco.core.lot :as lot]
             [popco.core.constants :as cn]
+            [popco.nn.matrix :as pmx]
             [clojure.core.matrix :as mx]))
 
 ;; Definitions of neural-net data types and related functions.
@@ -18,7 +19,6 @@
 ;; There are also some core.matrix ! ops in update.clj.
 
 (declare posify negify)
-
 
 (defprotocol NNMats
   "Protocol for access to matrices in an nnstru, i.e. a neural-network 
@@ -226,3 +226,18 @@
                            [(p-id-to-idx (:id (:alog1 %)))   ; get propn net indexes
                             (p-id-to-idx (:id (:alog2 %)))]) ;  of mapnode sides
                 a-propn-mapnodes))))
+
+(defn display-feeder-wts
+  "For each person in popn, print to stdout the column of weights from 
+  the feeder node in the neural network identified by net-keyword, and 
+  return the population unchanged.  Inserts newline before and after
+  each column (displayed as a row)."
+  [net-keyword popn]
+  (doall 
+    (map 
+      (comp pmx/pm-with-breaks pmx/col1 wt-mat net-keyword)
+      (:persons popn)))
+  popn)
+
+(def display-salient-wts (partial display-feeder-wts :propn-net))
+(def display-semantic-wts (partial display-feeder-wts :analogy-net))

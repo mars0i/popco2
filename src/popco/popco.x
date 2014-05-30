@@ -763,3 +763,13 @@
                                              (:id speaker))
                                     to-say-ids)]
     (map hash-map listeners to-say-id-activn-pairs)))
+
+(defn display-propn-salient-wts
+  "Display the utterance-map from the last tick that was stored 
+  in the population, and return the population unchanged."
+  [popn]
+  ;(map (comp println mx/pm pmx/col1 nn/wt-mat :propn-net) (:persons popn))
+  ;(map println 
+       (map mx/pm (map pmx/col1 (map nn/wt-mat (map :propn-net (:persons popn)))));)
+  ;(map (fn [pers] (->> pers :propn-net nn/wt-mat pmx/col1 mx/pm #(print "\n"))) (:persons popn))
+  popn)
