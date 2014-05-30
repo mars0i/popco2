@@ -21,8 +21,7 @@
   "Display the utterance-map from the last tick that was stored 
   in the population, and return the population unchanged."
   [popn]
-  (mx/pm (pmx/col1 (wt-mat (:propn-net popn))))
-  (println)
+  (map (comp #(println %) mx/pm pmx/col1 nn/wt-mat :propn-net) (:persons popn))
   popn)
 
 ;; non-lazy
