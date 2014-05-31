@@ -230,8 +230,7 @@
 (defn display-feeder-wts
   "For each person in popn, print to stdout the column of weights from 
   the feeder node in the neural network identified by net-keyword, and 
-  return the population unchanged.  Inserts newline before and after
-  each column (displayed as a row)."
+  return the population unchanged."
   [net-keyword popn]
   (let [persons (:persons popn)
         id-vec (:id-vec (net-keyword (first persons)))]
