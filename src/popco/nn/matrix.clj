@@ -17,6 +17,23 @@
   (println)
   (flush))
 
+;; EH
+(defn pm-with-idxs
+  [m]
+  (let [width (first (mx/shape m))  ; assume vector or square mat
+        idx-vec (mx/matrix (range width))]
+    (mx/pm idx-vec)
+    (mx/pm m)
+    (println)
+    (flush)))
+
+(defn print-vec-with-labels
+  [id-vec m]
+  (doseq [i (range (count 
+                     (mx/matrix :persistent-vector m)))]
+    (println (mx/mget m i) (id-vec i))))
+
+
 ;; vectorz only supports Doubles, and ndarray defaults to Doubles.
 ;; If I want something else with ndarray, I need to replace some of
 ;; its functions with other ones.  But for use with vectorz, the

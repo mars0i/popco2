@@ -233,11 +233,13 @@
   return the population unchanged.  Inserts newline before and after
   each column (displayed as a row)."
   [net-keyword popn]
-  (doall 
-    (map 
-      (comp pmx/pm-with-breaks pmx/col1 wt-mat net-keyword)
-      (:persons popn)))
-  popn)
+  (let [persons (:persons popn)
+        id-vec (:id-vec (net-keyword (first persons)))]
+    (doall 
+      (map 
+        (comp (partial pmx/print-vec-with-labels id-vec) pmx/col1 wt-mat net-keyword #(do (println (:id %)) %))
+        persons))
+    popn))
 
 (def display-salient-wts (partial display-feeder-wts :propn-net))
 (def display-semantic-wts (partial display-feeder-wts :analogy-net))
