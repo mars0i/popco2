@@ -29,13 +29,7 @@
 (defn receive-utterances
   "Retrieves utterances intended for listener, calls unmask-for-new-propns
   if any propns in the utterances are new to listener, and then calls
-  update-propn-net-from-utterances.  The first call modifies propn-mask
-  and analogy-mask so that the neural networks' weight matrices will reflect
-  the fact that the proposition is now part of listener's thought processes.
-  The second pervasively increases the degree of belief or disbelief in the 
-  proposition to reflect what the utterance conveys about it.  This is
-  accomplished by modifying weights between the SALIENT node and the 
-  proposition node in the proposition net's weight matrix."
+  update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
   (let [utterances (utterance-map (:id listener))
         propns (map :propn-id utterances)
@@ -49,7 +43,14 @@
 ;; Question: Do I have to reapply semantic-iffs here?
 ;; Answer:   This is done by adding into linger-wt-mat rather than overwriting it.
 (defn update-propn-net-from-utterances
-  "ADD TO DOCSTRING. Note utterances is a collection of Utterances."
+  "Pervasively increases listener's degree of belief or disbelief in proposition
+  in each utterance, to reflect what the utterance conveys about it.  This is
+  accomplished by modifying weights between the SALIENT node and the 
+  proposition node in the proposition net's weight matrix.  More specifically,
+  the linger-wt-mat is modified; this is be summed into each tick's new weight
+  matrix (see popco.nn.update/update-propn-wts-from-analogy-activns).  Note that
+  this won't have any effect on the main proposition weight matrix until the
+  tick after the utterance is received."
   [listener utterances]
   (let [propn-net (:propn-net listener)
         id-to-idx (:id-to-idx propn-net)
@@ -74,6 +75,9 @@
 
 ;; This function is purely functional despite calling mutational functions
 (defn unmask-for-new-propns
+  "Modifies original-pers's propn-mask and analogy-mask so that these neural 
+  networks' weight matrices will reflect the fact that the proposition is now
+  part of listener's thought processes."
   [original-pers new-propns]
   (let [pers (person-masks-clone original-pers)] ; TODO Is this really necesary?
     (doseq [new-propn new-propns]
