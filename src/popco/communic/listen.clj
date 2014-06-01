@@ -24,18 +24,26 @@
   (pp/pprint (:utterance-map popn)) (flush)
   popn)
 
-;; Entry point from main.clj. Purely functional since unmask-for-new-propns
+;; Entry point from main.clj. Purely functional, since unmask-for-new-propns
 ;; and update-propn-net-from-utterances are purely functional.
 (defn receive-utterances
-  "ADD DOCSTRING"
+  "Retrieves utterances intended for listener, calls unmask-for-new-propns
+  if any propns in the utterances are new to listener, and then calls
+  update-propn-net-from-utterances.  The first call modifies propn-mask
+  and analogy-mask so that the neural networks' weight matrices will reflect
+  the fact that the proposition is now part of listener's thought processes.
+  The second pervasively increases the degree of belief or disbelief in the 
+  proposition to reflect what the utterance conveys about it.  This is
+  accomplished by modifying weights between the SALIENT node and the 
+  proposition node in the proposition net's weight matrix."
   [utterance-map listener]
   (let [utterances (utterance-map (:id listener))
         propns (map :propn-id utterances)
         new-propns (filter (partial propn-still-masked? listener) propns)
         listener (if new-propns
-                   (unmask-for-new-propns listener new-propns)
+                   (unmask-for-new-propns listener new-propns) ; First main function called here
                    listener)]
-    (update-propn-net-from-utterances listener utterances)))
+    (update-propn-net-from-utterances listener utterances)))   ; Second main function called here
 
 ;; Note: This function is purely functional despite calling mutational functions
 ;; Question: Do I have to reapply semantic-iffs here?
