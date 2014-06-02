@@ -5,7 +5,6 @@
             [popco.nn.nets :as nn]
             [popco.nn.propn :as pn]
             [popco.nn.analogy :as an]
-            [popco.nn.matrix :as pmx]
             [clojure.core.matrix :as mx]))
 
 ;; Definition of person and related functions
@@ -61,14 +60,14 @@
         propn-ids (map :id propns)
         pers (->Person id 
                        (pn/clone propn-net)
-                       (pmx/zero-vector num-poss-propn-nodes)     ; propn-mask
-                       (pmx/zero-vector num-poss-propn-nodes)     ; propn-activns
+                       (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
+                       (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
                        analogy-net                                ; yup, analogy-net
-                       (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
-                       (pmx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
+                       (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
+                       (mx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net) ; yes, analogy-idx-to-propn-idxs
                        (vec utterable-ids)
-                       (let [utterable-mask (pmx/zero-vector num-poss-propn-nodes)] ; utterable-mask is a core.matrix vector
+                       (let [utterable-mask (mx/zero-vector num-poss-propn-nodes)] ; utterable-mask is a core.matrix vector
                          (doseq [i (map (:id-to-idx propn-net) utterable-ids)]
                            (nn/unmask! utterable-mask i))
                          utterable-mask)
@@ -128,7 +127,7 @@
   (let [p-net (:propn-net pers)
         num-nodes (count (:node-seq p-net))]
     (assoc-in pers [:propn-net :wt-mat]
-              (pmx/zero-matrix num-nodes num-nodes))))
+              (mx/zero-matrix num-nodes num-nodes))))
 
 (defn update-talk-to-persons
   "Fill person's talk-to-persons field based on its talk-to-groups field

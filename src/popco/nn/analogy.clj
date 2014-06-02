@@ -8,7 +8,6 @@
   (:require [utils.general :as ug]
             [popco.core.constants :as cn]
             [popco.nn.nets :as nn]
-            [popco.nn.matrix :as pmx]
             [clojure.core.matrix :as mx]
             [clojure.algo.generic.functor :as gf])
   (:import [popco.core.lot Propn Pred Obj]
@@ -105,12 +104,12 @@
   to represent activation values of nodes.  Each person has its own 
   activation vector."
   [len]
-  (pmx/zero-vector len))
+  (mx/zero-vector len))
 
 (defn make-wt-mat
   "Returns a core.matrix square matrix with dimension dim, filled with zeros."
   [dim]
-  (pmx/zero-matrix dim dim))
+  (mx/zero-matrix dim dim))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; STEP 1

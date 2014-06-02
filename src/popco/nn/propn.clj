@@ -8,7 +8,6 @@
   (:require [utils.general :as ug]
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
-            [popco.nn.matrix :as pmx]
             [clojure.core.matrix :as mx])
   (:import [popco.core.lot Propn]
            [popco.nn.nets PropnNet]))
@@ -28,7 +27,7 @@
         id-to-idx (:id-to-idx nncore)
         propn-map (assoc 
                   nncore
-                  :wt-mat (pmx/zero-matrix num-nodes num-nodes)
+                  :wt-mat (mx/zero-matrix num-nodes num-nodes)
                   :linger-wt-mat (new-linger-wt-mat id-to-idx sem-iffs sem-ifs)
                   :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
                                                     node-seq id-to-idx))]
@@ -93,7 +92,7 @@
   how matrix multiplication is done in popco2."
   [id-to-idx iffs ifs]
   (let [dim (count id-to-idx) ; note count is O(1) on a map
-        mat (pmx/zero-matrix dim dim)]
+        mat (mx/zero-matrix dim dim)]
     (doseq [[wt id1 id2] iffs]
       (nn/symlink! mat (id-to-idx id1) (id-to-idx id2) wt)) ; bidirectional links--activation goes both ways
     (doseq [[wt id1 id2] ifs]

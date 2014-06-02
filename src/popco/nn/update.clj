@@ -3,7 +3,6 @@
             [popco.core.person :as pers]
             [popco.core.constants :as cn]
             [popco.nn.nets :as nn]
-            [popco.nn.matrix :as pmx]
             [clojure.core.matrix :as mx]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -81,7 +80,7 @@
   propositions, in the analogy network."
   [pdim a-activns aidx-to-pidxs]
   (let [aidxs (keys aidx-to-pidxs)
-        wt-mat (pmx/zero-matrix pdim pdim)] ; make new mat
+        wt-mat (mx/zero-matrix pdim pdim)] ; make new mat
     (doseq [aidx aidxs
             :let [a-val (mx/mget a-activns aidx)
                   [p-idx1 p-idx2] (aidx-to-pidxs aidx)]]

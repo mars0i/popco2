@@ -13,7 +13,6 @@
             [popco.nn.analogy :as an]
             [popco.nn.propn :as pn]
             [popco.nn.update :as up]
-            [popco.nn.matrix :as pmx]
             [popco.core.constants :as nc]
             [popco.nn.pprint :as pp]
             [popco.io.csv :as csv])
