@@ -26,8 +26,10 @@
   (let [propn-id-vec (:id-vec propn-net)
         utterable-abs-activns (mx/abs
                                 (mx/emul propn-mask utterable-mask propn-activns))]
-    (for [i (range (mx/dimension-count utterable-abs-activns 0)) ; (dimension-count ... 0) returns length
-          :when #(< (rand) (mx/mget utterable-abs-activns i))]
+    (for [i (range (mx/dimension-count utterable-abs-activns 0)) ; (dimension-count ... 0) returns length ; TODO replace with length of id-vec or something
+          :let [randnum (rand)
+                activn (mx/mget utterable-abs-activns i)]
+          :when (< randnum activn)]
       (propn-id-vec i))))
 
 (defn choose-propn-ids-to-say
