@@ -34,8 +34,7 @@
 ;; To be used *only* in popco.nn.propn:
 (def ^:const +propn-node-init-activn+ 0.0)       ; *propn-init-activ* in popco1.
 
-; Values from popco1, but at present I'm not using them in popco2,
-;; since these values do nothing.  Modify communic/seems-worth-saying to
-;; reflect them as in popco1's same-named function, if desired.
-;(def ^:const +utterance-probability-increment+ 1)
-;(def ^:const +utterance-probability-multiplier+ 0)
+;; At present I'm not using these values from popco1 in popco2, since they do nothing:
+;; (def ^:const +utterance-probability-increment+ 1)
+;; (def ^:const +utterance-probability-multiplier+ 0)
+;; Modify communic/seems-worth-saying to reflect them as in popco1's same-named function, if desired.
