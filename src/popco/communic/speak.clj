@@ -20,13 +20,19 @@
     (ug/sample talk-to-persons :size max-talk-to :replacement false)))
 
 (defn worth-saying-ids
-  "ADD DOCSTRING"
+  "Given a Person, returns ids of propositions that the person might be willing
+  to say to someone at this time.  The set of selected propositions is a subset
+  of the intersection of the propositions currently entertained by the person
+  (ones not masked in propn-mask) and the propositions that the person is 
+  willing to communicate (ones unmasked in utterable-mask).  Each proposition
+  in this intersection is then selected with probability equal to the absolute
+  value of its activation."
   [{:keys [propn-net propn-mask propn-activns utterable-mask]}]
   ;; absolute values of activns of unmasked utterable propns:
   (let [propn-id-vec (:id-vec propn-net)
         utterable-abs-activns (mx/abs
                                 (mx/emul propn-mask utterable-mask propn-activns))]
-    (for [i (range (mx/dimension-count utterable-abs-activns 0)) ; (dimension-count ... 0) returns length ; TODO replace with length of id-vec or something
+    (for [i (range (count propn-id-vec))
           :let [randnum (rand)
                 activn (mx/mget utterable-abs-activns i)]
           :when (< randnum activn)]
