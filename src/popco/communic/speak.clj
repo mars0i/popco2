@@ -5,8 +5,7 @@
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
             [popco.communic.utterance :as ut]
-            [clojure.core.matrix :as mx]
-            [incanter.stats :as incant]))
+            [clojure.core.matrix :as mx]))
 
 (declare choose-listeners worth-saying-ids choose-propn-ids-to-say
          make-utterances speaker-plus-utterances)
