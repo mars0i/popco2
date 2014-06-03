@@ -7,8 +7,7 @@
             [popco.nn.nets :as nn]
             [popco.nn.analogy :as an]
             [clojure.core.matrix :as mx]
-            [clojure.pprint :as pp]
-            [incanter.stats :as incant]))
+            [clojure.pprint :as pp]))
 
 (declare receive-utterances update-propn-net-from-utterances
          combine-speaker-utterance-maps unmask-for-new-propns
