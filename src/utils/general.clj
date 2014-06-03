@@ -2,7 +2,10 @@
   (:use [clojure.repl :only [dir-fn]])
   (:require [clojure.pprint :only [*print-right-margin*]]
             [clojure.set :as st]
-            [incanter.stats :as incant]))
+            [clojure.data.generators :as gen]
+            [incanter.stats :as incant]
+            [bigml.sampling [simple :as simple]]
+            ))
 
 ;; Wrapper around incanter.stats/sample
 (defn sample
@@ -13,6 +16,8 @@
     (if (coll? res)
       res
       (list res))))
+
+(defn sample 
 
 (defn domap
   ([f coll] (doseq [e coll] (f e)))
