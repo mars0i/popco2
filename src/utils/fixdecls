@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+	echo Usage: `basename $0` sourcefile
+        echo 'Generates and replaces "(declare ...)" in a Clojure source file.'
+	exit 1
+fi
+
+sourcefile="$1"
+newsourcefile="new.$sourcefile"
+
+newdeclare=$(echo '(declare' \
+	`sed -n '/defn/s/(defn-* //p' "$sourcefile" | tr '\n' ' '` ')' \
+	| sed 's/ )/)/')
+
+#sed "s/(declare .*/$newdeclare/" "$sourcefile" > "$newsourcefile"
+echo "1,\$s/(declare .*/$newdeclare/\nw\n" | ed "$sourcefile"
+
