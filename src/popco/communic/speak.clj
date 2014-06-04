@@ -1,5 +1,5 @@
 (ns popco.communic.speak
-  (:require [utils.general :as ug]
+  (:require [utils.probability :as prob]
             ;[clojure.pprint :as pp] ; only if needed for cl-format
             [popco.core.lot :as lot]
             [popco.nn.nets :as nn]
@@ -16,7 +16,7 @@
   [{:keys [talk-to-persons max-talk-to]}]
   (if (>= max-talk-to (count talk-to-persons))
     talk-to-persons
-    (ug/sample talk-to-persons :size max-talk-to :replacement false)))
+    (prob/sample-without-repl max-talk-to talk-to-persons)))
 
 (defn worth-saying-ids
   "Given a Person, returns ids of propositions that the person might be willing
@@ -45,7 +45,7 @@
   [speaker num-utterances]
   (if (pos? num-utterances)
     (if-let [poss-utterance-ids (worth-saying-ids speaker)]  ; since sample throws exception on empty coll
-      (ug/sample poss-utterance-ids :size num-utterances :replacement true)
+      (prob/sample-with-repl num-utterances poss-utterance-ids)
       nil)
     nil))
 

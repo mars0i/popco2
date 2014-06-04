@@ -7,18 +7,6 @@
             [bigml.sampling [simple :as simple]]
             ))
 
-;; Wrapper around incanter.stats/sample
-(defn sample
-  "Just like incanter.stats/sample (q.v.), but if :size is 1, returns
-  a collection rather than the sampled element."
-  [& args]
-  (let [res (apply incant/sample args)]
-    (if (coll? res)
-      res
-      (list res))))
-
-(defn sample 
-
 (defn domap
   ([f coll] (doseq [e coll] (f e)))
   ([f coll1 & colls] (mapv f (cons coll1 colls)) nil))
