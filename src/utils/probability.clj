@@ -25,5 +25,10 @@
                    :size num-samples 
                    :replacement false))
 
+
+
 (def sample-without-repl incanter-sample-without-repl)
 (def sample-with-repl incanter-sample-with-repl)
+
+(def sample-without-repl gen/reservoir-sample)
+
