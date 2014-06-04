@@ -9,12 +9,7 @@
             [clojure.core.matrix :as mx]
             [clojure.pprint :as pp]))
 
-(declare receive-utterances update-propn-net-from-utterances
-         combine-speaker-utterance-maps unmask-for-new-propns
-         person-masks-clone add-to-propn-net! try-add-to-analogy-net!
-         propn-still-masked? propn-already-unmasked?
-         propn-components-already-unmasked? ids-to-poss-mn-id
-         unmask-mapnode-extended-family! display-utterances)
+(declare display-utterances receive-utterances update-propn-net-from-utterances combine-speaker-utterance-maps unmask-for-new-propns person-masks-clone add-to-propn-net! try-add-to-analogy-net! propn-still-masked? propn-already-unmasked? propn-components-already-unmasked? ids-to-poss-mn-id unmask-mapnode-extended-family!)
 
 (defn display-utterances
   "Display the utterance-map from the last tick that was stored 
