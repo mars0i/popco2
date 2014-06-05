@@ -3,7 +3,8 @@
         popco.core.main
         utils.general)
   ;[clojure.data :as da] ; for 'diff'
-  (:require [popco.core.population :as popn]
+  (:require [utils.probability :as prob]
+            [popco.core.population :as popn]
             [popco.core.person :as pers]
             [popco.core.lot :as lot]
             [popco.communic.utterance :as cu]
