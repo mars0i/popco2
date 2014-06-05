@@ -1,0 +1,162 @@
+"test/samplingfunctions.clj" in git hist 5e338ca
+==================================================
+Sample size = 5 , stuff size = 25 
+incanter_sample_with_repl:
+map:
+             Execution time mean : 384.363761 µs
+
+incanter_sample_with_repl:
+pmap:
+             Execution time mean : 344.344492 µs
+
+incanter_sample_without_repl:
+map:
+             Execution time mean : 2.136291 ms
+
+incanter_sample_without_repl:
+pmap:
+             Execution time mean : 1.240295 ms
+
+-------------------------------------------
+
+generators_sample_with_repl:
+map:
+             Execution time mean : 25.155116 µs
+
+generators_sample_with_repl:
+pmap:
+             Execution time mean : 111.702519 µs
+
+reservoir_sample (i.e. sample without replacement for generators):
+map:
+             Execution time mean : 398.997736 µs
+
+reservoir_sample (i.e. sample without replacement for generators):
+pmap:
+             Execution time mean : 445.573731 µs
+
+-------------------------------------------
+
+bigml_sample_with_repl:
+map:
+             Execution time mean : 123.754416 µs
+
+bigml_sample_with_repl:
+pmap:
+             Execution time mean : 220.515757 µs
+
+bigml_sample_without_repl:
+map:
+             Execution time mean : 139.451207 µs
+
+bigml_sample_without_repl:
+pmap:
+             Execution time mean : 228.936827 µs
+
+==================================================
+Sample size = 1 , stuff size = 25 
+incanter_sample_with_repl:
+map:
+             Execution time mean : 116.649843 µs
+
+incanter_sample_with_repl:
+pmap:
+             Execution time mean : 215.251840 µs
+
+incanter_sample_without_repl:
+map:
+             Execution time mean : 116.767440 µs
+
+incanter_sample_without_repl:
+pmap:
+             Execution time mean : 218.720770 µs
+
+-------------------------------------------
+
+generators_sample_with_repl:
+map:
+             Execution time mean : 24.711941 µs
+
+generators_sample_with_repl:
+pmap:
+             Execution time mean : 111.177666 µs
+
+reservoir_sample:
+map:
+             Execution time mean : 347.560021 µs
+
+reservoir_sample:
+pmap:
+             Execution time mean : 501.344486 µs
+
+-------------------------------------------
+
+bigml_sample_with_repl:
+map:
+             Execution time mean : 127.515862 µs
+
+bigml_sample_with_repl:
+pmap:
+             Execution time mean : 218.467020 µs
+
+bigml_sample_without_repl:
+map:
+             Execution time mean : 139.951710 µs
+
+bigml_sample_without_repl:
+pmap:
+             Execution time mean : 228.629066 µs
+
+==================================================
+Sample size = 25 , stuff size = 50 
+incanter_sample_with_repl:
+map:
+             Execution time mean : 366.457737 µs
+
+incanter_sample_with_repl:
+pmap:
+             Execution time mean : 320.081822 µs
+
+incanter_sample_without_repl:
+map:
+             Execution time mean : 12.359493 ms
+
+incanter_sample_without_repl:
+pmap:
+             Execution time mean : 5.861020 ms
+
+-------------------------------------------
+
+generators_sample_with_repl:
+map:
+             Execution time mean : 24.717352 µs
+
+generators_sample_with_repl:
+pmap:
+             Execution time mean : 110.723624 µs
+
+reservoir_sample:
+map:
+             Execution time mean : 753.320012 µs
+
+reservoir_sample:
+pmap:
+             Execution time mean : 657.390745 µs
+
+-------------------------------------------
+
+bigml_sample_with_repl:
+map:
+             Execution time mean : 127.278129 µs
+
+bigml_sample_with_repl:
+pmap:
+             Execution time mean : 212.793133 µs
+
+bigml_sample_without_repl:
+map:
+             Execution time mean : 140.710769 µs
+
+bigml_sample_without_repl:
+pmap:
+             Execution time mean : 228.328082 µs
