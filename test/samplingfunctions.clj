@@ -22,5 +22,5 @@
       (bench (def _ (doall (map-fn #(sample-fn sample-size %) stuffs)))))))
 
 (test-sampling-fns 5 (vec (range 25)))
+(test-sampling-fns 1 (vec (range 25)))
 (test-sampling-fns 25 (vec (range 50)))
-(test-sampling-fns 1 (vec (range 10)))
