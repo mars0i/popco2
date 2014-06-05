@@ -10,12 +10,11 @@
   (print "\n==================================================\nSample size ="
          sample-size ", stuff size =" (count stuff) "\n")
   (let [stuffs (repeat 100 stuff)]
-    (doseq [choose-fn [choose-incanter choose-generators choose-bigml]
-            sample-fn [sample-with-repl sample-without-repl]
+    (doseq [sample-fn [incanter-sample-with-repl incanter-sample-without-repl
+                       generators-sample-with-repl generators-sample-without-repl
+                       bigml-sample-with-repl bigml-sample-without-repl]
             map-fn [map pmap]]
-      (choose-fn)
       (println "\n--------------------------------------------")
-      (println choose-fn)
       (println sample-fn)
       (println map-fn)
       (print "\n")
