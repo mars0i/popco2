@@ -98,3 +98,12 @@
     (doseq [[wt id1 id2] ifs]
       (nn/dirlink! mat (id-to-idx id1) (id-to-idx id2) wt))    ; unidirectional: activation will flow from the id2 propn to the id1 propn
     mat))
+
+(def extract-salient-wts (comp 
+                           (partial mx/matrix :persistent-vector) 
+                           first 
+                           mx/columns 
+                           nn/wt-mat 
+                           :propn-net 
+                           `first 
+                           :persons))
