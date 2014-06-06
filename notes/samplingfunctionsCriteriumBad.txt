@@ -1,0 +1,30 @@
+"test/samplingfunctions.clj" in git hist 5e338ca
+
+All times are in microseconds.
+
+Sample size = 5 , stuff size = 25 
+function	map	pmap
+incanter_sample_with_repl	384.363761	344.344492
+incanter_sample_without_repl	2136.291	1240.295
+generators_sample_with_repl	25.155116	111.702519
+reservoir_sample (i.e. sample without replacement for generators)	398.997736	445.573731
+bigml_sample_with_repl	123.754416	220.515757
+bigml_sample_without_repl	139.451207	228.936827
+
+Sample size = 1 , stuff size = 25 
+function	map	pmap
+incanter_sample_with_repl	116.649843	215.251840
+incanter_sample_without_repl	116.767440	218.720770
+generators_sample_with_repl	24.711941	111.177666
+reservoir_sample	347.560021	501.344486
+bigml_sample_with_repl	127.515862	218.467020
+bigml_sample_without_repl	139.951710	228.629066
+
+Sample size = 25 , stuff size = 50 
+function	map	pmap
+incanter_sample_with_repl	366.457737	320.081822
+incanter_sample_without_repl	12359.493	5861.020
+generators_sample_with_repl	24.717352	110.723624
+reservoir_sample	753.320012	657.390745
+bigml_sample_with_repl	127.278129	212.793133
+bigml_sample_without_repl	140.710769	228.328082
