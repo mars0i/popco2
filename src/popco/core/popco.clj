@@ -16,7 +16,7 @@
             [popco.nn.update :as up]
             [popco.core.constants :as nc]
             [popco.nn.pprint :as pp]
-            [popco.io.csv :as csv])
+            [popco.io.propncsv :as csv])
   ;popco.nn.testtools
   ;popco.test.popco1comp
   (:import [popco.core.lot Propn Pred Obj]
