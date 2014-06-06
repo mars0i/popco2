@@ -12,7 +12,7 @@
   [& args]
   (let [res (apply incant/sample args)]
     (if (coll? res)
-      res
+      (doall res)
       (list res))))
 
 (defn incanter-sample-with-repl
@@ -28,9 +28,11 @@
 
 (defn generators-sample-with-repl
   [num-samples coll]
-  (repeatedly num-samples #(gen/rand-nth coll)))
+  (doall (repeatedly num-samples #(gen/rand-nth coll))))
 
-(def generators-sample-without-repl gen/reservoir-sample)
+(defn generators-sample-without-repl 
+  [num-samples coll]
+  (doall (gen/reservoir-sample num-samples coll)))
 
 ;(defn alt-sample-without-repl
 ;  [size x]
@@ -51,11 +53,11 @@
 
 (defn bigml-sample-with-repl
   [num-samples coll]
-  (take num-samples (simple/sample coll :replace true)))
+  (doall (take num-samples (simple/sample coll :replace true))))
 
 (defn bigml-sample-without-repl
   [num-samples coll]
-  (take num-samples (simple/sample coll :replace false)))
+  (doall (take num-samples (simple/sample coll :replace false))))
 
 
 ;; CHOOSE YOUR VERSION
