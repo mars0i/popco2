@@ -11,8 +11,10 @@
          sample-size ", stuff size =" (count stuff) "\n")
   (let [stuffs (repeat 100 stuff)]
     (doseq [sample-fn [incanter-sample-with-repl incanter-sample-without-repl
-                       generators-sample-with-repl generators-sample-without-repl
-                       bigml-sample-with-repl bigml-sample-without-repl]
+                       generators-sample-with-repl generators-reservoir-sample-without-repl
+                       hybrid-generators-incanter-sample-without-repl
+                       bigml-sample-with-repl bigml-sample-without-repl
+                       bigml-sample-twister-with-repl bigml-sample-twister-without-repl]
             map-fn [map pmap]]
       (println "\n--------------------------------------------")
       (println sample-fn)
