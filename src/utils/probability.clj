@@ -30,23 +30,32 @@
   [num-samples coll]
   (doall (repeatedly num-samples #(gen/rand-nth coll))))
 
-(defn generators-sample-without-repl 
+(defn generators-reservoir-sample-without-repl 
   [num-samples coll]
   (doall (gen/reservoir-sample num-samples coll)))
 
-;(defn alt-sample-without-repl
-;  [size x]
-;  ;; rest of this is copied from Incanter's stats.clj
-;  (if (> size (count x))
-;    (throw (Exception. "'size' can't be larger than (count x) without replacement!"))
-;    (map #(nth x %)
-;         (loop [samp-indices [] indices-set #{}]
-;           (if (= (count samp-indices) size)
-;             samp-indices
-;             (let [i (first (rand-int max-idx))]
-;               (if (contains? indices-set i)
-;                 (recur samp-indices indices-set)
-;                 (recur (conj samp-indices i) (conj indices-set i)))))))))
+(defn hybrid-generators-incanter-sample-without-repl
+  "Uses Incanter's algorithm for sampling without replacement, but with 
+  data.generator's random number generator."
+  [num-samples coll]
+  ;; rest of this is copied from Incanter's stats.clj and edited (with addl comments).
+  ;; Main change was replacing Incanter's sample-uniform with data.generator's uniform.
+  (let [max-idx (dec (count coll))]
+    (if (= num-samples 1)  ; if only one element needed, don't bother with the "with replacement" algorithm
+      (nth coll (rand-int (inc max-idx))) ; note this uses built-in Clojure rand-in (why that here, but uniform below?)
+      (if (> num-samples (count coll))    ; sanity check on arguments passed
+        (throw (Exception. "'num-samples' can't be larger than (count coll) without replacement!"))
+        ;; Rather than creating subseqs of the original coll, we create a seq of indices below,
+        ;; and then [in effect] map (partial nth coll) through the indices to get the samples that correspond to them.
+        (map #(nth coll %) 
+             ;; create the set of indices:
+             (loop [samp-indices [] indices-set #{}]
+               (if (= (count samp-indices) num-samples) ; loop until we've collected the right number of indices
+                 samp-indices
+                 (let [i (gen/uniform 0 max-idx)]     ; get a random index using data.generator's RNG (was Incanter's sample-uniform)
+                   (if (contains? indices-set i)      ; if we've already seen that index,
+                     (recur samp-indices indices-set) ;  then try again
+                     (recur (conj samp-indices i) (conj indices-set i))))))))))) ; otherwise add it to our indices
 
 
 ;; BIGML/SAMPLING
@@ -59,6 +68,14 @@
   [num-samples coll]
   (doall (take num-samples (simple/sample coll :replace false))))
 
+(defn bigml-sample-twister-with-repl
+  [num-samples coll]
+  (doall (take num-samples (simple/sample coll :replace true :generator :twister))))
+
+(defn bigml-sample-twister-without-repl
+  [num-samples coll]
+  (doall (take num-samples (simple/sample coll :replace false :generator :twister))))
+
 
 ;; CHOOSE YOUR VERSION
 
@@ -68,15 +85,15 @@
   (def sample-with-repl incanter-sample-with-repl))
 
 ;; Specify data.generators versions:
-(defn choose-generators []
-  (def sample-without-repl generators-sample-without-repl)
-  (def sample-with-repl generators-sample-with-repl))
+;(defn choose-generators []
+;  (def sample-without-repl generators-sample-without-repl)
+;  (def sample-with-repl generators-sample-with-repl))
 
 ;; Specify bigml/sampling versions:
 (defn choose-bigml []
   (def sample-without-repl bigml-sample-without-repl)
   (def sample-with-repl bigml-sample-with-repl))
 
-;(choose-bigml)
-(choose-generators)
+(choose-bigml)
+;(choose-generators)
 ;(choose-incanter)
