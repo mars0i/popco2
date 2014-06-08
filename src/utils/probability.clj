@@ -42,20 +42,21 @@
   ;; Main change was replacing Incanter's sample-uniform with data.generator's uniform.
   (let [max-idx (dec (count coll))]
     (if (= num-samples 1)  ; if only one element needed, don't bother with the "with replacement" algorithm
-      (nth coll (rand-int (inc max-idx))) ; note this uses built-in Clojure rand-in (why that here, but uniform below?)
+      (list (nth coll (rand-int (inc max-idx)))) ; note this uses built-in Clojure rand-int (why that here, but uniform below?)
       (if (> num-samples (count coll))    ; sanity check on arguments passed
         (throw (Exception. "'num-samples' can't be larger than (count coll) without replacement!"))
         ;; Rather than creating subseqs of the original coll, we create a seq of indices below,
         ;; and then [in effect] map (partial nth coll) through the indices to get the samples that correspond to them.
-        (map #(nth coll %) 
-             ;; create the set of indices:
-             (loop [samp-indices [] indices-set #{}]
-               (if (= (count samp-indices) num-samples) ; loop until we've collected the right number of indices
-                 samp-indices
-                 (let [i (gen/uniform 0 max-idx)]     ; get a random index using data.generator's RNG (was Incanter's sample-uniform)
-                   (if (contains? indices-set i)      ; if we've already seen that index,
-                     (recur samp-indices indices-set) ;  then try again
-                     (recur (conj samp-indices i) (conj indices-set i))))))))))) ; otherwise add it to our indices
+        (doall 
+          (map #(nth coll %) 
+               ;; create the set of indices:
+               (loop [samp-indices [] indices-set #{}]
+                 (if (= (count samp-indices) num-samples) ; loop until we've collected the right number of indices
+                   samp-indices
+                   (let [i (gen/uniform 0 max-idx)]     ; get a random index using data.generator's RNG (was Incanter's sample-uniform)
+                     (if (contains? indices-set i)      ; if we've already seen that index,
+                       (recur samp-indices indices-set) ;  then try again
+                       (recur (conj samp-indices i) (conj indices-set i)))))))))))) ; otherwise add it to our indices
 
 
 ;; BIGML/SAMPLING
