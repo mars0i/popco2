@@ -7,22 +7,27 @@
 
 ;; INCANTER
 
+;; Has same interface as java.util.Random
 (defn make-mersenne-twister
   [seed]
   (MersenneTwister. seed))
 
+;; Has same interface as java.util.Random
 (defn make-mersenne-twister-fast
   [seed]
   (MersenneTwisterFast. seed))
 
+;; for experimentation
 (defn mersenne-next-int
   [rng]
   (.nextInt rng))
 
+;; not same interface as java.util.Random
 (defn make-sfmt
   [seed]
   (SFMT19937. seed))
 
+;; this is the only thing it can do, unless I wrap it or something
 (defn smft-next-int
   [rng]
   (.next rng))
@@ -80,19 +85,37 @@
                        (recur samp-indices indices-set) ;  then try again
                        (recur (conj samp-indices i) (conj indices-set i)))))))))))) ; otherwise add it to our indices
 
+(defn my-twister (make-mersenne-twister 1017))
+(defn my-twister-fast (make-mersenne-twister-fast 1017))
+
+(defn mt-generators-sample-with-repl
+  [num-samples coll]
+  (binding [gen/*rnd* my-twister] ; FIXME need modifiable seed
+    (generators-sample-with-repl num-samples coll)))
+
+(defn mt-generators-reservoir-sample-without-repl
+  [num-samples coll]
+  (binding [gen/*rnd* my-twister] ; FIXME need modifiable seed
+    (generators-reservoir-sample-without-repl num-samples coll)))
+
+(defn mt-hybrid-generators-incanter-sample-without-repl
+  [num-samples coll]
+  (binding [gen/*rnd* my-twister] ; FIXME need modifiable seed
+    (hybrid-generators-incanter-sample-without-repl num-samples coll)))
+
 (defn mtf-generators-sample-with-repl
   [num-samples coll]
-  (binding [gen/*rnd* (make-mersenne-twister-fast 1001)] ; FIXME need modifiable seed
+  (binding [gen/*rnd* my-twister-fast] ; FIXME need modifiable seed
     (generators-sample-with-repl num-samples coll)))
 
 (defn mtf-generators-reservoir-sample-without-repl
   [num-samples coll]
-  (binding [gen/*rnd* (make-mersenne-twister-fast 1001)] ; FIXME need modifiable seed
+  (binding [gen/*rnd* my-twister-fast] ; FIXME need modifiable seed
     (generators-reservoir-sample-without-repl num-samples coll)))
 
 (defn mtf-hybrid-generators-incanter-sample-without-repl
   [num-samples coll]
-  (binding [gen/*rnd* (make-mersenne-twister-fast 1001)] ; FIXME need modifiable seed
+  (binding [gen/*rnd* my-twister-fast] ; FIXME need modifiable seed
     (hybrid-generators-incanter-sample-without-repl num-samples coll)))
 
 ;; BIGML/SAMPLING
