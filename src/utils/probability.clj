@@ -85,8 +85,8 @@
                        (recur samp-indices indices-set) ;  then try again
                        (recur (conj samp-indices i) (conj indices-set i)))))))))))) ; otherwise add it to our indices
 
-(defn my-twister (make-mersenne-twister 1017))
-(defn my-twister-fast (make-mersenne-twister-fast 1017))
+(def my-twister (make-mersenne-twister 1017))
+(def my-twister-fast (make-mersenne-twister-fast 1017))
 
 (defn mt-generators-sample-with-repl
   [num-samples coll]
