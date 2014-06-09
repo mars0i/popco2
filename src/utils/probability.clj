@@ -1,9 +1,31 @@
 (ns utils.probability
   (:require [clojure.data.generators :as gen]
             [incanter.stats :as incant]
-            [bigml.sampling [simple :as simple]]))
+            [bigml.sampling [simple :as simple]])
+  (:import [ec.util MersenneTwister MersenneTwisterFast] ; EXPERIMENTING--NEED TO DEAL WITH LICENSE NOTICES BEFORE RELEASE
+           [SFMT19937])) ; EXPERIMENTING--NEED TO DEAL WITH LICENSE NOTICES BEFORE RELEASE
 
 ;; INCANTER
+
+(defn make-mersenne-twister
+  [seed]
+  (MersenneTwister. seed))
+
+(defn make-mersenne-twister-fast
+  [seed]
+  (MersenneTwisterFast. seed))
+
+(defn mersenne-next-int
+  [rng]
+  (.nextInt rng))
+
+(defn make-sfmt
+  [seed]
+  (SFMT19937. seed))
+
+(defn smft-next-int
+  [rng]
+  (.next rng))
 
 ;; Wrapper around incanter.stats/sample
 (defn incanter-sample
@@ -58,6 +80,20 @@
                        (recur samp-indices indices-set) ;  then try again
                        (recur (conj samp-indices i) (conj indices-set i)))))))))))) ; otherwise add it to our indices
 
+(defn mtf-generators-sample-with-repl
+  [num-samples coll]
+  (binding [gen/*rnd* (make-mersenne-twister-fast 1001)] ; FIXME need modifiable seed
+    (generators-sample-with-repl num-samples coll)))
+
+(defn mtf-generators-reservoir-sample-without-repl
+  [num-samples coll]
+  (binding [gen/*rnd* (make-mersenne-twister-fast 1001)] ; FIXME need modifiable seed
+    (generators-reservoir-sample-without-repl num-samples coll)))
+
+(defn mtf-hybrid-generators-incanter-sample-without-repl
+  [num-samples coll]
+  (binding [gen/*rnd* (make-mersenne-twister-fast 1001)] ; FIXME need modifiable seed
+    (hybrid-generators-incanter-sample-without-repl num-samples coll)))
 
 ;; BIGML/SAMPLING
 
