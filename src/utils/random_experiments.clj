@@ -1,4 +1,4 @@
-(ns utils.probability
+(ns utils.random-experiments
   (:require [clojure.data.generators :as gen]
             [incanter.stats :as incant]
             [bigml.sampling [simple :as simple]])
