@@ -28,7 +28,7 @@
   (SFMT19937. seed))
 
 ;; this is the only thing it can do, unless I wrap it or something
-(defn smft-next-int
+(defn sfmt-next-int
   [rng]
   (.next rng))
 
