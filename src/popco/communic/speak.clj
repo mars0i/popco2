@@ -1,5 +1,5 @@
 (ns popco.communic.speak
-  (:require [utils.probability :as prob]
+  (:require [utils.random :as rnd]
             ;[clojure.pprint :as pp] ; only if needed for cl-format
             [popco.core.lot :as lot]
             [popco.nn.nets :as nn]
