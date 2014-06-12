@@ -16,7 +16,7 @@
   [{:keys [talk-to-persons max-talk-to]}]
   (if (>= max-talk-to (count talk-to-persons))
     talk-to-persons
-    (prob/sample-without-repl max-talk-to talk-to-persons)))
+    (rnd/sample-without-repl rand-int max-talk-to talk-to-persons)))
 
 (defn worth-saying-ids
   "Given a Person, returns ids of propositions that the person might be willing
@@ -45,7 +45,7 @@
   [speaker num-utterances]
   (if (pos? num-utterances)
     (if-let [poss-utterance-ids (worth-saying-ids speaker)]  ; since sample throws exception on empty coll
-      (prob/sample-with-repl num-utterances poss-utterance-ids)
+      (rnd/sample-with-repl rand-int num-utterances poss-utterance-ids)
       nil)
     nil))
 
