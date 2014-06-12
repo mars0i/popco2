@@ -1,5 +1,5 @@
 (ns popco.communic.speak
-  (:require [utils.random :as rnd]
+  (:require [utils.random :as ran]
             ;[clojure.pprint :as pp] ; only if needed for cl-format
             [popco.core.lot :as lot]
             [popco.nn.nets :as nn]
@@ -13,10 +13,10 @@
 (defn choose-listeners
   "Given a person as argument, return a sequence of persons to whom
   the argument person wants to talk on this tick."
-  [{:keys [talk-to-persons max-talk-to]}]
+  [{:keys [talk-to-persons max-talk-to rng]}]
   (if (>= max-talk-to (count talk-to-persons))
     talk-to-persons
-    (rnd/sample-without-repl rand-int max-talk-to talk-to-persons)))
+    (ran/sample-without-repl rng max-talk-to talk-to-persons)))
 
 (defn worth-saying-ids
   "Given a Person, returns ids of propositions that the person might be willing
@@ -45,7 +45,7 @@
   [speaker num-utterances]
   (if (pos? num-utterances)
     (if-let [poss-utterance-ids (worth-saying-ids speaker)]  ; since sample throws exception on empty coll
-      (rnd/sample-with-repl rand-int num-utterances poss-utterance-ids)
+      (ran/sample-with-repl (:rng speaker) num-utterances poss-utterance-ids)
       nil)
     nil))
 
