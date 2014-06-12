@@ -80,7 +80,7 @@
                (loop [samp-indices [] indices-set #{}]
                  (if (= (count samp-indices) num-samples) ; loop until we've collected the right number of indices
                    samp-indices
-                   (let [i (gen/uniform 0 max-idx)]     ; get a random index using data.generator's RNG (was Incanter's sample-uniform)
+                   (let [i (gen/uniform 0 max-idx)]     ; TODO WRONG s/b max-idx+1 get a random index using data.generator's RNG (was Incanter's sample-uniform)
                      (if (contains? indices-set i)      ; if we've already seen that index,
                        (recur samp-indices indices-set) ;  then try again
                        (recur (conj samp-indices i) (conj indices-set i)))))))))))) ; otherwise add it to our indices
