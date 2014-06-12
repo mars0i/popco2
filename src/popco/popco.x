@@ -844,3 +844,38 @@
   (partial make-sample-with-replacement-1
            (partial make-rand-idx-from-next-double
                     (MersenneTwisterFast. 325117))))
+
+(defmulti  next-double class)
+(defmethod next-double ec.util.MersenneTwister     [rng] (.nextDouble rng))
+(defmethod next-double ec.util.MersenneTwisterFast [rng] (.nextDouble rng))
+(defmethod next-double java.util.Random            [rng] (.nextDouble rng))
+(defmethod next-double SFMT19937
+
+
+;; Uses clojure.core's `rand-int` method of truncation to an int with `int`
+;; rather than data.generator's `uniform` method of truncation using `Math/floor`
+;; followed by clojure.core's `long`.  (Why call `Math/floor` before `long`?
+;; Maybe experiment with adding this before the call to `int`.)
+(defn make-rand-idx-from-next-double
+  "This is essentially the same as Clojure's `rand-int` with an RNG argument.
+  Works with any RNG that supports `.nextDouble`, including java.util.Random,
+  and Sean Luke's MersenneTwister and MersenneTwisterFast.  Returns an int in
+  [0,n).  Use `partial` to create a workalike for rand-int, maybe named 'rand-idx'."
+  [rng n]
+  (int (* n (.nextDouble rng))))
+
+;; ????
+;; question: Am I producing ints from 0 to count-1 with this method?  Or is there
+;; some kind of off by 1 type of issue?
+;(defn make-rand-idx-from-sfmt19937-next
+;  "This is essentially the same as Clojure's `rand-int` with an RNG argument.
+;  Works with any RNG that supports a method `.next` that returns an int, in
+;  particular SFMT19937.  Use `partial` to create a workalike for rand-int, which
+;  could be named 'rand-idx'."
+;  [rng n]
+;  (int (* n                            ; When we're all done, go back to an int.
+;          (- (/ (.next rng) +int-range-double+) ; SFMT19937 *only* produces ints; make it into a double.
+;             Integer/MIN_VALUE))))     ; then make it non-negative
+;                                       ; Is this a good strategy??
+
+(def ^:const +int-range-double+ (double (- Integer/MAX_VALUE Integer/MIN_VALUE)))
