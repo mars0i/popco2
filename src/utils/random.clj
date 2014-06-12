@@ -32,12 +32,15 @@
 ;(defprotocol RNG
 ;  (rand-idx [rng n] "Returns a random int in [0,n), using rng as the source."))
 
-(def ^:const +int-range-double+ (double (- Integer/MAX_VALUE Integer/MIN_VALUE)))
-
 (defmulti  rand-idx class)
 (defmethod rand-idx ec.util.MersenneTwister     [rng n] (.nextInt rng n))
 (defmethod rand-idx ec.util.MersenneTwisterFast [rng n] (.nextInt rng n))
 (defmethod rand-idx java.util.Random            [rng n] (.nextInt rng n))
+
+(defmulti  next-long class)
+(defmethod next-long ec.util.MersenneTwister     [rng] (.nextLong rng))
+(defmethod next-long ec.util.MersenneTwisterFast [rng] (.nextLong rng))
+(defmethod next-long java.util.Random            [rng] (.nextLong rng))
 
 ;; lazy
 ;; This version repeatedly calls nth coll with a new random index each time.
