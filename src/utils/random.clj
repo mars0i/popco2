@@ -9,25 +9,25 @@
 (defn make-long-seed
   [] 
   (- (System/currentTimeMillis)
-     (rand-int Integer/MAX_VALUE))
+     (rand-int Integer/MAX_VALUE)))
 
 (defn make-rng-mt
-  ([] (make-rnt-mt (make-long-seed)))
+  ([] (make-rng-mt (make-long-seed)))
   ([long-seed] (MersenneTwister. long-seed)))
 
 (defn make-rng-mtf
-  ([] (make-rnt-mt (make-long-seed)))
+  ([] (make-rng-mt (make-long-seed)))
   ([long-seed] (MersenneTwisterFast. long-seed)))
 
 (defn make-rng-sfmt
-  ([] (make-rnt-sfmt (make-long-seed)))
-  ([long-seed] (SFMT19937 long-seed)))
+  ([] (make-rng-sfmt (make-long-seed)))
+  ([long-seed] (SFMT19937. long-seed)))
 
 (defn make-rng-java
-  ([] (make-rnt-java (make-long-seed)))
+  ([] (make-rng-java (make-long-seed)))
   ([long-seed] (Random. long-seed)))
 
-(def make-rng make-rn-mtf)
+(def make-rng make-rng-mtf)
 
 
 ;; Uses clojure.core's `rand-int` method of truncation to an int with `int`
