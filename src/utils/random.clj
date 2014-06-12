@@ -3,7 +3,7 @@
             [incanter.stats :as incant]
             [bigml.sampling [simple :as simple]])
   (:import [ec.util MersenneTwister MersenneTwisterFast]
-           [SFMT19937]
+           ;[SFMT19937]
 	   [java.util Random]))
 
 (defn make-long-seed
@@ -19,9 +19,9 @@
   ([] (make-rng-mt (make-long-seed)))
   ([long-seed] (MersenneTwisterFast. long-seed)))
 
-(defn make-rng-sfmt
-  ([] (make-rng-sfmt (make-long-seed)))
-  ([long-seed] (SFMT19937. long-seed)))
+;(defn make-rng-sfmt
+;  ([] (make-rng-sfmt (make-long-seed)))
+;  ([long-seed] (SFMT19937. long-seed)))
 
 (defn make-rng-java
   ([] (make-rng-java (make-long-seed)))
@@ -29,6 +29,15 @@
 
 (def make-rng make-rng-mtf)
 
+;(defprotocol RNG
+;  (rand-idx [rng n] "Returns a random int in [0,n), using rng as the source."))
+
+(def ^:const +int-range-double+ (double (- Integer/MAX_VALUE Integer/MIN_VALUE)))
+
+(defmulti  rand-idx class)
+(defmethod rand-idx ec.util.MersenneTwister     [rng n] (.nextInt rng n))
+(defmethod rand-idx ec.util.MersenneTwisterFast [rng n] (.nextInt rng n))
+(defmethod rand-idx java.util.Random            [rng n] (.nextInt rng n))
 
 ;; Uses clojure.core's `rand-int` method of truncation to an int with `int`
 ;; rather than data.generator's `uniform` method of truncation using `Math/floor`
@@ -42,21 +51,19 @@
   [rng n]
   (int (* n (.nextDouble rng))))
 
-(def ^:const +int-range-double+ (double (- Integer/MAX_VALUE Integer/MIN_VALUE)))
-
 ;; ????
 ;; question: Am I producing ints from 0 to count-1 with this method?  Or is there
 ;; some kind of off by 1 type of issue?
-(defn make-rand-idx-from-sfmt19937-next
-  "This is essentially the same as Clojure's `rand-int` with an RNG argument.
-  Works with any RNG that supports a method `.next` that returns an int, in
-  particular SFMT19937.  Use `partial` to create a workalike for rand-int, which
-  could be named 'rand-idx'."
-  [rng n]
-  (int (* n                            ; When we're all done, go back to an int.
-          (- (/ (.next rng) +int-range-double+) ; SFMT19937 *only* produces ints; make it into a double.
-             Integer/MIN_VALUE))))     ; then make it non-negative
-                                       ; Is this a good strategy??
+;(defn make-rand-idx-from-sfmt19937-next
+;  "This is essentially the same as Clojure's `rand-int` with an RNG argument.
+;  Works with any RNG that supports a method `.next` that returns an int, in
+;  particular SFMT19937.  Use `partial` to create a workalike for rand-int, which
+;  could be named 'rand-idx'."
+;  [rng n]
+;  (int (* n                            ; When we're all done, go back to an int.
+;          (- (/ (.next rng) +int-range-double+) ; SFMT19937 *only* produces ints; make it into a double.
+;             Integer/MIN_VALUE))))     ; then make it non-negative
+;                                       ; Is this a good strategy??
 
 
 ;; lazy
