@@ -34,27 +34,47 @@
                                        ; Is this a good strategy??
 
 
-;; Note these are lazy:
-
-;; is "make-" correct?
+;; lazy
 ;; This version repeatedly calls nth coll with a new random index each time.
 (defn sample-with-repl-1
   [rand-idx num-samples coll]
-  (repeatedly num-samples 
-              #(nth coll (rand-idx (count coll))))) ; does repeatedly make this get reevaluated every time?
+  (let [size (count coll)]
+    (repeatedly num-samples 
+                #(nth coll (rand-idx size)))))
 
-;; is "make-" correct?
+;; lazy
 ;; This version is inspired by Incanter, which does it like this:
 ;;        (map #(nth x %) (sample-uniform size :min 0 :max max-idx :integers true))
 ;; You get a series of random ints between 0 and the coll size,
 ;; and then map nth coll through them.
 (defn sample-with-repl-2
   [rand-idx num-samples coll]
-  (map #(nth coll %) 
-       (repeatedly num-samples 
-                   #(rand-idx (count coll)))))
+  (let [size (count coll)]
+    (map #(nth coll %) 
+         (repeatedly num-samples #(rand-idx size)))))
+
+;; lazy
+(defn sample-with-repl-3
+  [rand-idx num-samples coll]
+  (let [size (count coll)]
+    (for [_ (range num-samples)]
+      (nth coll (rand-idx size)))))
+
+;; not lazy
+(defn sample-with-repl-4
+  [rand-idx num-samples coll]
+  (let [size (count coll)]
+    (loop [remaining num-samples result []] 
+      (if (> remaining 0)
+        (recur (dec remaining) (conj result 
+                                     (nth coll (rand-idx size))))
+        result))))
+
+(def sample-with-repl sample-with-repl-4)
+
 
 ;; lazy if more than one sample
+;; (deal with license issues)
 (defn sample-without-repl
   "Derived from Incanter's algorithm from sample-uniform for sampling without replacement."
   [rand-idx num-samples coll]
@@ -75,6 +95,5 @@
       :else (throw (Exception. "num-samples can't be larger than (count coll).")))))
 
 ;; example:
-(def sample-with-repl sample-with-repl-1)
 (def my-rand-idx (partial make-rand-idx-from-next-double (MersenneTwisterFast. 325117)))
 ;(sample-with-repl my-rand-idx 5 (range 25))
