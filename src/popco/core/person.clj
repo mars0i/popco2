@@ -1,5 +1,6 @@
 (ns popco.core.person
   (:require [utils.general :as ug]
+            [utils.random :as ran]
             [popco.communic.listen :as cl]
             [popco.core.constants :as cn]
             [popco.nn.nets :as nn]
@@ -8,6 +9,8 @@
             [clojure.core.matrix :as mx]))
 
 ;; Definition of person and related functions
+
+(def initial-rng (ran/make-rng))
 
 ;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [id 
@@ -40,15 +43,7 @@
    :max-talk-to     - Maximum number of people that this person will talk to in
                       any one tick.  If >= (count talk-to-persons), has no 
                       effect.(popco1: num-listeners)
-   :rand-idx-fn     - A function that behaves like rand-int, returning a random
-                      integer in [0, n).  (Should not be accessed directly except
-                      within the get-rand-idx-fn function, so that this internal
-                      structure can be replaced with something more general if
-                      needed.)")
-
-(defn get-rand-idx-fn
-  [pers]
-  (:rand-idx-fn pers))
+   :rng             - A random number generator object.  e.g. can be passed to rand-idx.")
 
 ;; MAYBE: Consider making code below more efficient if popco is extended
 ;; to involve regularly creating new persons in the middle of simulation runs
@@ -63,7 +58,7 @@
   person may modify its own propn weight matrix.  The analogy net can be shared 
   with every other person, however, since this will not be modified.  (The 
   analogy mask might be modified.)"
-  [id propns propn-net analogy-net utterable-ids groups talk-to-groups max-talk-to rand-idx-fn]
+  [id propns propn-net analogy-net utterable-ids groups talk-to-groups max-talk-to]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
@@ -84,7 +79,7 @@
                        (vec talk-to-groups)
                        nil  ; talk-to-persons will get filled when make-population calls update-talk-to-persons
                        max-talk-to
-                       rand-idx-fn)]
+                       (ran/make-rng (ran/next-long initial-rng)))]
     ;; set up propn net and associated vectors:
     (doseq [propn-id propn-ids] (cl/add-to-propn-net! pers propn-id))                        ; unmask propn nodes
     (nn/set-mask! (:propn-mask pers) cn/+feeder-node-idx+ (/ cn/+one+ cn/+decay+))        ; special mask val to undo next-activn's decay on this node
@@ -122,7 +117,7 @@
             talk-to-groups             ;  they'll have to be replaced anyway.           
             talk-to-persons
             max-talk-to  ; an integer
-            'FIXME)) ; TODO generate new rng here
+            (ran/make-rng (ran/next-long initial-rng))))
 
 (defn new-person-from-old
   "Create a clone of person pers, but with name new-name, or a generated name,
