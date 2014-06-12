@@ -49,6 +49,9 @@ It's probably not a measurable difference.
 
 ## MersenneTwister*.java
 
+
+### On MersenneTwisterFast vs. MersenneTwister
+
 I emailed this question to the author of these classes, Sean Luke:
 
 > Is the reason that MersenneTwisterFast doesn't subclass java.util.Random
@@ -65,3 +68,12 @@ Sean responded:
 > subclass of java.util.Random which does Mersenne Twister already: it's
 > MTF's sibling, MersenneTwister.java.
 
+### notes on methods
+
+clone() creates a new rng with the same state.
+
+stateEquals() determines whether two rngs have the same state.  Note that
+if they started with the same state, but they haven't been next'ed the
+same number of times, they'll have different states.
+
+writeState() and readState() look useful.
