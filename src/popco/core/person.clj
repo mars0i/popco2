@@ -18,7 +18,7 @@
                    analogy-net  analogy-mask  analogy-activns
                    analogy-idx-to-propn-idxs utterable-ids utterable-mask
                    groups  talk-to-groups  talk-to-persons
-                   max-talk-to])
+                   max-talk-to rng])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
