@@ -44,7 +44,7 @@
   into the converser-pair map, with new key :propn"
   [speaker num-utterances]
   (if (pos? num-utterances)
-    (if-let [poss-utterance-ids (worth-saying-ids speaker)]  ; since sample throws exception on empty coll
+    (if-let [poss-utterance-ids (seq (worth-saying-ids speaker))]  ; since sample throws exception on empty coll
       (ran/sample-with-repl (:rng speaker) num-utterances poss-utterance-ids)
       nil)
     nil))
