@@ -10,7 +10,7 @@
 
 ;; Definition of person and related functions
 
-(def initial-rng (ran/make-rng))
+(def initial-rng (ran/make-rng-print-seed)) ; temporary--print seed to console
 
 ;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [id 
