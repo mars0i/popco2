@@ -29,10 +29,14 @@
 
 (def make-rng make-rng-mtf)
 
-;(defprotocol RNG
-;  (rand-idx [rng n] "Returns a random int in [0,n), using rng as the source."))
+(defn make-rng-print-seed
+  "Make a seed, print it to stdout, then pass it to make-rng."
+  []
+  (let [seed (make-long-seed)]
+    (println seed)
+    (make-rng seed)))
 
-(defmulti  rand-idx class)
+(defmulti  rand-idx (fn [rng n] (class rng)))
 (defmethod rand-idx ec.util.MersenneTwister     [rng n] (.nextInt rng n))
 (defmethod rand-idx ec.util.MersenneTwisterFast [rng n] (.nextInt rng n))
 (defmethod rand-idx java.util.Random            [rng n] (.nextInt rng n))
