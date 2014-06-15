@@ -29,6 +29,10 @@
     #'clojure.pprint/*print-right-margin* 
     (constantly cols)))
 
+(defn extract-fn-name
+  [f]
+  (clojure.string/replace (str f) #".*\$(.*)@.*" "$1"))
+
 (defmacro add-to-docstr
   "Appends string addlstr onto end of existing docstring for symbol sym.
   (Tip: Consider beginning addlstr with \"\\n  \".)"
