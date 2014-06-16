@@ -5,12 +5,12 @@
         [sims.crime3.groups2]
         [popco.io.propncsv :only [spit-csv]]))
 
-(def ticks 500)
+(def ticks 100)
 
 (def test-results {})
 
 (def rng-fns [make-rng-mt make-rng-mtf make-rng-java])
-(def rng-names (map utils.general/extract-fn-name rng-fns))
+(def rng-names (map utils.general/extract-fn-name rng-fns)) ; note this converts dashes to underlines
 (def sample-with-repl-fns [sample-with-repl-1 sample-with-repl-2 sample-with-repl-3 sample-with-repl-4])
 (def sample-with-repl-names (map utils.general/extract-fn-name sample-with-repl-fns))
 (def many-times-fns [many-times unparalleled-many-times])
@@ -18,6 +18,7 @@
 
 (println "Testing" ticks "ticks with sims.crime3.groups2\n")
 
+;; Loop through different functions to test
 (doseq [rng-fn rng-fns
         sample-with-repl-fn sample-with-repl-fns
         many-times-fn many-times-fns]
@@ -32,31 +33,24 @@
         sample-with-repl-name (utils.general/extract-fn-name sample-with-repl-fn)
         many-times-name (utils.general/extract-fn-name many-times-fn)]
     ;; tell user how far along we are, using actual function internal names for extra sanity check:
-    ;(println "\nTesting with")
-    ;(println rng-fn)
-    ;(println sample-with-repl-fn)
-    ;(println many-times-fn)
     (print rng-name sample-with-repl-name many-times-name ": Mean seconds per call: ")(flush)
     ;; run test:
     (let [result (first (:mean (benchmark (def _ (nth (many-times-fn popn) ticks)) '())))] ; produces mean seconds per call
       ;; let user know what happened:
-      ;(println "Mean time for" rng-name sample-with-repl-name many-times-name ":" result)(flush)
       (println result)(flush)
       ;; store the new result into the results hash:
       (def test-results 
         (assoc-in test-results 
                   [rng-name sample-with-repl-name many-times-name]
                   result)))))
+;; Done with testing
 
-;; TODO not right should be a 2-level sequence, not 3
-;(spit-csv "samplingtests2.csv"
-;          (for [rng-key (keys test-results) :let [sample-fn-map (test-results rng-key)]]
-;            (for [sample-fn-key (keys sample-fn-map) :let [many-times-fn-map (sample-fn-map sample-fn-key)]]
-;              [rng-key sample-fn-key (many-times-fn-map "many-times") (many-times-fn-map "unparalleled-many-times")])))
-
+;; crude output to user
 (println "\nResults: ")
 (clojure.pprint/pprint test-results)
 (flush)
+
+;; construct and write output to csv
 
 (def test-results-seq
   (for [rng-name rng-names
@@ -68,5 +62,6 @@
 
 (spit-csv "samplingtests2.csv" test-results-seq)
 
+;; and what the heck, also write the constructed sequence to output for the user
 (clojure.pprint/pprint test-results-seq)
 (flush)
