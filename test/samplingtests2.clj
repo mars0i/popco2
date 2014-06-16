@@ -64,7 +64,7 @@
           unparalleled-many-times-result (many-times-fn-map "unparalleled-many-times")]
       [rng-name sample-with-repl-name many-times-result unparalleled-many-times-result]))) ; last two elements are mean seconds per call with pmap and without pmap
 
+(spit-csv "samplingtests2.csv" test-results-seq)
+
 (clojure.pprint/pprint test-results-seq)
 (flush)
-
-(spit-csv "samplingtests2.csv" test-results-seq)
