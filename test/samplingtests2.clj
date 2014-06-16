@@ -52,14 +52,19 @@
 ;            (for [sample-fn-key (keys sample-fn-map) :let [many-times-fn-map (sample-fn-map sample-fn-key)]]
 ;              [rng-key sample-fn-key (many-times-fn-map "many-times") (many-times-fn-map "unparalleled-many-times")])))
 
-(spit-csv "samplingtests2.csv"
-          (for [rng-name rng-names
-                sample-with-repl-name sample-with-repl-names]
-            (let [many-times-fn-map (get-in test-results [rng-name sample-with-repl-name])
-                  many-times-result (many-times-fn-map "many-times")
-                 unparalleled-many-times-result (many-times-fn-map "unparalleled-many-times")]
-              [rng-name sample-fn-name many-times-result unparalleled-many-times-result]))) ; last two elements are mean seconds per call with pmap and without pmap
-
 (println "\nResults: ")
 (clojure.pprint/pprint test-results)
 (flush)
+
+(def test-results-seq
+  (for [rng-name rng-names
+        sample-with-repl-name sample-with-repl-names]
+    (let [many-times-fn-map (get-in test-results [rng-name sample-with-repl-name])
+          many-times-result (many-times-fn-map "many-times")
+          unparalleled-many-times-result (many-times-fn-map "unparalleled-many-times")]
+      [rng-name sample-with-repl-name many-times-result unparalleled-many-times-result]))) ; last two elements are mean seconds per call with pmap and without pmap
+
+(clojure.pprint/pprint test-results-seq)
+(flush)
+
+(spit-csv "samplingtests2.csv" test-results-seq)
