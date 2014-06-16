@@ -16,7 +16,7 @@
 (def many-times-fns [many-times unparalleled-many-times])
 (def many-times-names (map utils.general/extract-fn-name many-times-fns))
 
-(println "Testing 500 ticks with sims.crime3.groups2\n")
+(println "Testing" ticks "ticks with sims.crime3.groups2\n")
 
 (doseq [rng-fn rng-fns
         sample-with-repl-fn sample-with-repl-fns
