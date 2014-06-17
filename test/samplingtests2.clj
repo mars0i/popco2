@@ -9,10 +9,20 @@
 
 (def test-results {})
 
+;; I think there's a problem with the very first Criterium run
+;; to test that, here is an exact copy of sample-with-repl-1 from utils.random
+(defn sample-with-repl-1-dummy
+  [rng num-samples coll]
+  (let [size (count coll)]
+    (repeatedly num-samples 
+                #(nth coll (rand-idx rng size)))))
+
 (def rng-fns [make-rng-mt make-rng-mtf make-rng-java])
 (def rng-names (map utils.general/extract-fn-name rng-fns)) ; note this converts dashes to underlines
-(def sample-with-repl-fns [sample-with-repl-2 sample-with-repl-3 sample-with-repl-4 sample-with-repl-1]) ; note order is now 2, 3, 4, 1
+
+(def sample-with-repl-fns [sample-with-repl-1-dummy sample-with-repl-1 sample-with-repl-1 sample-with-repl-2 sample-with-repl-3 sample-with-repl-4])
 (def sample-with-repl-names (map utils.general/extract-fn-name sample-with-repl-fns))
+
 (def many-times-fns [many-times unparalleled-many-times])
 (def many-times-names (map utils.general/extract-fn-name many-times-fns))
 
