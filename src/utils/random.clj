@@ -11,21 +11,21 @@
   (- (System/currentTimeMillis)
      (rand-int Integer/MAX_VALUE)))
 
-(defn make-rng-mt
-  ([] (make-rng-mt (make-long-seed)))
-  ([long-seed] (MersenneTwister. long-seed)))
+;(defn make-rng-mt
+;  ([] (make-rng-mt (make-long-seed)))
+;  ([long-seed] (MersenneTwister. long-seed)))
 
 (defn make-rng-mtf
-  ([] (make-rng-mt (make-long-seed)))
+  ([] (make-rng-mtf (make-long-seed)))
   ([long-seed] (MersenneTwisterFast. long-seed)))
 
 ;(defn make-rng-sfmt
 ;  ([] (make-rng-sfmt (make-long-seed)))
 ;  ([long-seed] (SFMT19937. long-seed)))
 
-(defn make-rng-java
-  ([] (make-rng-java (make-long-seed)))
-  ([long-seed] (Random. long-seed)))
+;(defn make-rng-java
+;  ([] (make-rng-java (make-long-seed)))
+;  ([long-seed] (Random. long-seed)))
 
 (def make-rng make-rng-mtf)
 
@@ -36,34 +36,36 @@
     (println seed)
     (make-rng seed)))
 
-(defmulti  rand-idx (fn [rng n] (class rng)))
-(defmethod rand-idx ec.util.MersenneTwister     [rng n] (.nextInt rng n))
-(defmethod rand-idx ec.util.MersenneTwisterFast [rng n] (.nextInt rng n))
-(defmethod rand-idx java.util.Random            [rng n] (.nextInt rng n))
+(defn rand-idx [rng n] (.nextInt rng n))
+;(defmulti  rand-idx (fn [rng n] (class rng)))
+;(defmethod rand-idx ec.util.MersenneTwister     [rng n] (.nextInt rng n))
+;(defmethod rand-idx ec.util.MersenneTwisterFast [rng n] (.nextInt rng n))
+;(defmethod rand-idx java.util.Random            [rng n] (.nextInt rng n))
 
-(defmulti  next-long class)
-(defmethod next-long ec.util.MersenneTwister     [rng] (.nextLong rng))
-(defmethod next-long ec.util.MersenneTwisterFast [rng] (.nextLong rng))
-(defmethod next-long java.util.Random            [rng] (.nextLong rng))
+(defn next-long [rng] (.nextLong rng))
+;(defmulti  next-long class)
+;(defmethod next-long ec.util.MersenneTwister     [rng] (.nextLong rng))
+;(defmethod next-long ec.util.MersenneTwisterFast [rng] (.nextLong rng))
+;(defmethod next-long java.util.Random            [rng] (.nextLong rng))
 
 ;; lazy
 ;; This version repeatedly calls nth coll with a new random index each time.
-(defn sample-with-repl-1
-  [rng num-samples coll]
-  (let [size (count coll)]
-    (repeatedly num-samples 
-                #(nth coll (rand-idx rng size)))))
+;(defn sample-with-repl-1
+;  [rng num-samples coll]
+;  (let [size (count coll)]
+;    (repeatedly num-samples 
+;                #(nth coll (rand-idx rng size)))))
 
 ;; lazy
 ;; This version is inspired by Incanter, which does it like this:
 ;;        (map #(nth x %) (sample-uniform size :min 0 :max max-idx :integers true))
 ;; You get a series of random ints between 0 and the coll size,
 ;; and then map nth coll through them.
-(defn sample-with-repl-2
-  [rng num-samples coll]
-  (let [size (count coll)]
-    (map #(nth coll %) 
-         (repeatedly num-samples #(rand-idx rng size)))))
+;(defn sample-with-repl-2
+;  [rng num-samples coll]
+;  (let [size (count coll)]
+;    (map #(nth coll %) 
+;         (repeatedly num-samples #(rand-idx rng size)))))
 
 ;; lazy
 (defn sample-with-repl-3
@@ -73,16 +75,16 @@
       (nth coll (rand-idx rng size)))))
 
 ;; not lazy
-(defn sample-with-repl-4
-  [rng num-samples coll]
-  (let [size (count coll)]
-    (loop [remaining num-samples result []] 
-      (if (> remaining 0)
-        (recur (dec remaining) (conj result 
-                                     (nth coll (rand-idx rng size))))
-        result))))
+;(defn sample-with-repl-4
+;  [rng num-samples coll]
+;  (let [size (count coll)]
+;    (loop [remaining num-samples result []] 
+;      (if (> remaining 0)
+;        (recur (dec remaining) (conj result 
+;                                     (nth coll (rand-idx rng size))))
+;        result))))
 
-(def sample-with-repl sample-with-repl-4)
+(def sample-with-repl sample-with-repl-3) ; see samplingtests2.xlsx
 
 
 ;; lazy if more than one sample
