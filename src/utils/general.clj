@@ -7,6 +7,19 @@
             [bigml.sampling [simple :as simple]]
             ))
 
+(defn file-exists?
+  [f]
+  (.exists (clojure.java.io/as-file f)))
+
+(defn make-dir
+  [f]
+  (.mkdir (java.io.File. f)))
+
+(defn make-dir-if-none
+  [f]
+  (when-not (file-exists? f)
+    (make-dir f)))
+
 (defn domap
   ([f coll] (doseq [e coll] (f e)))
   ([f coll1 & colls] (mapv f (cons coll1 colls)) nil))
