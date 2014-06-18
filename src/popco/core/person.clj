@@ -1,3 +1,4 @@
+;; Definition of person and related functions
 (ns popco.core.person
   (:require [utils.general :as ug]
             [utils.random :as ran]
@@ -8,10 +9,20 @@
             [popco.nn.analogy :as an]
             [clojure.core.matrix :as mx]))
 
-;; Definition of person and related functions
+(def session-id (ran/make-long-seed))
+(println "Session id/seed:" session-id)
+(def initial-rng (ran/make-rng session-id))
 
-(def initial-rng (ran/make-rng-print-seed)) ; temporary--print seed to console
+(ug/make-dir-if-none cn/+data-dir+)
+(spit (str cn/+data-dir+ "/restoreRNG" session-id ".clj")
+      (clojure.string/join 
+        "\n"
+        [(str "(intern 'popco.core.person session-id " session-id ")")
+         "(println \"Session id/seed:\" popco.core.person/session-id)"
+         "(intern 'popco.core.person 'initial-rng (utils.random/make-rng popco.core.person/session-id))"
+         "\n"]))
 
+                                                               
 ;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [id 
                    propn-net    propn-mask    propn-activns 
