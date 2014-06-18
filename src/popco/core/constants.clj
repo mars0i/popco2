@@ -5,6 +5,8 @@
 ;; of numeric types used instead of the default, i.e. java.lang.Double, with an implementation
 ;; that supports other number types, such as ndarray.
 
+(def ^:const +data-dir+ "data")
+
 ;; java.lang.Double:
 
 ;; TODO: get rid of these from all of the source?  or not?  purpose is to allow alt numbers, but it's confusing
