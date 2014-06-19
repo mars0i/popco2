@@ -12,12 +12,11 @@
 (def session-id (ran/make-long-seed))
 (println "Session id/seed:" session-id)
 (def initial-rng (ran/make-rng session-id))
-
 (ug/make-dir-if-none cn/+data-dir+)
 (spit (str cn/+data-dir+ "/restoreRNG" session-id ".clj")
       (clojure.string/join 
         "\n"
-        [(str "(intern 'popco.core.person session-id " session-id ")")
+        [(str "(intern 'popco.core.person 'session-id " session-id ")")
          "(println \"Session id/seed:\" popco.core.person/session-id)"
          "(intern 'popco.core.person 'initial-rng (utils.random/make-rng popco.core.person/session-id))"
          "\n"]))
