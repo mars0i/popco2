@@ -9,18 +9,6 @@
             [popco.nn.analogy :as an]
             [clojure.core.matrix :as mx]))
 
-(def session-id (ran/make-long-seed))
-(println "Session id/seed:" session-id)
-(def initial-rng (ran/make-rng session-id))
-(ug/make-dir-if-none cn/+data-dir+)
-(spit (str cn/+data-dir+ "/restoreRNG" session-id ".clj")
-      (clojure.string/join 
-        "\n"
-        [(str "(intern 'popco.core.person 'session-id " session-id ")")
-         "(println \"Session id/seed:\" popco.core.person/session-id)"
-         "(intern 'popco.core.person 'initial-rng (utils.random/make-rng popco.core.person/session-id))"
-         "\n"]))
-
                                                                
 ;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [id 
@@ -89,7 +77,7 @@
                        (vec talk-to-groups)
                        nil  ; talk-to-persons will get filled when make-population calls update-talk-to-persons
                        max-talk-to
-                       (ran/make-rng (ran/next-long initial-rng)))]
+                       (ran/make-rng (ran/next-long cn/initial-rng)))]
     ;; set up propn net and associated vectors:
     (doseq [propn-id propn-ids] (cl/add-to-propn-net! pers propn-id))                        ; unmask propn nodes
     (nn/set-mask! (:propn-mask pers) cn/+feeder-node-idx+ (/ cn/+one+ cn/+decay+))        ; special mask val to undo next-activn's decay on this node
@@ -127,7 +115,7 @@
             talk-to-groups             ;  they'll have to be replaced anyway.           
             talk-to-persons
             max-talk-to  ; an integer
-            (ran/make-rng (ran/next-long initial-rng))))
+            (ran/make-rng (ran/next-long cn/initial-rng))))
 
 (defn new-person-from-old
   "Create a clone of person pers, but with name new-name, or a generated name,

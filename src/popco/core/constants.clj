@@ -1,4 +1,6 @@
-(ns popco.core.constants)
+(ns popco.core.constants
+  (require [utils.random :as ran]
+           [utils.general :as ug]))
 ;; constants for use throughout popco
 
 ;; Consistent use of these facilitate allowing global change
@@ -6,6 +8,20 @@
 ;; that supports other number types, such as ndarray.
 
 (def ^:const +data-dir+ "data")
+
+;; These arent' constant per se, but will usually be the same for an entire session,
+;; and this is a good, central place to put them in order to avoid cyclic dependencies.
+(def session-id (ran/make-long-seed)) (println "Session id/seed:" session-id)
+(def initial-rng (ran/make-rng session-id))
+;; Now create a source file that will recreate this initial-rng later if desired:
+(ug/make-dir-if-none +data-dir+)
+(spit (str +data-dir+ "/restoreRNG" session-id ".clj")
+      (clojure.string/join 
+        "\n"
+        [(str "(intern 'popco.core.constants 'session-id " session-id ")")
+         "(println \"Session id/seed:\" popco.core.constants/session-id)"
+         "(intern 'popco.core.constants 'initial-rng (utils.random/make-rng popco.core.constants/session-id))"
+         "\n"]))
 
 ;; java.lang.Double:
 
