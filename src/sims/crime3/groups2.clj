@@ -22,7 +22,14 @@
                                pns/living-propns 
                                pns/conceptual-relats))
 
-(def c1 (pers/make-person :c1 propns pnet anet crime-ids [:central] [:central :west :east] 1))
+(def c1 (pers/make-person :c1                      ; name
+                          propns                   ; all of the propositions I might come to know
+                          pnet                     ; proposition-network
+                          anet                     ; analogy-network
+                          crime-ids                ; utterable-ids: ids of propns I'm willing to talk about
+                          [:central]               ; groups: what groups I'm in
+                          [:central :west :east]   ; talk-to-groups: groups whose members I'm willing to say something to
+                          1))                      ; max=talk-to: maximum number of people I'm willing to say something to
 
 (def e1 (pers/make-person :e1 propns pnet anet crime-ids [:east] [:east :west] 2))
 
