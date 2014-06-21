@@ -7,6 +7,7 @@
             [popco.core.population :as popn]
             [popco.core.person :as pers]
             [popco.core.lot :as lot]
+            [popco.core.reporters :as rep]
             [popco.communic.utterance :as cu]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
