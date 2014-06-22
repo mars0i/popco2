@@ -62,9 +62,6 @@
   [speaker]
   (let [listeners (choose-listeners speaker) ; may be empty
         to-say-ids (choose-propn-ids-to-say speaker (count listeners))] ; nil if no listeners, possibly nil if so
-    (println "listeners:" listeners) (flush)
-    (println "to-say-ids:" to-say-ids) (flush)
-    (println "===") (flush)
     (if to-say-ids
       (zipmap listeners 
               (map #(vector (ut/make-utterance speaker %)) to-say-ids))
