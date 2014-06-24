@@ -18,6 +18,11 @@
     talk-to-persons
     (ran/sample-without-repl rng max-talk-to talk-to-persons)))
 
+;; Note that SALIENT will be filtered out because the usual procedures for creating
+;; persons in a population puts only proposition ids in the utterable-ids field
+;; of each person.  utterable-mask, used here, is created from utterable-ids.
+;; Since SALIENT will not be in utterable-ids, it won't be unmasked in utterable-mask,
+;; and therefore won't get put forward as something to say.
 (defn worth-saying-ids
   "Given a Person, returns ids of propositions that the person might be willing
   to say to someone at this time.  The set of selected propositions is a subset
@@ -26,7 +31,7 @@
   willing to communicate (ones unmasked in utterable-mask).  Each proposition
   in this intersection is then selected with probability equal to the absolute
   value of its activation."
-  [{:keys [propn-net propn-mask propn-activns utterable-mask]}]
+  [{:keys [propn-net propn-mask propn-activns utterable-mask]}] ; argument is a Person
   ;; absolute values of activns of unmasked utterable propns:
   (let [propn-id-vec (:id-vec propn-net)
         utterable-abs-activns (mx/abs
@@ -49,22 +54,25 @@
       nil)
     nil))
 
-;; TODO: filter out SALIENT--don't send it
 (defn make-utterances
   "Given a person, returns a Clojure map representing utterances to
   persons, i.e. a map from persons who are listeners--i.e. persons
-  who the current person is trying to speak to--to utterances to be
-  conveyed from the current person to each of those listener.
-  Utterances are sequences in which the first element represents
-  a proposition [TODO: as id, or index?], and the second element
+  who the current person is trying to speak to--to utterances
+  to be conveyed from the current person to each of those listeners.
+  i.e. there is (at most) one utterance per listener, from speaker,
+  in a given timestep.  Utterances are sequences in which the first 
+  element represents a proposition via its id, and the second element
   captures the way in which the proposition should influence the
-  listener [TODO: raw or cooked activation?]." ; FIXME
+  listener as a function of the proposition's activation in the speaker.
+  Each utterance is individually-wrapped in vector to facilitate joining
+  the map created by this function with other similar maps, in order to
+  create one large map in which the values are sequences of utterances."
   [speaker]
   (let [listeners (choose-listeners speaker) ; may be empty
         to-say-ids (choose-propn-ids-to-say speaker (count listeners))] ; nil if no listeners, possibly nil if so
     (if to-say-ids
       (zipmap listeners 
-              (map #(vector (ut/make-utterance speaker %)) to-say-ids))
+              (map #(vector (ut/make-utterance speaker %)) to-say-ids)) ; wrapping each single utterance
       {})))
 
 ;; So person will get passed through
