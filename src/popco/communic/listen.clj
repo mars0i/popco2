@@ -15,7 +15,9 @@
   "Display the utterance-map from the last tick that was stored 
   in the population, and return the population unchanged."
   [popn]
-  (pp/pprint (:utterance-map popn)) (flush)
+  (pp/pprint (:utterance-map popn))
+  (print "\n")
+  (flush)
   popn)
 
 ;; Entry point from main.clj. Purely functional, since unmask-for-new-propns
@@ -25,7 +27,7 @@
   if any propns in the utterances are new to listener, and then calls
   update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
-  (let [utterances (utterance-map (:id listener))
+  (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
         propns (map :propn-id utterances)
         new-propns (filter (partial propn-still-masked? listener) propns)
         listener (if new-propns
@@ -37,8 +39,8 @@
 ;; Question: Do I have to reapply semantic-iffs here?
 ;; Answer:   This is done by adding into linger-wt-mat rather than overwriting it.
 (defn update-propn-net-from-utterances
-  "Pervasively increases listener's degree of belief or disbelief in proposition
-  in each utterance, to reflect what the utterance conveys about it.  This is
+  "Persistently increases listener's degree of belief or disbelief in proposition
+  in each utterance to reflect what the utterance conveys about it.  This is
   accomplished by modifying weights between the SALIENT node and the 
   proposition node in the proposition net's weight matrix.  More specifically,
   the linger-wt-mat is modified; this is be summed into each tick's new weight
@@ -69,15 +71,15 @@
 
 ;; This function is purely functional despite calling mutational functions
 (defn unmask-for-new-propns
-  "Modifies original-pers's propn-mask and analogy-mask so that these neural 
-  networks' weight matrices will reflect the fact that the proposition is now
+  "Returns person with modified propn-mask and analogy-mask so that the neural 
+  networks' weight matrices will reflect the fact that new propositions are now
   part of listener's thought processes."
   [original-pers new-propns]
   (let [pers (person-masks-clone original-pers)] ; TODO Is this really necesary?
     (doseq [new-propn new-propns]
       (add-to-propn-net! pers new-propn)
       (let [propn-to-extended-fams (:propn-to-extended-famss (:propn-net pers))
-            fams (propn-to-extended-fams new-propn)]
+            fams (propn-to-extended-fams new-propn)]  ;; TODO: NPE HERE
         (doseq [fam fams                           ; loop through all extended fams containing this propn
                 propn fam]                         ; and each propn in that family
           (try-add-to-analogy-net! pers propn))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
