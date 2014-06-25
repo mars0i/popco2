@@ -13,26 +13,35 @@
 ;; ************************
 
 (let [propns (concat pns/crime-propns pns/living-propns)  ; ok if lazy; make-* functions will realize it
-      crime-ids  (map :id pns/crime-propns) ; ok if lazy; make-* functions will realize it
+
+      virus-ids (map :id pns/virus-propns)
+      beast-ids (map :id pns/beast-propns)
+      viral-crime-ids (map :id pns/viral-crime-propns)
+      beastly-crime-ids (map :id pns/beastly-crime-propns)
+      crime-ids (map :id pns/crime-propns)
       living-ids (map :id pns/living-propns)
 
       ;; PECEPTION-IFS
       ;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
-      ;; ALL AND ONLY CRIME PROPNS ARE PERCEIVED
-      perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) pns/crime-propns) ; ok if lazy; make-* functions will realize it
+      crime-perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) pns/crime-propns)
+      virus-perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) pns/virus-propns)
+      beast-perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) pns/beast-propns)
 
       ;; PROPOSITION NET (TEMPLATE FOR INDIVIDUAL NETS)
       ;; ALL POSSIBLE PROPNS ARE UNMASKED HERE:
-      pnet (pn/make-propn-net propns pns/semantic-iffs perception-ifs) ; second arg is bidirectional links; third is unidirectional
+      no-perc-pnet (pn/make-propn-net propns pns/semantic-iffs nil) ; second arg is bidirectional links; third is unidirectional
+      crime-perc-pnet (pn/make-propn-net propns pns/semantic-iffs crime-perception-ifs) ; second arg is bidirectional links; third is unidirectional
+      virus-perc-pnet (pn/make-propn-net propns pns/semantic-iffs virus-perception-ifs) ; second arg is bidirectional links; third is unidirectional
+      beast-perc-pnet (pn/make-propn-net propns pns/semantic-iffs beast-perception-ifs) ; second arg is bidirectional links; third is unidirectional
 
       ;; ANALOGY NET (TO BE SHARED BY EVERYONE)
-      anet (an/make-analogy-net pns/crime-propns 
-                                pns/living-propns 
-                                pns/conceptual-relats)
+      both-bias-anet (an/make-analogy-net pns/crime-propns pns/living-propns pns/conceptual-relats)
+      virus-bias-anet (an/make-analogy-net pns/crime-propns pns/virus-propns pns/conceptual-relats)
+      beast-bias-anet (an/make-analogy-net pns/crime-propns pns/beast-propns pns/conceptual-relats)
 
-      ;; args:              id propns pnet anet utterable-ids mygroups talk-to-groups max-talk-to
-      e1 (pers/make-person :e1 propns pnet anet living-ids    [:east]  [:east :west]  2)
-      w1 (pers/make-person :w1 propns pnet anet living-ids    [:west]  [:east :west]  2)]
+      ;; args:              id unmasked pnet            anet utterable-ids mygroups talk-to-groups max-talk-to
+      e1 (pers/make-person :e1 propns   crime-perc-pnet virus-bias-anet crime-ids    [:east]  [:east :west]  2)
+      w1 (pers/make-person :w1 propns   crime-perc-pnet beast-bias-anet crime-ids    [:west]  [:east :west]  2)]
 
   (def popn (pp/make-population (vec (concat
                                        [e1 w1]
