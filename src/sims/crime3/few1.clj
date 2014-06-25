@@ -6,6 +6,12 @@
             [popco.core.constants :as cn]
             [sims.crime3.propns :as pns]))
 
+;; ************************
+;; TIPS:
+;; - If a person starts with all propns unmasked, the analogy net will never change.
+;; - If the only things uttered are propns that are already perceived, the propn net will never change.
+;; ************************
+
 (def all-propns (concat pns/crime-propns pns/living-propns))  ; ok if lazy; make-* functions will realize it
 (def crime-ids (map :id pns/crime-propns)) ; ok if lazy; make-* functions will realize it
 (def living-ids (map :id pns/living-propns))
