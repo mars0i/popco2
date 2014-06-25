@@ -49,13 +49,14 @@
 
 ;; non-lazy
 (defn make-person
-  "Creates a person with name (id), propns with propn-ids, and a pre-constructed
+  "Creates a person with name (id), propns, and a pre-constructed
   propn-net and analogy-net.  Uses propns to construct propn-mask and
   analogy-mask.  The propn-net passed in will not be used directly, but will be
   copied to make a propn-net with a new weight matrix (:wt-mat), since each 
   person may modify its own propn weight matrix.  The analogy net can be shared 
   with every other person, however, since this will not be modified.  (The 
-  analogy mask might be modified.)"
+  analogy mask might be modified.)  See docstring for ->Person for info on other
+  arguments."
   [id propns propn-net analogy-net utterable-ids groups talk-to-groups max-talk-to]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
