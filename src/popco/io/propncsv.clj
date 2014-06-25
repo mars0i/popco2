@@ -2,6 +2,7 @@
   (:require [popco.core.constants :as cn]
             [clojure.data.csv :as csv]
             [clojure.java.io :as io]
+            [popco.core.constants :as cn]
             [clojure.core.matrix :as mx]))
 
 
@@ -27,7 +28,7 @@
                data 
                (cons (column-names (first popns)) ; if not appending, add header row
                      data))]
-    (apply spit-csv "activns.csv" rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
+    (apply spit-csv (str "activns" cn/session-id ".csv") rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
 
 (defn propn-activns-row
   "Construct a sequence of activations representing all propn activns of all 
