@@ -15,7 +15,7 @@
             [popco.nn.analogy :as an]
             [popco.nn.propn :as pn]
             [popco.nn.update :as up]
-            [popco.core.constants :as nc]
+            [popco.core.constants :as cn]
             [popco.nn.pprint :as pp]
             [popco.io.propncsv :as csv])
   ;popco.nn.testtools
