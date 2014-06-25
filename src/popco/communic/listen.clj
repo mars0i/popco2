@@ -28,8 +28,8 @@
   update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
   (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
-        propns (map :propn-id utterances)
-        new-propns (filter (partial propn-still-masked? listener) propns)
+        new-propns (filter (partial propn-still-masked? listener) 
+                           (map :propn-id utterances))
         listener (if new-propns
                    (unmask-for-new-propns listener new-propns) ; First main function called here
                    listener)]
