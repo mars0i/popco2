@@ -31,13 +31,13 @@
         new-propns (filter (partial propn-still-masked? listener) 
                            (map :propn-id utterances))
         listener (if new-propns
-                   (unmask-for-new-propns listener new-propns) ; First main function called here
+                   (unmask-for-new-propns listener new-propns) ; First primary call
                    listener)]
-    (update-propn-net-from-utterances listener utterances)))   ; Second main function called here
+    (update-propn-net-from-utterances listener utterances)))   ; Second primary call
 
 ;; Note: This function is purely functional despite calling mutational functions
 ;; Question: Do I have to reapply semantic-iffs here?
-;; Answer:   This is done by adding into linger-wt-mat rather than overwriting it.
+;; Answer:   No. That's done by adding into linger-wt-mat rather than overwriting it.
 (defn update-propn-net-from-utterances
   "Persistently increases listener's degree of belief or disbelief in proposition
   in each utterance to reflect what the utterance conveys about it.  This is
@@ -54,10 +54,11 @@
     ;; would it be better to just set into a blank matrix, and then add it to linger-wt-mat and clip the whole thing??
     (doseq [utterance utterances]
       ;(print "->" (:id listener) "from" utterance)(flush) ; DEBUG
-      ; TODO next line clips to extrema, but that will happen later in update.clj.  Is that redundant?
+      ; TODO next line clips to extrema, but that will happen elsewhere in this file.  Is that redundant?
       (nn/add-from-feeder-node! linger-wt-mat
                                 (id-to-idx (:propn-id utterance))
                                 (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
+    ;; TODO can I do this with assoc-in or update-in?
     (assoc listener
            :propn-net (assoc propn-net
                              :linger-wt-mat linger-wt-mat))))
