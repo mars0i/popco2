@@ -8,7 +8,7 @@ A description of the requirements for the process implemented
 here can be found in the following publication.  See especially
 pages 10-11.
 
-```latex
+````
 @Article{Abrams:ModerateRole,
   author =	{Abrams, Marshall},
   title =    {A Moderate Role for Cognitive Models in Agent-Based
@@ -17,17 +17,16 @@ pages 10-11.
   year =	{2013},
   volume =	{1},
   number =	{16},
-  pages =	{1--33},
   month =	{September 13},
   url =	{http://www.casmodeling.com/content/1/1/16},
   doi =	{10.1186/2194-3206-1-16},
 }
-```
+````
 
 The original procedure on which this one is based can be found in
 the following publication.  See especially page 314.
 
-```latex
+````
 @Article{HolyoakThagard:AnalogMapConstraintSat,
   author =	{Holyoak, Keith J. and Thagard, Paul},
   title =	{Analogical Mapping by Constraint Satisfaction},
@@ -36,7 +35,7 @@ the following publication.  See especially page 314.
   volume =	{13},
   pages =	{295-355},
 }
-```
+````
 
 Note that the current way in which the network's weight matrix and 
 associated linear data structures are constructed is not designed
@@ -138,7 +137,28 @@ index, and i is the row index.  (This doesn't matter for symmetric
 links, since for them there will be identical weights at i,j and j,i,
 but it matters for assymetric, directional links.)
 
-**a note on `+analogy-max-w`+`**
+## Notes on biases, masks, communication, relations to propns
+
+In the initial version of `popco.core.person/make-person` (up until
+June 2014, at least), I chose which analogy-net nodes to unmask by
+calling `popco.communic.listen/try-add-to-analogy-net!` on every
+proposition.  For each proposition, then, this function unmasks nodes
+such that they are derived from matching that propn, and propns that
+are already unmasked in the analogy net.
+
+However, this makes the analogies allowed depend on the propns that
+exist---i.e. that are unmasked.  Is this right?  How do I specify a
+virus bias or beast bias via available analogies, in the crime3
+analogy system, for example?  
+
+Compare with popco 1:  The initial analogy network only involves nodes
+from the specified propns.  There are no nodes or links at all for
+propns that are not in one of the two analogue structures.  Then, I
+think, communication might add them?  
+
+(And what was happening during communication, in that case in popco 1?)
+
+## A note on `+analogy-max-wt+`:
 
 In popco1, I clipped analogy net weights to be less than or equal to 0.5, in order to reduce extreme cycling of activation values.
 
@@ -164,5 +184,5 @@ make-symlink's clipping to +acme-max-weight+.  Therefore, if I want to clip
 to weights 0.5 in the analogy net to damp oscillations, I can just apply
 that rule in analogy.clj, and ignore the propn net.
 
-SO: analogy.clj now has var `+analogy-max-w`+`, which is set to either 1.0
+SO: analogy.clj now has var `+analogy-max-wt+`, which is set to either 1.0
 or 0.5, `and add-wts-to-mat!` prevents weights from exceeding this value.
