@@ -138,6 +138,15 @@
 ;; when the two mapped predicates are identical.  In that case, a link of
 ;; weight +sem-similarity-link-value+ to SEMANTIC is added automatically.
 
+(def virus-propn-ids (map :id virus-propns)) 
+(def beast-propn-ids (map :id beast-propns))
+(def viral-crime-propn-ids (map :id viral-crime-propns)) 
+(def beastly-crime-propn-ids (map :id beastly-crime-propns))
+
 (def living-propns (concat virus-propns beast-propns))
 (def crime-propns (concat viral-crime-propns beastly-crime-propns))
 (def all-propns (concat crime-propns living-propns))
+
+(def living-propn-ids (concat virus-propn-ids beast-propn-ids))
+(def crime-propn-ids (concat viral-crime-propn-ids beastly-crime-propn-ids))
+(def all-propn-ids (concat crime-propn-ids living-propn-ids))
