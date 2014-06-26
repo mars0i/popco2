@@ -63,9 +63,9 @@
         propn-pair-ids (map #(map :id %) propn-pairs)  ; get their ids
         fams (match-propn-components propn-pairs)      ; match their components
         ext-fams (match-propn-components-deeply propn-pairs) ; match into proposition args
-        node-seq (cons {:id :SEMANTIC} (distinct (flatten fams))) ; flatten here assumes map-pairs aren't seqs
+        node-seq (cons {:id :SEMANTIC} (distinct (flatten fams))) ; make seq of all nodes (flatten here assumes map-pairs aren't seqs)
         num-nodes (count node-seq)
-        nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; This is the core of the analogy net object.
+        nn-map (assoc-ids-to-idx-nn-map (nn/make-nn-core node-seq)) ; create the core of the analogy net object, to which other things will be added
         id-to-idx (:id-to-idx nn-map)
         ids-to-idx (:ids-to-idx nn-map)
         pos-wt-mat (make-wt-mat num-nodes)  ; construct zero matrices
