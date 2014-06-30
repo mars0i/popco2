@@ -137,27 +137,6 @@ index, and i is the row index.  (This doesn't matter for symmetric
 links, since for them there will be identical weights at i,j and j,i,
 but it matters for assymetric, directional links.)
 
-## Notes on biases, masks, communication, relations to propns
-
-In the initial version of `popco.core.person/make-person` (up until
-June 2014, at least), I chose which analogy-net nodes to unmask by
-calling `popco.communic.listen/try-add-to-analogy-net!` on every
-proposition.  For each proposition, then, this function unmasks nodes
-such that they are derived from matching that propn, and propns that
-are already unmasked in the analogy net.
-
-However, this makes the analogies allowed depend on the propns that
-exist---i.e. that are unmasked.  Is this right?  How do I specify a
-virus bias or beast bias via available analogies, in the crime3
-analogy system, for example?  
-
-Compare with popco 1:  The initial analogy network only involves nodes
-from the specified propns.  There are no nodes or links at all for
-propns that are not in one of the two analogue structures.  Then, I
-think, communication might add them?  
-
-(And what was happening during communication, in that case in popco 1?)
-
 ## A note on `+analogy-max-wt+`:
 
 In popco1, I clipped analogy net weights to be less than or equal to 0.5, in order to reduce extreme cycling of activation values.
