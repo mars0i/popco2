@@ -34,7 +34,7 @@
       ;; ANALOGY NET (TO BE SHARED BY EVERYONE)
       anet (an/make-analogy-net pns/crime-propns pns/living-propns pns/conceptual-relats)
 
-      ;; args:              ID      UNMASKED          PROPN-NET        ANALOGY-NET  UTTERABLE-IDS        MYGROUPS          TALK-TO-GROUPS        MAX-TALK-TO
+      ;; args:              ID      UNMASKED          PROPN-NET        ANALOGY-NET  UTTERABLE-IDS        GROUPS I'M IN     TALK-TO-GROUPS        MAX-TALK-TO
 
       ;; The pundit has no biases, but fully believes all crime propns.  It might also be called "environment" or "world".  It's what feeds information to others.
       aa   (pers/make-person :aa    pns/crime-propns  crime-perc-pnet  anet         pns/crime-propn-ids  [:pundits]        [:vulcans :bajorans]  1)  ; PUNDIT: talks to everyone, listens to no one
