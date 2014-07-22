@@ -176,15 +176,15 @@
   [fs]
   (apply comp fs))
 
-(defn collect
-  "If args are collections, concats them; if neither is, creates a collection 
-  containing the two args; otherwise conjs the non-coll onto the coll."
-  [x y]
-  (cond
-    (and (coll? x) (coll? y)) (concat x y)
-    (coll? x) (conj x y)
-    (coll? y) (conj y x)
-    :else [x y]))
+;(defn collect
+;  "If args are collections, concats them; if neither is, creates a collection 
+;  containing the two args; otherwise conjs the non-coll onto the coll."
+;  [x y]
+;  (cond
+;    (and (coll? x) (coll? y)) (concat x y)
+;    (coll? x) (conj x y)
+;    (coll? y) (conj y x)
+;    :else [x y]))
 
 (defn collectivize
   "If x is a collection, returns it unchanged.  Otherwise returns a collection
