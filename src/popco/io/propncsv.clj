@@ -2,7 +2,6 @@
   (:require [popco.core.constants :as cn]
             [clojure.data.csv :as csv]
             [clojure.java.io :as io]
-            [popco.core.constants :as cn]
             [clojure.core.matrix :as mx]))
 
 

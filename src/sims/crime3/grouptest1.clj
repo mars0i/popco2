@@ -3,7 +3,6 @@
             [popco.nn.propn :as pn]
             [popco.core.person :as pers]
             [popco.core.population :as pp]
-            [popco.core.constants :as cn]
             [sims.crime3.propns :as pns]))
 
 ;; This is modeled on popco/crime/crime3socnet?.lisp .
@@ -21,9 +20,9 @@
 
       ;; PECEPTION-IFS
       ;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
-      crime-perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) pns/crime-propns)
-      ;virus-perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) pns/virus-propns)
-      ;beast-perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) pns/beast-propns)
+      crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/crime-propns)
+      ;virus-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/virus-propns)
+      ;beast-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/beast-propns)
 
       ;; PROPOSITION NETS (TEMPLATES FOR INDIVIDUAL NETS)
       no-perc-pnet (pn/make-propn-net all-propns pns/semantic-iffs nil) ; second arg is bidirectional links; third is unidirectional

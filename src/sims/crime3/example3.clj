@@ -3,14 +3,13 @@
             [popco.nn.propn :as pn]
             [popco.core.person :as pers]
             [popco.core.population :as pp]
-            [popco.core.constants :as cn]
             [sims.crime3.propns :as pns]))
 
 (def propns (concat pns/crime-propns pns/living-propns)) ; ok if lazy--will be realized by make-*
 (def crime-ids (map :id pns/crime-propns) ; ok if lazy--will be realized by make-*
 
 ;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
-(def perception-ifs (map #(vector cn/+one+ (:id %) :SALIENT) pns/crime-propns) ; ok if lazy--will be realized by make-*
+(def perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/crime-propns) ; ok if lazy--will be realized by make-*
 
 (def pnet (pn/make-propn-net propns pns/semantic-iffs perception-ifs)) ; second arg is bidirectional links; third is unidirectional
 
