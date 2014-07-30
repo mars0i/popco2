@@ -176,9 +176,50 @@
   [fs]
   (apply comp fs))
 
+;(defn collect
+;  "If args are collections, concats them; if neither is, creates a collection 
+;  containing the two args; otherwise conjs the non-coll onto the coll."
+;  [x y]
+;  (cond
+;    (and (coll? x) (coll? y)) (concat x y)
+;    (coll? x) (conj x y)
+;    (coll? y) (conj y x)
+;    :else [x y]))
+
+(defn collectivize
+  "If x is a collection, returns it unchanged.  Otherwise returns a collection
+  containing only x."
+  [x]
+  (if (coll? x)
+    x
+    (vector x)))
+
+(defn map-keys
+  "Returns a map that's like the argument m, but with each key replaced by
+  the result of applying f to the original key."
+  [f m]
+  (zipmap (map f (keys m))
+          (vals m)))
+
+(defn map-vals
+  "Returns a map that's like the argument m, but with each val replaced by
+  the result of applying f to the original val"
+  [f m]
+  (zipmap (keys m) 
+          (map f (vals m))))
+
+(defn map-keys-vals
+  "Returns a map that's like the argument m, but with each key replaced by
+  the result of applying fk to the original key, and with each val replaced
+  by apply fv to the original val."
+  [fk fv m]
+  (zipmap (map fk (keys m))
+          (map fv (vals m))))
+
+
 (defn coll-map-to-join-pairs
   "Given a map whose values are collections, return a sequence of maps each
-  of which has a key from the original map and val one of the members of the 
+  of which has a key from the original map with val one of the members of the 
   collection that was that keys' value.  This is essentially a join table of 
   all unique pairs licensed by the original map."
   [coll-map]
@@ -192,9 +233,10 @@
   which keys may be duplicates, return a map in which values are sequences 
   that collect vals that had the same key in the original sequence of maps."
   [join-pair-coll]
-  (apply merge-with 
-         (comp vec flatten vector)
-         join-pair-coll))
+  (map-vals collectivize        ; kludge: merge-with does nothing when only one, so need to wrap
+            (apply merge-with 
+                   (comp vec flatten vector)
+                   join-pair-coll)))
 
 ;; Consider using http://stackoverflow.com/questions/23745440/map-of-vectors-to-vector-of-maps instead:
 (defn invert-coll-map
