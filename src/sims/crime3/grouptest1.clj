@@ -37,6 +37,7 @@
 
       ;; The pundit has no biases, but fully believes all crime propns.  It might also be called "environment" or "world".  It's what feeds information to others.
       aa   (pers/make-person :aa    pns/crime-propns   crime-perc-pnet  anet         pns/crime-propn-ids  [:pundits]        [:vulcans :bajorans]  1)  ; PUNDIT: talks to everyone, listens to no one
+      ;; note that even pundit only talks to one person on each tick: max-talk-to = 1.  might want to change that, e.g. to represent what's perceived in a common environment.
 
       ;; Vulcans have a virus-bias, but don't initially perceive anything.
       vul1 (pers/make-person :vul1  crime+virus-propns no-perc-pnet     anet         pns/crime-propn-ids  [:vulcans]        [:vulcans]            1)  ; A normal Vulcan: Talks only to Vulcans

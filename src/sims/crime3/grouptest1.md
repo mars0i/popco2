@@ -43,7 +43,10 @@ beast propns in the other.
 structure.  i.e there are no analogies to the crime propns.
 
 The number of people talked to on each tick (i.e. `num-listeners` in
-popco1) is 1.
+popco1) is 1.  This applies to the pundit AA along with everyone else.
+(Note however that one might want to allow the pundit to speak to
+everyone on every tick, especially if it represents a common environment
+that everyone in the group can perceive.)
 
 I believe that what's supposed to happen is that, in the propn net, all
 propns have zero activations initially, and net structure as provided by
