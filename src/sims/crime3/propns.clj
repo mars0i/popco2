@@ -1,6 +1,5 @@
 (ns sims.crime3.propns
-  (:use popco.core.lot)
-  (:require [popco.core.constants :as cn]))
+  (:use popco.core.lot))
 
 ;; declare all proposition names
 ;(declare V-ip V-na V-ia V-ha V-ia->v-ha V-ipa V-ipa->v-ia V-ica V-ica->-v-ipa V-ica->-v-ipa->v-na V-qp V-qp->-v-ipa V-qp->-v-ipa->v-na
@@ -126,9 +125,9 @@
 ;    (semantic-iff 'cv-rpa 'b-abp -.1L0)
 ;   ))
 
-(def semantic-iffs [[(/ cn/+neg-one+ 10) :CB-vpp :V-ipa] [(/ cn/+neg-one+ 10) :CV-rpa :B-abp]])
+(def semantic-iffs [[(/  -1.0  10) :CB-vpp :V-ipa] [(/  -1.0  10) :CV-rpa :B-abp]])
 
-(def conceptual-relats [[cn/+neg-one+ :Causal-if :Preventative-if]])
+(def conceptual-relats [[-1.0 :Causal-if :Preventative-if]])
 ;; This specifies mapnodes that should be provided with a link from SEMANTIC.
 ;; Note order of the last two arguments doesn't matter: Both orders are tried.
 ;; The number will be multiplied by the default semantic link weight of

@@ -209,7 +209,7 @@
   "Return the distance of activn from 1.  Note return value will be > 1
   if activn < 0."
   [activn]
-  (- cn/+one+ activn))
+  (- 1.0 activn))
 
 (defn dist-from-min 
   "Return the distance of activn from 1.  Note return value will be > 1

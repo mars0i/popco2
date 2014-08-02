@@ -3,7 +3,6 @@
             [popco.nn.propn :as pn]
             [popco.core.person :as pers]
             [popco.core.population :as pp]
-            [popco.core.constants :as cn]
             [sims.crime3.propns :as pns]))
 
 ;; ************************
@@ -19,7 +18,7 @@
 ;; PECEPTION-IFS
 ;; Make all crime propns perceived all the time
 ;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
-(def perception-ifs (map #(vector cn/+one+ % :SALIENT) crime-ids)) ; ok if lazy; make-* functions will realize it
+(def perception-ifs (map #(vector 1.0 % :SALIENT) crime-ids)) ; ok if lazy; make-* functions will realize it
 
 ;; PROPOSITION NET (TEMPLATE FOR INDIVIDUAL NETS)
 (def pnet (pn/make-propn-net all-propns 

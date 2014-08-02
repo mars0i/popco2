@@ -379,7 +379,7 @@
   to the same predicate.  1.0 is the multiplier for semantic links to such nodes,
   since identical predicates represent the highest possible semantic similarity."
   [node-seq id-to-idx]
-  (map #(vector cn/+one+ %)
+  (map #(vector 1.0 %)
        (map (comp id-to-idx :id) 
             (filter dupe-pred-mapnode? node-seq))))
 

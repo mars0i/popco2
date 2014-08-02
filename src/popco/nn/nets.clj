@@ -88,12 +88,12 @@
 (defn posify 
   "Return the non-negative number closest to x, i.e. 0 if x < 0, else x."
   [x]
-  (max cn/+zero+ x))
+  (max 0.0 x))
 
 (defn negify
   "Return the non-positive number closest to x, i.e. 0 if x > 0, else x."
   [x]
-  (min cn/+zero+ x))
+  (min 0.0 x))
 
 (defn make-id-to-idx-map
   "Given a sequence of things, returns a map from things to indexes.  
@@ -131,7 +131,7 @@
 (defn clip-to-extrema
   "Returns -1 if x < -1, 1 if x > 1, and x otherwise."
   [x]
-  (max cn/+neg-one+ (min cn/+one+ x)))
+  (max -1.0 (min 1.0 x)))
 
 (defn set-activn!
   "Given a core.matrix vector representing a set of activations,
@@ -149,21 +149,21 @@
   "Given a core.matrix vector representing a mask, and an index
   into the mask, set the indexed element of the mask to 1."
   [mask idx]
-  (set-mask! mask idx cn/+one+))
+  (set-mask! mask idx 1.0))
 
 (defn node-unmasked?
   "Given a core.matrix vector representing a mask, and an index
   into the mask, return true if the mask is 1 at that index;
   otherwise false."
   [mask idx]
-  (= cn/+one+ (mx/mget mask idx)))
+  (= 1.0 (mx/mget mask idx)))
 
 (defn node-masked?
   "Given a core.matrix vector representing a mask, and an index
   into the mask, return true if the mask is 0 at that index;
   otherwise false."
   [mask idx]
-  (= cn/+zero+ (mx/mget mask idx)))
+  (= 0.0 (mx/mget mask idx)))
 
 (defn mask-matrix
   "Given a weight matrix and a mask vector (1-dimensional, i.e. not a 1xN row 

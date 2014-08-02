@@ -2,6 +2,14 @@
   (require [clojure.core.matrix :as mx]))
 ;; matrix utility functions
 
+(defn non-zeros
+  "Gets the non-zero indices of an array mapped to the values.
+  (By Matt Revelle at https://github.com/mikera/core.matrix/issues/102
+  Something like this will probably be incorporated into core.matrix
+  with the name non-zero-map.)"
+  ([m] (into {} 
+             (filter (comp not zero? second) 
+                     (map vector (mx/index-seq m) (mx/eseq m))))))
 
 (defn col1
   [m]
