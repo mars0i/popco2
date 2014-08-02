@@ -227,7 +227,7 @@
                             (p-id-to-idx (:id (:alog2 %)))]) ;  of mapnode sides
                 a-propn-mapnodes))))
 
-(defn display-feeder-wts
+(defn display-feeder-wts-ids
   "For each person in popn, print to stdout the column of weights from 
   the feeder node in the neural network identified by net-keyword, and 
   return the population unchanged."
@@ -240,5 +240,25 @@
         persons))
     popn))
 
-(def display-salient-wts (partial display-feeder-wts :propn-net))
-(def display-semantic-wts (partial display-feeder-wts :analogy-net))
+(def display-salient-wts-ids (partial display-feeder-wts-ids :propn-net))
+(def display-semantic-wts-ids (partial display-feeder-wts-ids :analogy-net))
+
+(defn salient-wts
+  "Return a vector containing weights of links to the SALIENT node 
+  in the proposition net."
+  [pers]
+  (pmx/col1 (:wt-mat (:propn-net pers))))
+
+(defn semantic-wts
+  "Return a vector containing weights of links to the SEMANTIC node 
+  in the proposition net."
+  [pers]
+  (pmx/col1 (:wt-mat (:analogy-net pers))))
+
+(defn display-salient-wts [popn] (doall (map println (map salient-wts (:persons popn)))) (flush) popn)
+
+(defn display-semantic-wts
+  [popn]
+  (map println (map semantic-wts (:persons popn)))
+  (flush)
+  popn)

@@ -13,8 +13,8 @@
   "\n  tick: timestep.
   persons: members of the population at time tick.
   groups: map from group id to person ids representing membership.
-  person-to-groups: map from person id to group ids--i.e. what groups am I in?
-  person-talk-to-groups: map from person id to groups of persons to whom person talks.")
+  utterance-map: used at runtime to pass utterances between the 
+                 \"everyone speaks\" and \"everyone listens\" steps.")
 
 ;; non-lazy
 ;; utterance-map left empty at first
@@ -26,3 +26,21 @@
         groups (ug/invert-coll-map person-to-groups)
         updated-members (vec (map (partial pers/update-talk-to-persons groups) members))] ; vec: simply to constrain the dimensions of laziness in popco2
     (->Population 0 updated-members groups nil)))  ; utterance-map empty at first
+
+(defn persons-ids
+  "List IDs of persons in popn."
+  [popn]
+  (map :id (:persons popn)))
+
+;; This does a linear search, so it's intended only for uses where efficiency
+;; doesn't matter--especially for a large population.  An option is to add a
+;; hash map to the population, and use this for the lookup, but that means
+;; that two data structures have to be maintained in population when persons
+;; are added or removed (unless we convert a map to a seq at runtime when we're
+;; iterating through persons).
+(defn get-person [id popn]
+  "Return person with id from population popn, or nil."
+  (some #(when 
+           (= id (:id %))
+           %)
+        (:persons popn)))

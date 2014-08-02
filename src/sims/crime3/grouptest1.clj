@@ -49,5 +49,6 @@
      ]
 
   (def popn (pp/make-population [aa
-                                 vul1 worf (pers/new-person-from-old vul1 :vul2)
-                                 baj1 kira (pers/new-person-from-old baj1 :baj2)])))
+                                 vul1 worf ; (pers/new-person-from-old vul1 :vul2)
+                                 baj1 kira ; (pers/new-person-from-old baj1 :baj2)
+                                ])))

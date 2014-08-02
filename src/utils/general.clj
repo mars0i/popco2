@@ -7,6 +7,14 @@
             [bigml.sampling [simple :as simple]]
             ))
 
+
+;; This is a slightly modified version of an example at clojure-doc.org:
+(defn round2
+  "Round a double to the given precision (number of significant digits)"
+  [precision d]
+  (let [factor (Math/pow 10 precision)]
+    (/ (Math/round (* d factor)) factor)))
+
 (defn file-exists?
   [f]
   (.exists (clojure.java.io/as-file f)))
