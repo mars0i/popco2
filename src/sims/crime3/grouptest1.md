@@ -52,7 +52,12 @@ I believe that what's supposed to happen is that, in the propn net, all
 propns have zero activations initially, and net structure as provided by
 the analogies.  Then utterances from the pundit gradually build up
 activations, as modified by the proposition network structure created by
-the analogies.
+the analogies.  
+(The proposition nodes in the proposition net start with zero
+activations.  Departures from zero can only come from (a) links to the
+SALIENT node and (b) links to other nodes that have nonzero
+activations. The analogy nodes, by contrast, are seeded with
+activations of 0.01.)
 
 (In case you're wondering, the names are taken from the TV show "Star
 Trek: Deep Space 9".  Deep Space 9 is a space station that's run by the
