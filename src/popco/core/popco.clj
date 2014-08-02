@@ -4,20 +4,22 @@
         utils.general)
   ;[clojure.data :as da] ; for 'diff'
   (:require [utils.random :as ran]
-            [popco.core.population :as popn]
-            [popco.core.person :as pers]
-            [popco.core.lot :as lot]
-            [popco.core.reporters :as rep]
-            [popco.communic.utterance :as cu]
+
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
-            [popco.nn.nets :as nn]
-            [popco.nn.analogy :as an]
-            [popco.nn.propn :as pn]
-            [popco.nn.update :as up]
+            [popco.communic.utterance :as cu]
             [popco.core.constants :as cn]
+            [popco.core.lot :as lot]
+            [popco.core.person :as pers]
+            [popco.core.population :as popn]
+            [popco.core.reporters :as rep]
+            [popco.io.propncsv :as csv]
+            [popco.nn.analogy :as an]
+            [popco.nn.matrix :as px]
+            [popco.nn.nets :as nn]
             [popco.nn.pprint :as pp]
-            [popco.io.propncsv :as csv])
+            [popco.nn.propn :as pn]
+            [popco.nn.update :as up])
   ;popco.nn.testtools
   ;popco.test.popco1comp
   (:import [popco.core.lot Propn Pred Obj]
