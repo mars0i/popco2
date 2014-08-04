@@ -8,12 +8,13 @@
             [popco.io.propncsv]
             [popco.nn.nets]))
 
-(def ticker                    popco.core.main/ticker)
-(def dotter                    popco.core.main/dotter)
+(def ticker                          popco.core.main/ticker)
+(def dotter                          popco.core.main/dotter)
 
-(def display-utterances        popco.communic.listen/display-utterances)
+(def display-utterances              popco.communic.listen/display-utterances)
 
-(def write-propn-activns-csv   popco.io.propncsv/write-propn-activns-csv)
+(def write-propn-activns-csv         popco.io.propncsv/write-propn-activns-csv)
 
-(def display-salient-wts       popco.nn.nets/display-salient-wts)
-(def display-semantic-wts      popco.nn.nets/display-semantic-wts)
+(def display-salient-wts             popco.nn.nets/display-salient-wts)
+(def display-semantic-wts            popco.nn.nets/display-semantic-wts)
+(def show-utterance-salient-effects  popco.nn.nets/show-utterance-salient-effects)

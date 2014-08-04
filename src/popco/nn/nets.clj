@@ -3,7 +3,8 @@
             [popco.core.lot :as lot]
             [popco.core.constants :as cn]
             [popco.nn.matrix :as pmx]
-            [clojure.core.matrix :as mx]))
+            [clojure.core.matrix :as mx]
+            [clojure.pprint :as pp]))
 
 ;; Definitions of neural-net data types and related functions.
 ;; Defines AnalogyNet and PropnNet, and definitions that are common 
@@ -262,3 +263,23 @@
   (map println (map semantic-wts (:persons popn)))
   (flush)
   popn)
+
+;; Useful for testing.  Not implemented as a display- function used for
+;; mapping over the sequence of populations because it has to look at
+;; pairs of subsequent populations.
+(defn show-utterance-salient-effects
+  "Given a sequence of populations, prints utterance map of population n-1
+  followed by non-zero weights from SALIENT in the propn net in population n."
+  ([popns] (show-utterance-salient-effects 0 popns))
+  ([to-skip popns]
+   (let [pnet (:propn-net (first (:persons (first popns))))
+         node-vec (:node-vec pnet)]
+     (doseq [[prev curr] (partition 2 1 popns)]
+       (println)
+       (pp/pprint (:utterance-map prev))
+       (pp/pprint (map 
+                    #(vector (:id %) 
+                             (map (fn [[[idx] wt]] [(:id (node-vec idx)) wt])
+                                  (pmx/non-zeros (salient-wts %))))
+                    (drop to-skip (:persons curr))))))))
+
