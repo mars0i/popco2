@@ -276,7 +276,9 @@
          node-vec (:node-vec pnet)]
      (doseq [[prev curr] (partition 2 1 popns)]
        (println)
+       (pp/cl-format true "~s: " (:tick prev))
        (pp/pprint (:utterance-map prev))
+       (pp/cl-format true "~s: " (:tick curr))
        (pp/pprint (map 
                     #(vector (:id %) 
                              (map (fn [[[idx] wt]] [(:id (node-vec idx)) wt])
