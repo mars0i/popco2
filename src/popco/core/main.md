@@ -44,6 +44,17 @@ once person in generation 500, let's say, and then realize only
 its communicative ancestors?  Maybe that would be efficient.  But then
 you'd have to wait a while to realize that one person.)
 
+Sketch of sequence of operations in `once`:
+
+1. Update networks in each person: popco.nn.update/update-person-nets.
+
+2. Persons create utterances for listeners: popco.communic.speak/speaker-plus-utterances.
+
+3. Send utterances to designated listeners: popco.communic.listen/receive-utterances.
+
+That means that within a tick, the networks won't reflect communication.
+Communication in tick *n* only affects networks in tick *n* +1.
+
 
 ### Misc notes
 

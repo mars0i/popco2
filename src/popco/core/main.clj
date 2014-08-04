@@ -27,10 +27,14 @@
 
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
-  Returns the population in its new state.  popn is the popn before applying
+  Returns the population in its new state.  popn contains the state before applying
   this function.  mapfn is either Clojure's pmap (default) or map.
   (Tip: If there's an exception, and the stacktrace doesn't show any popco
-  functions, try using map instead of pmap.) Should be purely functional."
+  functions, try using map instead of pmap.) Should be purely functional.
+  Sketch of sequence of operations:
+  1. Update networks in each person: ...nn.update/update-person-nets.
+  2. Persons create utterances for listeners: ...communic.speak/speaker-plus-utterances.
+  3. Send utterances to designated listeners: ...communic.listen/receive-utterances."
   ([popn] (once pmap popn))
   ([mapfn popn]
    ;; next mapfn expression creates seq of [person, utterance-map] pairs; transpose groups them as persons, utterance-maps.
