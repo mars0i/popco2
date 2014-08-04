@@ -27,7 +27,7 @@
         updated-members (vec (map (partial pers/update-talk-to-persons groups) members))] ; vec: simply to constrain the dimensions of laziness in popco2
     (->Population 0 updated-members groups nil)))  ; utterance-map empty at first
 
-(defn persons-ids
+(defn person-ids
   "List IDs of persons in popn."
   [popn]
   (map :id (:persons popn)))
