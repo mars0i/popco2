@@ -33,19 +33,21 @@
       ;; ANALOGY NET (TO BE SHARED BY EVERYONE)
       anet (an/make-analogy-net pns/crime-propns pns/living-propns pns/conceptual-relats)
 
-      ;; args:              ID      UNMASKED           PROPN-NET        ANALOGY-NET  UTTERABLE-IDS        GROUPS I'M IN     TALK-TO-GROUPS        MAX-TALK-TO
+      ;; PERSONS
+      ;; Vulcans have virus-bias, but don't initially perceive anything.
+      ;; Bajorans have beast-bias, but don't initially perceive anything.
+      ;; The pundit (aa) has no biases, but fully believes all crime propns.  It's what feeds opinions to others.
+      ;; Note that even pundit only talks to one person on each tick: max-talk-to = 1.  might want to change that, e.g. to represent what's perceived in a common environment.
+      ;; (Group names come from the TV show "Star Trek: Deep Space Nine", about a space station named "Deep Space Nine".  Kira and Worf work together on the space station.)
 
-      ;; The pundit has no biases, but fully believes all crime propns.  It might also be called "environment" or "world".  It's what feeds information to others.
-      aa   (pers/make-person :aa    pns/crime-propns   crime-perc-pnet  anet         pns/crime-propn-ids  [:pundits]        [:vulcans :bajorans]  1)  ; PUNDIT: talks to everyone, listens to no one
-      ;; note that even pundit only talks to one person on each tick: max-talk-to = 1.  might want to change that, e.g. to represent what's perceived in a common environment.
+      ;; args:              ID      UNMASKED            PROPN-NET        ANALOGY-NET  UTTERABLE-IDS        GROUPS I'M IN     TALK-TO-GROUPS        MAX-TALK-TO
 
-      ;; Vulcans have a virus-bias, but don't initially perceive anything.
-      vul1 (pers/make-person :vul1  crime+virus-propns no-perc-pnet     anet         pns/crime-propn-ids  [:vulcans]        [:vulcans]            1)  ; A normal Vulcan: Talks only to Vulcans
-      worf (pers/make-person :worf  crime+virus-propns no-perc-pnet     anet         pns/crime-propn-ids  [:vulcans :ds9]   [:vulcans :ds9]       1)  ; Worf is a Vulcan who also talks to DS9 officers
+      aa   (pers/make-person :aa    pns/crime-propns    crime-perc-pnet  anet         pns/crime-propn-ids  [:pundits]        [:vulcans :bajorans]  1)  ; PUNDIT: talks to everyone, listens to no one
+      vul1 (pers/make-person :vul1  crime+virus-propns  no-perc-pnet     anet         pns/crime-propn-ids  [:vulcans]        [:vulcans]            1)  ; NORMAL VULCAN: Talks only to Vulcans
+      worf (pers/make-person :worf  crime+virus-propns  no-perc-pnet     anet         pns/crime-propn-ids  [:vulcans :ds9]   [:vulcans :ds9]       1)  ; WORF is a VULCAN who also talks to DS9 folk.
 
-      ;; Bajorans have a beast-bias, but don't initially perceive anything.
-      baj1 (pers/make-person :baj1  crime+beast-propns no-perc-pnet     anet         pns/crime-propn-ids  [:bajorans]       [:bajorans]           1)  ; A normal Bajoran: Talks only to Bajorans
-      kira (pers/make-person :kira  crime+beast-propns no-perc-pnet     anet         pns/crime-propn-ids  [:bajorans :ds9]  [:bajorans :ds9]      1)  ; Kira is a Bajoran who also talks to DS9 officers
+      baj1 (pers/make-person :baj1  crime+beast-propns  no-perc-pnet     anet         pns/crime-propn-ids  [:bajorans]       [:bajorans]           1)  ; NORMAL BAJORAN: Talks only to Bajorans
+      kira (pers/make-person :kira  crime+beast-propns  no-perc-pnet     anet         pns/crime-propn-ids  [:bajorans :ds9]  [:bajorans :ds9]      1)  ; KIRA is a BAJORAN who also talks to DS9 folk.
      ]
 
   (def popn (pp/make-population [aa
