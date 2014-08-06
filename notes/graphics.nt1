@@ -1,3 +1,5 @@
+
+
 d3.js
 have to write separate code in javascript
 and open a browser
@@ -8,6 +10,7 @@ the digital humanities folk will like that
 and it's good advertising to put stuff like that up
 	(in browser, is not restricted to a "canvas". not sure it matters)
 (could I would I should I run popco in clojurescript?)
+updating in d3.js need not be done with a loop.
 
 
 processing
@@ -17,6 +20,7 @@ there is processingjs, which allows use in browsers
 so maybe can do same stuff as d3.js almost
 it probably can do anything, but can it do as much as d3.js as easily?
 	(in browser, is restricted to a "canvas")
+updating in processing is done with a loop
 
 
 gephi
@@ -45,3 +49,32 @@ then again could there be tools that are useful for application of
 there is an experimental clojure interface, called ClojureEngine
 	(1.0, 2011, based on Clojure 1.2)
 
+NOTES
+
+trevor bedford has a post on d3.js vs processing.js comparing speed
+with a test application in 2012.  processing.js won, at that point,
+anyway.
+http://www.trevorbedford.com/archive/may_07_2012.html
+
+But here's a claim about a case in which d3.js is faster:
+http://www.nickdiakopoulos.com/2012/05/14/visualization-performance-in-the-browser/
+It also explains that because processing.js is raster (bitmap) graphics,
+it slows down with increase in size, whereas d3.js doesn't because it
+uses vector graphics. (On the other hand, with processing.js, gthe
+browser doesn't care how many objects you spit to it--it's all bits to
+it.)
+
+These speed tradeoffs are strikingly illustrated here, with network
+graphs: http://nad.webfactional.com/ntap/graphscale/
+Add multiples of the number of nodes, and d3.js slows way down,
+whereas processing.js keeps going at exactly the same speed.
+
+From http://www.quora.com/Data-Visualization/Should-I-learn-Processing-if-I-know-D3-js
+"another interesting aspect of processing is its immediacy. you are
+manipulating physical objects, so it's much more direct to make stuff.
+compared to processing there is a lot of overhead in d3. so, it's much
+easier to sketch in processing."
+"There are tons of functions that can be used for generative art which
+are there out of the box in processing and which would be a pain to
+get to work in d3. Also: 3D. easy in processing, a pain in D3 (despite
+the name)."
