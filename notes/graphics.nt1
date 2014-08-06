@@ -1,0 +1,47 @@
+d3.js
+have to write separate code in javascript
+and open a browser
+then send data over via json or something
+but it's beautiful, and flexible
+and there could be much value to putting stuff on the web even if not live
+the digital humanities folk will like that
+and it's good advertising to put stuff like that up
+	(in browser, is not restricted to a "canvas". not sure it matters)
+(could I would I should I run popco in clojurescript?)
+
+
+processing
+can be accessed in java and clojure via the clojure wrappers
+there is processingjs, which allows use in browsers
+	(could I would I should I run popco in clojurescript?)
+so maybe can do same stuff as d3.js almost
+it probably can do anything, but can it do as much as d3.js as easily?
+	(in browser, is restricted to a "canvas")
+
+
+gephi
+both standalone player
+and java toolkit
+can do click on open box with details
+and is going to have good graph tools
+but not the fancy stuff
+so short term that's maybe better
+long term might want the cool stuff
+
+
+graphviz
+seems useful, but ScottW didn't mention
+
+
+cytoscape
+java based
+(originally for biological nets)
+probably nothing fancy
+has a Bayesian net app/lib
+seems to have a big community
+a lot of the libs/apps are going to be directed at stuff that's not me now
+then again could there be tools that are useful for application of
+ biological concepts to cultural evolution?
+there is an experimental clojure interface, called ClojureEngine
+	(1.0, 2011, based on Clojure 1.2)
+
