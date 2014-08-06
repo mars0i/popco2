@@ -94,6 +94,59 @@
   [coll]
   (vec (map #(vec %) coll)))
 
+(defn pprint-nn
+  "Pretty-print the matrix in nnstru with associated row, col info."
+  [nnstru mat-key]
+  (print (format-nn nnstru mat-key)))
+
+(defn format-nn
+  "Format the matrix in nnstru with associated row, col info into a string
+  that would be printed prettily.  Display fields are fixed width, so this
+  can also be used to output a matrix to a file for use in other programs."
+  ([nnstru mat-key] (format-nn mat-key ""))
+  ([nnstru mat-key sep]
+   (let [labels (map name (map :id (:node-vec nnstru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nnstru))]
+         mat (get nnstru mat-key)]
+     (format-matrix-with-labels mat labels labels sep))))
+
+; This is rather slow, but fine if you don't need to run it very often.
+(defn format-matrix-with-labels
+  "Format a matrix mat with associated row and column labels into a string
+  that could be printed prettily.  row-labels and col-labels must be sequences
+  of strings in index order, corresponding to indexes from 0 to n.  If a string
+  is provided as an additional, optional sep argument, it will be used to 
+  separate columns.  For example, you can use a string containing a comma to 
+  generate csv output."
+  ([mat row-labels col-labels] (format-matrix-with-labels mat row-labels col-labels "")) ; default to empty string as column separator
+  ([mat row-labels col-labels sep]
+   (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
+         nums-width (+ 0 (max-strlen 
+                           (map #(cl-format nil "~f" %)   ; REWRITE WITH mx/longest-nums
+                                (apply concat pv-mat))))
+         left-pad-width (max-strlen row-labels)]
+     (apply str
+            (concat
+              (format-top-labels col-labels nums-width left-pad-width sep)
+              (format-mat-with-row-labels pv-mat row-labels nums-width sep))))))
+
+(defn format-mat-with-row-labels
+  "Format a matrix with labels on each row.  pv-mat is a core.matrix matrix
+  of the persistent-vector type (i.e. a Clojure vector of [row] vectors).  Labels is
+  a sequence of label strings, in order, one for each row.  nums-width is the desired
+  maximum width to round number strings to.  sep is a string that can contain extra
+  padding to put between columns.  This function is normally called from
+  format-matrix-with-labels."
+  [pv-mat labels nums-width sep]
+  (let [num-labels (count labels)
+        labels-width (max-strlen labels)
+        nums-widths (repeat num-labels (+ 1 nums-width)) ; we'll need a list of repeated instances of nums-width
+        seps (repeat num-labels sep)]                    ; and separators
+    (map (fn [row label]
+           (cl-format nil "~v@a~a ~{~vf~a~}~%" 
+                      labels-width label sep
+                      (interleave nums-widths row seps))) ; Using v to set width inside iteration directive ~{~} requires repeating the v arg
+         pv-mat labels)))
+
 ;; Code notes:
 ;; This function does the following:
 ;; - Add spaces to beginning of labels so they're all the same length.
@@ -129,54 +182,6 @@
                                                                                           labels)))))))) 
                  sep
                  "\n"))))
-
-(defn format-mat-with-row-labels
-  "ADD DOCSTRING"
-  [pv-mat labels nums-width sep]
-  (let [num-labels (count labels)
-        labels-width (max-strlen labels)
-        nums-widths (repeat num-labels (+ 1 nums-width)) ; we'll need a list of repeated instances of nums-width
-        seps (repeat num-labels sep)]                    ; and separators
-    (map (fn [row label]
-           (cl-format nil "~v@a~a ~{~vf~a~}~%" 
-                      labels-width label sep
-                      (interleave nums-widths row seps))) ; Using v to set width inside iteration directive ~{~} requires repeating the v arg
-         pv-mat labels)))
-
-; This is rather slow, but fine if you don't need to run it very often.
-(defn format-matrix-with-labels
-  "Format a matrix mat with associated row and column labels into a string
-  that could be printed prettily.  row-labels and col-labels must be sequences
-  of strings in index order, corresponding to indexes from 0 to n.  If a string
-  is provided as an additional, optional sep argument, it will be used to 
-  separate columns.  For example, you can use a string containing a comma to 
-  generate csv output."
-  ([mat row-labels col-labels] (format-matrix-with-labels mat row-labels col-labels "")) ; default to empty string as column separator
-  ([mat row-labels col-labels sep]
-   (let [pv-mat (mx/matrix :persistent-vector mat) ; "coerce" to Clojure vector of Clojure (row) vectors
-         nums-width (+ 0 (max-strlen 
-                           (map #(cl-format nil "~f" %)   ; REWRITE WITH mx/longest-nums
-                                (apply concat pv-mat))))
-         left-pad-width (max-strlen row-labels)]
-     (apply str
-            (concat
-              (format-top-labels col-labels nums-width left-pad-width sep)
-              (format-mat-with-row-labels pv-mat row-labels nums-width sep))))))
-
-(defn format-nn
-  "Format the matrix in nnstru with associated row, col info into a string
-  that would be printed prettily.  Display fields are fixed width, so this
-  can also be used to output a matrix to a file for use in other programs."
-  ([nnstru mat-key] (format-nn mat-key ""))
-  ([nnstru mat-key sep]
-   (let [labels (map name (map :id (:node-vec nnstru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nnstru))]
-         mat (get nnstru mat-key)]
-     (format-matrix-with-labels mat labels labels sep))))
-
-(defn pprint-nn
-  "Pretty-print the matrix in nnstru with associated row, col info."
-  [nnstru mat-key]
-  (print (format-nn nnstru mat-key)))
 
 (defn dotformat
   "Given a string for display of a matrix (or anything), replaces

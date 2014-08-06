@@ -14,14 +14,29 @@
 (declare once many-times unparalleled-many-times ticker inc-tick)
 
 (defn many-times
-  "Returns a lazy sequence of population states, one for each tick.
-  No between-tick reporting is done when the sequence is realized."
+  "Returns a lazy sequence of population states, one for each tick.  Attempts 
+  to split processing of persons across multiple CPU cores, if possible, through 
+  use of the pmap function.  
+  The first element in the resulting sequence is the original, unchanged Population 
+  popn that was passed to this function.  Each subsequent population in the sequence 
+  records the effects of operations by the function `once` on the previous population 
+  in the sequence.  Note that the contents of field :utterance-map contains the 
+  utterances that have been received by the persons in the :persons field, but that 
+  these utterances won't have their full effects on each person's internal networks 
+  until the next tick."
   [popn]
   (iterate once popn))
 
 (defn unparalleled-many-times
-  "Returns a lazy sequence of population states, one for each tick.
-  No between-tick reporting is done when the sequence is realized."
+  "Returns a lazy sequence of population states, one for each tick.  Does not
+  split processing of persons across multiple CPU cores.
+  The first element in the resulting sequence is the original, unchanged Population 
+  popn that was passed to this function.  Each subsequent population in the sequence 
+  records the effects of operations by the function `once` on the previous population 
+  in the sequence.  Note that the contents of field :utterance-map contains the 
+  utterances that have been received by the persons in the :persons field, but that 
+  these utterances won't have their full effects on each person's internal networks 
+  until the next tick."
   [popn]
   (iterate (partial once map) popn))
 
