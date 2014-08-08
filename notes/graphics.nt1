@@ -21,6 +21,7 @@ so maybe can do same stuff as d3.js almost
 it probably can do anything, but can it do as much as d3.js as easily?
 	(in browser, is restricted to a "canvas")
 updating in processing is done with a loop
+(maybe use Cleermans' iac program as a model.)
 
 
 gephi
