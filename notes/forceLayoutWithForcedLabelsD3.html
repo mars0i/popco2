@@ -1,30 +1,74 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<!-- from http://bl.ocks.org/MoritzStefaner/1377729 -->
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Force based label placement</title>
-		<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?2.6.0"></script>
-		<script type="text/javascript" src="http://mbostock.github.com/d3/d3.layout.js?2.6.0"></script>
-		<script type="text/javascript" src="http://mbostock.github.com/d3/d3.geom.js?2.6.0"></script>
-	</head>
-	<body>
-<script type="text/javascript" charset="utf-8">
-			var w = 960, h = 500;
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8">
+<title>Force-based label placement</title>
+<link rel="icon" href="http://bl.ocks.org/favicon.png">
+<style>
 
-			var labelDistance = 0;
+@import url("/style.css?20120730");
 
-			var vis = d3.select("body").append("svg:svg").attr("width", w).attr("height", h);
+header,
+footer {
+  color: #555;
+}
 
-			var nodes = [];
-			var labelAnchors = [];
-			var labelAnchorLinks = [];
-			var links = [];
+a.gist {
+  color: #000;
+}
 
-			;; Create nodes
-			for(var i = 0; i < 30; i++) {
-				var node = {
-					label : "node " + i
+</style>
+
+</head><body><header>
+  <a href="http://bl.ocks.org/MoritzStefaner">MoritzStefaner</a>’s block
+  <a class="gist" title="View gist #1377729 on GitHub" href="https://gist.github.com/MoritzStefaner/1377729">#1377729</a>
+  <span class="date">November 18, 2011</span>
+</header>
+
+<h1>Force-based label placement</h1>
+
+
+<iframe src="forceLayoutWithForcedLabelsD3_files/a.html" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+<p></p><aside><a style="position:relative;top:6px;" href="http://bl.ocks.org/MoritzStefaner/raw/1377729/" target="_blank">Open in a new window.</a></aside>
+
+
+<div class="gist-readme"><p>A small demo of a pleasant, yet simple label
+ placement algorithm for densely packed visualizations. The basic idea 
+is to have labels orbit around their target node at a fixed distance, 
+but repeal each other, so that they don't overlap, and orient themselves
+ to the outside of clusters. To support that, labels on the right of 
+their target node are left-aligned, and labels on the left of their 
+target node are right-aligned; in between, we interpolate. In this 
+example, one force layout governs the node placement, and the second one
+ the label placement, but of course, the node placement could be 
+computed by any other algorithm.</p>
+
+<p>I first used this label placement in the <a href="http://max-planck-research-networks.net/">MPG research networks project</a> and owe the basic idea to <a href="https://twitter.com/cedrickiefer">Cedric Kiefer</a>.</p></div>
+
+<div class="gist-sources"><div class="gist-source"><h2>index.html<a href="#index.html" name="index.html">#</a></h2><pre><code class="html xml"><span class="doctype">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"&gt;</span>
+<span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span>
+	<span class="tag">&lt;<span class="title">head</span>&gt;</span>
+		<span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span>
+		<span class="tag">&lt;<span class="title">title</span>&gt;</span>Force based label placement<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+		<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"http://mbostock.github.com/d3/d3.js?2.6.0"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+		<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"http://mbostock.github.com/d3/d3.layout.js?2.6.0"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+		<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"http://mbostock.github.com/d3/d3.geom.js?2.6.0"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+	<span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+	<span class="tag">&lt;<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span><span class="javascript">
+			<span class="keyword">var</span> w = <span class="number">960</span>, h = <span class="number">500</span>;
+
+			<span class="keyword">var</span> labelDistance = <span class="number">0</span>;
+
+			<span class="keyword">var</span> vis = d3.select(<span class="string">"body"</span>).append(<span class="string">"svg:svg"</span>).attr(<span class="string">"width"</span>, w).attr(<span class="string">"height"</span>, h);
+
+			<span class="keyword">var</span> nodes = [];
+			<span class="keyword">var</span> labelAnchors = [];
+			<span class="keyword">var</span> labelAnchorLinks = [];
+			<span class="keyword">var</span> links = [];
+
+			<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">30</span>; i++) {
+				<span class="keyword">var</span> node = {
+					label : <span class="string">"node "</span> + i
 				};
 				nodes.push(node);
 				labelAnchors.push({
@@ -35,10 +79,9 @@
 				});
 			};
 
-			;; Create links
-			for(var i = 0; i < nodes.length; i++) {
-				for(var j = 0; j < i; j++) {
-					if(Math.random() > .95)
+			<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; nodes.length; i++) {
+				<span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; i; j++) {
+					<span class="keyword">if</span>(Math.random() &gt; .<span class="number">95</span>)
 						links.push({
 							source : i,
 							target : j,
@@ -46,80 +89,80 @@
 						});
 				}
 				labelAnchorLinks.push({
-					source : i * 2,
-					target : i * 2 + 1,
-					weight : 1
+					source : i * <span class="number">2</span>,
+					target : i * <span class="number">2</span> + <span class="number">1</span>,
+					weight : <span class="number">1</span>
 				});
 			};
 
-			var force = d3.layout.force().size([w, h]).nodes(nodes).links(links).gravity(1).linkDistance(50).charge(-3000).linkStrength(function(x) {
-				return x.weight * 10
+			<span class="keyword">var</span> force = d3.layout.force().size([w, h]).nodes(nodes).links(links).gravity(<span class="number">1</span>).linkDistance(<span class="number">50</span>).charge(-<span class="number">3000</span>).linkStrength(<span class="function"><span class="keyword">function</span><span class="params">(x)</span> {</span>
+				<span class="keyword">return</span> x.weight * <span class="number">10</span>
 			});
 
 
 			force.start();
 
-			var force2 = d3.layout.force().nodes(labelAnchors).links(labelAnchorLinks).gravity(0).linkDistance(0).linkStrength(8).charge(-100).size([w, h]);
+			<span class="keyword">var</span> force2 = d3.layout.force().nodes(labelAnchors).links(labelAnchorLinks).gravity(<span class="number">0</span>).linkDistance(<span class="number">0</span>).linkStrength(<span class="number">8</span>).charge(-<span class="number">100</span>).size([w, h]);
 			force2.start();
 
-			var link = vis.selectAll("line.link").data(links).enter().append("svg:line").attr("class", "link").style("stroke", "#CCC");
+			<span class="keyword">var</span> link = vis.selectAll(<span class="string">"line.link"</span>).data(links).enter().append(<span class="string">"svg:line"</span>).attr(<span class="string">"class"</span>, <span class="string">"link"</span>).style(<span class="string">"stroke"</span>, <span class="string">"#CCC"</span>);
 
-			var node = vis.selectAll("g.node").data(force.nodes()).enter().append("svg:g").attr("class", "node");
-			node.append("svg:circle").attr("r", 5).style("fill", "#555").style("stroke", "#FFF").style("stroke-width", 3);
+			<span class="keyword">var</span> node = vis.selectAll(<span class="string">"g.node"</span>).data(force.nodes()).enter().append(<span class="string">"svg:g"</span>).attr(<span class="string">"class"</span>, <span class="string">"node"</span>);
+			node.append(<span class="string">"svg:circle"</span>).attr(<span class="string">"r"</span>, <span class="number">5</span>).style(<span class="string">"fill"</span>, <span class="string">"#555"</span>).style(<span class="string">"stroke"</span>, <span class="string">"#FFF"</span>).style(<span class="string">"stroke-width"</span>, <span class="number">3</span>);
 			node.call(force.drag);
 
 
-			var anchorLink = vis.selectAll("line.anchorLink").data(labelAnchorLinks)//.enter().append("svg:line").attr("class", "anchorLink").style("stroke", "#999");
+			<span class="keyword">var</span> anchorLink = vis.selectAll(<span class="string">"line.anchorLink"</span>).data(labelAnchorLinks)<span class="comment">//.enter().append("svg:line").attr("class", "anchorLink").style("stroke", "#999");</span>
 
-			var anchorNode = vis.selectAll("g.anchorNode").data(force2.nodes()).enter().append("svg:g").attr("class", "anchorNode");
-			anchorNode.append("svg:circle").attr("r", 0).style("fill", "#FFF");
-				anchorNode.append("svg:text").text(function(d, i) {
-				return i % 2 == 0 ? "" : d.node.label
-			}).style("fill", "#555").style("font-family", "Arial").style("font-size", 12);
+			<span class="keyword">var</span> anchorNode = vis.selectAll(<span class="string">"g.anchorNode"</span>).data(force2.nodes()).enter().append(<span class="string">"svg:g"</span>).attr(<span class="string">"class"</span>, <span class="string">"anchorNode"</span>);
+			anchorNode.append(<span class="string">"svg:circle"</span>).attr(<span class="string">"r"</span>, <span class="number">0</span>).style(<span class="string">"fill"</span>, <span class="string">"#FFF"</span>);
+				anchorNode.append(<span class="string">"svg:text"</span>).text(<span class="function"><span class="keyword">function</span><span class="params">(d, i)</span> {</span>
+				<span class="keyword">return</span> i % <span class="number">2</span> == <span class="number">0</span> ? <span class="string">""</span> : d.node.label
+			}).style(<span class="string">"fill"</span>, <span class="string">"#555"</span>).style(<span class="string">"font-family"</span>, <span class="string">"Arial"</span>).style(<span class="string">"font-size"</span>, <span class="number">12</span>);
 
-			var updateLink = function() {
-				this.attr("x1", function(d) {
-					return d.source.x;
-				}).attr("y1", function(d) {
-					return d.source.y;
-				}).attr("x2", function(d) {
-					return d.target.x;
-				}).attr("y2", function(d) {
-					return d.target.y;
+			<span class="keyword">var</span> updateLink = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+				<span class="keyword">this</span>.attr(<span class="string">"x1"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
+					<span class="keyword">return</span> d.source.x;
+				}).attr(<span class="string">"y1"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
+					<span class="keyword">return</span> d.source.y;
+				}).attr(<span class="string">"x2"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
+					<span class="keyword">return</span> d.target.x;
+				}).attr(<span class="string">"y2"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
+					<span class="keyword">return</span> d.target.y;
 				});
 
 			}
 
-			var updateNode = function() {
-				this.attr("transform", function(d) {
-					return "translate(" + d.x + "," + d.y + ")";
+			<span class="keyword">var</span> updateNode = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+				<span class="keyword">this</span>.attr(<span class="string">"transform"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
+					<span class="keyword">return</span> <span class="string">"translate("</span> + d.x + <span class="string">","</span> + d.y + <span class="string">")"</span>;
 				});
 
 			}
 
 
-			force.on("tick", function() {
+			force.on(<span class="string">"tick"</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
 
 				force2.start();
 
 				node.call(updateNode);
 
-				anchorNode.each(function(d, i) {
-					if(i % 2 == 0) {
+				anchorNode.each(<span class="function"><span class="keyword">function</span><span class="params">(d, i)</span> {</span>
+					<span class="keyword">if</span>(i % <span class="number">2</span> == <span class="number">0</span>) {
 						d.x = d.node.x;
 						d.y = d.node.y;
-					} else {
-						var b = this.childNodes[1].getBBox();
+					} <span class="keyword">else</span> {
+						<span class="keyword">var</span> b = <span class="keyword">this</span>.childNodes[<span class="number">1</span>].getBBox();
 
-						var diffX = d.x - d.node.x;
-						var diffY = d.y - d.node.y;
+						<span class="keyword">var</span> diffX = d.x - d.node.x;
+						<span class="keyword">var</span> diffY = d.y - d.node.y;
 
-						var dist = Math.sqrt(diffX * diffX + diffY * diffY);
+						<span class="keyword">var</span> dist = Math.sqrt(diffX * diffX + diffY * diffY);
 
-						var shiftX = b.width * (diffX - dist) / (dist * 2);
-						shiftX = Math.max(-b.width, Math.min(0, shiftX));
-						var shiftY = 5;
-						this.childNodes[1].setAttribute("transform", "translate(" + shiftX + "," + shiftY + ")");
+						<span class="keyword">var</span> shiftX = b.width * (diffX - dist) / (dist * <span class="number">2</span>);
+						shiftX = Math.max(-b.width, Math.min(<span class="number">0</span>, shiftX));
+						<span class="keyword">var</span> shiftY = <span class="number">5</span>;
+						<span class="keyword">this</span>.childNodes[<span class="number">1</span>].setAttribute(<span class="string">"transform"</span>, <span class="string">"translate("</span> + shiftX + <span class="string">","</span> + shiftY + <span class="string">")"</span>);
 					}
 				});
 
@@ -131,6 +174,69 @@
 
 			});
 
-		</script>
-	</body>
-</html>
+		</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+	<span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre></div></div>
+
+<script src="forceLayoutWithForcedLabelsD3_files/d3.js"></script>
+<script src="forceLayoutWithForcedLabelsD3_files/highlight.js"></script>
+<script>
+
+var gist = {"history":[{"version":"ff3b73e13b5fff196b192bd5e9bce6eecec63d3a"}],"files":{"index.html":{"language":"HTML","type":"text/html","filename":"index.html","size":3692,"sha":"ebb376075039043ff7d71e03d1cb4c4fc42d35c2"},"readme.mkd":{"language":"Markdown","type":"text/plain","filename":"readme.mkd","size":822,"sha":"1b7d8cb980962f404a230c5ba1c783bc1905d760"}},"created_at":"2011-11-18T20:55:49.000Z","updated_at":"2014-03-16T18:20:32.000Z","description":"Force-based label placement","owner":{"login":"MoritzStefaner"},"id":"1377729"};
+
+var files = d3.values(gist.files)
+    .sort(function(a, b) { return (b.filename === "index.html") - (a.filename === "index.html") || a.filename.localeCompare(b.filename); });
+
+var readme = d3.selectAll(".gist-readme")
+    .data(files.filter(function(d) { return /^readme\b/i.test(d.filename) && d.language === "Markdown"; }))
+    .each(function(d) {
+      var readme = d3.select(this);
+      d3.text("/MoritzStefaner/raw/1377729/ff3b73e13b5fff196b192bd5e9bce6eecec63d3a/" + d.filename, function(error, content) {
+        readme.html(new Showdown.converter().makeHtml(content));
+        readme.selectAll("code").each(function() { hljs.highlightBlock(this); });
+      });
+    });
+
+var source = d3.select(".gist-sources").selectAll(".gist-source")
+    .data(files.filter(function(d) { return !/^readme\b/i.test(d.filename) && d.size < 50000 && text(d.type); }))
+  .enter().append("div")
+    .attr("class", "gist-source");
+
+source.append("h2")
+    .text(function(d) { return d.filename; })
+  .append("a")
+    .attr("name", function(d) { return d.filename; })
+    .attr("href", function(d) { return "#" + d.filename; })
+    .text("#");
+
+source.append("pre").append("code")
+    .attr("class", function(d) { return d.language && (d.language === "JSON" ? "javascript" : d.language.toLowerCase()); })
+    .each(function(d) {
+      var code = d3.select(this);
+      d3.text("/MoritzStefaner/raw/1377729/ff3b73e13b5fff196b192bd5e9bce6eecec63d3a/" + (d.filename === "index.html" ? "" : d.filename), function(error, content) {
+        code.text(content);
+        hljs.highlightBlock(code.node());
+      });
+    });
+
+function text(type) {
+  return /(^text\/)|(^application\/(javascript|json)$)|(^image\/svg$)|(\+xml$)/.test(type);
+}
+
+</script>
+
+<footer>
+  <a href="http://bl.ocks.org/MoritzStefaner">MoritzStefaner</a>’s block
+  <a class="gist" title="View gist #1377729 on GitHub" href="https://gist.github.com/MoritzStefaner/1377729">#1377729</a>
+  <span class="date">November 18, 2011</span>
+</footer>
+
+<script>
+
+GoogleAnalyticsObject = "ga", ga = function() { ga.q.push(arguments); }, ga.q = [], ga.l = +new Date;
+ga("create", "UA-48272912-1", "ocks.org");
+ga("send", "pageview");
+
+</script>
+<script async="" src="forceLayoutWithForcedLabelsD3_files/analytics.js"></script>
+</body></html>

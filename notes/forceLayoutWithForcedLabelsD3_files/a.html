@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Force based label placement</title>
+		<script type="text/javascript" src="a_data/d3_002.js"></script><script src="a_data/d3.js"></script>
+		<script type="text/javascript" src="a_data/d3_002.html"></script>
+		<script type="text/javascript" src="a_data/d3.html"></script>
+	</head>
+	<body>
+<script type="text/javascript" charset="utf-8">
+			var w = 960, h = 500;
+
+			var labelDistance = 0;
+
+			var vis = d3.select("body").append("svg:svg").attr("width", w).attr("height", h);
+
+			var nodes = [];
+			var labelAnchors = [];
+			var labelAnchorLinks = [];
+			var links = [];
+
+			for(var i = 0; i < 30; i++) {
+				var node = {
+					label : "node " + i
+				};
+				nodes.push(node);
+				labelAnchors.push({
+					node : node
+				});
+				labelAnchors.push({
+					node : node
+				});
+			};
+
+			for(var i = 0; i < nodes.length; i++) {
+				for(var j = 0; j < i; j++) {
+					if(Math.random() > .95)
+						links.push({
+							source : i,
+							target : j,
+							weight : Math.random()
+						});
+				}
+				labelAnchorLinks.push({
+					source : i * 2,
+					target : i * 2 + 1,
+					weight : 1
+				});
+			};
+
+			var force = d3.layout.force().size([w, h]).nodes(nodes).links(links).gravity(1).linkDistance(50).charge(-3000).linkStrength(function(x) {
+				return x.weight * 10
+			});
+
+
+			force.start();
+
+			var force2 = d3.layout.force().nodes(labelAnchors).links(labelAnchorLinks).gravity(0).linkDistance(0).linkStrength(8).charge(-100).size([w, h]);
+			force2.start();
+
+			var link = vis.selectAll("line.link").data(links).enter().append("svg:line").attr("class", "link").style("stroke", "#CCC");
+
+			var node = vis.selectAll("g.node").data(force.nodes()).enter().append("svg:g").attr("class", "node");
+			node.append("svg:circle").attr("r", 5).style("fill", "#555").style("stroke", "#FFF").style("stroke-width", 3);
+			node.call(force.drag);
+
+
+			var anchorLink = vis.selectAll("line.anchorLink").data(labelAnchorLinks)//.enter().append("svg:line").attr("class", "anchorLink").style("stroke", "#999");
+
+			var anchorNode = vis.selectAll("g.anchorNode").data(force2.nodes()).enter().append("svg:g").attr("class", "anchorNode");
+			anchorNode.append("svg:circle").attr("r", 0).style("fill", "#FFF");
+				anchorNode.append("svg:text").text(function(d, i) {
+				return i % 2 == 0 ? "" : d.node.label
+			}).style("fill", "#555").style("font-family", "Arial").style("font-size", 12);
+
+			var updateLink = function() {
+				this.attr("x1", function(d) {
+					return d.source.x;
+				}).attr("y1", function(d) {
+					return d.source.y;
+				}).attr("x2", function(d) {
+					return d.target.x;
+				}).attr("y2", function(d) {
+					return d.target.y;
+				});
+
+			}
+
+			var updateNode = function() {
+				this.attr("transform", function(d) {
+					return "translate(" + d.x + "," + d.y + ")";
+				});
+
+			}
+
+
+			force.on("tick", function() {
+
+				force2.start();
+
+				node.call(updateNode);
+
+				anchorNode.each(function(d, i) {
+					if(i % 2 == 0) {
+						d.x = d.node.x;
+						d.y = d.node.y;
+					} else {
+						var b = this.childNodes[1].getBBox();
+
+						var diffX = d.x - d.node.x;
+						var diffY = d.y - d.node.y;
+
+						var dist = Math.sqrt(diffX * diffX + diffY * diffY);
+
+						var shiftX = b.width * (diffX - dist) / (dist * 2);
+						shiftX = Math.max(-b.width, Math.min(0, shiftX));
+						var shiftY = 5;
+						this.childNodes[1].setAttribute("transform", "translate(" + shiftX + "," + shiftY + ")");
+					}
+				});
+
+
+				anchorNode.call(updateNode);
+
+				link.call(updateLink);
+				anchorLink.call(updateLink);
+
+			});
+
+		</script><svg height="500" width="960"><line y2="352.8127823880575" x2="435.58338100282174" y1="411.8403361356483" x1="413.3162341528371" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="352.8127823880575" x2="435.58338100282174" y1="324.463077567773" x1="376.77891712981767" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="294.966665081576" x2="707.9317353644979" y1="237.3836135107648" x1="724.7756541410506" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="94.521438806707" x2="295.4403756232611" y1="60.03770236491452" x1="345.276935872761" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="250.90053082952318" x2="257.1987288424504" y1="322.1926903778292" x1="308.8678073040989" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="324.463077567773" x2="376.77891712981767" y1="322.1926903778292" x1="308.8678073040989" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="203.5898580907324" x2="366.16020525987193" y1="261.02772710374995" x1="401.329670187274" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="324.463077567773" x2="376.77891712981767" y1="261.02772710374995" x1="401.329670187274" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="203.5898580907324" x2="366.16020525987193" y1="165.08272623926072" x1="416.986175465526" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="149.75200878038035" x2="471.9122504075717" y1="165.08272623926072" x1="416.986175465526" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="203.5898580907324" x2="366.16020525987193" y1="202.09926088489686" x1="289.9826860529361" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="250.90053082952318" x2="257.1987288424504" y1="202.09926088489686" x1="289.9826860529361" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="11.873354051262561" x2="464.84834280348514" y1="41.04540965108825" x1="403.434122405729" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="60.03770236491452" x2="345.276935872761" y1="41.04540965108825" x1="403.434122405729" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="183.28020871898707" x2="639.1414183993185" y1="137.80463389610907" x1="680.0330245040217" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="322.1926903778292" x2="308.8678073040989" y1="366.23654482170315" x1="263.1478414275236" style="stroke: rgb(204, 204, 204);" class="link"></line><line y2="183.28020871898707" x2="639.1414183993185" y1="154.7011365502511" x1="587.6576610196732" style="stroke: rgb(204, 204, 204);" class="link"></line><g transform="translate(614.9370528105766,321.21121204940414)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(464.84834280348514,11.873354051262561)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(435.58338100282174,352.8127823880575)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(366.16020525987193,203.5898580907324)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(295.4403756232611,94.521438806707)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(413.3162341528371,411.8403361356483)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(533.8422423954811,351.0630430856968)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(707.9317353644979,294.966665081576)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(471.9122504075717,149.75200878038035)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(257.1987288424504,250.90053082952318)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(639.1414183993185,183.28020871898707)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(545.6391932029271,243.6518490599582)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(552.5927249516329,484.127525717372)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(376.77891712981767,324.463077567773)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(724.7756541410506,237.3836135107648)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(345.276935872761,60.03770236491452)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(308.8678073040989,322.1926903778292)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(401.329670187274,261.02772710374995)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(623.2476659880753,49.69954903908948)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(688.6345889427755,390.1908278362754)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(416.986175465526,165.08272623926072)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(366.8905144926486,486.61900213030754)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(543.3920635933487,43.97408441006059)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(289.9826860529361,202.09926088489686)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(403.434122405729,41.04540965108825)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(680.0330245040217,137.80463389610907)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(612.1681313332211,432.33666143251037)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(475.76396537733285,472.0837514299266)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(263.1478414275236,366.23654482170315)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(587.6576610196732,154.7011365502511)" class="node"><circle style="fill: rgb(85, 85, 85); stroke: rgb(255, 255, 255); stroke-width: 3;" r="5"></circle></g><g transform="translate(614.9370528105766,321.21121204940414)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(625.2459620944021,326.68578711632273)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-2.975789025237382,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 0</text></g><g transform="translate(464.84834280348514,11.873354051262561)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(464.8961809381995,-0.6865531062683559)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-25.377971984262714,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 1</text></g><g transform="translate(435.58338100282174,352.8127823880575)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(435.6072697190943,364.02579242161795)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-25.4207273831168,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 2</text></g><g transform="translate(366.16020525987193,203.5898580907324)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(355.718378324378,198.77357839805757)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-48.60781529802831,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 3</text></g><g transform="translate(295.4403756232611,94.521438806707)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(284.7305291712273,87.82167093464429)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-47.072214548011694,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 4</text></g><g transform="translate(413.3162341528371,411.8403361356483)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(408.543279465537,423.0338026711826)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-35.467196479396506,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 5</text></g><g transform="translate(533.8422423954811,351.0630430856968)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(539.3752819458242,360.9528844585977)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-13.036851773080977,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 6</text></g><g transform="translate(707.9317353644979,294.966665081576)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(719.8393587051883,298.5133926157507)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-1.0599990163990052,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 7</text></g><g transform="translate(471.9122504075717,149.75200878038035)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(475.22483565703334,138.88814976166975)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-18.044945178414533,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 8</text></g><g transform="translate(257.1987288424504,250.90053082952318)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(244.488732661226,250.94398699973047)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-50.94985186370862,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 9</text></g><g transform="translate(639.1414183993185,183.28020871898707)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(650.5530945075476,180.25723243809318)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-0.997750183901733,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 10</text></g><g transform="translate(545.6391932029271,243.6518490599582)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(556.533138638662,242.8170777968198)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-0.08574101285795908,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 11</text></g><g transform="translate(552.5927249516329,484.127525717372)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(556.3177375090927,496.0980329188326)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-21.033422640124506,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 12</text></g><g transform="translate(376.77891712981767,324.463077567773)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(367.92233013740383,331.8946191291255)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-52.848900684243965,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 13</text></g><g transform="translate(724.7756541410506,237.3836135107648)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(737.2942110714428,235.73038094835476)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-0.2575892221275681,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 14</text></g><g transform="translate(345.276935872761,60.03770236491452)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(337.8756789490944,49.95210667538571)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-47.62957188740682,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 15</text></g><g transform="translate(308.8678073040989,322.1926903778292)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(297.7501885212371,327.1005960408469)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-57.30111777964954,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 16</text></g><g transform="translate(401.329670187274,261.02772710374995)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(392.7718687855367,267.44666973003507)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-53.86420427768551,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 17</text></g><g transform="translate(623.2476659880753,49.69954903908948)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(630.5467137011838,39.482511741481005)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-12.52960999578273,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 18</text></g><g transform="translate(688.6345889427755,390.1908278362754)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(699.0778760020826,397.24805946005745)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-5.13052858509179,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 19</text></g><g transform="translate(416.986175465526,165.08272623926072)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(411.4389917086389,155.17543907472094)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-44.54465485976329,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 20</text></g><g transform="translate(366.8905144926486,486.61900213030754)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(361.48777031110467,498.1140496942088)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-42.65406962912735,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 21</text></g><g transform="translate(543.3920635933487,43.97408441006059)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(546.9773848478044,32.241293390702765)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-21.17968654824761,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 22</text></g><g transform="translate(289.9826860529361,202.09926088489686)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(278.4986015500673,197.67967414748693)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-57.853221328604846,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 23</text></g><g transform="translate(403.434122405729,41.04540965108825)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(399.8510255095581,29.238156623464576)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-38.614890152781385,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 24</text></g><g transform="translate(680.0330245040217,137.80463389610907)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(690.8370211388975,131.03218912503934)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-4.569712149820229,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 25</text></g><g transform="translate(612.1681313332211,432.33666143251037)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(619.4134998164762,442.345444502429)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-12.37746073474286,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 26</text></g><g transform="translate(475.76396537733285,472.0837514299266)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(475.55767418140994,484.41386542852325)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-30.425594776243628,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 27</text></g><g transform="translate(263.1478414275236,366.23654482170315)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(252.00154575525332,372.70947278014114)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-55.802915224065636,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 28</text></g><g transform="translate(587.6576610196732,154.7011365502511)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text style="fill: rgb(85, 85, 85); font-family: Arial;"></text></g><g transform="translate(593.9320371918427,145.00548484729617)" class="anchorNode"><circle style="fill: rgb(255, 255, 255);" r="0"></circle><text transform="translate(-13.666891597083852,5)" style="fill: rgb(85, 85, 85); font-family: Arial;">node 29</text></g></svg>
+	
+</body></html>
