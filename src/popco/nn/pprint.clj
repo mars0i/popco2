@@ -103,10 +103,10 @@
   "Format the matrix in nnstru with associated row, col info into a string
   that would be printed prettily.  Display fields are fixed width, so this
   can also be used to output a matrix to a file for use in other programs."
-  ([nnstru mat-key] (format-nn mat-key ""))
+  ([nnstru mat-key] (format-nn nnstru mat-key ""))
   ([nnstru mat-key sep]
    (let [labels (map name (map :id (:node-vec nnstru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nnstru))]
-         mat (get nnstru mat-key)]
+         mat (mat-key nnstru)]
      (format-matrix-with-labels mat labels labels sep))))
 
 ; This is rather slow, but fine if you don't need to run it very often.
