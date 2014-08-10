@@ -183,19 +183,25 @@
                  sep
                  "\n"))))
 
-(defn format-nn-for-gephi
-  "Format the matrix in nnstru with associated row, col info into a string
-  that would be printed prettily.  Display fields are fixed width, so this
-  can also be used to output a matrix to a file for use in other programs."
-  [nnstru mat-key]
-  (let [pv-mat (mx/matrix :persistent-vector (mat-key nnstru)) ; "coerce" to Clojure vector of Clojure (row) vectors
-        labels (map name (map :id (:node-vec nnstru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nnstru))]
-        mat (mat-key nnstru)]
-    (doall
-      (apply str
-             (concat
-               (interpose ";" labels)
-               (format-mat-with-row-labels pv-mat labels 20 ";"))))))
+(defn format-nn-gephi-csv-mat
+  "Format the matrix in nnstru (a proposition net or analogy net) with 
+  associated row, col info into a string formatted as a Gephi CSV matrix--
+  i.e. with delimited node label strings in the top row and left column, 
+  and delimited edge weight numbers at intersecting rows and columns.  
+  mat-key, if present is either function (or keyword) that selects the 
+  appropriate matrix from the nnstru.  This would usually be one of the 
+  functions wt-mat, pos-wt-mat, or neg-wt-mat from popco.nn.nets."
+  ([nnstru] (format-nn-gephi-csv-mat nnstru nn/wt-mat))
+  ([nnstru mat-key]
+   (let [pv-mat (mx/matrix :persistent-vector (mat-key nnstru)) ; "coerce" to Clojure vector of Clojure (row) vectors
+         labels (map name (map :id (:node-vec nnstru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nnstru))]
+         mat (mat-key nnstru)]
+     (doall
+       (apply str
+              (concat
+                (ug/seq-to-csv-row-str labels)
+                "\n"
+                (format-mat-with-row-labels pv-mat (map ug/add-quotes labels) 20 ", ")))))))
 
 (defn dotformat
   "Given a string for display of a matrix (or anything), replaces
