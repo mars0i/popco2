@@ -7,6 +7,25 @@
             [bigml.sampling [simple :as simple]]
             ))
 
+(defn add-quotes
+  "Append initial and terminal double-quote characters to string."
+  [string]
+  (str "\"" string "\""))
+
+(defn add-quotes-if-str
+  [x]
+  (if (string? x)
+    (add-quotes x)
+    x))
+
+(defn seq-to-csv-row-str
+  "Given a sequence, create a string representing a row in csv format, with
+  each element in the sequence as an element in the csv row.  Strings will
+  be surrounded by quote characters.  Comma is used as the delimiter.  A
+  terminating newline is not added."
+  [s]
+  (apply str 
+         (interpose ", " (map add-quotes-if-str s))))
 
 ;; This is a slightly modified version of an example at clojure-doc.org:
 (defn round2
