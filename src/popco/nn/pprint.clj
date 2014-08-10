@@ -11,7 +11,7 @@
 
 (declare list-analogy-links list-propn-links list-links compare-links
          normalize-link list-nodes list-propn-nodes list-analogy-nodes
-         list-both-nodes max-strlen collcolls-to-vecvecs format-top-labels
+         list-both-nodes max-strlen collcolls-to-vecvecs format-vertical-top-labels
          format-mat-with-row-labels format-matrix-with-labels format-nn
          pprint-nn dotformat dotformat-nn dotprint-nn)
 
@@ -126,7 +126,7 @@
          left-pad-width (max-strlen row-labels)]
      (apply str
             (concat
-              (format-top-labels col-labels nums-width left-pad-width sep)
+              (format-vertical-top-labels col-labels nums-width left-pad-width sep)
               (format-mat-with-row-labels pv-mat row-labels nums-width sep))))))
 
 (defn format-mat-with-row-labels
@@ -163,7 +163,7 @@
 ;; (Maybe there's a way to do more of this with cl-format.)
 ;; NOTE: In cl-format, @ says to insert padding on left, v says to replace
 ;; the v with the next argument before processing the one after it.
-(defn format-top-labels
+(defn format-vertical-top-labels
   "ADD DOCSTRING"
   [labels intercolumn-width left-pad-width sep]
   (let [label-height (max-strlen labels)
@@ -182,6 +182,20 @@
                                                                                           labels)))))))) 
                  sep
                  "\n"))))
+
+(defn format-nn-for-gephi
+  "Format the matrix in nnstru with associated row, col info into a string
+  that would be printed prettily.  Display fields are fixed width, so this
+  can also be used to output a matrix to a file for use in other programs."
+  [nnstru mat-key]
+  (let [pv-mat (mx/matrix :persistent-vector (mat-key nnstru)) ; "coerce" to Clojure vector of Clojure (row) vectors
+        labels (map name (map :id (:node-vec nnstru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nnstru))]
+        mat (mat-key nnstru)]
+    (doall
+      (apply str
+             (concat
+               (interpose ";" labels)
+               (format-mat-with-row-labels pv-mat labels 20 ";"))))))
 
 (defn dotformat
   "Given a string for display of a matrix (or anything), replaces
