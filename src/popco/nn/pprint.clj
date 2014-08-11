@@ -136,16 +136,16 @@
   maximum width to round number strings to.  sep is a string that can contain extra
   padding to put between columns.  This function is normally called from
   format-matrix-with-labels."
-  [pv-mat labels nums-width sep]
-  (let [num-labels (count labels)
-        labels-width (max-strlen labels)
-        nums-widths (repeat num-labels (+ 1 nums-width)) ; we'll need a list of repeated instances of nums-width
-        seps (repeat num-labels sep)]                    ; and separators
-    (map (fn [row label]
-           (cl-format nil "~v@a~a ~{~vf~a~}~%" 
-                      labels-width label sep
-                      (interleave nums-widths row seps))) ; Using v to set width inside iteration directive ~{~} requires repeating the v arg
-         pv-mat labels)))
+  ([pv-mat labels nums-width sep] (format-mat-with-row-labels pv-mat labels nums-width sep (max-strlen labels)))
+  ([pv-mat labels nums-width sep labels-width]
+   (let [num-labels (count labels)
+         nums-widths (repeat num-labels (+ 1 nums-width)) ; we'll need a list of repeated instances of nums-width
+         seps (repeat num-labels sep)]                    ; and separators
+     (map (fn [row label]
+            (cl-format nil "~v@a~a ~{~vf~a~}~%" 
+                       labels-width label sep
+                       (interleave nums-widths row seps))) ; Using v to set width inside iteration directive ~{~} requires repeating the v arg
+          pv-mat labels))))
 
 ;; Code notes:
 ;; This function does the following:
@@ -201,7 +201,7 @@
               (concat
                 (ug/seq-to-csv-row-str labels)
                 "\n"
-                (format-mat-with-row-labels pv-mat (map ug/add-quotes labels) 20 ", ")))))))
+                (format-mat-with-row-labels pv-mat (map ug/add-quotes labels) 20 ", " 0)))))))
 
 (defn dotformat
   "Given a string for display of a matrix (or anything), replaces
