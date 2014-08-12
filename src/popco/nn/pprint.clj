@@ -183,6 +183,19 @@
                  sep
                  "\n"))))
 
+(defn remove-non-links 
+  "Replace zero-weight links in a persistent-vector matrix with empty strings 
+  (for Gephi).  Temporary: The right way to do it is to have a separate matrix 
+  of good links."
+  [pv-mat]
+  (map (fn [row] 
+         (map (fn [elem]
+                (if (== elem 0) "" elem))
+              row))
+       pv-mat))
+
+;; Delimiter must be ";" and there must be no whitespace after it.
+;; Node names should not be quoted.
 (defn format-nn-gephi-csv-mat
   "Format the matrix in nnstru (a proposition net or analogy net) with 
   associated row, col info into a string formatted as a Gephi CSV matrix--
@@ -193,15 +206,17 @@
   functions wt-mat, pos-wt-mat, or neg-wt-mat from popco.nn.nets."
   ([nnstru] (format-nn-gephi-csv-mat nnstru nn/wt-mat))
   ([nnstru mat-key]
-   (let [pv-mat (mx/matrix :persistent-vector (mat-key nnstru)) ; "coerce" to Clojure vector of Clojure (row) vectors
+   (let [pv-mat (remove-non-links (mx/matrix :persistent-vector (mat-key nnstru))) ; "coerce" to Clojure vector of Clojure (row) vectors
          labels (map name (map :id (:node-vec nnstru))) ; get ids in index order, convert to strings.  [or: (sort-by val < (:id-to-idx nnstru))]
-         mat (mat-key nnstru)]
-     (doall
-       (apply str
-              (concat
-                (ug/seq-to-csv-row-str labels)
-                "\n"
-                (format-mat-with-row-labels pv-mat (map ug/add-quotes labels) 20 ", " 0)))))))
+         sep ";"]
+     (apply str
+            (apply concat                     ; merge the rows into one long seq
+                   (map #(conj (vec %) "\n")  ; add newline to the end of each row seq
+                        (cons                 ; add top label row to data rows
+                              (cons sep       ; upper left corner must be empty
+                                    (interpose sep labels))
+                              (map (fn [label row] (interpose sep (cons label row)))
+                                   labels pv-mat))))))))
 
 (defn dotformat
   "Given a string for display of a matrix (or anything), replaces
