@@ -29,19 +29,15 @@
   and sum them when necessary, while it's simpler for the
   proposition network to store a single neural net, and extra the
   positive and negative aspects of it when needed."
-  (wt-mat 
-    [nnstru]
-    "Returns the nnstru's full (positive and negative) weight matrix.") 
-  (pos-wt-mat 
-    [nnstru]
-    "Returns the nnstru's positive-only weight matrix.")
-  (neg-wt-mat 
-    [nnstru]
-    "Returns the nnstru's negative-only weight matrix.")
-)
-
-;; TODO since analogy net doesn't change, maybe I should have a third matrix
-;; so that wt-mat doesn't have to calculate it.
+  (wt-mat [nnstru] "Returns the nnstru's full (positive and negative) weight matrix.") 
+  (pos-wt-mat [nnstru] "Returns the nnstru's positive-only weight matrix.")
+  (neg-wt-mat [nnstru] "Returns the nnstru's negative-only weight matrix.")
+  (links [nnstru]
+    "Returns a clojure.core.matrix in which nonzero entries represent the existence
+    of neural network links/edges, and zero entries represent that there is no
+    link between the two nodes that index the entry.  Note that entries representing
+    links can have any nonzero value, including negative values.  (This function needed
+    because proposition networks can include zero-weight links.)"))
 
 ;; AnalogyNets store weight matrices, node activations, and associated semantic
 ;; information for a proposition network.
@@ -50,7 +46,8 @@
   NNMats
   (wt-mat [nnstru] (mx/add (:pos-wt-mat nnstru) (:neg-wt-mat nnstru)))
   (pos-wt-mat [nnstru] (:pos-wt-mat nnstru))
-  (neg-wt-mat [nnstru] (:neg-wt-mat nnstru)))
+  (neg-wt-mat [nnstru] (:neg-wt-mat nnstru))
+  (links [nnstru] (wt-mat nnstru))) ; Analogy nets never have zero-weight links, so we can use the regular weight matrix.
 
 (ug/add-to-docstr ->AnalogyNet
   "Makes an ACME analogy neural-net structure, i.e. a structure that 
@@ -59,11 +56,12 @@
 
 ;; PropnNets store a weight matrix, node activations, and associated semantic
 ;; information for a proposition network.
-(defrecord PropnNet [wt-mat linger-wt-mat node-vec id-to-idx]
+(defrecord PropnNet [wt-mat linger-wt-mat link-mat node-vec id-to-idx]
   NNMats
   (wt-mat [nnstru] (:wt-mat nnstru))
   (pos-wt-mat [nnstru] (mx/emap posify (:wt-mat nnstru)))
-  (neg-wt-mat [nnstru] (mx/emap negify (:wt-mat nnstru))))
+  (neg-wt-mat [nnstru] (mx/emap negify (:wt-mat nnstru)))
+  (links [nnstru] (:link-mat nnstru)))
 
 ;; TODO DOCSTRING IS OBSOLETE?
 (ug/add-to-docstr ->PropnNet

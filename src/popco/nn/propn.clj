@@ -1,5 +1,6 @@
 ;; propn.clj
 ;; Functions for creating and working with PropnNets.
+;; NOTE: The Proposition record type is defined in popco.nn.nets.
 ;; Further documentation on PropnNets can be read and maintained in net.clj
 ;; See lot.clj for documentation on Propns and their components.
 
@@ -16,6 +17,8 @@
          propn-extended-descendant-propns make-propn-to-extended-fams-ids
          make-propn-net new-linger-wt-mat)
 
+;; NOTE: The Proposition record type is defined in popco.nn.nets.
+
 ;; non-lazy
 (defn make-propn-net
   "Constructs a proposition netword object with fields specified in doctrings
@@ -29,6 +32,7 @@
                   nncore
                   :wt-mat (mx/zero-matrix num-nodes num-nodes)
                   :linger-wt-mat (new-linger-wt-mat id-to-idx sem-iffs sem-ifs)
+                  :link-mat (mx/zero-matrix num-nodes num-nodes)
                   :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
                                                     node-seq id-to-idx))]
     (nn/map->PropnNet
@@ -41,7 +45,8 @@
   [pnet]
   (assoc pnet 
          :wt-mat        (mx/matrix (:wt-mat pnet))
-         :linger-wt-mat (mx/matrix (:linger-wt-mat pnet))))
+         :linger-wt-mat (mx/matrix (:linger-wt-mat pnet))
+         :link-mat (mx/matrix (:link-mat pnet))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
