@@ -1,5 +1,6 @@
 ;; analogy.clj
 ;; Functions for creating and working with AnalogyNets.
+;; NOTE: The Analogy record type is defined in popco.nn.nets.
 ;; Further documentation on AnalogyNets can be read and maintained in net.clj
 ;; See lot.clj for documentation on Propns and their components.
 
@@ -29,6 +30,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
 ;; ...
+
+;; NOTE: The Analogy record type is defined in popco.nn.nets.
 
 ;; non-lazy
 (defn make-analogy-net
