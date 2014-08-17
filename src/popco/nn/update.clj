@@ -81,8 +81,8 @@
   [pdim a-activns aidx-to-pidxs]
   (let [aidxs (keys aidx-to-pidxs)
         wt-mat (mx/zero-matrix pdim pdim)] ; make new mat
-    (doseq [aidx aidxs
-            :let [a-val (mx/mget a-activns aidx)
+    (doseq [aidx aidxs        ; loop through indexes of all propn map nodes in analogy net
+            :let [a-val (mx/mget a-activns aidx)          ; if the propn map node has not been unmasked, this activation will be 0.
                   [p-idx1 p-idx2] (aidx-to-pidxs aidx)]]
       (nn/symlink! wt-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
     wt-mat))
