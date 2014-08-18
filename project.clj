@@ -7,7 +7,7 @@
   :profiles {:dev {:dependencies [;[slingshot "0.10.3"][org.jblas/jblas "1.2.3"][mars0i/clatrix "0.4.0-SNAPSHOT"]
                                   ;[net.mikera/core.matrix "0.22.1-OTHERZEROS"] ; my hack version that allows mmul to return numbers of the same kind as input
                                   [net.mikera/core.matrix "0.27.2-SNAPSHOT"]
-                                  [net.mikera/vectorz-clj "0.20.1-SNAPSHOT"]
+                                  [net.mikera/vectorz-clj "0.25.0"]
                                   [org.clojure/algo.generic "0.1.1"]
                                   [org.clojure/data.csv "0.1.2"]
                                   ;[org.clojure/math.combinatorics "0.0.7"]
