@@ -79,11 +79,11 @@
   link as a function of the activation of the map node that maps those two 
   propositions, in the analogy network."
   [pdim a-activns aidx-to-pidxs]
-  (let [aidxs (keys aidx-to-pidxs)
+  (let [aidxs (keys aidx-to-pidxs) ; TODO QUESTION: Should we instead use only unmasked indexes?
         wt-mat (mx/zero-matrix pdim pdim)] ; make new mat
-    (doseq [aidx aidxs        ; loop through indexes of all propn map nodes in analogy net
+    (doseq [aidx aidxs        ; loop through indexes of all propn map nodes in analogy net.
             :let [a-val (mx/mget a-activns aidx)          ; if the propn map node has not been unmasked, this activation will be 0.
-                  [p-idx1 p-idx2] (aidx-to-pidxs aidx)]]
+                  [p-idx1 p-idx2] (aidx-to-pidxs aidx)]]  ; TODO should this be done only if a-val is nonzero?
       (nn/symlink! wt-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
     wt-mat))
 
