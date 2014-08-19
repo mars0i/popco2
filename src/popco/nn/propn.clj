@@ -20,6 +20,10 @@
 ;; NOTE: The Proposition record type is defined in popco.nn.nets.
 
 ;; non-lazy
+;; By default, propn net's link-mat is empty (contains nil).  An external function applied 
+;; to the popn can be used to fill it, if desired (e.g. by mapping over ticks).  Otherwise 
+;; we use the regular wt-mat as the value of links.  This can occasionally hide what should 
+;; be considered a link even though it has weight zero.  See github issue #6 for discussion.
 (defn make-propn-net
   "Constructs a proposition netword object with fields specified in doctrings
   of ->Propn-net and make-nn-core."
@@ -32,7 +36,7 @@
                   nncore
                   :wt-mat (mx/zero-matrix num-nodes num-nodes)
                   :linger-wt-mat (new-linger-wt-mat id-to-idx sem-iffs sem-ifs)
-                  :link-mat (mx/zero-matrix num-nodes num-nodes)
+                  :link-mat nil ; by default this is "empty".  it can be filled by an external function applied to the population.
                   :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
                                                     node-seq id-to-idx))]
     (nn/map->PropnNet
@@ -46,7 +50,9 @@
   (assoc pnet 
          :wt-mat        (mx/matrix (:wt-mat pnet))
          :linger-wt-mat (mx/matrix (:linger-wt-mat pnet))
-         :link-mat (mx/matrix (:link-mat pnet))))
+         :link-mat (if-let [link-mat (:link-mat pnet)]
+                     (mx/matrix link-mat) ; make fresh copy of link-mat
+                     nil))) ; source link-mat is nil, too
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
