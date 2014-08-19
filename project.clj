@@ -15,6 +15,7 @@
                                   [incanter/incanter-core "1.5.5"]
                                   ;[org.clojure/data.generators "0.1.2"]
                                   ;[bigml/sampling "2.1.1"]
+                                  [it.uniroma1.dis.wsngroup.gexf4j/gexf4j "0.4.4-BETA"]
                                   [criterium/criterium "0.4.3"]]
                    :source-paths ["src"] ; where load will look for source files
                    :java-source-paths ["src/java"]
