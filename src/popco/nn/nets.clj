@@ -56,12 +56,16 @@
 
 ;; PropnNets store a weight matrix, node activations, and associated semantic
 ;; information for a proposition network.
+;; By default, propn net's link-mat is empty (contains nil).  An external function applied 
+;; to the popn can be used to fill it, if desired.  Otherwise 
+;; we use the regular wt-mat as the value of links.  This can occasionally hide what should 
+;; be considered a link even though it has weight zero.  See github issue #6 for discussion.
 (defrecord PropnNet [wt-mat linger-wt-mat link-mat node-vec id-to-idx]
   NNMats
   (wt-mat [nnstru] (:wt-mat nnstru))
   (pos-wt-mat [nnstru] (mx/emap posify (:wt-mat nnstru)))
   (neg-wt-mat [nnstru] (mx/emap negify (:wt-mat nnstru)))
-  (links [nnstru] (:link-mat nnstru)))
+  (links [nnstru] (or (:link-mat nnstru) (wt-mat nnstru)))) ; By default, propn net's link-mat is empty (contains nil).  An external function applied to the popn can be used to fill it.
 
 ;; TODO DOCSTRING IS OBSOLETE?
 (ug/add-to-docstr ->PropnNet
@@ -75,6 +79,14 @@
                  conversational influences on link weights.  (Contrast with the
                  effect of analogy net activations of propn-map-nodes, which is
                  recreated from scratch on every tick.)
+  :link-mat      nil by default, but can be filled with a core.matrix matrix that
+                 represents non-links by zero, and links by other values.  This allows
+                 distinguishing proposition net links that have weight zero from non
+                 links.  Filling should be done with an 'external' program, i.e. one
+                 that is not normally run but that can be applied to a population,
+                 returning a population in which the link-mats of the proposition nets
+                 of one or more persons have been filled.  This allows keeping track of
+                 zero-weight links by external network display routines.
   :propn-to-descendant-propn-idxs - a map from each propn id to a seq of 
                  of indexes from the propn's descendant propns.
   :propn-to-extended-fams-ids - a map from each propn id to a vec of seqs
