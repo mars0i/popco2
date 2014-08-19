@@ -71,7 +71,7 @@
         aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
         propn-from-analogy-wt-mat (propn-wts-from-analogy-activns dim a-activns aidx-to-pidxs)] ; rets new mat
     (mx/emap! nn/clip-to-extrema (mx/add! propn-from-analogy-wt-mat linger-wt-mat))
-    (assoc-in pers [:propn-net :wt-mat] propn-from-analogy-wt-mat)))
+    (assoc-in pers [:propn-net :all-wt-mat] propn-from-analogy-wt-mat)))
 
 (defn propn-wts-from-analogy-activns
   "Generates a new proposition weight matrix from proposition map nodes 
@@ -86,38 +86,6 @@
                   [p-idx1 p-idx2] (aidx-to-pidxs aidx)]]  ; TODO should this be done only if a-val is nonzero?
       (nn/symlink! wt-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
     wt-mat))
-
-;; TODO: Deal with semantic-iffs and influence from communication.
-;; TODO TODO maybe refactor so that I'm not going in and out of the person repeatedly--
-;; i.e pass around components, and then reconstruct the person at the end.
-;(defn old-update-propn-wts-from-analogy-activns
-;  "Performs a functional update of person pers's propn link weight matrix 
-;  from activations of proposition map nodes in the analogy network.  
-;  i.e. this updates the weight of a propn-to-propn link as a function of 
-;  the activation of the map node that maps those two propositions, in the 
-;  analogy network.  Returns the fresh, updated person."
-;  [pers]
-;  (let [updated-pers (set-propn-wts-from-analogy-activns! (pers/propn-net-zeroed pers)) ; make a new wt-mat, then update from analogy net
-;        p-mat (:wt-mat (:propn-net updated-pers))]
-;    (assoc-in pers [:propn-net :wt-mat]
-;              (emap! nn/clip-to-extrema (add! p-mat (:linger-wt-mat pers))))))
-;
-;(defn old-set-propn-wts-from-analogy-activns!
-;  "Mutates person pers's propn link weight matrix from activations of
-;  proposition map nodes in the analogy network.  i.e. this sets the
-;  weight of a propn-to-propn link as a function of the activation of
-;  the map node that maps those two propositions, in the analogy network.
-;  Returns the original person with its newly-modified propn net"
-;  [pers]
-;  (let [a-activns (:analogy-activns pers)
-;        p-mat (:wt-mat (:propn-net pers))         ; We want the actual matrix. Safer with the keyword.
-;        aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
-;        aidxs (keys aidx-to-pidxs)]
-;    (doseq [a-idx aidxs
-;            :let [a-val (mget a-activns a-idx)
-;                  [p-idx1 p-idx2] (aidx-to-pidxs a-idx)]]  ; CAN I DO THIS AT THE TOP OF THE doseq BY DESTRUCTURING MAP ELEMENTS?
-;      (nn/dirlink! p-mat p-idx1 p-idx2 (calc-propn-link-wt a-val)))
-;    pers)) ; this function mutates the matrix inside pers, so no need to assoc it into the result
 
 ;; calc-assoc-weight in imp.lisp in popco1
 (defn calc-propn-link-wt

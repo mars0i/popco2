@@ -34,7 +34,7 @@
         id-to-idx (:id-to-idx nncore)
         propn-map (assoc 
                   nncore
-                  :wt-mat (mx/zero-matrix num-nodes num-nodes)
+                  :all-wt-mat (mx/zero-matrix num-nodes num-nodes)
                   :linger-wt-mat (new-linger-wt-mat id-to-idx sem-iffs sem-ifs)
                   :link-mat nil ; by default this is "empty".  it can be filled by an external function applied to the population.
                   :propn-to-descendant-propn-idxs (make-propn-to-extended-descendant-propn-idxs 
@@ -48,7 +48,7 @@
   but possibly sharing pnet's other data structures."
   [pnet]
   (assoc pnet 
-         :wt-mat        (mx/matrix (:wt-mat pnet))
+         :all-wt-mat    (mx/matrix (:all-wt-mat pnet))
          :linger-wt-mat (mx/matrix (:linger-wt-mat pnet))
          :link-mat (if-let [link-mat (:link-mat pnet)]
                      (mx/matrix link-mat) ; make fresh copy of link-mat

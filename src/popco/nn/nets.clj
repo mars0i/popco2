@@ -62,9 +62,9 @@
 ;; be considered a link even though it has weight zero.  See github issue #6 for discussion.
 (defrecord PropnNet [wt-mat linger-wt-mat link-mat node-vec id-to-idx]
   NNMats
-  (wt-mat [nnstru] (:wt-mat nnstru))
-  (pos-wt-mat [nnstru] (mx/emap posify (:wt-mat nnstru)))
-  (neg-wt-mat [nnstru] (mx/emap negify (:wt-mat nnstru)))
+  (wt-mat [nnstru] (:all-wt-mat nnstru))
+  (pos-wt-mat [nnstru] (mx/emap posify (:all-wt-mat nnstru)))
+  (neg-wt-mat [nnstru] (mx/emap negify (:all-wt-mat nnstru)))
   (links [nnstru] (or (:link-mat nnstru) (wt-mat nnstru)))) ; By default, propn net's link-mat is empty (contains nil).  An external function applied to the popn can be used to fill it.
 
 ;; TODO DOCSTRING IS OBSOLETE?
@@ -72,7 +72,7 @@
   "Makes a proposition neural-net structure, i.e. a structure that represents a
   POPCO proposition constraint satisfaction network.  Has these fields in addition
   to those documented for make-nn-core:
-  :wt-mat -      A core.matrix square matrix with dimensions equal to the number
+  :all-wt-mat -      A core.matrix square matrix with dimensions equal to the number
                  of nodes, representing all links.
   :linger-wt-mat -  A core.matrix square matrix with dimensions equal to the number
                  of nodes, representing the lingering semantic, perceptual, and
@@ -258,13 +258,13 @@
   "Return a vector containing weights of links to the SALIENT node 
   in the proposition net."
   [pers]
-  (pmx/col1 (:wt-mat (:propn-net pers))))
+  (pmx/col1 (wt-mat (:propn-net pers))))
 
 (defn semantic-wts
   "Return a vector containing weights of links to the SEMANTIC node 
-  in the proposition net."
+  in the analogy net."
   [pers]
-  (pmx/col1 (:wt-mat (:analogy-net pers))))
+  (pmx/col1 (wt-mat (:analogy-net pers))))
 
 (defn display-salient-wts [popn] (doall (map println (map salient-wts (:persons popn)))) (flush) popn)
 
