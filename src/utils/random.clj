@@ -1,10 +1,11 @@
 (ns utils.random
-  (:require [clojure.data.generators :as gen]
-            [incanter.stats :as incant]
-            [bigml.sampling [simple :as simple]])
+  ;(:require ;[clojure.data.generators :as gen]
+            ;[incanter.stats :as incant]
+            ;[bigml.sampling [simple :as simple]])
   (:import [ec.util MersenneTwister MersenneTwisterFast]
            ;[SFMT19937]
-	   [java.util Random]))
+	   ;[java.util Random]
+           ))
 
 (defn make-long-seed
   [] 

@@ -1,11 +1,7 @@
 (ns utils.general ; Utility functions handy for any Clojure program
   (:use [clojure.repl :only [dir-fn]])
   (:require [clojure.pprint :only [*print-right-margin*]]
-            [clojure.set :as st]
-            [clojure.data.generators :as gen]
-            [incanter.stats :as incant]
-            [bigml.sampling [simple :as simple]]
-            ))
+            [clojure.set :as st]))
 
 (defn add-quotes
   "Append initial and terminal double-quote characters to string."

@@ -13,8 +13,8 @@
                                   ;[org.clojure/math.combinatorics "0.0.7"]
                                   ;[incanter/incanter "1.5.5"]
                                   [incanter/incanter-core "1.5.5"]
-                                  [org.clojure/data.generators "0.1.2"]
-                                  [bigml/sampling "2.1.1"]
+                                  ;[org.clojure/data.generators "0.1.2"]
+                                  ;[bigml/sampling "2.1.1"]
                                   [criterium/criterium "0.4.3"]]
                    :source-paths ["src"] ; where load will look for source files
                    :java-source-paths ["src/java"]
