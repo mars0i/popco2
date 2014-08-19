@@ -60,7 +60,9 @@
 ;; to the popn can be used to fill it, if desired.  Otherwise 
 ;; we use the regular wt-mat as the value of links.  This can occasionally hide what should 
 ;; be considered a link even though it has weight zero.  See github issue #6 for discussion.
-(defrecord PropnNet [wt-mat linger-wt-mat link-mat node-vec id-to-idx]
+;; (Note that it's a mistake to use 'wt-mat' for both a field name and a function name, because
+;; in this defrecord form, 'wt-mat' cannot be called as a function.)
+(defrecord PropnNet [all-wt-mat linger-wt-mat link-mat node-vec id-to-idx]
   NNMats
   (wt-mat [nnstru] (:all-wt-mat nnstru))
   (pos-wt-mat [nnstru] (mx/emap posify (:all-wt-mat nnstru)))
