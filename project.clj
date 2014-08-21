@@ -10,13 +10,14 @@
                                   [net.mikera/vectorz-clj "0.25.0"]
                                   [org.clojure/algo.generic "0.1.1"]
                                   [org.clojure/data.csv "0.1.2"]
+                                  [org.clojure/data.xml "0.0.8"]
                                   ;[org.clojure/math.combinatorics "0.0.7"]
+                                  ;[it.uniroma1.dis.wsngroup.gexf4j/gexf4j "0.4.4-BETA"] ; Java GEXF format library
+                                  ;[gexf "0.1.0-SNAPSHOT"] ; Clojure GEXF format library
                                   ;[incanter/incanter "1.5.5"]
                                   [incanter/incanter-core "1.5.5"]
                                   ;[org.clojure/data.generators "0.1.2"]
                                   ;[bigml/sampling "2.1.1"]
-                                  [it.uniroma1.dis.wsngroup.gexf4j/gexf4j "0.4.4-BETA"] ; Java GEXF format library
-                                  [gexf "0.1.0-SNAPSHOT"] ; Clojure GEXF format library
                                   [criterium/criterium "0.4.3"]]
                    :source-paths ["src"] ; where load will look for source files
                    :java-source-paths ["src/java"]
