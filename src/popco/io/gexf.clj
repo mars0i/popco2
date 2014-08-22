@@ -1,5 +1,6 @@
 (ns popco.io.gexf
-  (:require [clojure.data.xml :as x]))
+  (:require [clojure.data.xml :as x]
+            [clojure.core.matrix :as mx]))
 
 (def as-elem x/sexp-as-element) ; convenience abbreviation
 
@@ -31,36 +32,28 @@
 
 (defn edge
   "node1-id and node2-id are strings.  edge-weight should be 
-  a number that will determine the edge thickness.  It's not
+  a number that will determine the edge thickness.  It's
   a function of the popco link weight, but is not the same thing."
   [node1-id node2-id edge-weight]
-  [:edge {:id (str node1-id "<->" node2-id)
-          :source node1-id
-          :target node2-id
-          :weight (str edge-weight)}])
+  (let [wt-str (str (* 1 (mx/abs edge-weight)))      ; TODO multiplication of weight is just for testing. delete it later.
+        color (cond (pos? edge-weight) {:r "0" :g "255" :b "0"}
+                    (neg? edge-weight) {:r "255" :g "0" :b "0"}
+                    :else {:r "0" :g "0" :b "0"})]
+    [:edge {:id (str node1-id "::" node2-id)
+            :source node1-id
+            :target node2-id
+            :weight wt-str}
+     [:viz:thickness {:value wt-str}] ; IGNORED, APPARENTLY
+     [:viz:color color]]))
 
 ;; IMPORTANT: During import into Gephi, uncheck "auto-scale".  Otherwise it does funny things with node sizes.
 (defn gexf-test []
   (gexf-graph
     (nodes
-      (node "SALIENT" 50 0 0 255)
-      (node "b-what-hey" 40 0 255 0)
-      (node "v-yola-boy" 30 255 0 0))
+      (node "A" 50 0 0 255)
+      (node "B" 40 0 255 0)
+      (node "C" 30 255 0 0))
     (edges
-      (edge "SALIENT" "b-what-hey" 2.0)
-      (edge "SALIENT" "v-yola-boy" 1.0)
-      (edge "v-yola-boy" "b-what-hey" 4.0))))
-;; LOOKS LIKE GEPHI just makes whatever is the smallest weight into a single-width line.  ugh.  Maybe there's viz:weight attr?
-
-
-
-
-;            <node id="a" label="glossy">
-;                <viz:color r="239" g="173" b="66" a="0.6"/>
-;                <viz:position x="15.783598" y="40.109245" z="0.0"/>
-;                <viz:size value="2.0375757"/>
-;                <viz:shape value="disc"/>
-;            </node>
-
-
-;(sexp-as-element [:foo {:foo-attr "foo value"} [:bar {:bar-attr "bar value"} [:baz {} "The baz value"] [:baz {} "another baz value"]]])
+      (edge "A" "B" -2.0)
+      (edge "A" "C" 1.0)
+      (edge "C" "B" 4.0))))
