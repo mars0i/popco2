@@ -76,9 +76,10 @@
   networks' weight matrices will reflect the fact that new propositions are now
   part of listener's thought processes."
   [original-pers new-propns]
-  (let [pers (person-masks-clone original-pers)] ; TODO Is this really necesary?
+  (let [pers (person-masks-clone original-pers) ; TODO Is this really necesary?
+        pnet (:propn-net pers)]
     (doseq [new-propn new-propns]
-      (add-to-propn-net! pers new-propn)
+      (add-to-propn-net! pnet new-propn)
       (let [propn-to-extended-fams (:propn-to-extended-famss (:propn-net pers))
             fams (propn-to-extended-fams new-propn)]  ;; TODO: NPE HERE
         (doseq [fam fams                           ; loop through all extended fams containing this propn
@@ -86,19 +87,23 @@
           (try-add-to-analogy-net! pers propn))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
     pers))
 
+(defn masks-clone
+  [net]
+  (assoc net :mask (mx/clone (:mask net))))
+
 (defn person-masks-clone
   "Accepts a single argument, a person pers, and returns a person containing
   a fresh copy of its analogy and proposition masks."
   [pers]
   (assoc pers 
-         :analogy-mask (mx/clone (:analogy-mask pers))
-         :propn-mask (mx/clone (:propn-mask pers))))
+         :propn-net (masks-clone (:propn-net pers))
+         :analogy-net (masks-clone (:analogy-net pers))))
 
 (defn add-to-propn-net!
   "ADD DOCSTRING"
-  [pers propn]
-  (let [pnet (:propn-net pers)]
-    (nn/unmask! (:propn-mask pers) ((:id-to-idx pnet) propn))))
+  [pnet propn]
+  (let [id-to-idx (:id-to-idx pnet)]
+    (nn/unmask! (:propn-mask pnet) (id-to-idx propn))))
 
 (defn try-add-to-analogy-net!
   "ADD DOCSTRING.  See communic.md for further explanation."
@@ -113,29 +118,30 @@
 
 (defn propn-still-masked?
   "Return true if, in person (first arg), propn (second arg) doesn't exist
-   in the proposition net in the sense that it's masked; false otherwise."
-  [{{id-to-idx :id-to-idx} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
-    propn-mask :propn-mask}           ; bind propn-mask of person
-   propn]
-  (nn/node-masked? propn-mask (id-to-idx propn)))
+  in the proposition net in the sense that it's masked; false otherwise."
+  [pers propn]
+  (let [pnet (:propn-net pers)]
+    (nn/node-masked? (:mask pnet)
+                     ((:id-to-idx pnet) propn))))
 
 (defn propn-already-unmasked?
   "Return true if, in person (first arg), propn (second arg) exists in the
   proposition net in the sense that it has been unmasked; false otherwise."
-  [{{id-to-idx :id-to-idx} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
-    propn-mask :propn-mask}           ; bind propn-mask of person
-   propn]
-  (nn/node-unmasked? propn-mask (id-to-idx propn)))
+  [pers propn]
+  (let [pnet (:propn-net pers)]
+    (nn/node-unmasked? (:mask pnet)
+                       ((:id-to-idx pnet) propn))))
 
 (defn propn-components-already-unmasked?
   "Return true if, in person (first arg), propn (second arg) is a possible
   candidate for matching--i.e. if its component propns (and therefore
   preds, objs) already exist, i.e. have been unmasked.  Returns false if not."
-  [{{propn-to-descendant-propn-idxs :propn-to-descendant-propn-idxs} :propn-net ; bind field of propn-net of person that's passed as 2nd arg
-    propn-mask :propn-mask} ; bind propn-mask of person
-   propn]
-  (every? (partial nn/node-unmasked? propn-mask) 
-          (propn-to-descendant-propn-idxs propn))) ; if propn is missing extended-descendant propns, can't match
+  [pers propn]
+  (let [pnet (:propn-net pers)
+        propn-to-descendant-propn-idxs (:propn-to-descendant-propn-idxs pnet)
+        propn-mask (:propn-mask pnet)]
+    (every? (partial nn/node-unmasked? propn-mask) 
+            (propn-to-descendant-propn-idxs propn)))) ; if propn is missing extended-descendant propns, can't match
 
 (defn ids-to-poss-mn-id
   "Given two id keywords and a person, constructs and returns 
@@ -146,8 +152,9 @@
 
 (defn unmask-mapnode-extended-family!
   "ADD DOCSTRING"
-  [{{propn-mn-to-ext-fam-idxs :propn-mn-to-ext-fam-idxs} :analogy-net ; bind index map from analogy-net in person
-    analogy-mask :analogy-mask} ; bind mask in person
-   mn-id]
-  (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
-    (nn/unmask! analogy-mask idx)))
+  [pers mn-id]
+  (let [anet (:analogy-net pers)
+        propn-mn-to-ext-fam-idxs (:propn-mn-to-ext-fam-idxs anet)
+        analogy-mask (:mask anet)]
+    (doseq [idx (propn-mn-to-ext-fam-idxs mn-id)]
+      (nn/unmask! analogy-mask idx))))

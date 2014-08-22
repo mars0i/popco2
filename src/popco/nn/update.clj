@@ -67,7 +67,7 @@
   [pers]
   (let [linger-wt-mat (:linger-wt-mat (:propn-net pers))
         dim (first (mx/shape linger-wt-mat))
-        a-activns (:analogy-activns pers)
+        a-activns (:activns (:analogy-net pers))
         aidx-to-pidxs (:analogy-idx-to-propn-idxs pers)
         propn-from-analogy-wt-mat (propn-wts-from-analogy-activns dim a-activns aidx-to-pidxs)] ; rets new mat
     (mx/emap! nn/clip-to-extrema (mx/add! propn-from-analogy-wt-mat linger-wt-mat))
@@ -101,26 +101,28 @@
   ([pers] 
    (settle-analogy-net pers 1))
   ([pers iters]
-   (settle-net pers :analogy-net :analogy-activns :analogy-mask iters)))
+   (settle-net pers :analogy-net iters)))
 
 (defn settle-propn-net
   "Return person pers with its propn net updated by 1 or more iters of settling."
   ([pers] 
    (settle-propn-net pers 1))
   ([pers iters]
-   (settle-net pers :propn-net :propn-activns :propn-mask iters)))
+   (settle-net pers :propn-net iters)))
 
 (defn settle-net
   "Return person pers with the net selected by net-key and activns-key updated
   by iters rounds of settling."
-  [pers net-key activns-key mask-key iters]
-  (assoc pers activns-key
-         (ug/fn-pow 
-           (partial next-activns (net-key pers) (mask-key pers))
-           (activns-key pers)
-           iters)))
+  [pers net-key iters]
+  (let [net (net-key pers)]
+    (assoc pers 
+           (assoc net :activns
+                  (ug/fn-pow 
+                    (partial next-activns net (:mask net))
+                    (:activns net)
+                    iters)))))
 
-;; GROSSBERG ALGORITHM SETTLING FUNCTION
+  ;; GROSSBERG ALGORITHM SETTLING FUNCTION
 ;; See settle.md for explanation and reference sources, including
 ;; explanation of unidirectional links.
 ;; TODO: Should I use add-product here for the inner addition of emuls?

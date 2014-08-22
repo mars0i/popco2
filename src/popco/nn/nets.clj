@@ -42,7 +42,7 @@
 ;; AnalogyNets store weight matrices, node activations, and associated semantic
 ;; information for a proposition network.
 ;; AnalogyNets are created with make-analogy-net in nn/analogy.clj
-(defrecord AnalogyNet [pos-wt-mat neg-wt-mat node-vec id-to-idx ids-to-idx]
+(defrecord AnalogyNet [mask activns pos-wt-mat neg-wt-mat node-vec id-to-idx ids-to-idx]
   NNMats
   (wt-mat [nnstru] (mx/add (:pos-wt-mat nnstru) (:neg-wt-mat nnstru)))
   (pos-wt-mat [nnstru] (:pos-wt-mat nnstru))
@@ -62,7 +62,7 @@
 ;; be considered a link even though it has weight zero.  See github issue #6 for discussion.
 ;; (Note that it's a mistake to use 'wt-mat' for both a field name and a function name, because
 ;; in this defrecord form, 'wt-mat' cannot be called as a function.)
-(defrecord PropnNet [all-wt-mat linger-wt-mat link-mat node-vec id-to-idx]
+(defrecord PropnNet [mask activns all-wt-mat linger-wt-mat link-mat node-vec id-to-idx]
   NNMats
   (wt-mat [nnstru] (:all-wt-mat nnstru))
   (pos-wt-mat [nnstru] (mx/emap posify (:all-wt-mat nnstru)))

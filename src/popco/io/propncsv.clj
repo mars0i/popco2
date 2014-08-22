@@ -43,7 +43,7 @@
   [pers]
   (rest   ; strip SALIENT node (see sanity check exception in write-propn-activns-csv)
         (mx/matrix :persistent-vector 
-                   (:propn-activns pers))))
+                   (:activns (:propn-net pers)))))
  
 (defn column-names
   "Given a sequence of persons, return a sequence of strings containing

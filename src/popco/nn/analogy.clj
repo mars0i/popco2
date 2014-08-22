@@ -25,7 +25,7 @@
 (declare make-analogy-net assoc-ids-to-idx-nn-map make-activn-vec make-wt-mat match-propns propns-match? match-propn-components match-propn-components-deeply
          make-mapnode-map make-propn-mn-to-mns make-propn-mn-to-fam-idxs alog-ids make-two-ids-to-idx-map ids-to-mapnode-id ids-to-poss-mapnode-id add-wts-to-mat! 
          sum-wts-to-mat! write-wts-to-mat! matched-idx-fams competing-mapnode-fams competing-mapnode-idx-fams args-match? identity-if-zero make-propn-to-analogs 
-         pred-mapnode? dupe-pred-mapnode? write-semantic-links! conc-specs-to-idx-multiplier-pairs dupe-pred-idx-multiplier-pairs)
+         pred-mapnode? dupe-pred-mapnode? write-semantic-links! conc-specs-to-idx-multiplier-pairs dupe-pred-idx-multiplier-pairs clone)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ALL STEPS - put it all together
@@ -74,6 +74,8 @@
         pos-wt-mat (make-wt-mat num-nodes)  ; construct zero matrices
         neg-wt-mat (make-wt-mat num-nodes)  ; ... to be filled below
         analogy-map (assoc nn-map
+                           :mask     (mx/zero-vector num-nodes)
+                           :activns  (mx/zero-vector num-nodes)
                            :pos-wt-mat pos-wt-mat
                            :neg-wt-mat neg-wt-mat
                            :propn-mn-to-ext-fam-idxs (make-propn-mn-to-fam-idxs id-to-idx ext-fams)
@@ -420,3 +422,10 @@
     (gf/fmap #(vec (map second %)) (group-by first propn-pair-ids))
     (gf/fmap #(vec (map first %)) (group-by second propn-pair-ids))))
 
+(defn clone
+  "Make AnalogyNet like anet that has its own new copy of anet's mask and activns,
+  with everything else shared, including the weight matrices."
+  [anet]
+  (assoc anet
+         :mask    (mx/clone (:mask anet))
+         :activns (mx/clone (:activns anet))))

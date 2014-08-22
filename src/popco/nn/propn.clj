@@ -34,6 +34,8 @@
         id-to-idx (:id-to-idx nncore)
         propn-map (assoc 
                   nncore
+                  :mask     (mx/zero-vector num-nodes)
+                  :activns  (mx/zero-vector num-nodes)
                   :all-wt-mat (mx/zero-matrix num-nodes num-nodes)
                   :linger-wt-mat (new-linger-wt-mat id-to-idx sem-iffs sem-ifs)
                   :link-mat nil ; by default this is "empty".  it can be filled by an external function applied to the population.
@@ -44,10 +46,12 @@
              :propn-to-extended-fams-ids (make-propn-to-extended-fams-ids propn-map)))))
 
 (defn clone
-  "Make a PropnNet pnet that has its own new copy of pnet's wt-mat matrix, 
-  but possibly sharing pnet's other data structures."
+  "Make a PropnNet pnet that has its own new copy of pnet's mask, activns, and 
+  wt-mat matrix, but possibly sharing pnet's other data structures."
   [pnet]
   (assoc pnet 
+         :mask          (mx/clone (:mask pnet))
+         :activns       (mx/clone (:activns pnet))
          :all-wt-mat    (mx/matrix (:all-wt-mat pnet))
          :linger-wt-mat (mx/matrix (:linger-wt-mat pnet))
          :link-mat (if-let [link-mat (:link-mat pnet)]

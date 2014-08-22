@@ -7,9 +7,11 @@
 
 (defn doublify-pers-propn-activns
   [pers]
-  (assoc pers 
-         :propn-activns 
-         (doublify-matrix (:propn-activns pers))))
+  (let [pnet (:propn-net pers)]
+    (assoc pers 
+           :propn-net (assoc pnet 
+                             :activns (doublify-matrix 
+                                        (:activns pnet))))))
 
 (defn doublify-popn-propn-activns
   [popn]

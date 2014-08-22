@@ -12,8 +12,8 @@
                                                                
 ;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [id 
-                   propn-net    propn-mask    propn-activns 
-                   analogy-net  analogy-mask  analogy-activns
+                   propn-net 
+                   analogy-net
                    analogy-idx-to-propn-idxs utterable-ids utterable-mask
                    groups  talk-to-groups  talk-to-persons
                    max-talk-to rng])
@@ -63,11 +63,7 @@
         propn-ids (map :id propns)
         pers (->Person id 
                        (pn/clone propn-net)
-                       (mx/zero-vector num-poss-propn-nodes)     ; propn-mask
-                       (mx/zero-vector num-poss-propn-nodes)     ; propn-activns
-                       analogy-net                                ; yup, analogy-net
-                       (mx/zero-vector num-poss-analogy-nodes)   ; analogy-mask
-                       (mx/zero-vector num-poss-analogy-nodes)   ; analogy-activns
+                       analogy-net                               ; yup, analogy-net
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net) ; yes, analogy-idx-to-propn-idxs
                        (vec utterable-ids)
                        (let [utterable-mask (mx/zero-vector num-poss-propn-nodes)] ; utterable-mask is a core.matrix vector
@@ -80,15 +76,15 @@
                        max-talk-to
                        (ran/make-rng (ran/next-long cn/initial-rng)))]
     ;; set up propn net and associated vectors:
-    (doseq [propn-id propn-ids] (cl/add-to-propn-net! pers propn-id))                ; unmask propn nodes
-    (nn/set-mask! (:propn-mask pers) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))        ; special mask val to undo next-activn's decay on this node
-    (mx/add! (:propn-activns pers) (mx/emul (:propn-mask pers) cn/+propn-node-init-activn+)) ; initial activns for unmasked propns
+    (doseq [propn-id propn-ids] (cl/add-to-propn-net! (:propn-net pers) propn-id))                ; unmask propn nodes
+    (nn/set-mask! (:propn-mask (:propn-net pers)) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))        ; special mask val to undo next-activn's decay on this node
+    (mx/add! (:propn-activns (:propn-net pers)) (mx/emul (:propn-mask (:propn-net pers)) cn/+propn-node-init-activn+)) ; initial activns for unmasked propns
     (nn/set-activn! (:propn-activns pers) cn/+feeder-node-idx+ 1.0)                  ; salient node always has activn = 1
     ;; set up analogy net and associated vectors:
     (doseq [propn-id propn-ids] (cl/try-add-to-analogy-net! pers propn-id))         ; unmask analogy nodes (better to fill propn mask first)
-    (nn/set-mask! (:analogy-mask pers) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))     ; special mask val to undo next-activn's decay on this node
-    (mx/add! (:analogy-activns pers) (mx/emul (:analogy-mask pers) cn/+analogy-node-init-activn+)) ; initial activns for unmasked analogy nodes
-    (nn/set-activn! (:analogy-activns pers) cn/+feeder-node-idx+ 1.0)               ; semantic node always has activn = 1
+    (nn/set-mask! (:analogy-mask (:analogy-net pers)) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))     ; special mask val to undo next-activn's decay on this node
+    (mx/add! (:analogy-activns (:analogy-net pers)) (mx/emul (:analogy-mask (:analogy-net pers)) cn/+analogy-node-init-activn+)) ; initial activns for unmasked analogy nodes
+    (nn/set-activn! (:analogy-activns (:analogy-net pers)) cn/+feeder-node-idx+ 1.0)               ; semantic node always has activn = 1
     pers))
 
 
@@ -97,18 +93,14 @@
   copy of any internal structure one might want to mutate.  (Useful for creating 
   distinct persons rather than to update the same person for a new tick.)"
   [{:keys [id 
-           propn-net    propn-mask    propn-activns 
-           analogy-net  analogy-mask  analogy-activns
+           propn-net
+           analogy-net
            analogy-idx-to-propn-idxs  utterable-ids  utterable-mask
            groups  talk-to-groups  talk-to-persons
            max-talk-to]}]
   (->Person id
             (pn/clone propn-net)
-            (mx/clone propn-mask)
-            (mx/clone propn-activns)
-            analogy-net                ; should never change
-            (mx/clone analogy-mask)
-            (mx/clone analogy-activns)
+            (an/clone analogy-net) ; has new mask and activns, but shares the rest, including weight matrices
             analogy-idx-to-propn-idxs  ; should never change
             utterable-ids              ; These last few are normal Clojure vecs,
             utterable-mask             ;  so

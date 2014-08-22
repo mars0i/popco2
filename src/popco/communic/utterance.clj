@@ -14,8 +14,9 @@
 
 (defn utterance-valence
   [speaker propn-id]
-  (let [id-to-idx (:id-to-idx (:propn-net speaker))
-        propn-activns (:propn-activns speaker)]
+  (let [pnet (:propn-net speaker)
+        id-to-idx (:id-to-idx pnet)
+        propn-activns (:activns pnet)]
     (ug/sign-of (mx/mget propn-activns (id-to-idx propn-id)))))
     
 (defn make-utterance
