@@ -3,6 +3,12 @@
   (:require [clojure.pprint :only [*print-right-margin*]]
             [clojure.set :as st]))
 
+(defn got
+  "Like 'get', but throws an exception if key is not found."
+  [m k]
+  (get m k 
+       (throw (Exception. (str "No key " k)))))
+
 (defn add-quotes
   "Append initial and terminal double-quote characters to string."
   [string]
