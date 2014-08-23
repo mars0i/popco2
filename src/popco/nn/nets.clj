@@ -74,8 +74,10 @@
   "Makes a proposition neural-net structure, i.e. a structure that represents a
   POPCO proposition constraint satisfaction network.  Has these fields in addition
   to those documented for make-nn-core:
-  :all-wt-mat -      A core.matrix square matrix with dimensions equal to the number
-                 of nodes, representing all links.
+  :mask -         Vector of 1's (propn is entertained) and 0's (it isn't)
+  :activns -      Vector of activation values for nodes in propn net
+  :all-wt-mat -   A core.matrix square matrix with dimensions equal to the number
+                  of nodes, representing all links.
   :linger-wt-mat -  A core.matrix square matrix with dimensions equal to the number
                  of nodes, representing the lingering semantic, perceptual, and
                  conversational influences on link weights.  (Contrast with the

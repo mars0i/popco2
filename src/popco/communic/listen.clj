@@ -100,10 +100,11 @@
          :analogy-net (masks-clone (:analogy-net pers))))
 
 (defn add-to-propn-net!
-  "ADD DOCSTRING"
+  "Add proposition with id propn to proposition network pnet by
+  unmasking at the corresponding index in the proposition mask."
   [pnet propn]
   (let [id-to-idx (:id-to-idx pnet)]
-    (nn/unmask! (:propn-mask pnet) (id-to-idx propn))))
+    (nn/unmask! (:mask pnet) (id-to-idx propn))))
 
 (defn try-add-to-analogy-net!
   "ADD DOCSTRING.  See communic.md for further explanation."
@@ -139,7 +140,7 @@
   [pers propn]
   (let [pnet (:propn-net pers)
         propn-to-descendant-propn-idxs (:propn-to-descendant-propn-idxs pnet)
-        propn-mask (:propn-mask pnet)]
+        propn-mask (:mask pnet)]
     (every? (partial nn/node-unmasked? propn-mask) 
             (propn-to-descendant-propn-idxs propn)))) ; if propn is missing extended-descendant propns, can't match
 

@@ -18,12 +18,12 @@
 (defn list-analogy-links
   "ADD DOCSTRING"
   [pers]
-  (list-links (:analogy-net pers) (:analogy-mask pers)))
+  (list-links (:analogy-net pers)))
 
 (defn list-propn-links
   "ADD DOCSTRING"
   [pers]
-  (list-links (:propn-net pers) (:propn-mask pers)))
+  (list-links (:propn-net pers)))
 
 (defn list-links
   "Return a seq of all node pairs that are linked in nnstru's matrix.
@@ -32,8 +32,9 @@
   i.e. wt1 = wt2 for bidirectional links (the usual case).
   BUGS: Actually just checks whether weights are nonzero; zero-weight
   links will be ignored."
-  [nnstru mask]
+  [nnstru]
   (let [mat (nn/wt-mat nnstru)
+        mask (:mask nnstru)
         id-vec (:id-vec nnstru)
         num-nodes (count id-vec)]
     (for [i (range num-nodes)
@@ -63,8 +64,9 @@
     [id2 id1 wt1 wt2]))
 
 (defn list-nodes
-  [nnstru mask]
+  [nnstru]
   (let [mat (nn/wt-mat nnstru)
+        mask (:mask nnstru)
         id-vec (:id-vec nnstru)
         num-nodes (count id-vec)]
     (for [i (range num-nodes)
@@ -73,11 +75,11 @@
 
 (defn list-propn-nodes
   [pers]
-  (list-nodes (:propn-net pers) (:propn-mask pers)))
+  (list-nodes (:propn-net pers)))
 
 (defn list-analogy-nodes
   [pers]
-  (list-nodes (:analogy-net pers) (:analogy-mask pers)))
+  (list-nodes (:analogy-net pers)))
 
 (defn list-both-nodes
   [pers]

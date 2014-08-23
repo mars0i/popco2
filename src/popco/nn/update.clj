@@ -116,11 +116,11 @@
   [pers net-key iters]
   (let [net (net-key pers)]
     (assoc pers 
-           (assoc net :activns
-                  (ug/fn-pow 
-                    (partial next-activns net (:mask net))
-                    (:activns net)
-                    iters)))))
+           net-key (assoc net :activns
+                          (ug/fn-pow 
+                            (partial next-activns net (:mask net))
+                            (:activns net)
+                            iters)))))
 
   ;; GROSSBERG ALGORITHM SETTLING FUNCTION
 ;; See settle.md for explanation and reference sources, including

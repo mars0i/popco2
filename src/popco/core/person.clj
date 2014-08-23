@@ -9,6 +9,7 @@
             [popco.nn.analogy :as an]
             [clojure.core.matrix :as mx]))
 
+
                                                                
 ;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [id 
@@ -21,11 +22,7 @@
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
    :propn-net -       PropnNet for this person
-   :propn-mask -      vector of 1's (propn is entertained) and 0's (it isn't)
-   :propn-activns -   vector of activation values for nodes in propn net
    :analogy-net -     AnalogyNet (same for all persons)
-   :analogy-mask -    vector of 1's (mapnode is present) or 0's (it's absent)
-   :analogy-activns - activation values of nodes in analogy net
    :analogy-idxs-to-propn-idx - map from propn mapnode indexes in analogy net
                                 to corresponding propn index pairs in propn net.
    :utterable-ids   - Ids of propositions that person is willing to say to others.
@@ -63,7 +60,7 @@
         propn-ids (map :id propns)
         pers (->Person id 
                        (pn/clone propn-net)
-                       analogy-net                               ; yup, analogy-net
+                       (an/clone analogy-net)
                        (nn/make-analogy-idx-to-propn-idxs analogy-net propn-net) ; yes, analogy-idx-to-propn-idxs
                        (vec utterable-ids)
                        (let [utterable-mask (mx/zero-vector num-poss-propn-nodes)] ; utterable-mask is a core.matrix vector
@@ -77,14 +74,14 @@
                        (ran/make-rng (ran/next-long cn/initial-rng)))]
     ;; set up propn net and associated vectors:
     (doseq [propn-id propn-ids] (cl/add-to-propn-net! (:propn-net pers) propn-id))                ; unmask propn nodes
-    (nn/set-mask! (:propn-mask (:propn-net pers)) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))        ; special mask val to undo next-activn's decay on this node
-    (mx/add! (:propn-activns (:propn-net pers)) (mx/emul (:propn-mask (:propn-net pers)) cn/+propn-node-init-activn+)) ; initial activns for unmasked propns
-    (nn/set-activn! (:propn-activns pers) cn/+feeder-node-idx+ 1.0)                  ; salient node always has activn = 1
+    (nn/set-mask! (:mask (:propn-net pers)) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))        ; special mask val to undo next-activn's decay on this node
+    (mx/add! (:activns (:propn-net pers)) (mx/emul (:mask (:propn-net pers)) cn/+propn-node-init-activn+)) ; initial activns for unmasked propns
+    (nn/set-activn! (:activns (:propn-net pers)) cn/+feeder-node-idx+ 1.0)                  ; salient node always has activn = 1
     ;; set up analogy net and associated vectors:
     (doseq [propn-id propn-ids] (cl/try-add-to-analogy-net! pers propn-id))         ; unmask analogy nodes (better to fill propn mask first)
-    (nn/set-mask! (:analogy-mask (:analogy-net pers)) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))     ; special mask val to undo next-activn's decay on this node
-    (mx/add! (:analogy-activns (:analogy-net pers)) (mx/emul (:analogy-mask (:analogy-net pers)) cn/+analogy-node-init-activn+)) ; initial activns for unmasked analogy nodes
-    (nn/set-activn! (:analogy-activns (:analogy-net pers)) cn/+feeder-node-idx+ 1.0)               ; semantic node always has activn = 1
+    (nn/set-mask! (:mask (:analogy-net pers)) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))     ; special mask val to undo next-activn's decay on this node
+    (mx/add! (:activns (:analogy-net pers)) (mx/emul (:mask (:analogy-net pers)) cn/+analogy-node-init-activn+)) ; initial activns for unmasked analogy nodes
+    (nn/set-activn! (:activns (:analogy-net pers)) cn/+feeder-node-idx+ 1.0)               ; semantic node always has activn = 1
     pers))
 
 

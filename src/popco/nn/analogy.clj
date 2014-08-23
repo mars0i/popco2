@@ -39,25 +39,27 @@
   an ACME analogy constraint satisfaction network.  This is a standard 
   neural-net structure produced by make-nn-core (q.v.), with these changes that
   are specific to an analogy network:
-  :pos-wt-mat - A core.matrix square matrix with dimensions equal to the number
-  of nodes.  This will represent positively weighted links.
-  :neg-wt-mat - A core.matrix square matrix with dimensions equal to the number
-  of nodes.  This will represent negatively weighted links.
-  :id-to-idx -   A Clojure map from ids of the same data items to integers, 
-  allowing lookup of a node's index from its id.
-  :ids-to-idx - This does roughly the same thing as :id-to-idx. The latter
-  maps mapnode ids to indexes into the node vector (or rows, or 
-  columns of the matrices).  :ids-to-idx, by contrast, maps
-  vector pairs containing the ids of the two sides (from which
-  the mapnode id is constructed).  This is redundant information,
-  but convenient. Note: The SEMANTIC node will have the key [nil nil]
-  since it's not built from analogs.
+  :mask -        Vector of 1's (mapnode is present) or 0's (it's absent)
+  :activns -     Activation values of nodes in analogy net
+  :pos-wt-mat -   A core.matrix square matrix with dimensions equal to the number
+                  of nodes.  This will represent positively weighted links.
+  :neg-wt-mat -   A core.matrix square matrix with dimensions equal to the number
+                  of nodes.  This will represent negatively weighted links.
+  :id-to-idx -    A Clojure map from ids of the same data items to integers, 
+                  allowing lookup of a node's index from its id.
+  :ids-to-idx -   This does roughly the same thing as :id-to-idx. The latter
+                  maps mapnode ids to indexes into the node vector (or rows, or 
+                  columns of the matrices).  :ids-to-idx, by contrast, maps
+                  vector pairs containing the ids of the two sides (from which
+                  the mapnode id is constructed).  This is redundant information,
+                  but convenient. Note: The SEMANTIC node will have the key [nil nil]
+                  since it's not built from analogs.
   :propn-mn-to-ext-fam-idxs - A map from ids of propn-mapnodes to sets of indexes of the
-  associated component mapnodes, components of argument propn-mapnodes, etc.
-  all the say down--i.e. of the propn-mapnode's 'extended family'.
-  Note: Has no entry for the SEMANTIC node.
+                  associated component mapnodes, components of argument propn-mapnodes, etc.
+                  all the say down--i.e. of the propn-mapnode's 'extended family'.
+                  Note: Has no entry for the SEMANTIC node.
   :propn-to-analogs -  A map from ids of propns to ids of their analogs--i.e.
-  of the propns that are the other sides of mapnodes.
+                  of the propns that are the other sides of mapnodes.
   Also see docstring for write-semantic-links!."
   [propnseq1 propnseq2 conc-specs]
   (let [pos-conc-specs (filter (comp pos? first) conc-specs) ; conceptual specs with positive weight
