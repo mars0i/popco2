@@ -1,6 +1,7 @@
 (ns popco.io.gexf
   (:require [clojure.data.xml :as x]
-            [clojure.core.matrix :as mx]))
+            [clojure.core.matrix :as mx]
+            [popco.nn.matrix :as px]))
 
 (def as-elem x/sexp-as-element) ; convenience abbreviation
 
@@ -19,8 +20,11 @@
 	            [:attributes {:class "node"}
 		                 [:attribute {:id "activn" :title "activation" :type "float"}
 				             [:default {} "0.0"]]]
-                    [:nodes {} nodes]
-                    [:edges {} edges]]]))
+	            [:attributes {:class "edge"}
+		                 [:attribute {:id "popco-wt" :title "popco weight" :type "float"}
+				             [:default {} "0.0"]]]
+                    [:nodes {:count (count nodes)} nodes]
+                    [:edges {:count (count edges)} edges]]]))
 
 (defn node
  "id should be a string. It will also be used as label. 
@@ -34,21 +38,52 @@
 	 [:viz:color color]
 	 [:viz:size {:value (str (* node-size-multiplier (mx/abs activn)))}] ] ))
 
+(defn popco-to-gexf-wt
+  "Translate a popco link weight into a string suitable for use as an edge
+  weight in a GEXF specification for Gephi, by taking the absolute value and
+  possibly making that absolute value larger or smaller."
+  [popco-wt]
+  (str (+ 5 (* 10 (mx/abs popco-wt)))))
+
 (defn edge
-  "node1-id and node2-id are strings.  edge-weight should be 
-  a number that will determine the edge thickness.  It's
-  a function of the popco link weight, but is not the same thing."
-  [node1-id node2-id edge-weight]
-  (let [wt-str (str (* 50 (mx/abs edge-weight)))      ; TODO multiplication of weight is just for testing. delete it later?
-        color (cond (pos? edge-weight) {:r "0" :g "255" :b "0"}
-                    (neg? edge-weight) {:r "255" :g "0" :b "0"}
+  "node1-id and node2-id are strings that correspond to id's passed to the
+  function node.  popco-wt should be a POPCO link weight.  It will determine
+  edge thickness via the GEXF weight attribute via function popco-to-gexf-wt,
+  but will also be stored as the value of attribute popco-wt."
+  [node1-id node2-id popco-wt]
+  (let [gexf-wt (popco-to-gexf-wt popco-wt)
+        color (cond (pos? popco-wt) {:r "0" :g "255" :b "0"}
+                    (neg? popco-wt) {:r "255" :g "0" :b "0"}
                     :else {:r "0" :g "0" :b "0"})]
     [:edge {:id (str node1-id "::" node2-id)
             :source node1-id
             :target node2-id
-            :weight wt-str}
-     [:viz:thickness {:value wt-str}] ; IGNORED, APPARENTLY
+            :weight gexf-wt}
+     [:attvalues {} [:attvalue {:for "popco-wt" :value (str popco-wt)}]]
+     [:viz:thickness {:value gexf-wt}] ; IGNORED, APPARENTLY
      [:viz:color color]]))
+
+(defn nn-to-nodes
+  [nnstru]
+  (let [activns (:activns nnstru)
+        node-vec (:node-vec nnstru)
+        key-to-node (fn [k]
+                      (let [idx (first k)]                ; keys from non-zeros are vectors of length 1
+                        (node (name (:id (node-vec idx))) ; node-vec is a Clojure vector of Propns
+                              (mx/mget activns idx))))]   ; activns is a core.matrix vector of numbers
+    (map key-to-node 
+         (keys ; if it's nonzero, we don't care about the value, which is usually 1
+           (px/non-zeros (:mask nnstru))))))
+
+;; TODO
+(defn nn-to-edges
+  [nnstru]
+  '())
+
+(defn nn-to-graph
+  [nnstru]
+  (gexf-graph (nn-to-nodes nnstru)
+              (nn-to-edges nnstru)))
 
 ;; IMPORTANT: During import into Gephi, uncheck "auto-scale".  Otherwise it does funny things with node sizes.
 (defn gexf-test []
