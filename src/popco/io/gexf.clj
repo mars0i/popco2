@@ -64,21 +64,34 @@
      [:viz:color color]]))
 
 (defn nn-to-nodes
+  "Given an PropnNet or AnalogyNet, return a seq of node specifications,
+  one for each unmasked node, to pass to gexf-graph."
   [nnstru]
   (let [activns (:activns nnstru)
         node-vec (:node-vec nnstru)
         key-to-node (fn [k]
-                      (let [idx (first k)]                ; keys from non-zeros are vectors of length 1
+                      (let [[idx] k]                      ; keys from non-zeros are vectors of length 1
                         (node (name (:id (node-vec idx))) ; node-vec is a Clojure vector of Propns
                               (mx/mget activns idx))))]   ; activns is a core.matrix vector of numbers
     (map key-to-node 
-         (keys ; if it's nonzero, we don't care about the value, which is usually 1
-           (px/non-zeros (:mask nnstru))))))
+         (px/non-zero-indices (:mask nnstru)))))
 
-;; TODO
 (defn nn-to-edges
+  "Given an PropnNet or AnalogyNet, return a seq of edge specifications,
+  one for each edge between unmasked nodes, to pass to gexf-graph.  Doesn't
+  distinguish between one-way and two-way links, and assumes that the only
+  one-way links are from the feeder node."
   [nnstru]
-  '())
+  (let [wt-mat (wt-mat nnstru)
+        node-vec (:node-vec nnstru)
+        key-to-edge (fn [k]
+                      (let [[idx1 idx2] k]
+                        (edge (name (:id (node-vec idx1))) ; node-vec is a Clojure vector of Propns
+                              (name (:id (node-vec idx2))) ; node-vec is a Clojure vector of Propns
+                              (mx/mget wt-mat idx1 idx2))))]   ; activns is a core.matrix vector of numbers
+    (map key-to-edge 
+         (filter #(>= idx1 idx2)  ; Get only lower triangle including diagonal, containing feeder weights plus weights duplicated in upper triangle.
+                 (px/non-zero-indices (:mask nnstru))))))  ; TODO NEED TO MAKE THIS A MATRIX OF UNMASKED ELEMENTS SO TO SPEAK
 
 (defn nn-to-graph
   [nnstru]
