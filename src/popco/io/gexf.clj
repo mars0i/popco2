@@ -1,6 +1,7 @@
 (ns popco.io.gexf
   (:require [clojure.data.xml :as x]
             [clojure.core.matrix :as mx]
+            [popco.nn.nets :as nn]
             [popco.nn.matrix :as px]))
 
 (def as-elem x/sexp-as-element) ; convenience abbreviation
@@ -82,7 +83,7 @@
   distinguish between one-way and two-way links, and assumes that the only
   one-way links are from the feeder node."
   [nnstru]
-  (let [wt-mat (wt-mat nnstru)
+  (let [wt-mat (nn/wt-mat nnstru)
         node-vec (:node-vec nnstru)
         key-to-edge (fn [k]
                       (let [[idx1 idx2] k]
@@ -90,7 +91,7 @@
                               (name (:id (node-vec idx2))) ; node-vec is a Clojure vector of Propns
                               (mx/mget wt-mat idx1 idx2))))]   ; activns is a core.matrix vector of numbers
     (map key-to-edge 
-         (filter #(>= idx1 idx2)  ; Get only lower triangle including diagonal, containing feeder weights plus weights duplicated in upper triangle.
+         (filter (fn [[idx1 idx2]] (>= idx1 idx2))  ; Get only lower triangle including diagonal, containing feeder weights plus weights duplicated in upper triangle.
                  (px/non-zero-indices (:mask nnstru))))))  ; TODO NEED TO MAKE THIS A MATRIX OF UNMASKED ELEMENTS SO TO SPEAK
 
 (defn nn-to-graph

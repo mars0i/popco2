@@ -2,17 +2,19 @@
   (require [clojure.core.matrix :as mx]))
 ;; matrix utility functions
 
-(def square-from-row
-  "row-mat must be a *matrix* not a vector, i.e. it must be 2D 
+(defn square-from-row
+  "Make a symmetric matrix by multiplying a row matrix by itself.
+  row-mat must be a *matrix* not a vector, i.e. it must be 2D 
   even though only one row."
   [row-mat]
-  (mx/mmul (transpose row-mat) row-mat))
+  (mx/mmul (mx/transpose row-mat) row-mat))
 
-(def square-from-col
-  "col-mat must be a *matrix* not a vector, i.e. it must be 2D 
+(defn square-from-col
+  "Make a symmetric matrix by multiplying a column matrix by itself.
+  col-mat must be a *matrix* not a vector, i.e. it must be 2D 
   even though only one column."
   [col-mat]
-  (mx/mmul col-mat (transpose col-mat)))
+  (mx/mmul col-mat (mx/transpose col-mat)))
 
 (defn non-zero-index-val-pairs
   "Return [indices val] pairs for non-zero vals in matrix m.
