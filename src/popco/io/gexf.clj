@@ -77,6 +77,11 @@
     (map key-to-node 
          (px/non-zero-indices (:mask nnstru)))))
 
+;; Another way to do this would be with multiple :when clauses:
+;; Do the :when test on the mask for i and j, and then the :let,
+;; to store the wt, and then a separate :when test on wt.  Yes--
+;; you can do that, and the clauses are executed in order; the :let
+;; won't be executed if the first :when doesn't succeed.
 (defn unmasked-non-zero-links
   "Returns a sequence of triplets containing indexes and wts from nnstru's wt-mat
   whenever wt is nonzero and is between unmasked nodes.  Doesn't distinguish
@@ -90,7 +95,8 @@
           j (range (inc i)) ; iterate through lower triangle including diagonal
           :let [wt (mx/mget wt-mat i j)]
           :when (and (not= 0.0 wt)
-                     (not= 0.0 (mx/mget mask i)))] ; assumes floats not ints, since not= uses = not ==.
+                     (pos? (mx/mget mask i))    ; mask values are never negative
+                     (pos? (mx/mget mask j)))]  ;  (and almost always = 1)
       [i j wt])))
 
 (defn nn-to-edges
