@@ -2,7 +2,7 @@
   (:require [utils.general :as ug]
             [popco.core.lot :as lot]
             [popco.core.constants :as cn]
-            [popco.nn.matrix :as pmx]
+            [popco.nn.matrix :as px]
             [clojure.core.matrix :as mx]
             [clojure.pprint :as pp]))
 
@@ -251,7 +251,7 @@
         id-vec (:id-vec (net-keyword (first persons)))]
     (doall 
       (map 
-        (comp (partial pmx/print-vec-with-labels id-vec) pmx/col1 wt-mat net-keyword #(do (println (:id %)) %))
+        (comp (partial px/print-vec-with-labels id-vec) px/col1 wt-mat net-keyword #(do (println (:id %)) %))
         persons))
     popn))
 
@@ -262,13 +262,13 @@
   "Return a vector containing weights of links to the SALIENT node 
   in the proposition net."
   [pers]
-  (pmx/col1 (wt-mat (:propn-net pers))))
+  (px/col1 (wt-mat (:propn-net pers))))
 
 (defn semantic-wts
   "Return a vector containing weights of links to the SEMANTIC node 
   in the analogy net."
   [pers]
-  (pmx/col1 (wt-mat (:analogy-net pers))))
+  (px/col1 (wt-mat (:analogy-net pers))))
 
 (defn display-salient-wts [popn] (doall (map println (map salient-wts (:persons popn)))) (flush) popn)
 
@@ -296,6 +296,6 @@
        (pp/pprint (map 
                     #(vector (:id %) 
                              (map (fn [[[idx] wt]] [(:id (node-vec idx)) (ug/round2 3 wt)]) ; round to strip spurious small decimals from float noise
-                                  (pmx/non-zeros (salient-wts %))))
+                                  (px/non-zeros (salient-wts %))))
                     (drop to-skip (:persons curr))))))))
 
