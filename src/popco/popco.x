@@ -879,3 +879,16 @@
 ;                                       ; Is this a good strategy??
 
 (def ^:const +int-range-double+ (double (- Integer/MAX_VALUE Integer/MIN_VALUE)))
+
+
+;; There are probably more efficient ways to do this, rather than
+;; converting the mask vector to a row matrix, then multiplying it
+;; by itself to create a square matrix, and then element-multiplying
+;; that by the wt-mat.
+;; NOT RIGHT since first element in mask vec isn't 1 or 0.
+(defn unmasked-wt-mat
+   "Returns a matrix like the nnstru's full (positive and negative) weight matrix,
+   but with links between masked nodes zeroed out." 
+  [nnstru]
+    (mx/emul (wt-mat nnstru)
+             (px/square-from-vec (:mask nnstru))))

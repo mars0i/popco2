@@ -18,26 +18,26 @@
                    :xsi:schemaLocation "http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd"
                    :version "1.2"}
             [:graph {:defaultedgetype "undirected" :mode "static"} 
-	            [:attributes {:class "node"}
-		                 [:attribute {:id "activn" :title "activation" :type "float"}
-				             [:default {} "0.0"]]]
-	            [:attributes {:class "edge"}
-		                 [:attribute {:id "popco-wt" :title "popco weight" :type "float"}
-				             [:default {} "0.0"]]]
-                    [:nodes {:count (count nodes)} nodes]
-                    [:edges {:count (count edges)} edges]]]))
+             [:attributes {:class "node"}
+              [:attribute {:id "activn" :title "activation" :type "float"}
+               [:default {} "0.0"]]]
+             [:attributes {:class "edge"}
+              [:attribute {:id "popco-wt" :title "popco weight" :type "float"}
+               [:default {} "0.0"]]]
+             [:nodes {:count (count nodes)} nodes]
+             [:edges {:count (count edges)} edges]]]))
 
 (defn node
- "id should be a string. It will also be used as label. 
- activn is a POPCO activation value."
- [id activn]
- (let [color (cond (pos? activn) {:r "255" :g "255" :b "0"} ; yellow
-	      (neg? activn) {:r "0" :g "0" :b "255"}
-	      :else {:r "128" :g "128" :b "128"})]
-  [:node {:id id :label id} 
-         [:attvalues {} [:attvalue {:for "activn" :value (str activn)}]]
-	 [:viz:color color]
-	 [:viz:size {:value (str (* node-size-multiplier (mx/abs activn)))}] ] ))
+  "id should be a string. It will also be used as label. 
+  activn is a POPCO activation value."
+  [id activn]
+  (let [color (cond (pos? activn) {:r "255" :g "255" :b "0"} ; yellow
+                    (neg? activn) {:r "0" :g "0" :b "255"}
+                    :else {:r "128" :g "128" :b "128"})]
+    [:node {:id id :label id} 
+     [:attvalues {} [:attvalue {:for "activn" :value (str activn)}]]
+     [:viz:color color]
+     [:viz:size {:value (str (* node-size-multiplier (mx/abs activn)))}] ] ))
 
 (defn popco-to-gexf-wt
   "Translate a popco link weight into a string suitable for use as an edge
@@ -77,39 +77,53 @@
     (map key-to-node 
          (px/non-zero-indices (:mask nnstru)))))
 
+(defn unmasked-non-zero-links
+  "Returns a sequence of triplets containing indexes and wts from nnstru's wt-mat
+  whenever wt is nonzero and is between unmasked nodes.  Doesn't distinguish
+  between directed and undirected links, and assumes that all links can be
+  found in the lower triangle (including diagonal) of wt-mat."
+  [nnstru]
+  (let [wt-mat (nn/wt-mat nnstru)
+        mask (:mask nnstru)
+        size (first (mx/shape mask))]
+    (for [i (range size)
+          j (range (inc i)) ; iterate through lower triangle including diagonal
+          :let [wt (mx/mget wt-mat i j)]
+          :when (and (not= 0.0 wt)
+                     (not= 0.0 (mx/mget mask i)))] ; assumes floats not ints, since not= uses = not ==.
+      [i j wt])))
+
 (defn nn-to-edges
   "Given an PropnNet or AnalogyNet, return a seq of edge specifications,
   one for each edge between unmasked nodes, to pass to gexf-graph.  Doesn't
   distinguish between one-way and two-way links, and assumes that the only
   one-way links are from the feeder node."
   [nnstru]
-  (let [wt-mat (nn/wt-mat nnstru)
-        node-vec (:node-vec nnstru)
-        key-to-edge (fn [k]
-                      (let [[idx1 idx2] k]
-                        (edge (name (:id (node-vec idx1))) ; node-vec is a Clojure vector of Propns
-                              (name (:id (node-vec idx2))) ; node-vec is a Clojure vector of Propns
-                              (mx/mget wt-mat idx1 idx2))))]   ; activns is a core.matrix vector of numbers
-    (map key-to-edge 
-         (filter (fn [[idx1 idx2]] (>= idx1 idx2))  ; Get only lower triangle including diagonal, containing feeder weights plus weights duplicated in upper triangle.
-                 (px/non-zero-indices (:mask nnstru))))))  ; TODO NEED TO MAKE THIS A MATRIX OF UNMASKED ELEMENTS SO TO SPEAK
+  (let [node-vec (:node-vec nnstru)
+        link-to-edge (fn [[idx1 idx2 wt]]
+                       (edge (name (:id (node-vec idx1))) ; node-vec is a Clojure vector of Propns
+                             (name (:id (node-vec idx2))) ; node-vec is a Clojure vector of Propns
+                             wt))]
+    (map link-to-edge (unmasked-non-zero-links nnstru))))
+
 
 (defn nn-to-graph
+  "Returns a GEXF specification for a graph based on nnstru."
   [nnstru]
   (gexf-graph (nn-to-nodes nnstru)
               (nn-to-edges nnstru)))
 
 ;; IMPORTANT: During import into Gephi, uncheck "auto-scale".  Otherwise it does funny things with node sizes.
 (defn gexf-test []
- (gexf-graph
-  (list             ; can't be a vector--vectors aren't seqs
-   (node "A" 1.0)
-   (node "B" 0.25)
-   (node "C" -0.5))
-  (list
-   (edge "A" "B" -2.0)
-   (edge "A" "C" 1.0)
-   (edge "C" "B" 4.0))))
+  (gexf-graph
+    (list             ; can't be a vector--vectors aren't seqs
+          (node "A" 1.0)
+          (node "B" 0.25)
+          (node "C" -0.5))
+    (list
+      (edge "A" "B" -2.0)
+      (edge "A" "C" 1.0)
+      (edge "C" "B" 4.0))))
 
 
 ;(defn nodes
