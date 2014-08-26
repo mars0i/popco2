@@ -6,15 +6,21 @@
   "Make a symmetric matrix by multiplying a row matrix by itself.
   row-mat must be a *matrix* not a vector, i.e. it must be 2D 
   even though only one row."
-  [row-mat]
-  (mx/mmul (mx/transpose row-mat) row-mat))
+  [m]
+  (mx/mmul (mx/transpose m) m))
 
 (defn square-from-col
   "Make a symmetric matrix by multiplying a column matrix by itself.
   col-mat must be a *matrix* not a vector, i.e. it must be 2D 
   even though only one column."
-  [col-mat]
-  (mx/mmul col-mat (mx/transpose col-mat)))
+  [m]
+  (mx/mmul m (mx/transpose m)))
+
+(defn square-from-vec
+  "Make a symmetric matrix by multiplying a core.matrix vector
+  by itself, first making the vector into a row matrix."
+  [v]
+  (square-from-row (mx/matrix [v])))
 
 (defn non-zero-index-val-pairs
   "Return [indices val] pairs for non-zero vals in matrix m.
