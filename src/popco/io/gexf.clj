@@ -31,7 +31,9 @@
   "id should be a string. It will also be used as label. 
   activn is a POPCO activation value."
   [id activn]
-  (let [color (cond (pos? activn) {:r "255" :g "255" :b "0"} ; yellow
+  (let [color (cond (or (= id "SALIENT") 
+                        (= id "SEMANTIC")) {:r "255" :g "0" :b "255"}
+                    (pos? activn) {:r "255" :g "255" :b "0"} ; yellow
                     (neg? activn) {:r "0" :g "0" :b "255"}
                     :else {:r "128" :g "128" :b "128"})]
     [:node {:id id :label id} 
