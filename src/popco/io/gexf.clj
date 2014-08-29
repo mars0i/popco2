@@ -9,21 +9,7 @@
 
 ;; IMPORTANT: During import into Gephi, uncheck "auto-scale".  Otherwise it does funny things with node sizes.
 
-
 (def node-size-multiplier 50)
-
-;; GEXF dynamic mode doesn't seem to allow the same id at different times.
-;; i.e. what I would consider the same node at different times is not considered the same node by Gephi.
-;; Likewise for edges.
-;; Generate unique GEXF id numbers for nodes and edges.
-;; Going over to the dark side ... it should be possible to do this functionally.
-(def node-id-num (atom 0)) ; generate unique node ids for gexf/gephi
-(def edge-id-num (atom 0)) ; generate unique edge ids for gexf/gephi
-(def popco-to-gexf-node-id (atom {})) ; store relationship between popco ids and gexf node ids so I can look them up to provide source/target ids for edges
-
-;; An alternative would be to use GEXF's time-indexed attributes, but
-;; keep the nodes and edges as single entities.  I suppose that's what I
-;; really need.
 
 (defn gexf-graph
   "Generate a GEXF specification suitable for reading by clojure.data.xml
@@ -56,19 +42,14 @@
 
 (defn node
   "id should be a string. It will also be used as label. 
-  activn is a POPCO activation value.  tick-list, if non-nil,
-  contains a single tick number, or contains nil."
-  [id activn & tick-list]
-  (swap! popco-to-gexf-node-id assoc [id (first tick-list)] (swap! node-id-num inc)) ; increment node-id-num and store it as the value of (popco) id in map for later use by function edge.
+  activn is a POPCO activation value."
+  [id activn]
   (let [color (cond (or (= id "SALIENT") 
                         (= id "SEMANTIC")) {:r "255" :g "0" :b "255"}
                     (pos? activn) {:r "255" :g "255" :b "0"} ; yellow
-                    (neg? activn) {:r "50" :g "50" :b "255"}
-                    :else {:r "100" :g "100" :b "100"})]
-    [:node (merge {:id @node-id-num :label id}
-                  (if-let [tick (first tick-list)]
-                    {:start tick :endopen (inc tick)}
-                    {}))
+                    (neg? activn) {:r "0" :g "0" :b "255"}
+                    :else {:r "128" :g "128" :b "128"})]
+    [:node {:id id :label id} 
      [:attvalues {} [:attvalue {:for "activn" :value (str activn)}]]
      [:viz:color color]
      [:viz:size {:value (str (* node-size-multiplier (mx/abs activn)))}] ] ))
@@ -81,28 +62,23 @@
   [popco-wt]
   (str (+ 5 (* 10 (mx/abs popco-wt)))))
 
+
 (defn edge
   "node1-id and node2-id are strings that correspond to id's passed to the
   function node.  popco-wt should be a POPCO link weight.  It will determine
   edge thickness via the GEXF weight attribute via function popco-to-gexf-wt,
-  but will also be stored as the value of attribute popco-wt.  tick-list, if
-  non-nil, contains a single tick number, or contains nil."
-  [node1-id node2-id popco-wt & tick-list]
-  (swap! edge-id-num inc)
-  (let [tick (first tick-list) ; might be nil
-        gexf-wt (popco-to-gexf-wt popco-wt)
+  but will also be stored as the value of attribute popco-wt."
+  [node1-id node2-id popco-wt]
+  (let [gexf-wt (popco-to-gexf-wt popco-wt)
         color (cond (pos? popco-wt) {:r "0" :g "255" :b "0"}
                     (neg? popco-wt) {:r "255" :g "0" :b "0"}
                     :else {:r "0" :g "0" :b "0"})]
-    [:edge (merge {:id @edge-id-num
-                   :source (@popco-to-gexf-node-id [node1-id tick])
-                   :target (@popco-to-gexf-node-id [node2-id tick])
-                   :weight gexf-wt}
-                  (if tick
-                    {:start tick :endopen (inc tick)}
-                    {}))
+    [:edge {:id (str node1-id "::" node2-id)
+            :source node1-id
+            :target node2-id
+            :weight gexf-wt}
      [:attvalues {} [:attvalue {:for "popco-wt" :value (str popco-wt)}]]
-     [:viz:thickness {:value gexf-wt}] ; IGNORED, APPARENTLY
+     [:viz:size {:value gexf-wt}] ; IGNORED, APPARENTLY
      [:viz:color color]]))
 
 
@@ -112,12 +88,10 @@
   [nnstru]
   (let [activns (:activns nnstru)
         node-vec (:node-vec nnstru)
-        tick (:tick nnstru) ; nil if tick field doesn't exist
         key-to-node (fn [k]
-                      (let [[idx] k]                       ; keys from non-zeros are vectors of length 1
+                      (let [[idx] k]                      ; keys from non-zeros are vectors of length 1
                         (node (name (:id (node-vec idx))) ; node-vec is a Clojure vector of Propns
-                              (mx/mget activns idx)       ; activns is a core.matrix vector of numbers
-                              tick)))]
+                              (mx/mget activns idx))))]   ; activns is a core.matrix vector of numbers
     (map key-to-node 
          (px/non-zero-indices (:mask nnstru)))))
 
@@ -144,20 +118,53 @@
                      (pos? (mx/mget mask j)))]  ;  (and almost always = 1)
       [i j wt])))
 
+
 (defn nn-to-edges
   "Given an PropnNet or AnalogyNet, return a seq of edge specifications,
   one for each edge between unmasked nodes, to pass to gexf-graph.  Doesn't
   distinguish between one-way and two-way links, and assumes that the only
   one-way links are from the feeder node."
-  [nnstru & tick-list]  ; TODO process tick-list
+  [nnstru]
   (let [node-vec (:node-vec nnstru)
-        tick (:tick nnstru) ; nil if tick field doesn't exist
         link-to-edge (fn [[idx1 idx2 wt]]
                        (edge (name (:id (node-vec idx1))) ; node-vec is a Clojure vector of Propns
                              (name (:id (node-vec idx2))) ; node-vec is a Clojure vector of Propns
-                             wt
-                             tick))]
+                             wt))]
     (map link-to-edge (unmasked-non-zero-links nnstru))))
+
+
+(defn nn-to-graph
+  "Returns a GEXF specification for a graph based on nnstru."
+  [nnstru]
+  (gexf-graph (nn-to-nodes nnstru)
+              (nn-to-edges nnstru)
+              :static ; TODO temp kludge
+              0)) ; TODO temp kludge
+
+
+;; NEW STRATEGY FOR DYNAMIC GRAPHS:
+;;
+;; Given a seq of popns, make a seq of persons at ticks, or rather nnstrus at ticks.
+;; Run through the nnstrus
+;; If a node appears for the first time at t1, it will have start: t1, and no end:.
+;; If an edge appears for the first time at t1, it will have start: t1, and no end:.
+;; For each t:
+;; Each node or edge will have an activn or popco-wt attribute with start: t and endopen: t+1.
+;; For each activn and popco-wt, also assign attributes for Gephi weight, and viz:
+;; properties, also with start: t and endopen: t+1.
+;; This is done with attvalues and attvalue.
+;; 
+;; Attributes will have to be declared as dynamic in the header.
+;;
+;; Question: Can I give the Gephi weight and the viz: attributes timestamps??
+;; (If not, then I'm not sure there's a point to bring a dynamic graph into Gephi.
+;; Maybe in d3.)
+;; p. 18 of the GEXF manual says:
+;;
+;;      About the weight: dynamic weight can be used with the reserved title "weight"
+;;      in attributes. In dynamic mode, the static XML-attribute weight should be ig-
+;;      nored if the dynamic one is provided.
+
 
 
 ;; TODO: handle nnstrus from multiple ticks
@@ -170,19 +177,18 @@
 ;    (gexf-graph (nn-to-nodes nnstru) (nn-to-edges nnstru) :static)))
 
 
-(defn nnstrus-with-mode-to-graph
-  [nnstrus mode first-tick]
-  (gexf-graph (mapcat nn-to-nodes nnstrus) 
-              (mapcat nn-to-edges nnstrus)
-              mode
-              first-tick))
+;(defn nnstrus-with-mode-to-graph
+;  [nnstrus mode first-tick]
+;  (gexf-graph (mapcat nn-to-nodes nnstrus) 
+;              (mapcat nn-to-edges nnstrus)
+;              mode
+;              first-tick))
 
-
-(defn nns-to-graph
-  [nnstrus]
-  (if-let [first-tick (:tick (first nnstrus))]
-    (nnstrus-with-mode-to-graph nnstrus :dynamic first-tick)
-    (nnstrus-with-mode-to-graph nnstrus :static nil)))
+;(defn nns-to-graph
+;  [nnstrus]
+;  (if-let [first-tick (:tick (first nnstrus))]
+;    (nnstrus-with-mode-to-graph nnstrus :dynamic first-tick)
+;    (nnstrus-with-mode-to-graph nnstrus :static nil)))
 
 
 (defn net-with-tick
