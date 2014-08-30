@@ -52,6 +52,7 @@
     [:node {:id id :label id} 
      [:attvalues {} [:attvalue {:for "activn" :value (str activn)}]]
      [:viz:color color]
+     [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}]
      [:viz:size {:value (str (* node-size-multiplier (mx/abs activn)))}] ] ))
 
 
