@@ -146,9 +146,27 @@
 ;; NEW STRATEGY FOR DYNAMIC GRAPHS:
 ;;
 ;; Given a seq of popns, make a seq of persons at ticks, or rather nnstrus at ticks.
-;; Run through the nnstrus
+;; Run through the nnstrus:
+;;
 ;; If a node appears for the first time at t1, it will have start: t1, and no end:.
+;;      i.e. I need a hashmap of existing nodes in the graph so I can check for their existence
+;;      Wait a minute.  Don't I already have that in the nnstru?  
+;;      Something that does the same job?   i.e. just check the mask.
+;;      uh, well, actually, what you'd need is the mask from the previous tick in order
+;;      to know whether the node is new.  (cf. in popco1 where I needed to know new nodes
+;;      for GUESS).
 ;; If an edge appears for the first time at t1, it will have start: t1, and no end:.
+;;      i.e. I need a hashmap of existing edges in the graph so I can check for their existence
+;;      (Again, I could use the previous nnstru to check for the change.)
+;;
+;; so either collect a new record of what was there in the past
+;; or store structures from the previous nnstru
+;;
+;; If I'm mapping this through the populations-at-ticks, then I need to preserve that
+;; what's getting passed on is a population, and not a population plus something else.
+;; However, I can store extra data in the population.  e.g. a special hashmap, or 
+;; last year's model of the mask and wt-mat.
+;;
 ;; For each t:
 ;; Each node or edge will have an activn or popco-wt attribute with start: t and endopen: t+1.
 ;; For each activn and popco-wt, also assign attributes for Gephi weight, and viz:
