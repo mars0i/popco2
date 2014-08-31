@@ -9,7 +9,8 @@
 
 ;; IMPORTANT: During import into Gephi, uncheck "auto-scale".  Otherwise it does funny things with node sizes.
 
-(def node-size-multiplier 50)
+(def node-size 75)  ; GEXF size
+(def edge-weight 15) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
 
 (defn gexf-graph
   "Generate a GEXF specification suitable for reading by clojure.data.xml
@@ -31,10 +32,10 @@
                              (= mode :dynamic) {:defaultedgetype "undirected" :mode "dynamic" :timeformat "integer" :start (str first-tick)}  ; TODO Is that the correct timeformat??
                              :else (throw (Exception. (str "Bad GEXF graph mode: " mode))))
                        [:attributes {:class "node"}
-                        [:attribute {:id "activn" :title "activation" :type "float"}
+                        [:attribute {:id "popco-activn" :title "popco-activn" :type "float"}
                          [:default {} "0.0"]]]
                        [:attributes {:class "edge"}
-                        [:attribute {:id "popco-wt" :title "popco weight" :type "float"}
+                        [:attribute {:id "popco-wt" :title "popco-wt" :type "float"}
                          [:default {} "0.0"]]]
                        [:nodes {:count (count nodes)} nodes]
                        [:edges {:count (count edges)} edges]]]))
@@ -44,25 +45,10 @@
   "id should be a string. It will also be used as label. 
   activn is a POPCO activation value."
   [id activn]
-  (let [color (cond (or (= id "SALIENT") 
-                        (= id "SEMANTIC")) {:r "255" :g "0" :b "255"}
-                    (pos? activn) {:r "255" :g "255" :b "0"} ; yellow
-                    (neg? activn) {:r "0" :g "0" :b "255"}
-                    :else {:r "128" :g "128" :b "128"})]
     [:node {:id id :label id} 
-     [:attvalues {} [:attvalue {:for "activn" :value (str activn)}]]
-     [:viz:color color]
-     [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}]
-     [:viz:size {:value (str (* node-size-multiplier (mx/abs activn)))}] ] ))
-
-
-(defn popco-to-gexf-wt
-  "Translate a popco link weight into a string suitable for use as an edge
-  weight in a GEXF specification for Gephi, by taking the absolute value and
-  possibly making that absolute value larger or smaller."
-  [popco-wt]
-  (str (+ 5 (* 10 (mx/abs popco-wt)))))
-
+     [:attvalues {} [:attvalue {:for "popco-activn" :value (str activn)}]]
+     [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
+     [:viz:size {:size node-size}]])
 
 (defn edge
   "node1-id and node2-id are strings that correspond to id's passed to the
@@ -70,17 +56,12 @@
   edge thickness via the GEXF weight attribute via function popco-to-gexf-wt,
   but will also be stored as the value of attribute popco-wt."
   [node1-id node2-id popco-wt]
-  (let [gexf-wt (popco-to-gexf-wt popco-wt)
-        color (cond (pos? popco-wt) {:r "0" :g "255" :b "0"}
-                    (neg? popco-wt) {:r "255" :g "0" :b "0"}
-                    :else {:r "0" :g "0" :b "0"})]
     [:edge {:id (str node1-id "::" node2-id)
             :source node1-id
             :target node2-id
-            :weight gexf-wt}
-     [:attvalues {} [:attvalue {:for "popco-wt" :value (str popco-wt)}]]
-     [:viz:size {:value gexf-wt}] ; IGNORED, APPARENTLY
-     [:viz:color color]]))
+            :weight edge-weight}
+     [:attvalues {} [:attvalue {:for "popco-wt" :value (str popco-wt)}]]])
+
 
 
 (defn nn-to-nodes
@@ -222,3 +203,50 @@
 (defn propn-net-with-tick
   [person-id popn]
   (net-with-tick person-id :propn-net popn))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;; ALTERNATIVES that specify variable colors, sizes, weights etc.:
+
+(def deprecated-node-size-multiplier 50)
+
+(defn deprecated-node
+  "id should be a string. It will also be used as label. 
+  activn is a POPCO activation value."
+  [id activn]
+  (let [color (cond (or (= id "SALIENT") 
+                        (= id "SEMANTIC")) {:r "255" :g "0" :b "255"}
+                    (pos? activn) {:r "255" :g "255" :b "0"} ; yellow
+                    (neg? activn) {:r "0" :g "0" :b "255"}
+                    :else {:r "128" :g "128" :b "128"})]
+    [:node {:id id :label id} 
+     [:attvalues {} [:attvalue {:for "popco-activn" :value (str activn)}]]
+     [:viz:color color]
+     [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to have a starting position
+     [:viz:size {:value (str (* deprecated-node-size-multiplier (mx/abs activn)))}] ] ))
+
+(defn deprecated-popco-to-gexf-wt
+  "Translate a popco link weight into a string suitable for use as an edge
+  weight in a GEXF specification for Gephi, by taking the absolute value and
+  possibly making that absolute value larger or smaller."
+  [popco-wt]
+  (str (+ 5 (* 10 (mx/abs popco-wt)))))
+
+(defn deprecated-edge
+  "node1-id and node2-id are strings that correspond to id's passed to the
+  function node.  popco-wt should be a POPCO link weight.  It will determine
+  edge thickness via the GEXF weight attribute via function popco-to-gexf-wt,
+  but will also be stored as the value of attribute popco-wt."
+  [node1-id node2-id popco-wt]
+  (let [gexf-wt (deprecated-popco-to-gexf-wt popco-wt)
+        color (cond (pos? popco-wt) {:r "0" :g "255" :b "0"}
+                    (neg? popco-wt) {:r "255" :g "0" :b "0"}
+                    :else {:r "0" :g "0" :b "0"})]
+    [:edge {:id (str node1-id "::" node2-id)
+            :source node1-id
+            :target node2-id
+            :weight gexf-wt}
+     [:attvalues {} [:attvalue {:for "popco-wt" :value (str popco-wt)}]]
+     [:viz:size {:value gexf-wt}] ; IGNORED, APPARENTLY
+     [:viz:color color]]))
+
