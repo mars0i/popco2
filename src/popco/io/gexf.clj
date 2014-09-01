@@ -166,31 +166,6 @@
 ;;      nored if the dynamic one is provided.
 
 
-
-;; TODO: handle nnstrus from multiple ticks
-;(defn nn-to-graph
-;  "Returns a GEXF specification for a graph based on nnstru.  Second argument,
-;  if present, should be the tick (timestep) indexing this graph."
-;  [nnstru & tick-list]
-;  (if tick-list
-;    (gexf-graph (apply nn-to-nodes nnstru tick-list) (apply nn-to-edges nnstru tick-list) :dynamic)
-;    (gexf-graph (nn-to-nodes nnstru) (nn-to-edges nnstru) :static)))
-
-
-;(defn nnstrus-with-mode-to-graph
-;  [nnstrus mode first-tick]
-;  (gexf-graph (mapcat nn-to-nodes nnstrus) 
-;              (mapcat nn-to-edges nnstrus)
-;              mode
-;              first-tick))
-
-;(defn nns-to-graph
-;  [nnstrus]
-;  (if-let [first-tick (:tick (first nnstrus))]
-;    (nnstrus-with-mode-to-graph nnstrus :dynamic first-tick)
-;    (nnstrus-with-mode-to-graph nnstrus :static nil)))
-
-
 (defn net-with-tick
   [person-id net-key popn]
   (assoc (net-key (popn/get-person person-id popn))
