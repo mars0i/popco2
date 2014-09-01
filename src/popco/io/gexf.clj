@@ -47,7 +47,7 @@
   [id activn]
     [:node {:id id :label id} 
      [:attvalues {} [:attvalue {:for "popco-activn" :value (str activn)}]]
-     [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
+     ;[:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
      [:viz:size {:size node-size}]])
 
 (defn edge
@@ -78,11 +78,6 @@
          (px/non-zero-indices (:mask nnstru)))))
 
 
-;; Another way to do this would be with multiple :when clauses:
-;; Do the :when test on the mask for i and j, and then the :let,
-;; to store the wt, and then a separate :when test on wt.  Yes--
-;; you can do that, and the clauses are executed in order; the :let
-;; won't be executed if the first :when doesn't succeed.
 (defn unmasked-non-zero-links
   "Returns a sequence of triplets containing indexes and wts from nnstru's wt-mat
   whenever wt is nonzero and is between unmasked nodes.  Doesn't distinguish
@@ -100,6 +95,11 @@
                      (pos? (mx/mget mask j)))]  ;  (and almost always = 1)
       [i j wt])))
 
+;; Another way to organize unmasked-non-zero-links above would be with multiple :when clauses:
+;; Do the :when test on the mask for i and j, and then the :let,
+;; to store the wt, and then a separate :when test on wt.  Yes--
+;; you can do that, and the clauses are executed in order; the :let
+;; won't be executed if the first :when doesn't succeed.
 
 (defn nn-to-edges
   "Given an PropnNet or AnalogyNet, return a seq of edge specifications,
