@@ -12,6 +12,14 @@
 (def node-size 100)  ; GEXF size
 (def edge-weight 10) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
 
+;; Generate unique GEXF id numbers for nodes and edges (using the dark side: ... state).
+;; This will be more convenient than label-based ids for incorporating multiple persons into one graph.
+;; It also allows complete replacement of nodes from one tick to the next in dynamic graphs; that's
+;; not desirable for Gephi, but might be useful for some other program.
+(def node-id-num (atom 0)) ; generate unique node ids for gexf/gephi
+(def edge-id-num (atom 0)) ; generate unique edge ids for gexf/gephi
+(def popco-to-gexf-node-id (atom {})) ; store relationship between popco ids and gexf node ids so I can look them up to provide source/target ids for edges
+
 (defn gexf-graph
   "Generate a GEXF specification suitable for reading by clojure.data.xml
   functions such as `emit` and `indent-str`.  nodes is a sequence (not vector)
