@@ -9,6 +9,14 @@
   (get m k 
        (throw (Exception. (str "No key " k)))))
 
+;; An alternative is (defn assoc-if-new [coll k v] (merge {k v} coll)),
+;; from optevo at http://stackoverflow.com/questions/25035535/clojure-assoc-if-and-assoc-if-new
+(defn assoc-if-new
+  [m k v]
+  (if (contains? m k)
+    m
+    (assoc m k v)))
+
 (defn add-quotes
   "Append initial and terminal double-quote characters to string."
   [string]
