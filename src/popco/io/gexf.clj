@@ -9,8 +9,8 @@
 
 ;; IMPORTANT: During import into Gephi, uncheck "auto-scale".  Otherwise it does funny things with node sizes.
 
-(def node-size 75)  ; GEXF size
-(def edge-weight 15) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
+(def node-size 100)  ; GEXF size
+(def edge-weight 10) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
 
 (defn gexf-graph
   "Generate a GEXF specification suitable for reading by clojure.data.xml
@@ -114,12 +114,15 @@
                              wt))]
     (map link-to-edge (unmasked-non-zero-links nnstru))))
 
+;; Nodes to trick Gephi into thinking that limits of values are more extreme than they actually are
+(def gephi-dummy-nodes [(node "dummy1" -1.0) (node "dummy2" 0.0) (node "dummy3" 1.0)]) ; make sure that Gephi ranking has limits -1, 1 for activns
+(def gephi-dummy-edges [(edge "dummy1" "dummy2" 1.0) (edge "dummy2" "dummy3" -1.0)])  ; make sure that Gephi ranking has limits -1, 1 for link weights
 
-(defn nn-to-graph
+(defn nn-to-gephi-graph
   "Returns a GEXF specification for a graph based on nnstru."
   [nnstru]
-  (gexf-graph (nn-to-nodes nnstru)
-              (nn-to-edges nnstru)
+  (gexf-graph (concat (nn-to-nodes nnstru) gephi-dummy-nodes)
+              (concat (nn-to-edges nnstru) gephi-dummy-edges)
               :static ; TODO temp kludge
               0)) ; TODO temp kludge
 
