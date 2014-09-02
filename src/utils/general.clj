@@ -17,6 +17,12 @@
     m
     (assoc m k v)))
 
+(defn assoc-if-new-throw-if-old
+  [m k v]
+  (if (contains? m k)
+    (throw (Exception. (str "Trying to set value for key " k "a second time, with new value " v)))
+    (assoc m k v)))
+
 (defn add-quotes
   "Append initial and terminal double-quote characters to string."
   [string]
