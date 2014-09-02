@@ -1,4 +1,4 @@
-(ns popco.io.gexf
+(ns popco.io.gexf-static
   (:require [clojure.data.xml :as x]
             [clojure.core.matrix :as mx]
             [popco.core.population :as popn]
