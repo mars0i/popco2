@@ -8,6 +8,18 @@
 
 ;; gut rehab.  see gexf_dynamic_old.clj, gexf_static.clj for other code
 
+(def node-size 25)  ; GEXF size
+(def edge-weight 10) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
+
+;; Generate unique GEXF id numbers for nodes and edges.
+;; This will be more convenient than label-based ids for incorporating multiple persons into one graph.
+;; It also allows complete replacement of nodes from one tick to the next in dynamic graphs; that's
+;; not desirable for Gephi, but might be useful for some other program.
+;; (Note: If we parallelize generation of gexf files, this could conceivably create a little bottleneck.  Seems unlikely, though.)
+(def node-id-num (atom 0)) ; generate unique node ids for gexf/gephi
+(def edge-id-num (atom 0)) ; generate unique edge ids for gexf/gephi
+(def popco-to-gexf-node-id (atom {})) ; store relationship between popco ids and gexf node ids so I can look them up to provide source/target ids for edges
+
 (defn net-with-tick
   [person-id net-key popn]
   (assoc (net-key (popn/get-person person-id popn)) :tick (:tick popn)))
@@ -112,14 +124,44 @@
   (reduce dynamic-edge-data-from-net edge-data nets-with-ticks))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; FUNCTIONS TO GENERATE clojure.data.xml SPECS FROM NODE, EDGE DATA COLLECTIONS
+
+(defn node-entry-to-node
+  "Expects one hashmap entry from node-data."
+  [[id [tick activn]] & size-s] ; size-s is a hack so that you can special-case size for some nodes
+  (swap! popco-to-gexf-node-id 
+         ug/assoc-if-new id (swap! node-id-num inc))
+  (let [size (or (first size-s) node-size)
+        node-spec {:id (str @node-id-num) :label (name id)}
+        activn-spec {:for "popco-activn" :value (str activn)}
+        tick-str (str tick)]
+    [:node  (if tick
+              (merge node-spec {:start tick-str})
+              node-spec)
+     [:attvalues {}
+      [:attvalue (if tick
+                   (merge activn-spec {:start tick-str :endopen (str (inc tick))})
+                   activn-spec)]]
+     [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
+     [:viz:size {:value (str size)}]]))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TOP-LEVEL FUNCTIONS
 
 (defn dynamic-net-data
   "node-data and edge-data are hashes for data on subsequent states
   of nodes and edges, respectively.  nets-with-ticks contains one
   or more nets, each with an added tick (e.g. by net-with-tick).
-  Example usage: (dynamic-net-data {} {} (analogy-net-with-tick :worf popn))"
-  [node-data edge-data & nets-with-ticks]
+   usage: (dynamic-net-data {} {} (analogy-net-with-tick :worf popn))"
+  [node-data edge-data nets-with-ticks]
   [(dynamic-node-data-from-nets node-data nets-with-ticks)
    (dynamic-edge-data-from-nets edge-data nets-with-ticks)])
   
+(defn nodes-edges-from-data
+  [node-data edge-data]
+  (reset! node-id-num 0)
+  (reset! edge-id-num 0)
+  (reset! popco-to-gexf-node-id {})
+  ;; FIXME
+  )
