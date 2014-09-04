@@ -10,6 +10,13 @@
 
 ;; IMPORTANT: During import into Gephi, uncheck "auto-scale".  Otherwise it does funny things with node sizes.
 
+;; Note another way to organize unmasked-non-zero-links below would be with multiple :when clauses:
+;; Do the :when test on the mask for i and j, and then the :let,
+;; to store the wt, and then a separate :when test on wt.  Yes--
+;; you can do that, and the clauses are executed in order; the :let
+;; won't be executed if the first :when doesn't succeed.
+
+
 (def node-size 25)  ; GEXF size
 (def edge-weight 10) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
 
@@ -62,20 +69,6 @@
      [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
      [:viz:size {:value (str size)}]]))
 
-(defn edge
-  "node1-id and node2-id are strings that correspond to id's passed to the
-  function node.  popco-wt should be a POPCO link weight.  It will determine
-  edge thickness via the GEXF weight attribute via function popco-to-gexf-wt,
-  but will also be stored as the value of attribute popco-wt."
-  [node1-id node2-id popco-wt]
-  [:edge {:id (str (swap! edge-id-num inc))
-          :source (str (get @popco-to-gexf-node-id node1-id))
-          :target (str (get @popco-to-gexf-node-id node2-id))
-          :weight edge-weight}
-   [:attvalues {} [:attvalue {:for "popco-wt" :value (str popco-wt)}]]])
-
-
-
 (defn nn-to-nodes
   "Given an PropnNet or AnalogyNet, return a seq of node specifications,
   one for each unmasked node, to pass to gexf-graph."
@@ -88,6 +81,18 @@
                               (mx/mget activns idx))))]   ; activns is a core.matrix vector of numbers
     (map key-to-node 
          (px/non-zero-indices (:mask nnstru)))))
+
+(defn edge
+  "node1-id and node2-id are strings that correspond to id's passed to the
+  function node.  popco-wt should be a POPCO link weight.  It will determine
+  edge thickness via the GEXF weight attribute via function popco-to-gexf-wt,
+  but will also be stored as the value of attribute popco-wt."
+  [node1-id node2-id popco-wt]
+  [:edge {:id (str (swap! edge-id-num inc))
+          :source (str (get @popco-to-gexf-node-id node1-id))
+          :target (str (get @popco-to-gexf-node-id node2-id))
+          :weight edge-weight}
+   [:attvalues {} [:attvalue {:for "popco-wt" :value (str popco-wt)}]]])
 
 
 (defn unmasked-non-zero-links
@@ -106,12 +111,6 @@
                      (pos? (mx/mget mask i))    ; mask values are never negative
                      (pos? (mx/mget mask j)))]  ;  (and almost always = 1)
       [i j wt])))
-
-;; Another way to organize unmasked-non-zero-links above would be with multiple :when clauses:
-;; Do the :when test on the mask for i and j, and then the :let,
-;; to store the wt, and then a separate :when test on wt.  Yes--
-;; you can do that, and the clauses are executed in order; the :let
-;; won't be executed if the first :when doesn't succeed.
 
 (defn nn-to-edges
   "Given an PropnNet or AnalogyNet, return a seq of edge specifications,
