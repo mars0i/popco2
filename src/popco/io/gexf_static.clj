@@ -58,7 +58,7 @@
          ug/assoc-if-new-throw-if-old id (swap! node-id-num inc)) ; we should never encounter the same id twice.
   [:node {:id (str @node-id-num) :label id} 
    [:attvalues {} [:attvalue {:for "popco-activn" :value (str activn)}]]
-   ;[:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
+   [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
    [:viz:size {:size node-size}]])
 
 (defn edge
