@@ -10,7 +10,7 @@
 
 ;; IMPORTANT: During import into Gephi, uncheck "auto-scale".  Otherwise it does funny things with node sizes.
 
-(def node-size 100)  ; GEXF size
+(def node-size 25)  ; GEXF size
 (def edge-weight 10) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
 
 ;; Generate unique GEXF id numbers for nodes and edges.
@@ -53,13 +53,14 @@
 (defn node
   "id should be a string. It will also be used as label. 
   activn is a POPCO activation value."
-  [id activn]
+  [id activn & size-s] ; size-s is a hack so that you can special-case size for some nodes
   (swap! popco-to-gexf-node-id 
          ug/assoc-if-new-throw-if-old id (swap! node-id-num inc)) ; we should never encounter the same id twice.
-  [:node {:id (str @node-id-num) :label id} 
-   [:attvalues {} [:attvalue {:for "popco-activn" :value (str activn)}]]
-   ;[:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
-   [:viz:size {:size node-size}]])
+  (let [size (or (first size-s) node-size)]
+    [:node {:id (str @node-id-num) :label id} 
+     [:attvalues {} [:attvalue {:for "popco-activn" :value (str activn)}]]
+     [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
+     [:viz:size {:value (str size)}]]))
 
 (defn edge
   "node1-id and node2-id are strings that correspond to id's passed to the
@@ -126,7 +127,7 @@
     (map link-to-edge (unmasked-non-zero-links nnstru))))
 
 ;; Nodes to trick Gephi into thinking that limits of values are more extreme than they actually are
-(def gephi-dummy-nodes [(node "dummy1" -1.0) (node "dummy2" 0.0) (node "dummy3" 1.0)]) ; make sure that Gephi ranking has limits -1, 1 for activns
+(def gephi-dummy-nodes [(node "dummy1" -1.0 1.0) (node "dummy2" 0.0 1.0) (node "dummy3" 1.0 1.0)]) ; make sure that Gephi ranking has limits -1, 1 for activns.  third arg is node size override
 (def gephi-dummy-edges [(edge "dummy1" "dummy2" 1.0) (edge "dummy2" "dummy3" -1.0)])  ; make sure that Gephi ranking has limits -1, 1 for link weights
 
 (defn nn-to-gephi-graph
