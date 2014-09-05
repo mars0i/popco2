@@ -8,30 +8,6 @@
 
 ;; gut rehab.  see gexf_dynamic_old.clj, gexf_static.clj for other code
 
-(def node-size 25)  ; GEXF size
-(def edge-weight 10) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
-
-;; Generate unique GEXF id numbers for nodes and edges.
-;; This will be more convenient than label-based ids for incorporating multiple persons into one graph.
-;; It also allows complete replacement of nodes from one tick to the next in dynamic graphs; that's
-;; not desirable for Gephi, but might be useful for some other program.
-;; (Note: If we parallelize generation of gexf files, this could conceivably create a little bottleneck.  Seems unlikely, though.)
-(def node-id-num (atom 0)) ; generate unique node ids for gexf/gephi
-(def edge-id-num (atom 0)) ; generate unique edge ids for gexf/gephi
-(def popco-to-gexf-node-id (atom {})) ; store relationship between popco ids and gexf node ids so I can look them up to provide source/target ids for edges
-
-(defn net-with-tick
-  [person-id net-key popn]
-  (assoc (net-key (popn/get-person person-id popn)) :tick (:tick popn)))
-
-(defn analogy-net-with-tick
-  [person-id popn]
-  (net-with-tick person-id :analogy-net popn))
-
-(defn propn-net-with-tick
-  [person-id popn]
-  (net-with-tick person-id :propn-net popn))
-
 ;; pseudocode for nodes:
 ;; iterate through nets (need not be same type--could be both analogy and proposition)
 ;; in each net, run through all nodes
@@ -47,6 +23,29 @@
 ;;   with constructed key representing the two ends (maybe also person as part of id)
 ;;   and weight+tick ([tick popco-wt]).
 ;; if edge is old, conj [tick popco-wt] onto existing seq of [tick popco-wt]s.
+
+(def node-size 25)  ; GEXF size
+(def edge-weight 10) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
+
+;; Generate unique GEXF id numbers for nodes and edges.  More convenient than label-based ids for incorporating multiple persons into one graph.
+(def node-id-num (atom 0))
+(def edge-id-num (atom 0))
+(def popco-to-gexf-node-id (atom {})) ; store relationship between popco ids and gexf node ids so I can look them up to provide source/target ids for edges
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; FUNCTIONS TO ADD TICKS TO NEURAL NET STRUCTURES
+
+(defn net-with-tick
+  [person-id net-key popn]
+  (assoc (net-key (popn/get-person person-id popn)) :tick (:tick popn)))
+
+(defn analogy-net-with-tick
+  [person-id popn]
+  (net-with-tick person-id :analogy-net popn))
+
+(defn propn-net-with-tick
+  [person-id popn]
+  (net-with-tick person-id :propn-net popn))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS USED FOR BOTH NODE AND EDGE DATA COLLECTION
@@ -82,7 +81,7 @@
           (map (partial idx-to-node-data net-with-tick)
                (unmasked-nonzero-idxs net-with-tick))))
 
-(defn dynamic-node-data-from-nets
+(defn dynamic-net-node-data
   [node-data nets-with-ticks]
   (reduce dynamic-node-data-from-net node-data nets-with-ticks))
 
@@ -119,7 +118,7 @@
           (map (partial idxs-to-edge-data net-with-tick)
                (unmasked-non-zero-links net-with-tick))))
 
-(defn dynamic-edge-data-from-nets
+(defn dynamic-net-edge-data
   [edge-data nets-with-ticks]
   (reduce dynamic-edge-data-from-net edge-data nets-with-ticks))
 
@@ -128,21 +127,22 @@
 
 (defn node-entry-to-node
   "Expects one hashmap entry from node-data."
-  [[id [tick activn]] & size-s] ; size-s is a hack so that you can special-case size for some nodes
+  [[id tick-data-entries] & size-s] ; size-s is a hack so that you can special-case size for some nodes
   (swap! popco-to-gexf-node-id 
          ug/assoc-if-new id (swap! node-id-num inc))
-  (let [size (or (first size-s) node-size)
+  (let [first-tick (ffirst tick-data-entries) ; if tick, i.e. first element of first entry is nil, assume that they're all nil.
+        size (or (first size-s) node-size)
         node-spec {:id (str @node-id-num) :label (name id)}
-        activn-spec {:for "popco-activn" :value (str activn)}
-        tick-str (str tick)]
-    [:node  (if tick
-              (merge node-spec {:start tick-str})
+        make-tick-data-attr (fn [[tick activn]]
+                              (let [activn-spec {:for "popco-activn" :value (str activn)}]
+                                [:attvalue (if tick
+                                             (merge activn-spec {:start (str (float tick)) :endopen (str (inc (float tick)))})
+                                             activn-spec)])) ]
+    [:node  (if first-tick
+              (merge node-spec {:start (str (float first-tick))})
               node-spec)
-     [:attvalues {}
-      [:attvalue (if tick
-                   (merge activn-spec {:start tick-str :endopen (str (inc tick))})
-                   activn-spec)]]
-     [:viz:position {:x (str (- (rand 1000) 500)) :y (str (- (rand 1000) 500)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
+     (into [:attvalues {}] (map make-tick-data-attr tick-data-entries))
+     [:viz:position {:x (str (- (rand 100) 50)) :y (str (- (rand 100) 50)) :z "0.0"}] ; doesn't matter for Gephi, but can be useful for other programs to provide a starting position
      [:viz:size {:value (str size)}]]))
 
 
@@ -155,8 +155,8 @@
   or more nets, each with an added tick (e.g. by net-with-tick).
    usage: (dynamic-net-data {} {} (analogy-net-with-tick :worf popn))"
   [node-data edge-data nets-with-ticks]
-  [(dynamic-node-data-from-nets node-data nets-with-ticks)
-   (dynamic-edge-data-from-nets edge-data nets-with-ticks)])
+  [(dynamic-net-node-data node-data nets-with-ticks)
+   (dynamic-net-edge-data edge-data nets-with-ticks)])
   
 (defn nodes-edges-from-data
   [node-data edge-data]
@@ -165,3 +165,32 @@
   (reset! popco-to-gexf-node-id {})
   ;; FIXME
   )
+
+(defn gexf-graph
+  "Generate a GEXF specification suitable for reading by clojure.data.xml
+  functions such as `emit` and `indent-str`.  nodes is a sequence (not vector)
+  of clojure.data.xml specifications for GEXF nodes, which can be generated by
+  popco.io.gexf/node.  edges is the same sort of thing for edge specifications,
+  which can be generated by popco.io.gexf/edges.  mode, if present, should be
+  one of the keywords :static (default) or :dynamic, which determine the GEXF 
+  graph mode.  Dynamic graphs allow time indexing.  first-tick is ignored
+  if mode is :static."
+  [nodes edges mode first-tick]
+  (x/sexp-as-element [:gexf {:xmlns "http://www.gexf.net/1.2draft"
+                             :xmlns:viz "http://www.gexf.net/1.1draft/viz"
+                             :xmlns:xsi "http://www.w3.org/2001/XMLSchema-instance"
+                             :xsi:schemaLocation "http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd"
+                             :version "1.2"}
+                      [:graph 
+                       (cond (= mode :static) {:defaultedgetype "undirected" :mode "static"} 
+                             (= mode :dynamic) {:defaultedgetype "undirected" :mode "dynamic" :timeformat "double" :start (str first-tick)}  ; TODO Is that the correct timeformat??
+                             :else (throw (Exception. (str "Bad GEXF graph mode: " mode))))
+                       [:attributes {:class "node" :mode "dynamic"} ; alter for STATIC?
+                        [:attribute {:id "popco-activn" :title "popco-activn" :type "float"}
+                         [:default {} "0.0"]]]
+                       [:attributes {:class "edge" :mode "dynamic"} ; alter for STATIC?
+                        [:attribute {:id "popco-wt" :title "popco-wt" :type "float"}
+                         [:default {} "0.0"]]]
+                       [:nodes {:count (count nodes)} nodes]
+                      ; [:edges {:count (count edges)} edges]  ; FIXME when I can generate edges
+                       ]]))
