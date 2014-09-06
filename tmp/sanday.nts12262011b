@@ -1,0 +1,27 @@
+nts12262011b on sanday simulations
+
+agent (man)
+agent (woman)
+agent (animal)
+agent (creator)
+not-agent (plant)
+human (man)
+human (woman)
+agents have goals
+and try to achieve them
+
+kill (man plant-food)
+produce (nature plant-food)
+
+acquire-easily (man plant-food)
+acquire-easily (woman plant-food)
+acquire-difficultly (man animal-food)
+
+struggle-control (man animal)
+
+success mysterious dangerous
+animals mysterious
+animals uncontrollable
+plants predictible
+plants controllable
+

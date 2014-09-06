@@ -1,0 +1,228 @@
+% OnFoot beamer theme
+% Copyright 2012 by Marshall Abrams
+% This file may be distributed and/or modified
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+% See the file doc/licenses/LICENSE for more details.
+
+% Very loosely inspired by the beautiful design, by Worksight, 
+% of the cover of the book 
+% 	_On Foot: A History of Walking_, by Joseph A. Amato, 
+% displayed on p. 183 of _30 Essential Typefaces for a Lifetime_, edited
+% and curated by Imin Pao and Joshua Berger, 2006 International Book Co. Ltd:
+
+% NOTE as provided, assumes that you have both the 
+% URW-Garamond/mathdesign package installed, and possibly another
+% Garamond installed.
+
+% Used aspects of Pittsburgh and AnnArbor themes as models.
+
+\mode<presentation>
+
+% URW Garamond.  Even if we override it below with another Garamond, 
+% this is worth including because it produces Garamond-friendly 
+% math typesetting.  Note though that the result is that italics
+% from the main font will be mixed with e.g. Greek letters from
+% URW Garamond.
+\usepackage[T1]{fontenc}
+\usepackage[urw-garamond]{mathdesign}
+
+% XeLaTeX pulling from OSX-available fonts
+\usepackage{fontspec,xltxtra,xunicode}
+\defaultfontfeatures{Mapping=tex-text}
+\newcommand{\SetFont}[1]{\setromanfont[Mapping=tex-text]{#1}}
+%\SetFont{SabonLTStd-Roman}
+%\SetFont{AGaramondPro-Regular}
+%\SetFont{Garamond}    % Apple Garamond
+\SetFont{GaramondNo8} % URW/Stempel Garamond from the Mac side. Gets rid of the annoying " mapping:
+%\SetFont{EB Garamond}
+
+% Pros and cons of above fonts:
+% Sabon is a bit too crisp, but has large x-height so is large, and non-free.
+% Adobe G. is crisp, clear, beautiful, but non-free.
+% Stempel/URWno8 G. is easy-reading since large x-height, but can be both
+%   less elegant, and can have a slightly distracting calligraphic feel (e.g. "a")
+%   The accent acute is large and obtrusive.
+%   Has only lining numerals, and no small caps, apparently.
+% (I like URWno8 for e.g. 12pt reading, but it's a bit stodgy for presentations.)
+% EB G. is beautiful though not as much so as Adobe G.  
+%   Its boldface is barely noticeable, so if you must use bold for
+%   emphasis, you should switch to a different font--at least for that page.
+%   The default Q and ampersand are swashy--beautiful but distracting.
+%   Sometimes word spacing is too tight in the italic font.
+%   (It's a beta release.)
+%   Has both oldstyle (default) and lining numerals, and has
+%   small caps.
+% Apple Garamond (not listed above) has little value for me.  Very thin.  
+% Also: For whatever it's worth, Adobe Garamond and EB Garamond use a "Th"
+% ligature, while URW Garamond does not.  (You decide which is better.)
+
+% switch number style of specific text:
+\newcommand{\lnum}[1]{\addfontfeature{Numbers=Lining}{#1}}
+\newcommand{\onum}[1]{\addfontfeature{Numbers=OldStyle}{#1}}
+% To switch number style globally in subsquent text (but not equations), 
+% insert one of these into document:
+%\addfontfeatures{Numbers=Lining}
+%\addfontfeatures{Numbers=OldStyle}
+% Doesn't affect equations.
+
+\usefonttheme{serif} % vs default
+
+% basic color scheme: like beetle, but turn beetle's blue into black,
+% so section bar at top is black
+\usecolortheme{beetle}
+\definecolor{beetle@other}{RGB}{0,0,0}
+
+% Now further mods of color scheme:
+% NOTE SOME OF THESE COLORS MAY REQUIRE something like this:
+%\documentclass[12pt,xcolor=svgnames]{beamer}
+
+\newcommand{\DefaultBG}{AntiqueWhite!60!white}
+\newcommand{\DefaultFG}{black}
+
+\newcommand{\HeaderBG}{black}
+%\newcommand{\HeaderBG}{black!80!white}
+\newcommand{\HeaderFG}{red!90!black}
+%\newcommand{\HeaderFG}{purple!45!red!80!white}
+
+% Define the two basic OnFoot color schemes:
+\setbeamercolor{OnFootDark}{bg=\HeaderBG,fg=\HeaderFG}
+\setbeamercolor{OnFootLight}{bg=\DefaultBG,fg=\DefaultFG}
+\setbeamercolor{OnFootLightWithRed}{bg=\DefaultBG,fg=\HeaderFG}
+
+\setbeamercolor*{structure}{parent=OnFootDark}
+
+\setbeamercolor{background canvas}{parent=OnFootLight}
+\setbeamercolor{background}{parent=background canvas}
+%\setbeamercolor{title}{parent=OnFootLight}
+\setbeamercolor{title}{parent=OnFootLightWithRed}
+
+% This makes the section/subsection text a dark offwhite, on black:
+\setbeamercolor*{palette primary}{parent=OnFootDark,fg=\DefaultBG!80!black}
+
+\setbeamercolor*{author in head/foot}{parent=OnFootLight} % color for author, below
+
+\beamertemplatenavigationsymbolsempty % get rid of nav icons in lower right
+
+% not needed--this is the default
+%\setbeamertemplate{frametitle}[default][left] % put slide title on left
+
+% copied from frametitle in beamerouterthemedefault.sty and them modified 
+% to try to put section at right side of title area
+\defbeamertemplate*{frametitle}{OnFoot}[1][left]
+{
+  \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+  \@tempdima=\textwidth%  I think this will set with of header box to width of text below
+  \advance\@tempdima by\beamer@leftmargin%  and then expand it to include
+  \advance\@tempdima by\beamer@rightmargin% the margins
+  % Next line is to make textbox for title and section head 
+  % as wide as possible without Beamer complaining.  What's correct method?
+  %\advance\@tempdima by 3.4cm%
+  \begin{beamercolorbox}[sep=0.3cm,#1,wd=\the\@tempdima]{frametitle}
+    \raggedright% This allows hfill to successfully push things all the way right
+    \usebeamerfont{frametitle}%
+    \vbox{}\vskip-1ex%
+    \if@tempswa\else\csname beamer@fte#1\endcsname\fi%
+    \hspace{7pt}%
+    \strut\Large\insertframetitle\strut%
+    {%
+      \ifx\insertsectionhead\@empty%
+      \else%
+      % next line replaces ref to frame subtitle with section heading,
+      % pushes it to the right, and makes it small
+      {\usebeamerfont{section in head/foot}\usebeamercolor[fg]{section in head/foot}\hfill\scriptsize\insertsectionhead\hspace{8pt}\strut\par}%
+      % use these 3 lines instead of the preceding, to display subsections:
+      % {\usebeamerfont{section in head/foot}\usebeamercolor[fg]{section in head/foot}\hfill\scriptsize\insertsectionhead:\hspace{8pt}\strut\par}%
+      % \vskip-1ex%
+      % {\usebeamerfont{section in head/foot}\usebeamercolor[fg]{section in head/foot}\hfill\tiny\insertsubsectionhead\hspace{8pt}\strut\par}%
+      \fi
+    }%
+    \vskip-1ex%
+    \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+  \end{beamercolorbox}%
+}
+
+% % next two defs modified from infolines:
+% 
+% % This puts section and subsection above the slide title
+% % section on far left, subsection on far right
+% % Colors as specified above.
+% \defbeamertemplate*{headline}{OnFoot theme}
+% {
+%   \leavevmode%
+%   \hbox{%
+%   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,left]{section in head/foot}%
+%     \usebeamerfont{section in head/foot}\hspace*{3ex}\insertsectionhead
+%   \end{beamercolorbox}%
+%   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{subsection in head/foot}%
+%     \usebeamerfont{subsection in head/foot}\insertsubsectionhead\hspace*{3ex}
+%   \end{beamercolorbox}
+%   }%
+%   \vskip0pt%
+% }
+
+\title[Abbrev.Title\hspace{2em}\insertframenumber/\inserttotalframenumber]{Full Title}
+
+% This puts author name on bottom left.  Needs further modification, probably.
+% Setting ht and dp to 0, but adding vspace after the text lines it up with the nav icons
+\defbeamertemplate*{footline}{OnFoot theme}
+{
+  \leavevmode%
+  \hbox{%
+  %\begin{beamercolorbox}[wd=.333333\paperwidth,ht=0.00ex,dp=0ex,left]{author in head/foot}%
+  \begin{beamercolorbox}[wd=1.00\paperwidth,ht=0.00ex,dp=0ex,left]{author in head/foot}%
+    \usebeamerfont{author in
+    head/foot}\hspace*{3ex}\insertshortauthor\
+    (\insertshortinstitute), ``\insertshorttitle"\hfill\hspace{70ex} \insertframenumber/\inserttotalframenumber \vspace{1.5ex}
+  \end{beamercolorbox}%
+%  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+%    \usebeamerfont{title in head/foot}\insertshorttitle
+%  \end{beamercolorbox}%
+%  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+%    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+%  \end{beamercolorbox}
+  }%
+  \vskip0pt%
+}
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamertemplate{itemize subsubitem}[circle]
+\setbeamertemplate{enumerate item}[default]
+\setbeamertemplate{sections/subsections in toc}[default]
+
+% Copied from beamerinnerthemedefault.sty, and then modified.
+% Made the main title box shorter by changing the sep param of the first color box.
+% Note that it will still expand if need be.
+\defbeamertemplate*{title page}{OnFoot}[1][]
+{
+  \vbox{}
+  \vfill
+  \begin{centering}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{title} % changed sep from 8pt -MA
+      \usebeamerfont{title}\LARGE\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%     
+    \end{beamercolorbox}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center,#1]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{institute}
+      \usebeamerfont{institute}\footnotesize\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{date}
+      \usebeamerfont{date}\scriptsize\insertdate
+    \end{beamercolorbox}\vskip0.5em
+    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  \end{centering}
+  \vfill
+}
+
+\setbeamerfont{quote}{shape=\rm} % Don't italicize quotations
+
+\mode
+<all>

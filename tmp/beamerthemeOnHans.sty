@@ -1,0 +1,182 @@
+% OnHans beamer theme
+% Somewhat like OnHand but san serif
+% Copyright 2013 by Marshall Abrams
+% This file may be distributed and/or modified
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+% See the file doc/licenses/LICENSE for more details.
+
+% Used aspects of Pittsburgh and AnnArbor themes as models.
+
+\mode<presentation>
+
+% XeLaTeX pulling from OSX-available fonts
+\usepackage{fontspec,xltxtra,xunicode}
+\defaultfontfeatures{Mapping=tex-text}
+\newcommand{\SetFont}[1]{\setsansfont[Mapping=tex-text]{#1}}
+\SetFont{Gill Sans Light}
+%\SetFont{Helvetica}
+%\SetFont{Optima}
+% The default cmss (Computer Modern San Serif)
+% is actually pretty nice
+
+\newcommand{\lnum}[1]{\addfontfeature{Numbers=Lining}{#1}}
+\newcommand{\onum}[1]{\addfontfeature{Numbers=OldStyle}{#1}}
+
+%\usefonttheme{serif} % vs default
+\usefonttheme{default} % san serif
+
+% basic color scheme: like beetle, but turn beetle's blue into DarkSlateGrey,
+% so section bar at top is DarkSlateGrey
+\usecolortheme{beetle}
+\definecolor{beetle@other}{RGB}{0,0,0}
+
+% Now further mods of color scheme:
+% NOTE SOME OF THESE COLORS MAY REQUIRE something like this:
+%\documentclass[12pt,xcolor=svgnames]{beamer}
+
+%\newcommand{\DefaultBG}{AntiqueWhite!98!green}
+%\newcommand{\DefaultBG}{AntiqueWhite!80!white}
+\newcommand{\DefaultBG}{AntiqueWhite!60!white}
+
+% Define the basic OnHans color schemes:
+
+% main text:
+\setbeamercolor{OnHansLight}{bg=\DefaultBG,fg=DarkSlateGrey}
+% dark red top titles and bullets:
+\setbeamercolor{OnHansDark}{bg=DarkSlateGrey!70!white,fg=Maroon!70!orange}
+% main text's bg, but dark title's text color:
+\setbeamercolor{OnHansMixed}{bg=\DefaultBG,fg=Maroon!85!white}
+% a variation on the dark top title scheme:
+\setbeamercolor{OnHansDarkAlt}{bg=DarkSlateGrey!30!white!95!yellow,fg=Maroon!90!yellow}
+
+\setbeamercolor*{structure}{parent=OnHansDark}
+
+\setbeamercolor{background canvas}{parent=OnHansLight}
+\setbeamercolor{background}{parent=background canvas}
+\setbeamercolor{title}{parent=OnHansLight}
+
+% This makes the section/subsection text a dark offwhite, on DarkSlateGrey:
+\setbeamercolor*{palette primary}{parent=OnHansDark,fg=\DefaultBG!80!DarkSlateGrey}
+
+\setbeamercolor*{author in head/foot}{parent=OnHansLight} % color for author, below
+
+% not needed--this is the default
+%\setbeamertemplate{frametitle}[default][left] % put slide title on left
+
+% copied from frametitle in beamerouterthemedefault.sty and them modified 
+% to try to put section at right side of title area
+\defbeamertemplate*{frametitle}{OnHans}[1][left]
+{
+  \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+  \@tempdima=\textwidth%  I think this will set with of header box to width of text below
+  \advance\@tempdima by\beamer@leftmargin%  and then expand it to include
+  \advance\@tempdima by\beamer@rightmargin% the margins
+  % Next line is to make textbox for title and section head 
+  % as wide as possible without Beamer complaining.  What's correct method?
+  %\advance\@tempdima by 3.4cm%
+  \begin{beamercolorbox}[sep=0.3cm,#1,wd=\the\@tempdima]{frametitle}
+    \raggedright% This allows hfill to successfully push things all the way right
+    \usebeamerfont{frametitle}%
+    \vbox{}\vskip-1ex%
+    \if@tempswa\else\csname beamer@fte#1\endcsname\fi%
+    \hspace{7pt}%
+    \strut\insertframetitle\strut%
+    {%
+      \ifx\insertsectionhead\@empty%
+      \else%
+      % next line replaces ref to frame subtitle with section heading,
+      % pushes it to the right, and makes it small
+%% THIS LINE CAUSES BEAMER TO COMPLAIN WHEN I USE THE \note{} COMMAND:
+      {\usebeamerfont{section in head/foot}\usebeamercolor[fg]{section in head/foot}\hfill\scriptsize\insertsectionnumber. \insertsectionhead\hspace{8pt}\strut\par}%
+      % use these 3 lines instead of the preceding, to display subsections:
+      % {\usebeamerfont{section in head/foot}\usebeamercolor[fg]{section in head/foot}\hfill\scriptsize\insertsectionhead:\hspace{8pt}\strut\par}%
+      % \vskip-1ex%
+      % {\usebeamerfont{section in head/foot}\usebeamercolor[fg]{section in head/foot}\hfill\tiny\insertsubsectionhead\hspace{8pt}\strut\par}%
+      \fi
+    }%
+    \vskip-1ex%
+    \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+  \end{beamercolorbox}%
+}
+
+% % next two defs modified from infolines:
+% 
+% % This puts section and subsection above the slide title
+% % section on far left, subsection on far right
+% % Colors as specified above.
+% \defbeamertemplate*{headline}{OnHans theme}
+% {
+%   \leavevmode%
+%   \hbox{%
+%   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,left]{section in head/foot}%
+%     \usebeamerfont{section in head/foot}\hspace*{3ex}\insertsectionhead
+%   \end{beamercolorbox}%
+%   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{subsection in head/foot}%
+%     \usebeamerfont{subsection in head/foot}\insertsubsectionhead\hspace*{3ex}
+%   \end{beamercolorbox}
+%   }%
+%   \vskip0pt%
+% }
+
+% This puts author name on bottom left.  Needs further modification, probably.
+% Setting ht and dp to 0, but adding vspace after the text lines it up with the nav icons
+\defbeamertemplate*{footline}{OnHans theme}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=0.00ex,dp=0ex,left]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\hspace*{3ex}\insertshortauthor, \hspace*{3ex}\insertshortinstitute\vspace{1.5ex}
+  \end{beamercolorbox}%
+%  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+%    \usebeamerfont{title in head/foot}\insertshorttitle
+%  \end{beamercolorbox}%
+%  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+%    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+%  \end{beamercolorbox}
+  }%
+  \vskip0pt%
+}
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamertemplate{itemize subsubitem}[circle]
+\setbeamertemplate{enumerate item}[default]
+\setbeamertemplate{sections/subsections in toc}[default]
+
+% Copied from beamerinnerthemedefault.sty, and then modified.
+% Made the main title box shorter by changing the sep param of the first color box.
+% Note that it will still expand if need be.
+\defbeamertemplate*{title page}{OnHans}[1][]
+{
+  \vbox{}
+  \vfill
+  \begin{centering}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{title} % changed sep from 8pt -MA
+      \usebeamerfont{title}\LARGE\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%     
+    \end{beamercolorbox}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center,#1]{author}
+      \usebeamerfont{author}\large\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{institute}
+      \usebeamerfont{institute}\small\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{date}
+      \usebeamerfont{date}\small\insertdate
+    \end{beamercolorbox}\vskip0.5em
+    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  \end{centering}
+  \vfill
+}
+
+
+\setbeamerfont{quote}{shape=\sf} % Don't italicize quotations
+
+\mode
+<all>

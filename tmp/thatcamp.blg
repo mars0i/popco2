@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2011)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: thatcamp.aux
+The style file: myforthcoming.bst
+Database file #1: phil.bib
+Warning--can't use both volume and number fields in Duncker:OnProbSolving
+You've used 22 entries,
+            2884 wiz_defined-function locations,
+            798 strings with 9204 characters,
+and the built_in function-call counts, 11920 in all, are:
+= -- 960
+> -- 401
+< -- 43
++ -- 150
+- -- 117
+* -- 886
+:= -- 1864
+add.period$ -- 67
+call.type$ -- 22
+change.case$ -- 146
+chr.to.int$ -- 21
+cite$ -- 23
+duplicate$ -- 846
+empty$ -- 963
+format.name$ -- 211
+if$ -- 2394
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 176
+newline$ -- 120
+num.names$ -- 111
+pop$ -- 312
+preamble$ -- 1
+purify$ -- 127
+quote$ -- 0
+skip$ -- 415
+stack$ -- 0
+substring$ -- 494
+swap$ -- 428
+text.length$ -- 7
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 220
+warning$ -- 1
+while$ -- 82
+width$ -- 0
+write$ -- 309
+(There was 1 warning)
