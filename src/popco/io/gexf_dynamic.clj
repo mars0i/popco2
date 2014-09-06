@@ -146,6 +146,25 @@
      [:viz:size {:value (str size)}]]))
 
 
+(defn edge-entry-to-edge
+  [[id-set tick-data-entries] & size-s]
+  (let [first-tick (ffirst tick-data-entries) ; if tick, i.e. first element of first entry is nil, assume that they're all nil.
+        [node1-id node2-id] (vec id-set)
+        size (or (first size-s) node-size)
+        edge-spec {:id (str (swap! edge-id-num inc))
+                   :source (str (get @popco-to-gexf-node-id node1-id))
+                   :target (str (get @popco-to-gexf-node-id node2-id))
+                   :label (str (name node1-id) "<->" (name node2-id))}
+        make-tick-data-attr (fn [[tick wt]]
+                              (let [wt-spec {:for "popco-wt" :value (str wt)}]
+                                [:attvalue (if tick
+                                             (merge wt-spec {:start (str (float tick)) :endopen (str (inc (float tick)))})
+                                             wt-spec)])) ]
+    [:edge  (if first-tick
+              (merge edge-spec {:start (str (float first-tick))})
+              edge-spec)
+     (into [:attvalues {}] (map make-tick-data-attr tick-data-entries))]))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TOP-LEVEL FUNCTIONS
 
@@ -192,5 +211,5 @@
                         [:attribute {:id "popco-wt" :title "popco-wt" :type "float"}
                          [:default {} "0.0"]]]
                        [:nodes {:count (count nodes)} nodes]
-                      ; [:edges {:count (count edges)} edges]  ; FIXME when I can generate edges
+                       [:edges {:count (count edges)} edges]
                        ]]))
