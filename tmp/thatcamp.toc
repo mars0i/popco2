@@ -1,4 +1,0 @@
-\beamer@endinputifotherversion {3.10pt}
-\beamer@sectionintoc {1}{Introduction}{2}{0}{1}
-\beamer@sectionintoc {2}{Agent-based culture models}{11}{0}{2}
-\beamer@sectionintoc {3}{POPCO details}{26}{0}{3}
