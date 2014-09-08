@@ -51,7 +51,7 @@
       kira (pers/make-person :kira  crime+beast-propns  no-perc-pnet     anet         pns/crime-propn-ids  [:bajorans :ds9]  [:bajorans :ds9]      1)  ; KIRA is a BAJORAN who also talks to DS9 folk.
      ]
 
-  (def popn (pp/make-population [aa
-                                 vul1 worf ; (pers/new-person-from-old vul1 :vul2)
-                                 baj1 kira ; (pers/new-person-from-old baj1 :baj2)
-                                ])))
+  (def popn1 (pp/make-population [aa
+                                  vul1 worf ; (pers/new-person-from-old vul1 :vul2)
+                                  baj1 kira ; (pers/new-person-from-old baj1 :baj2)
+                                  ])))
