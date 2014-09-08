@@ -40,8 +40,9 @@
       ;; Note that even pundit only talks to one person on each tick: max-talk-to = 1.  might want to change that, e.g. to represent what's perceived in a common environment.
       ;; (Group names come from the TV show "Star Trek: Deep Space Nine", about a space station named "Deep Space Nine".  Kira and Worf work together on the space station.)
 
-      ;; args:              ID      UNMASKED            PROPN-NET        ANALOGY-NET  UTTERABLE-IDS        GROUPS I'M IN     TALK-TO-GROUPS        MAX-TALK-TO
-
+      ;; args:               ID     UNMASKED            PROPN-NET        ANALOGY-NET  UTTERABLE-IDS        GROUPS            TALK-TO-GROUPS        MAX-TALK-TO
+      ;;                          (propns entertained) (propns perceived)             (propns I can say)   (Groups I'm in)   (Groups I talk to)    (Max number of people I talk to in one tick)
+      ;;
       aa   (pers/make-person :aa    pns/crime-propns    crime-perc-pnet  anet         pns/crime-propn-ids  [:pundits]        [:vulcans :bajorans]  1)  ; PUNDIT: talks to everyone, listens to no one
       vul1 (pers/make-person :vul1  crime+virus-propns  no-perc-pnet     anet         pns/crime-propn-ids  [:vulcans]        [:vulcans]            1)  ; NORMAL VULCAN: Talks only to Vulcans
       worf (pers/make-person :worf  crime+virus-propns  no-perc-pnet     anet         pns/crime-propn-ids  [:vulcans :ds9]   [:vulcans :ds9]       1)  ; WORF is a VULCAN who also talks to DS9 folk.
