@@ -140,11 +140,12 @@
 (defn node-entry-to-node
   "Expects one hashmap entry from node-data."
   [[id tick-data-entries] & size-s] ; size-s is a hack so that you can special-case size for some nodes
-  (swap! popco-to-gexf-node-id 
-         ug/assoc-if-new id (swap! node-id-num inc))
+
+  (swap! popco-to-gexf-node-id ug/assoc-if-new id (swap! node-id-num inc)) ; update popco-id to id-num hashmap
+
   (let [first-tick (ffirst tick-data-entries) ; if tick, i.e. first element of first entry is nil, assume that they're all nil.
         size (or (first size-s) node-size)
-        node-spec {:id (str @node-id-num) :label (name id)}
+        node-spec {:id (str @node-id-num) :label (name id)} ; i.e. gexf id is a number. label stores the popco id.
         make-tick-data-attr (fn [[tick activn]]
                               (let [activn-spec {:for "popco-activn" :value (str activn)}]
                                 [:attvalue (if tick
@@ -207,24 +208,30 @@
   graph mode.  Dynamic graphs allow time indexing.  first-tick is ignored
   if mode is :static."
   [nodes edges mode first-tick]
-  (x/sexp-as-element [:gexf {:xmlns "http://www.gexf.net/1.2draft"
-                             :xmlns:viz "http://www.gexf.net/1.1draft/viz"
-                             :xmlns:xsi "http://www.w3.org/2001/XMLSchema-instance"
-                             :xsi:schemaLocation "http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd"
-                             :version "1.2"}
-                      [:graph 
-                       (cond (= mode :static) {:defaultedgetype "undirected" :mode "static"} 
-                             (= mode :dynamic) {:defaultedgetype "undirected" :mode "dynamic" :timeformat "double" :start (str first-tick)}  ; TODO Is that the correct timeformat??
-                             :else (throw (Exception. (str "Bad GEXF graph mode: " mode))))
-                       [:attributes {:class "node" :mode mode}
-                        [:attribute {:id "popco-activn" :title "popco-activn" :type "float"}
-                         [:default {} "0.0"]]]
-                       [:attributes {:class "edge" :mode mode}
-                        [:attribute {:id "popco-wt" :title "popco-wt" :type "float"}
-                         [:default {} "0.0"]]]
-                       [:nodes {:count (count nodes)} nodes]
-                       [:edges {:count (count edges)} edges]
-                       ]]))
+  (let [mode-str (name mode)]
+    (x/sexp-as-element [:gexf {:xmlns "http://www.gexf.net/1.2draft"
+                               :xmlns:viz "http://www.gexf.net/1.1draft/viz"
+                               :xmlns:xsi "http://www.w3.org/2001/XMLSchema-instance"
+                               :xsi:schemaLocation "http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd"
+                               :version "1.2"}
+                        [:graph 
+                         (cond (= mode :static) {:defaultedgetype "undirected" :mode "static"} 
+                               (= mode :dynamic) {:defaultedgetype "undirected" :mode "dynamic" :timeformat "double" :start (str first-tick)}  ; TODO Is that the correct timeformat??
+                               :else (throw (Exception. (str "Bad GEXF graph mode: " mode))))
+                         [:attributes {:class "node" :mode mode-str}
+                          [:attribute {:id "popco-activn" :title "popco-activn" :type "float"}
+                           [:default {} "0.0"]]]
+                         [:attributes {:class "edge" :mode mode-str}
+                          [:attribute {:id "popco-wt" :title "popco-wt" :type "float"}
+                           [:default {} "0.0"]]]
+                         [:nodes {:count (count nodes)} nodes]
+                         [:edges {:count (count edges)} edges]
+                         ]])))
+
+(defn reset-id-nums! []
+  (reset! node-id-num 0)
+  (reset! edge-id-num 0)
+  (reset! popco-to-gexf-node-id {}))
 
 (defn gexf-graph
   "Return GEXF graph data structure suitable for use by clojure.data.xml's
@@ -233,17 +240,15 @@
   will be static.  pers-ids is a collection of person ids to be selected from
   each population.  net-ids contains one or both of :propn-net, :analogy-net."
   [person-ids net-keys popns]
-  (reset! node-id-num 0)
-  (reset! edge-id-num 0)
-  (reset! popco-to-gexf-node-id {})
+  (reset! node-id-num 0) ; TODO Is this necessary? Desirable?
+  (reset! edge-id-num 0) ; TODO Is this necessary? Desirable?
+  (reset! popco-to-gexf-node-id {}) ; This one is needed in any event.
   (let [nets (apply concat
                     (for [person-id person-ids
                           net-key net-keys]
                       (nets-with-ticks person-id net-key popns)))]
     (gexf-graph-from-data
-      (map node-entry-to-node 
-           (net-node-data-from-nets {} nets)) 
-      (map edge-entry-to-edge 
-           (net-edge-data-from-nets {} nets))
+      (map node-entry-to-node (net-node-data-from-nets {} nets)) 
+      (map edge-entry-to-edge (net-edge-data-from-nets {} nets))
       (if (> (count popns) 1) :dynamic :static)
-      0))) ;; FIXME make initial tick depend on popns
+      (:tick (first popns)))))
