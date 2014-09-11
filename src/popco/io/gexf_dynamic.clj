@@ -35,38 +35,45 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS TO ADD TICKS TO NEURAL NET STRUCTURES
 
-(defn net-with-tick
+(defn net-with-origin-info
+  "Extract proposition or analogy net (specified by net-key) from population
+  popn.  Return this net with the person-id and the population's tick assoc'ed
+  into it as :person and :tick, respectively."
   [person-id net-key popn]
-  (assoc (net-key (popn/get-person person-id popn)) :tick (:tick popn)))
+  (assoc (net-key (popn/get-person person-id popn))
+         :tick (:tick popn)
+         :person person-id))
 
-(defn nets-with-ticks
+(defn nets-with-origin-info
+  "Apply net-with-origin-info to a collection of populations in popns."
   [person-id net-key popns]
-  (map (partial net-with-tick person-id net-key) popns))
+  (map (partial net-with-origin-info person-id net-key) popns))
 
-(defn analogy-net-with-tick
-  [person-id popn]
-  (net-with-tick person-id :analogy-net popn))
-
-(defn analogy-nets-with-ticks
-  [person-id popns]
-  (nets-with-ticks person-id :analogy-net popns))
-
-(defn propn-net-with-tick
-  [person-id popn]
-  (net-with-tick person-id :propn-net popn))
-
-(defn propn-nets-with-ticks
-  [person-id popns]
-  (nets-with-ticks person-id :propn-net popns))
+;(defn analogy-net-with-origin-info
+;  [person-id popn]
+;  (net-with-origin-info person-id :analogy-net popn))
+;
+;(defn analogy-nets-with-origin-info
+;  [person-id popns]
+;  (nets-with-origin-info person-id :analogy-net popns))
+;
+;(defn propn-net-with-origin-info
+;  [person-id popn]
+;  (net-with-origin-info person-id :propn-net popn))
+;
+;(defn propn-nets-with-origin-info
+;  [person-id popns]
+;  (nets-with-origin-info person-id :propn-net popns))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS USED FOR BOTH NODE AND EDGE DATA COLLECTION
 
 (defn add-data
-  [collected-data id-data-pair]
-  (let [[id data] id-data-pair]
+  "To be used with reduce to "
+  [collected-data key-data-pair]
+  (let [[node-key data] key-data-pair]
     (update-in collected-data
-               [id] 
+               [node-key] 
                (fnil conj []) data))) ; i.e. if the key id exists in node-data, conj data onto existing value; otherwise conj it onto an empty vec
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -74,20 +81,26 @@
 
 (defn idx-to-node-data
   "Given an net and a seq containing a single index, returns a pair
-  containing the node id corresponding to that index in that net,
+  containing the a new key corresponding to that index in that net,
   and the activation value of that node."
   [net-with-tick k]
   (let [[idx] k
         id (:id ((:node-vec net-with-tick) idx))
         tick (:tick net-with-tick)
+        person (:person net-with-tick)
         activn (mx/mget (:activns net-with-tick) idx)]
-    [id [tick activn]]))
+    [[id person] [tick activn]])) ; [id person] will serve as a hash key
 
 (defn unmasked-nonzero-idxs
   [net]
   (px/non-zero-indices (:mask net)))
 
 (defn node-data-from-net
+  "Extract data on unmasked, nonzero values from a neural net structure,
+  converting the data into a format that will be collected in a hashmap
+  from node ids to information for that node.  node-data is a hashmap.  
+  net-with-tick is a neural net structure (nnstru) with added tick 
+  (and person) fields."
   [node-data net-with-tick]
   (reduce add-data node-data
           (map (partial idx-to-node-data net-with-tick)
@@ -103,9 +116,10 @@
 (defn idxs-to-edge-data 
   [net-with-tick [idx1 idx2 wt]]
   (let [node-vec (:node-vec net-with-tick) ; node-vec is a Clojure vector of Propns
-        id #{(:id (node-vec idx1)) (:id (node-vec idx2))} ; use set as hashmap key so order of ids doesn't matter
-        tick (:tick net-with-tick)]
-    [id [tick wt]]))
+        id #{(:id (node-vec idx1)) (:id (node-vec idx2))} ; use set as part of hashmap key so order of ids doesn't matter
+        tick (:tick net-with-tick)
+        person (:person net-with-tick)]
+    [[id person] [tick wt]]))  ; [id person] will serve as hash key
 
 (defn unmasked-non-zero-links
   "Returns a sequence of triplets containing indexes and wts from net's wt-mat
@@ -139,13 +153,18 @@
 
 (defn node-entry-to-node
   "Expects one hashmap entry from node-data."
-  [[id tick-data-entries] & size-s] ; size-s is a hack so that you can special-case size for some nodes
+  [[k tick-data-entries] & size-s] ; size-s is a hack so that you can special-case size for some nodes
 
-  (swap! popco-to-gexf-node-id ug/assoc-if-new id (swap! node-id-num inc)) ; update popco-id to id-num hashmap
+  (swap! popco-to-gexf-node-id ug/assoc-if-new k (swap! node-id-num inc)) ; update popco-id to id-num hashmap
 
   (let [first-tick (ffirst tick-data-entries) ; if tick, i.e. first element of first entry is nil, assume that they're all nil.
         size (or (first size-s) node-size)
-        node-spec {:id (str @node-id-num) :label (name id)} ; i.e. gexf id is a number. label stores the popco id.
+        node-name (name (first k))
+        person-name (name (second k))
+        node-spec {:id (str @node-id-num)  ; i.e. gexf id is a number. label stores the popco id.
+                   :label (str person-name ":" node-name)
+                   :popco-node node-name
+                   :person person-name}
         make-tick-data-attr (fn [[tick activn]]
                               (let [activn-spec {:for "popco-activn" :value (str activn)}]
                                 [:attvalue (if tick
@@ -160,14 +179,15 @@
 
 
 (defn edge-entry-to-edge
-  [[id-set tick-data-entries] & size-s]
+  [[k tick-data-entries] & size-s]
   (let [first-tick (ffirst tick-data-entries) ; if tick, i.e. first element of first entry is nil, assume that they're all nil.
-        [node1-id node2-id] (vec id-set)
+        [id-set person] k
+        [node1-id node2-id] (vec id-set)  ; each key is a seq containing :id, :person
         size (or (first size-s) node-size)
         edge-spec {:id (str (swap! edge-id-num inc))
-                   :source (str (get @popco-to-gexf-node-id node1-id))
-                   :target (str (get @popco-to-gexf-node-id node2-id))
-                   :label (str (name node1-id) "<->" (name node2-id))}
+                   :source (str (get @popco-to-gexf-node-id [node1-id person]))
+                   :target (str (get @popco-to-gexf-node-id [node2-id person]))
+                   :label (str (name person) ":" (name node1-id) "<->" (name node2-id))}
         make-tick-data-attr (fn [[tick wt]]
                               (let [wt-spec {:for "popco-wt" :value (str wt)}]
                                 [:attvalue (if tick
@@ -180,23 +200,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TOP-LEVEL FUNCTIONS
-
-;(defn net-data
-;  "node-data and edge-data are hashes for data on subsequent states
-;  of nodes and edges, respectively.  nets-with-ticks contains one
-;  or more nets, each with an added tick (e.g. by net-with-tick).
-;   usage: (net-data {} {} (analogy-net-with-tick :worf popn))"
-;  [node-data edge-data nets-with-ticks]
-;  [(net-node-data-from-nets node-data nets-with-ticks)
-;   (net-edge-data-from-nets edge-data nets-with-ticks)])
-;  
-;(defn nodes-edges-from-data
-;  [node-data edge-data]
-;  (reset! node-id-num 0)
-;  (reset! edge-id-num 0)
-;  (reset! popco-to-gexf-node-id {})
-;  ;; FIXME
-;  )
 
 (defn gexf-graph-from-data
   "Generate a GEXF specification suitable for reading by clojure.data.xml
@@ -246,7 +249,7 @@
   (let [nets (apply concat
                     (for [person-id person-ids
                           net-key net-keys]
-                      (nets-with-ticks person-id net-key popns)))]
+                      (nets-with-origin-info person-id net-key popns)))]
     (gexf-graph-from-data
       (map node-entry-to-node (net-node-data-from-nets {} nets)) 
       (map edge-entry-to-edge (net-edge-data-from-nets {} nets))
