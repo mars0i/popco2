@@ -12,7 +12,7 @@
             [popco.core.lot :as lot]
             [popco.core.person :as pers]
             [popco.core.population :as popn]
-            [popco.core.reporters :as rep]
+            [popco.core.reporters :as rpt]
             [popco.io.propncsv :as csv]
             [popco.io.gexf-static :as gxs]
             [popco.io.gexf-dynamic :as gxd]
