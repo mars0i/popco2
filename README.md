@@ -1,7 +1,7 @@
 popco2
 =======
 
-Cultural transmission with analogy biases.  Rewrite of
+Cultural transmission with analogy-influenced biases.  Rewrite of
 [popco](https://github.com/mars0i/popco) in Clojure.  
 This repository was previously called "popco-x".
 
