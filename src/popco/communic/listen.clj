@@ -76,12 +76,13 @@
   networks' weight matrices will reflect the fact that new propositions are now
   part of listener's thought processes."
   [original-pers new-propns]
-  (let [pers (person-masks-clone original-pers) ; TODO Is this really necesary?
+  (let [pers (person-masks-clone original-pers) ; new copy since will modify person's internal structures. TODO Is this really necesary?
         pnet (:propn-net pers)]
     (doseq [new-propn new-propns]
-      (add-to-propn-net! pnet new-propn)
-      (let [propn-to-extended-fams (:propn-to-extended-famss (:propn-net pers))
-            fams (propn-to-extended-fams new-propn)]  ;; TODO: NPE HERE
+      (println "\n<" new-propn ">")
+      (add-to-propn-net! pnet new-propn) ; note modifying propn net that's inside the person that will get returned
+      (let [propn-to-extended-fams (:propn-to-extended-fams-ids (:propn-net pers))
+            fams (propn-to-extended-fams new-propn)]
         (doseq [fam fams                           ; loop through all extended fams containing this propn
                 propn fam]                         ; and each propn in that family
           (try-add-to-analogy-net! pers propn))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
