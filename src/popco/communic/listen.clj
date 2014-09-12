@@ -79,7 +79,6 @@
   (let [pers (person-masks-clone original-pers) ; new copy since will modify person's internal structures. TODO Is this really necesary?
         pnet (:propn-net pers)]
     (doseq [new-propn new-propns]
-      (println "\n<" new-propn ">")
       (add-to-propn-net! pnet new-propn) ; note modifying propn net that's inside the person that will get returned
       (let [propn-to-extended-fams (:propn-to-extended-fams-ids (:propn-net pers))
             fams (propn-to-extended-fams new-propn)]
