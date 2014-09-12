@@ -262,7 +262,8 @@
   (default) or clojure.data.xml/emit is used.  (emit generates the xml
   as one long line.  It usually takes slightly less time, and the result
   might be read a little more quickly by the program that uses the
-  GEXF file.  Humans will want the indented version."
+  GEXF file.  With many ticks or many persons, it's possible that emit
+  will need less Java heap.  Humans will of course prefer indented output."
   ([filename person-ids net-keys popns]
    (spit-graph filename person-ids net-keys popns true))
   ([filename person-ids net-keys popns indent?]
