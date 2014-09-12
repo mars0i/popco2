@@ -255,3 +255,14 @@
       (map edge-entry-to-edge (net-edge-data-from-nets {} nets))
       (if (> (count popns) 1) :dynamic :static)
       (:tick (first popns)))))
+
+(defn spit-graph
+  "Call gexf-graph, (over)writing the output to a file named filename.
+  If indent? is present, it determines whether clojure.data.xml/indent
+  (default) or clojure.data.xml/emit is used."
+  ([filename person-ids net-keys popns]
+   (spit-graph filename person-ids net-keys popns true))
+  ([filename person-ids net-keys popns indent?]
+   (let [emitter (if indent? x/indent x/emit)]
+     (emitter (gexf-graph person-ids net-keys popns)
+              (clojure.java.io/writer filename)))))
