@@ -5,7 +5,7 @@
             [popco.core.population :as pp]
             [sims.crime3.propns :as pns]))
 
-;; JUST LIKE grouptest1.clj, BUT WITH SOME ADDED PERSONS WHO ARE MISSING CRIME PROPNS
+;; JUST LIKE grouptest1.clj, BUT WITH ONE ADDED PERSON WHO IS MISSING CRIME PROPNS
 ;; AND SO MUST LEARN THEM FROM COMMUNICATION.
 ;; Note name of population is: popn2.
 
@@ -55,7 +55,6 @@
       baj1 (pers/make-person :baj1  crime+beast-propns  no-perc-pnet     anet         pns/crime-propn-ids  [:bajorans]       [:bajorans]           1)  ; NORMAL BAJORAN: Talks only to Bajorans
       kira (pers/make-person :kira  crime+beast-propns  no-perc-pnet     anet         pns/crime-propn-ids  [:bajorans :ds9]  [:bajorans :ds9]      1)  ; KIRA is a BAJORAN who also talks to DS9 folk.
 
-      ;; TODO THIS IS CAUSING AN NPE!
       ;;                            note no crime propns                                                   can learn from kira or worf
       jake (pers/make-person :jake  pns/living-propns   no-perc-pnet     anet         pns/crime-propn-ids  [:ds9]            [:ds9]                1)  ; enterains both analogies, ignorant of crime
      ]
