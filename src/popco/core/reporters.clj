@@ -23,7 +23,6 @@
 (def display-salient-wts             popco.nn.nets/display-salient-wts)
 (def display-semantic-wts            popco.nn.nets/display-semantic-wts)
 (def show-utterance-salient-effects  popco.nn.nets/show-utterance-salient-effects)
-Gj
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THESE FUNCTIONS DO NOT RETURN POPULATIONS.
