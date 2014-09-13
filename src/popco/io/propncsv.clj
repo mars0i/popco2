@@ -14,7 +14,7 @@
 (defn write-propn-activns-csv
   "Collects reads activns from a sequence of opulations into a large seq of 
   seqs, and then writes them all at once into a csv file.  Writes a header row
-  first if ':append true' is an option.  (Does not return the popns: Since this
+  first if ':append true' is an option.  (DOES NOT RETURN THE POPNS: Since this
   function realizes the lazy seq of popns, not returning the sequence allows
   you to lose the head, etc.--less memory use, more speed.  If you want to use
   the sequence again, hold on to it elsewhere.)"
