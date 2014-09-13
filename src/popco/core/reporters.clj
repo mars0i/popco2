@@ -6,10 +6,12 @@
   (:require [popco.communic.listen]
             [popco.core.main]
             [popco.io.propncsv]
+            [popco.io.gexf-dynamic] ; will probably change
             [popco.nn.nets]))
 
-;; MOST of these functions take a single population, generate some
-;; output, and return the population unchanged.  This illustrates
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; THESE FUNCTIONS TAKE A SINGLE POPULATION, GENERATE SOME
+;; OUTPUT, AND RETURN THE POPULATION UNCHANGED.  This illustrates
 ;; a typical use, where popn contains an intial population:
 ;;    (def popns (map ticker (take 100 (many-times popn))))
 
@@ -21,7 +23,13 @@
 (def display-salient-wts             popco.nn.nets/display-salient-wts)
 (def display-semantic-wts            popco.nn.nets/display-semantic-wts)
 (def show-utterance-salient-effects  popco.nn.nets/show-utterance-salient-effects)
+Gj
 
-;; THIS FUNCTION DOES NOT RETURN POPULATIONS.
-;; It expects an entire *sequence* of populations, does not return it.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; THESE FUNCTIONS DO NOT RETURN POPULATIONS.
+;; They expects an entire *sequence* of populations.  Store the population
+;; sequence elsewhere if you want to reuse it.
+
 (def write-propn-activns-csv         popco.io.propncsv/write-propn-activns-csv)
+
+(def spit-graph                      popco.io.dynamic/spit-graph)
