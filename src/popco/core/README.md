@@ -8,6 +8,24 @@ don't fit elsewhere.
 
 Main entry point for the entire simulations framework.
 
+**main.clj**
+
+Contains top-level functions (e.g. `once`, `many-times`) for running a
+simulation from a definition of a population.  (Populations are defined
+using functions in populations.clj in files under src/sims .)
+
+**reports.clj**
+
+One-stop shopping for population information access: Aliases to
+functions that can be used to get data from a time series of
+populations.
+
+**populations.clj**
+
+Functions for defining and accessing population structures.  A
+population structure contains the state of a population of persons at a
+tick.
+
 **communic.clj**
 
 Functions for transmitting propositions/beliefs between persons,
@@ -19,6 +37,7 @@ transmission.
 **person.clj**
 
 Definitions and routines for creating and accessing fields in Persons.
+See also ../nn/nets.clj, ../nn/analogy.clj, ../nn/propn.clj.
 
 **lot.clj**
 
