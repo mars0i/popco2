@@ -1,7 +1,8 @@
 ;; Namespace for aliases to functions used to report data from
 ;; the stream of generations/ticks.  (It was too hard to remember
 ;; where these functions lived, but it still made sense to have them
-;; live in different homes.)
+;; live in different homes.)  See original source files for documentation.
+
 (ns popco.core.reporters
   (:require [popco.communic.listen]
             [popco.core.main]
@@ -14,6 +15,9 @@
 ;; OUTPUT, AND RETURN THE POPULATION UNCHANGED.  This illustrates
 ;; a typical use, where popn contains an intial population:
 ;;    (def popns (map ticker (take 100 (many-times popn))))
+;; Or e.g. using domap from utils/general:
+;;    (def ps100 (take 100 (many-times popn)))
+;;    (domap display-utterances ps100)
 
 (def ticker                          popco.core.main/ticker)
 (def dotter                          popco.core.main/dotter)
