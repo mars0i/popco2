@@ -35,4 +35,4 @@
 
 (def write-propn-activns-csv         popco.io.propncsv/write-propn-activns-csv)
 
-(def spit-graph                      popco.io.dynamic/spit-graph)
+(def spit-graph                      popco.io.gexf-dynamic/spit-graph)
