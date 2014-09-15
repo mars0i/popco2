@@ -1,0 +1,1994 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns:viz="http://www.gexf.net/1.1draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.gexf.net/1.2draft" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <graph defaultedgetype="undirected" mode="dynamic" timeformat="double" start="40">
+    <attributes class="node" mode="dynamic">
+      <attribute type="float" title="popco-activn" id="popco-activn">
+        <default>0.0</default>
+      </attribute>
+    </attributes>
+    <attributes class="edge" mode="dynamic">
+      <attribute type="float" title="popco-wt" id="popco-wt">
+        <default>0.0</default>
+      </attribute>
+    </attributes>
+    <nodes count="42">
+      <node start="48.0" id="1" label="jake:CV-rpa" popco-node="CV-rpa" person="jake">
+        <attvalues>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.3464826575464015"/>
+        </attvalues>
+        <viz:position x="-43.39582276956172" y="-35.90697301732888" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="43.0" id="2" label="jake:CB-np" popco-node="CB-np" person="jake">
+        <attvalues>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.16513436192795386"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.2294085785888819"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.25474108767126535"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.2645255717014621"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.2680265773868612"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.2650557397114668"/>
+        </attvalues>
+        <viz:position x="43.8979005443949" y="-18.790548346863446" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="3" label="jake:B-dtp" popco-node="B-dtp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.07203422691158651"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.0833057986056766"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.02957876268157733"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.01971472299186499"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.05158340692960403"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.07222293857707843"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.08782246164769789"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.09982256075522036"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.10885660156816834"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.11003802461545818"/>
+        </attvalues>
+        <viz:position x="-13.586067413720912" y="32.64467142928332" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="4" label="jake:V-ica" popco-node="V-ica" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.1477658324798761"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.15703647385204297"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.16757559535758257"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.17645906572018705"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.18352533680771416"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.1921508626435865"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.2018184952229364"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.20674949483885185"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.21009863459051353"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.20447136793274207"/>
+        </attvalues>
+        <viz:position x="-2.7381450875943756" y="-32.0494260722149" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="5" label="jake:V-ia-&gt;v-ha" popco-node="V-ia-&gt;v-ha" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.0"/>
+        </attvalues>
+        <viz:position x="-24.79477834917153" y="-16.98712195878724" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="45.0" id="6" label="jake:CV-ca" popco-node="CV-ca" person="jake">
+        <attvalues>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.2067764842244807"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.2985196031349946"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.3379863527988069"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.35672059305265225"/>
+        </attvalues>
+        <viz:position x="10.304806754696273" y="18.489487973259372" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="7" label="jake:CB-ap-&gt;cb-vpp" popco-node="CB-ap-&gt;cb-vpp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.6147821025421154"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.6223418258861526"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.6256788796298115"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.6271338274173219"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.6277624890220298"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.6280338552253453"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.6281858999110158"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.628277794868773"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.6283209578135319"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.6284241945437647"/>
+        </attvalues>
+        <viz:position x="35.95036311533434" y="-19.485468297604825" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="8" label="jake:V-ip" popco-node="V-ip" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.005790072063168374"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.0038773174326026914"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.016112979633542905"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.025404862125085068"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.03340612481902834"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.04429607927578956"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.057802021658823685"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.08790806056377513"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.13174162426833871"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.1615621044383805"/>
+        </attvalues>
+        <viz:position x="-9.099738900194595" y="-20.76041818200839" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="9" label="jake:CB-cpc-&gt;-cb-vpp" popco-node="CB-cpc-&gt;-cb-vpp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.3042152602995828"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.32041348963849525"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.3276007300492641"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.33078974680173695"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.3322047304764606"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.33283256625003627"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.3331111403181493"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.3332347451120959"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.3332895892158204"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.3333139238360022"/>
+        </attvalues>
+        <viz:position x="39.23367964900915" y="1.2535262972688344" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="10" label="jake:CV-rpa-&gt;cv-ca" popco-node="CV-rpa-&gt;cv-ca" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.3332347451120959"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.3332895892158204"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.3333139238360022"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.33332472123625456"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.33332951210010775"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.3333316378318508"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.33333258103031826"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.33333299953248896"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.3333331852241254"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.3476284317581347"/>
+        </attvalues>
+        <viz:position x="48.79533374604419" y="11.456348593095342" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="11" label="jake:V-ha" popco-node="V-ha" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.1127812797528871"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.11868184392503771"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.1279638926935402"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.1365028147634197"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.14366338765744874"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.15277046032501287"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.1625827104590298"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.1681254375370005"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.17203850854414934"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.176527830544961"/>
+        </attvalues>
+        <viz:position x="-13.796392201778787" y="-6.733385759978063" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="12" label="jake:V-ipa" popco-node="V-ipa" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.26859762373630613"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.31167209941724916"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.33684168427339883"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.35086441548521186"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.3584270643223857"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.3624026520315788"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.36399551874489783"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.3645106885587204"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.3647114737468496"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.3746965063493674"/>
+        </attvalues>
+        <viz:position x="43.03781562567775" y="28.13724288758226" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="13" label="jake:CB-dtp" popco-node="CB-dtp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.158403988162502"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.22095137982563723"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.24773581915643392"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.2717278263251007"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.29218911824584587"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.30780674273735686"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.319493810875089"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.32806233811154023"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.3292576422625163"/>
+        </attvalues>
+        <viz:position x="40.47000463589761" y="26.571245387510515" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="14" label="jake:V-na" popco-node="V-na" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.36921187580545956"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.370110473171673"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.3613282859786576"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.35467705575710157"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.3463493099820341"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.3352212241764253"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.3275429147247831"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.3225457991682919"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.3190123392313663"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.3106834418258112"/>
+        </attvalues>
+        <viz:position x="-46.77577026658166" y="13.8131215179612" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="15" label="jake:B-hrp" popco-node="B-hrp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.2917038534661457"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.3055712238869525"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.30901047085433975"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.3087879873095172"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.3061046039966675"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.30071473186460906"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.2996608200800222"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.29693528911980405"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.2947568065391253"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.2875646611197476"/>
+        </attvalues>
+        <viz:position x="-33.992221554638235" y="-49.900595000475356" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="16" label="jake:B-abp" popco-node="B-abp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.4128475387912055"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.4622119913223199"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.4884774559067059"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.5014640855511097"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.5077042083594066"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.5106682254884652"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.5119379488778522"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.5123447722711408"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.5124894391499372"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.514239003977813"/>
+        </attvalues>
+        <viz:position x="1.9522546058707988" y="4.053113692705665" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="17" label="jake:B-abp-&gt;b-hrp" popco-node="B-abp-&gt;b-hrp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.006727261921054944"/>
+        </attvalues>
+        <viz:position x="1.4287956300303009" y="-29.916474403397164" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="18" label="jake:B-cpb-&gt;-b-abp" popco-node="B-cpb-&gt;-b-abp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.0"/>
+        </attvalues>
+        <viz:position x="46.97428702980275" y="18.399415884763897" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="19" label="jake:CV-sa-&gt;-cv-rpa" popco-node="CV-sa-&gt;-cv-rpa" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.3331111403181493"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.3332347451120959"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.3332895892158204"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.3333139238360022"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.33332472123625456"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.33332951210010775"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.3333316378318508"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.33333258103031826"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.33333299953248896"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.3333331852241254"/>
+        </attvalues>
+        <viz:position x="24.909783252160537" y="26.667476453056537" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="20" label="jake:V-qp-&gt;-v-ipa" popco-node="V-qp-&gt;-v-ipa" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.06275844683583437"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.07180444320250126"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.07719016946843484"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.08029114385743577"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.08205922947314129"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.08306546699701253"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.0836231744112268"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.08389469558419152"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.08402422630754286"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.0843137258985578"/>
+        </attvalues>
+        <viz:position x="43.287049781711346" y="-27.032099195432746" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="21" label="jake:CB-ap" popco-node="CB-ap" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.48420656659667255"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.5899984733370741"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.6130316252730934"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.6179960267503631"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.6196111863428969"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.6201714707702098"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.6204147345105866"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.6205810569382718"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.6207269730677497"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.6219369255130205"/>
+        </attvalues>
+        <viz:position x="28.6147306259804" y="-26.652194459234334" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="22" label="jake:V-qp" popco-node="V-qp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.005790072063168374"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.0038773174326026914"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.016112979633542905"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.025404862125085068"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.03340612481902834"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.04429607927578956"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.05174050603394373"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.03292696261379226"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.011145862127543926"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.09767338089843675"/>
+        </attvalues>
+        <viz:position x="47.75557357243862" y="47.09510413367053" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="23" label="jake:B-ab-&gt;b-abp" popco-node="B-ab-&gt;b-abp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.448555119754206"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.46410424636027037"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.4710223153563011"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.47406189616917616"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.4753825301247438"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.4759543673090246"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.4762685639800495"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.47645632901499274"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.47654568859346563"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.476746894235836"/>
+        </attvalues>
+        <viz:position x="26.626059950373616" y="-42.692683141725354" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="24" label="jake:V-ipa-&gt;v-ia" popco-node="V-ipa-&gt;v-ia" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.11986733535835038"/>
+        </attvalues>
+        <viz:position x="1.8580744479062545" y="42.18155877250065" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="25" label="jake:V-ia" popco-node="V-ia" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.09103544139087562"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.09605436529759821"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.1007452449691783"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.10385350427182584"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.10685382314237973"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.11305854635833472"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.15123825420081147"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.19131236165431204"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.21524193084228915"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.23079758091169592"/>
+        </attvalues>
+        <viz:position x="-33.80035235128629" y="-42.214835764940226" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="26" label="jake:SALIENT" popco-node="SALIENT" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="1.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="1.0"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="1.0"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="1.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="1.0"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="1.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="1.0"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="1.0"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="1.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="1.0"/>
+        </attvalues>
+        <viz:position x="-18.248445612662444" y="-49.72394186837652" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="27" label="jake:B-cpb-&gt;b-dtp" popco-node="B-cpb-&gt;b-dtp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.012037415782068149"/>
+        </attvalues>
+        <viz:position x="-1.4154723999213346" y="-35.66532242719034" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="28" label="jake:CV-na" popco-node="CV-na" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.6455763953731634"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.6487063558467704"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.6477768083828918"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.6459223160185035"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.6418815744059283"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.6378396445624799"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.6345256657223651"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.6320804364981722"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.6301969604586454"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.6238741007184887"/>
+        </attvalues>
+        <viz:position x="49.096247083739215" y="44.96494794112222" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="29" label="jake:B-hlb" popco-node="B-hlb" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.07013584601671682"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.060578816348436565"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.0517297669725734"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.04780416652529733"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.04759083035627175"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.05299697692309022"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.06423106307084121"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.067289379350808"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.06877266847713714"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.07142669005586244"/>
+        </attvalues>
+        <viz:position x="-7.301099404820832" y="-32.84789241595199" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="48.0" id="30" label="jake:CV-cp" popco-node="CV-cp" person="jake">
+        <attvalues>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.14435056130397714"/>
+        </attvalues>
+        <viz:position x="-29.059712444044983" y="17.775013380483117" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="31" label="jake:B-cpb" popco-node="B-cpb" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.01386535903979923"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.014084639680249556"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.01207974672896995"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.010640514736212851"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.009764006900158528"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.009244825431134803"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.009712515026742436"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.010508446806204282"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.011086975676300128"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.006382497396669764"/>
+        </attvalues>
+        <viz:position x="42.62987387899409" y="-12.383412460430584" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="32" label="jake:CV-ip" popco-node="CV-ip" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.5345644684012355"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.5301829528406706"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.5287619999976423"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.5286268450437162"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.5266487833051096"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.5254504489191757"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.5247623243886267"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.5242600251760371"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.5237225875180918"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.5328433770697643"/>
+        </attvalues>
+        <viz:position x="2.4542912441279015" y="9.568186440615342" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="33" label="jake:CB-vpp" popco-node="CB-vpp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.5099359678277894"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.5485919380203763"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.568628425560026"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.5783791867021368"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.583016926460031"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.5852066060613017"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.5861454157131654"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.5864483903985868"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.5865571969417623"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.5878237295913423"/>
+        </attvalues>
+        <viz:position x="28.22509796545026" y="-1.2364192722219869" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="34" label="jake:CV-ca-&gt;cv-ha" popco-node="CV-ca-&gt;cv-ha" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.4999323840945603"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.49997784362010556"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.49999273979743625"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.499997620976824"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.49999922044168577"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.49999974455433166"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.49999991629556345"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.4999999725717303"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.49999999101230463"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.49999999705491205"/>
+        </attvalues>
+        <viz:position x="42.418779782671905" y="28.300683894179755" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="35" label="jake:V-qp-&gt;-v-ipa-&gt;v-na" popco-node="V-qp-&gt;-v-ipa-&gt;v-na" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.0"/>
+        </attvalues>
+        <viz:position x="36.97028466761185" y="-27.378860261002856" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="36" label="jake:CB-hrp" popco-node="CB-hrp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.610155302753445"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.6168986174613728"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.6197748288884429"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.6208212351415013"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.620559071473785"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.620146570100076"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.6206968006118296"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.6202734200871555"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.6196471887065989"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.614104028502966"/>
+        </attvalues>
+        <viz:position x="-21.894279162688257" y="2.038820610906896" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="37" label="jake:B-pp" popco-node="B-pp" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.1462940602484718"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.1518197968217609"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.15830099394717456"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.16253255027133134"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.15181228722607118"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.10878818492958313"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.07021558497754274"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.04479299932359135"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.03023350142004658"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.026569504761491516"/>
+        </attvalues>
+        <viz:position x="44.8973597803524" y="44.17032761674906" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="38" label="jake:V-ica-&gt;-v-ipa" popco-node="V-ica-&gt;-v-ipa" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.06275844683583437"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.07180444320250126"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.07719016946843484"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.08029114385743577"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.08205922947314129"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.08306546699701253"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.0836231744112268"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.08389469558419152"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.08402422630754286"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.0843137258985578"/>
+        </attvalues>
+        <viz:position x="33.558645148791015" y="-10.731741847633167" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="39" label="jake:B-ab" popco-node="B-ab" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="-0.2431957098894113"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="-0.2505896549444186"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="-0.26064688398159774"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="-0.26803489830768656"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="-0.2759951258857775"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="-0.28658149791038023"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="-0.29459863644492545"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="-0.2997489503724018"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="-0.3029612463014685"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="-0.3079177091663312"/>
+        </attvalues>
+        <viz:position x="-15.556239645959693" y="0.1481994804176736" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="40" label="jake:V-ica-&gt;-v-ipa-&gt;v-na" popco-node="V-ica-&gt;-v-ipa-&gt;v-na" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.0"/>
+        </attvalues>
+        <viz:position x="23.264206482070364" y="-42.69708534882991" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="41" label="jake:CV-ip-&gt;-cv-rpa-&gt;cv-na" popco-node="CV-ip-&gt;-cv-rpa-&gt;cv-na" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.5999999832089326"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.5999999960154011"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.6554619993303085"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.664783498227445"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.6663501625470867"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.6666134718192889"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.6666577262086679"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.7087594834803735"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.746793137435434"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.7497506343669794"/>
+        </attvalues>
+        <viz:position x="-2.0157761153078866" y="-15.006280437944874" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+      <node start="40.0" id="42" label="jake:B-abp-&gt;b-hlb" popco-node="B-abp-&gt;b-hlb" person="jake">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-activn" value="0.0"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-activn" value="0.006727261921054944"/>
+        </attvalues>
+        <viz:position x="-8.178808360226562" y="43.99439796989918" z="0.0"/>
+        <viz:size value="25"/>
+      </node>
+    </nodes>
+    <edges count="117">
+      <edge start="40.0" id="1" source="25" target="32" label="jake:V-ia&lt;-&gt;CV-ip">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.007285149838895645"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.008107952208759827"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.007716651345607991"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.007431565633285751"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.0073373078323506705"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.00730643126954984"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.011907673004915532"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.016271584491191333"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.017310790192061255"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01787998851444074"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="2" source="15" target="32" label="jake:B-hrp&lt;-&gt;CV-ip">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.016933244104595842"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.016961957148353305"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.01707273342022311"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.01708055595783924"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.017077357739919096"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01707646621404506"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01708993877174388"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.017076365427286442"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01717169896212639"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01751183680139587"/>
+        </attvalues>
+      </edge>
+      <edge start="48.0" id="3" source="16" target="1" label="jake:B-abp&lt;-&gt;CV-rpa">
+        <attvalues>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.1"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.10487044258928627"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="4" source="25" target="30" label="jake:V-ia&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.008526255081355261"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="5" source="8" target="6" label="jake:V-ip&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.00840217977825288"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.009557608083108151"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.008070166135311875"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.009393486731944118"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="6" source="15" target="13" label="jake:B-hrp&lt;-&gt;CB-dtp">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.002664334625682639"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.0038439232896010384"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.004524559637207766"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.004621109139553882"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.004619908773448356"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.004639645896564811"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.004616460805256504"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.004587036421259616"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.004548891771558378"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="7" source="39" target="32" label="jake:B-ab&lt;-&gt;CV-ip">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.017540037577587052"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.017553527081711023"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.0175614604488912"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.017565954746676757"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.01756805134184827"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01756898160052862"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.017562717141629346"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.017542800093874274"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01764511048839771"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.0179563020010388"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="8" source="2" target="26" label="jake:CB-np&lt;-&gt;SALIENT">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.05"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="9" source="14" target="30" label="jake:V-na&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.014541982983830637"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="10" source="41" target="26" label="jake:CV-ip-&gt;-cv-rpa-&gt;cv-na&lt;-&gt;SALIENT">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.2"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.2"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.2"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.2"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.2"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.25"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.3"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.3"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="11" source="36" target="4" label="jake:CB-hrp&lt;-&gt;V-ica">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.015459832392244653"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.015232329028116132"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.015334304994230226"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.015368166841265865"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.015375630008531383"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.015378189754905"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01552613694265618"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.015422029605130486"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.015398178386247892"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.015395573539568233"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="12" source="4" target="6" label="jake:V-ica&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-2.4407234507446246E-4"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.003800197081845964"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.005162484099158807"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.005474903324176974"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="13" source="28" target="37" label="jake:CV-na&lt;-&gt;B-pp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.015136250648429828"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.015888666297193085"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.0157447068638979"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.015655364493438156"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.01658569982321838"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.017515519867092464"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.017754359444713635"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.017685432345281672"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01757516464801599"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.0174695049784026"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="14" source="7" target="20" label="jake:CB-ap-&gt;cb-vpp&lt;-&gt;V-qp-&gt;-v-ipa">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.014515926983915501"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.014702634896910136"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.014708378072385994"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.014687090397317658"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.014675378630277207"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.014671263386827164"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.014663475393401113"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.014642810431726348"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.014631417252355972"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.014723389932882662"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="15" source="21" target="22" label="jake:CB-ap&lt;-&gt;V-qp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.016581483714830713"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.016598109047854807"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.016564237813776302"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.016538587641323415"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.0165289878620556"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.0165266106935529"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.016521094578349816"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.016646183881305905"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01706188246498613"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.017848395104302844"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="16" source="14" target="21" label="jake:V-na&lt;-&gt;CB-ap">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.019133249078397842"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.01914655609642662"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.019151778289868308"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.01915357759963654"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.019154058682149516"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.019154194100691538"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01915590916673128"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.019159841440526782"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.019160499604204392"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01916171938875711"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="17" source="36" target="25" label="jake:CB-hrp&lt;-&gt;V-ia">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.004972650697990865"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.005261592939443416"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.0048983300539736175"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.004760886955644682"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.004740018808380051"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.004738340598647951"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.00855942071329913"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.010506144582064288"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.010779738388765775"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.010994768649937323"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="18" source="14" target="2" label="jake:V-na&lt;-&gt;CB-np">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.008784051353587905"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01099114193070097"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.011576308409998466"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.011881939038433481"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.012097074493277765"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.012259931145611714"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="19" source="2" target="29" label="jake:CB-np&lt;-&gt;B-hlb">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.004775536872060469"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.009455545214031413"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.011862835532615091"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.012718362829060158"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.013117297211519469"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.013305913000817805"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="20" source="26" target="1" label="jake:SALIENT&lt;-&gt;CV-rpa">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.05"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="21" source="33" target="12" label="jake:CB-vpp&lt;-&gt;V-ipa">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.09984317946259225"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.09944455645725028"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.09881042102212348"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.09859241785955794"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.09854340187554955"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.09853630775427084"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.09821059806231075"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.09799184763375396"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.09794529111388742"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.10514811129535657"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="22" source="15" target="28" label="jake:B-hrp&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.018753889205378578"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.018789708305734024"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.018859515689506563"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.018857817898063074"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.01885432751710621"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01885352755384827"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.018870514657940027"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01887723413638133"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.018867282324565946"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01886357020148548"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="23" source="22" target="30" label="jake:V-qp&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.004889610727433918"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="24" source="8" target="13" label="jake:V-ip&lt;-&gt;CB-dtp">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.009735045597157037"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.013902677486770954"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.015522245416697764"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.015965566022845667"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.016069328885702176"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01608295828470478"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.015902940346054398"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.015525636742587912"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01644278534680572"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="25" source="26" target="34" label="jake:SALIENT&lt;-&gt;CV-ca-&gt;cv-ha">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.1"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="26" source="22" target="2" label="jake:V-qp&lt;-&gt;CB-np">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.006218918344452165"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.010940821195691043"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.012999527621496474"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.013996026363839767"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.014927632871759753"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01606819668827035"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="27" source="13" target="29" label="jake:CB-dtp&lt;-&gt;B-hlb">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-3.890651964992949E-4"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.002952180479173882"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.004485016210065859"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.0048826307777870065"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.004962758923567696"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.004994952053131556"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.004886159898549982"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.0049098740292411154"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.004898234492439655"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="28" source="36" target="22" label="jake:CB-hrp&lt;-&gt;V-qp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.016649828249689327"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.016465374344033456"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.016566323619461042"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.016593614503196377"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.016599088080006666"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.016601135684493024"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.016569470383020823"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01675001018328774"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.017175993555225005"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.017870376988390623"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="29" source="16" target="33" label="jake:B-abp&lt;-&gt;CB-vpp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.17872324142658913"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.1792252807311812"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.17960964743849173"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.17960783462008387"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.1796091278738179"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.1796181278062523"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.17950335091011205"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.1793280659989297"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.179284740520582"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.18084748836565598"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="30" source="1" target="12" label="jake:CV-rpa&lt;-&gt;V-ipa">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.15598931742265812"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="31" source="8" target="36" label="jake:V-ip&lt;-&gt;CB-hrp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.016649828249689327"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.016465374344033456"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.016566323619461042"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.016593614503196377"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.016599088080006666"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.016601135684493024"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.016557672805386094"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01642149851789968"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.016083429815754217"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.016947407010816925"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="32" source="29" target="6" label="jake:B-hlb&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.0013350755832513444"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.004468249033389571"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.0053221969049676385"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.005229970311949552"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="33" source="36" target="3" label="jake:CB-hrp&lt;-&gt;B-dtp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.012552463276894483"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.0015855039715689185"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.004431612949635999"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.00518646501187282"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.005282076125045652"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.005282117882031337"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.005202810351061676"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.005236781421628586"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.005229880039598928"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.0052558492595623785"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="34" source="30" target="37" label="jake:CV-cp&lt;-&gt;B-pp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.011035108823674734"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="35" source="32" target="26" label="jake:CV-ip&lt;-&gt;SALIENT">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.15000000000000002"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="36" source="13" target="22" label="jake:CB-dtp&lt;-&gt;V-qp">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.009735045597157037"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.013902677486770954"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.015522245416697764"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.015965566022845667"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.016069328885702176"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.016095459244545782"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01625765891987218"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01672162335072566"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01748190155652151"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="37" source="11" target="28" label="jake:V-ha&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.006933409055138797"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.006879760681904719"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.006849577610168559"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.006838452966944479"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.006835021269545705"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.006833919717722527"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.006822523880332489"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.006366551482742292"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.006229067446275311"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.006043322875043392"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="38" source="2" target="37" label="jake:CB-np&lt;-&gt;B-pp">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.05955133507372623"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.08100381682109774"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.08907710611067729"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.09267799368604529"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.09447547045574464"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.09552816590018331"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="39" source="21" target="3" label="jake:CB-ap&lt;-&gt;B-dtp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.015806730037860147"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.016948230364457608"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.01820317596170183"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.0186960559546276"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.01878998326544953"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.018805691188451074"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.018809207042850013"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.018811490050598203"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01881238113015353"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.018813485750774586"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="40" source="3" target="6" label="jake:B-dtp&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.008204025628390496"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.010051201484374859"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.010357468144063365"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.009747093560071352"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="41" source="3" target="28" label="jake:B-dtp&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.015592944574361157"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.017046362274792833"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.018316294914950015"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.01879398514843821"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.0188832718842433"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.018898046267751684"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.018902657362788258"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.018908189273779116"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01890957103483885"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.018911104305697226"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="42" source="22" target="6" label="jake:V-qp&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.010213310887279082"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.015112129305951894"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.016752624695820156"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.017782671521730072"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="43" source="21" target="4" label="jake:CB-ap&lt;-&gt;V-ica">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.01537064131455496"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.015387523562444688"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.015350255141204847"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.015319093879628357"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.015305703238191849"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.015301549639591098"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.015482183643135278"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.015313802391195636"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.015270298654338607"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01535500249762211"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="44" source="26" target="30" label="jake:SALIENT&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.05"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="45" source="39" target="30" label="jake:B-ab&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.014274158986088303"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="46" source="11" target="30" label="jake:V-ha&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.004330775296276854"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="47" source="13" target="4" label="jake:CB-dtp&lt;-&gt;V-ica">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.007178760039021165"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.011569761563126274"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.013726056010953891"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.014439144197442034"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.014640216377782206"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.014905151954762087"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.014764703266581117"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.014731368619074984"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01472434614143434"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="48" source="32" target="29" label="jake:CV-ip&lt;-&gt;B-hlb">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.01166712558290759"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.012102355350487407"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.012109857228224764"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.012162546190426712"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.012196439462814906"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.012213220759289345"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.012296144350311025"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01214112790972382"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.012344244792541252"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.013035085077262504"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="49" source="26" target="28" label="jake:SALIENT&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.15000000000000002"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="50" source="39" target="28" label="jake:B-ab&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.01913354746465444"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.01914657452176464"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.019151779423434365"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.01915357766928634"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.019154058686427524"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.019154194100954272"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01915590916674741"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01915984144052777"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01916049960420445"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.019161719388757107"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="51" source="17" target="10" label="jake:B-abp-&gt;b-hrp&lt;-&gt;CV-rpa-&gt;cv-ca">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.004888178953136713"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="52" source="21" target="8" label="jake:CB-ap&lt;-&gt;V-ip">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.016599858579620885"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.016614721396661952"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.016621599839467358"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.016625254187035688"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.016626891420281405"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.016627611617570804"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.016618444366737147"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01644702150155102"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.016104911753119"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.016963981684691976"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="53" source="39" target="2" label="jake:B-ab&lt;-&gt;CB-np">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.01360279446850391"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.016990971684050265"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.017697167331351394"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.017877708392409396"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.0179420986058316"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.017973128474908655"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="54" source="36" target="15" label="jake:CB-hrp&lt;-&gt;B-hrp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.13357920673287896"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.140388855489508"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.14046894433669502"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.14000939213087388"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.1398607871623954"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.1398559889688197"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.1417929162506709"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.14066611645883834"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.14013862766580323"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.13997396522760727"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="55" source="7" target="26" label="jake:CB-ap-&gt;cb-vpp&lt;-&gt;SALIENT">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.1"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.1"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="56" source="26" target="6" label="jake:SALIENT&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.05"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="57" source="13" target="11" label="jake:CB-dtp&lt;-&gt;V-ha">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.007178760039021165"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.011569761563126274"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.013726056010953891"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.014439144197442034"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.014640216377782206"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01484137659727641"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.014748864246376909"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.014727436336238407"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.014723370109507786"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="58" source="8" target="30" label="jake:V-ip&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.08669704977793816"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="59" source="21" target="26" label="jake:CB-ap&lt;-&gt;SALIENT">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.1"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.15000000000000002"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.15000000000000002"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.15000000000000002"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.15000000000000002"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.15000000000000002"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.15000000000000002"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.15000000000000002"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.15000000000000002"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.15000000000000002"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="60" source="25" target="2" label="jake:V-ia&lt;-&gt;CB-np">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.003041664176557598"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.0075171177118698584"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01376313165942126"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.017012880646536516"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.017686280641870337"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.017900386017018932"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="61" source="3" target="2" label="jake:B-dtp&lt;-&gt;CB-np">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.0057579424597040685"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.007886194680853035"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.008515560605288417"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.00874031460892857"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.008838880601782409"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.008890431816886523"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="62" source="15" target="2" label="jake:B-hrp&lt;-&gt;CB-np">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.00563615244073579"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.007752167274193192"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.008428229749586394"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.008659124425462073"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.0087295915322015"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.008768725733820204"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="63" source="26" target="10" label="jake:SALIENT&lt;-&gt;CV-rpa-&gt;cv-ca">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.05"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="64" source="13" target="37" label="jake:CB-dtp&lt;-&gt;B-pp">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.010609150203448684"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.0017331934832740502"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.0036997034944314233"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.006164358261953349"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.00791795811967483"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.008517743470582857"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.008740456864827521"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.008838889646242224"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.008890432384394076"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="65" source="28" target="4" label="jake:CV-na&lt;-&gt;V-ica">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.006929808092225107"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.0068793074324186914"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.006849520958662094"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.0068384459013905805"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.006835020388859192"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.006833919607966377"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.006925738404363654"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.006378840939986242"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.006230515672331"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.006043491390480723"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="66" source="33" target="26" label="jake:CB-vpp&lt;-&gt;SALIENT">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.05"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="67" source="39" target="21" label="jake:B-ab&lt;-&gt;CB-ap">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.16067491271457662"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.16070463815382474"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.16075767058475054"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.16077313170010693"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.16077650693253712"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.16077952271450063"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.16081474142314384"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.1608346729709955"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.16083657365753384"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.16092252942846752"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="68" source="14" target="13" label="jake:V-na&lt;-&gt;CB-dtp">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.01584067087640607"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.01826625166327257"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.018790200736487548"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.018882998739693048"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01889802669460217"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01890265596301633"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.018908189174016838"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.018909571027735918"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01891110430519173"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="69" source="21" target="15" label="jake:CB-ap&lt;-&gt;B-hrp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.018677228403457813"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.018700115625539294"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.01876739788442606"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.018764744982982248"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.018760836186928895"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01875994020620214"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.018775905925486135"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01877958736235086"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.018768807347855562"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01876445125204701"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="70" source="39" target="36" label="jake:B-ab&lt;-&gt;CB-hrp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.01908794423759503"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.01897272152433485"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.019046957790081212"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.019055334461794787"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.01905594143842937"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.019056454744974555"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.019037340555357943"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.019060896263632252"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.0190618937658085"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.019064139306179832"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="71" source="36" target="37" label="jake:CB-hrp&lt;-&gt;B-pp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.00575104126685378"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.005921310454056684"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.005528071356390878"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.005365255674122995"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.0071478002521386365"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.008646807101145385"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.009118138244218728"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.00937388914153958"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.009462744848269946"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.009512721387149673"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="72" source="14" target="32" label="jake:V-na&lt;-&gt;CV-ip">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.017637973431284617"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.017675769812877776"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.017691295908279333"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.017697741142172263"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.017700328779368717"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01770133014621741"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.017696773074058803"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.017682273551256882"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.017782998941109348"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.018094013733635075"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="73" source="15" target="6" label="jake:B-hrp&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.008117811350798032"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.009982780679113075"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.010270101996265006"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.010012799249500232"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="74" source="25" target="6" label="jake:V-ia&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.12526203980801187"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.14986276178133312"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.15348743760800448"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.16265867133521406"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="75" source="27" target="10" label="jake:B-cpb-&gt;b-dtp&lt;-&gt;CV-rpa-&gt;cv-ca">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.008769400631654758"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="76" source="36" target="29" label="jake:CB-hrp&lt;-&gt;B-hlb">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.015986973668008466"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.01715809827851278"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.019337351075847133"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.019805784309551766"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.019968112880461332"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.020002389849347737"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.018167909089423822"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.019552849302934064"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.020020261835335423"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.020591318766812052"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="77" source="25" target="13" label="jake:V-ia&lt;-&gt;CB-dtp">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.010470474390970128"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.0013606735029770126"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.0031872308518262425"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.0036654802611616553"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.003763285717833109"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.007935648879320878"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.010040512490948882"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01035709226120212"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.010517853505517144"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="78" source="26" target="19" label="jake:SALIENT&lt;-&gt;CV-sa-&gt;-cv-rpa">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.05"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.05"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="79" source="15" target="30" label="jake:B-hrp&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.013355047705059186"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="80" source="24" target="10" label="jake:V-ipa-&gt;v-ia&lt;-&gt;CV-rpa-&gt;cv-ca">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.09233725236482171"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="81" source="36" target="11" label="jake:CB-hrp&lt;-&gt;V-ha">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.006343609800340672"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.005932178890009234"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.00613396539196811"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.006168101392674813"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.006171132422093048"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.00617126623809509"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.006294022385116309"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.006180244023193073"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.006156870108323486"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.006155094125870595"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="82" source="14" target="6" label="jake:V-na&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01020373258659705"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.011741150836239157"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.011929007288372739"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.011925994823595153"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="83" source="9" target="26" label="jake:CB-cpc-&gt;-cb-vpp&lt;-&gt;SALIENT">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.05"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="84" source="8" target="32" label="jake:V-ip&lt;-&gt;CV-ip">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.037464365069810546"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.03763692364205007"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.037742660357180796"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.03779684142685612"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.03782130638521939"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.037831557373887215"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.03573013408823583"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.0247894137078437"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.010601445170023677"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.004671129417854807"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="85" source="31" target="33" label="jake:B-cpb&lt;-&gt;CB-vpp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.004574690144952681"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.002760363595990606"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.0016667478772086854"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.0015105975860594313"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.0014788321390996674"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.001468490579227"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.001790433456468038"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.002008373049274609"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.0020547560815867283"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-6.771035853467278E-5"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="86" source="25" target="28" label="jake:V-ia&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.006929808092225107"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.007548391199257912"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.0070179191417080525"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.006859448457429279"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.006837638254087397"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.006834245861187519"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01019457381688878"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.011740821169435832"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.011928996962716903"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.011925994520882544"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="87" source="7" target="38" label="jake:CB-ap-&gt;cb-vpp&lt;-&gt;V-ica-&gt;-v-ipa">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.014515926983915501"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.014702634896910136"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.014708378072385994"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.014687090397317658"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.014675378630277207"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.014671263386827164"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.014663475393401113"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.014642810431726348"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.014631417252355972"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.014723389932882662"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="88" source="36" target="26" label="jake:CB-hrp&lt;-&gt;SALIENT">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.15000000000000002"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.15000000000000002"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="89" source="21" target="25" label="jake:CB-ap&lt;-&gt;V-ia">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.015392120142511182"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.01581133116384614"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.015564442727635401"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.015446371342997792"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.015420516941677268"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.015414899724790439"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.017475588925222163"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01871676934611718"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.018935554243864287"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.019035085428284443"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="90" source="4" target="30" label="jake:V-ica&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.004330775296276854"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="91" source="11" target="2" label="jake:V-ha&lt;-&gt;CB-np">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.003041664176557598"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.0075171177118698584"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.010353078949190436"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.011372474401336683"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.0118449121741588"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.012067507771577727"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="92" source="22" target="28" label="jake:V-qp&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.01671903287579905"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.016766979995571803"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.01678505203203905"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.016791838567719493"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.016794327819171423"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.0167952161815089"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01679952765107319"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.016945248957521593"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.017352127924677004"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01801925993666643"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="93" source="31" target="1" label="jake:B-cpb&lt;-&gt;CV-rpa">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-9.263285189237505E-4"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="94" source="3" target="32" label="jake:B-dtp&lt;-&gt;CV-ip">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.01152377677399976"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.013418694310789236"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.015772742878636278"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.01683508065318771"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.0170905853822913"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.017142819001315052"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.017146576361641467"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.017127505882071473"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.017238945213723707"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01758388293670118"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="95" source="7" target="23" label="jake:CB-ap-&gt;cb-vpp&lt;-&gt;B-ab-&gt;b-abp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.144616641834898"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.1446986433218294"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.14478335988568602"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.14481183434383485"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.14481708274826086"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.1448188296294398"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.14487447034223996"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.1449171959054295"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.14492386939454555"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.14505746820780396"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="96" source="2" target="4" label="jake:CB-np&lt;-&gt;V-ica">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.003041664176557598"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.0075171177118698584"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.010454090616212497"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01140753555910479"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.011856876529687307"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01207155395448519"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="97" source="29" target="28" label="jake:B-hlb&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.016016690591909622"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.016269246077296715"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.01624737697335085"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.016268471220080592"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.01627995240533639"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.016284306459898874"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01632315596100076"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01627817846443756"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.016290294364857627"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.016303522556544235"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="98" source="21" target="11" label="jake:CB-ap&lt;-&gt;V-ha">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.01538540526993374"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.0154045239697688"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.015410172439511356"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.015412315411389611"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.015412999380494228"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01541324032159194"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.015542130496352556"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.015443163230443866"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.0154215528685743"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.01541745043616826"/>
+        </attvalues>
+      </edge>
+      <edge start="44.0" id="99" source="8" target="2" label="jake:V-ip&lt;-&gt;CB-np">
+        <attvalues>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.006218918344452165"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.010940821195691043"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.012982040319747723"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.013511956968933335"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.013290220776843643"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.014545249016034368"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="100" source="11" target="6" label="jake:V-ha&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.0011849638915844268"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.00434648076090021"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.00523488354440679"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.00548403677398615"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="101" source="32" target="37" label="jake:CV-ip&lt;-&gt;B-pp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.010665222950684502"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.011348478239152922"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.011111740851816144"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.01089308906052201"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.012399577176986833"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.014304506287511707"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.015177291011108702"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.015494582097509941"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01577808460349989"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.016279273752146915"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="102" source="32" target="22" label="jake:CV-ip&lt;-&gt;V-qp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.037464365069810546"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.03763692364205007"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.037742660357180796"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.03779684142685612"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.03782130638521939"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.037831557373887215"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.03872612678681808"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.051271595034832834"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.07209957743680827"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.11456253432410185"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="103" source="6" target="37" label="jake:CV-ca&lt;-&gt;B-pp">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.012833706519284971"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01688716621607126"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.017671156304393233"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.017898653212557025"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="104" source="32" target="4" label="jake:CV-ip&lt;-&gt;V-ica">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.010734862333700246"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.010727431085633427"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.010738712441409183"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.010750986200243735"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.010759514043212418"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.010764440201981704"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.011091529424623821"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01081931503108213"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01096507837010805"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.005813181426301485"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="105" source="13" target="26" label="jake:CB-dtp&lt;-&gt;SALIENT">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.05"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.05"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="106" source="39" target="13" label="jake:B-ab&lt;-&gt;CB-dtp">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.015640858052115438"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.018140768805477804"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.018691091337989078"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.018789606073406972"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.018805662733421814"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.018809204899603204"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.018811489889375418"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01881238111803245"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.018813485749863676"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="107" source="14" target="28" label="jake:V-na&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="0.1660764004324318"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.16664774073678912"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.1668147887555235"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.1668658322384135"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.16687728955796974"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.16688003089422992"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.16714053157498865"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.16729386935448246"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.16727273147336463"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.16746601684183993"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="108" source="29" target="30" label="jake:B-hlb&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.00599227620113926"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="109" source="3" target="30" label="jake:B-dtp&lt;-&gt;CV-cp">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.013501625133623261"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="110" source="21" target="29" label="jake:CB-ap&lt;-&gt;B-hlb">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.00647969546219212"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.006774671515125636"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.006677395539039376"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.006703201487871156"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.00671667384276484"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.006719570293861292"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.006759030554510831"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.00668471845350992"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.0067110112999629965"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.006732694572866208"/>
+        </attvalues>
+      </edge>
+      <edge start="41.0" id="111" source="3" target="13" label="jake:B-dtp&lt;-&gt;CB-dtp">
+        <attvalues>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="0.08593964140240683"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="0.13085365419791983"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="0.14118745168539523"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="0.1427041157438056"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="0.14297881555005237"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="0.14310166775187816"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="0.1431836442474009"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="0.1432091520131529"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.14328725033055575"/>
+        </attvalues>
+      </edge>
+      <edge start="49.0" id="112" source="42" target="10" label="jake:B-abp-&gt;b-hlb&lt;-&gt;CV-rpa-&gt;cv-ca">
+        <attvalues>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="0.004888178953136713"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="113" source="21" target="37" label="jake:CB-ap&lt;-&gt;B-pp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.015383907044148663"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.01578209927535074"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.015557557586756844"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.015444851413984087"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.01639702072721836"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.017366351278583422"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.017742226363527177"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.017882874100739327"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01794267832112884"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.017973192798096168"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="114" source="8" target="28" label="jake:V-ip&lt;-&gt;CV-na">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.01671903287579905"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.016766979995571803"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.01678505203203905"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.016791838567719493"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.016794327819171423"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.0167952161815089"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01678807326244263"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01662732100840259"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01629921122092745"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.017139510859543218"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="115" source="32" target="11" label="jake:CV-ip&lt;-&gt;V-ha">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.010679028773236343"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.010706102583782766"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.010730579265618349"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.01074788791734951"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.010758334354369826"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01076399112609749"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.01099813584984474"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01078344118237597"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01095167434970801"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.011704280875793373"/>
+        </attvalues>
+      </edge>
+      <edge start="40.0" id="116" source="14" target="36" label="jake:V-na&lt;-&gt;CB-hrp">
+        <attvalues>
+          <attvalue endopen="41.0" start="40.0" for="popco-wt" value="-0.01915563345962969"/>
+          <attvalue endopen="42.0" start="41.0" for="popco-wt" value="-0.019054188285664398"/>
+          <attvalue endopen="43.0" start="42.0" for="popco-wt" value="-0.019131158842597897"/>
+          <attvalue endopen="44.0" start="43.0" for="popco-wt" value="-0.019140070748812132"/>
+          <attvalue endopen="45.0" start="44.0" for="popco-wt" value="-0.019140890327630368"/>
+          <attvalue endopen="46.0" start="45.0" for="popco-wt" value="-0.01914142898669582"/>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.019124035048409267"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01915013717922515"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.019151466969100996"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.019154105478570056"/>
+        </attvalues>
+      </edge>
+      <edge start="46.0" id="117" source="39" target="6" label="jake:B-ab&lt;-&gt;CV-ca">
+        <attvalues>
+          <attvalue endopen="47.0" start="46.0" for="popco-wt" value="-0.015928371022350646"/>
+          <attvalue endopen="48.0" start="47.0" for="popco-wt" value="-0.01859629474152023"/>
+          <attvalue endopen="49.0" start="48.0" for="popco-wt" value="-0.01892713121620511"/>
+          <attvalue endopen="50.0" start="49.0" for="popco-wt" value="-0.019034520841728315"/>
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>
