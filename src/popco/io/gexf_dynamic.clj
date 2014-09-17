@@ -270,3 +270,17 @@
    (let [emitter (if indent? x/indent x/emit)]
      (emitter (gexf-graph person-ids net-keys popns)
               (clojure.java.io/writer filename)))))
+
+(defn spit-graphs
+  "Run spit-graph on each person individually, so as to produce separate 
+  graph files, one for each person, with names that begin with basename 
+  and end with (name person-id).gexf .  The last optional argument is
+  the same as the optional argument of spit-graph."
+  ([basename person-ids net-keys popns & indent?-seq]
+   (doseq [person-id person-ids
+           :let [filename (str basename (name person-id) ".gexf")]]
+     (spit-graph filename
+                 [person-id] 
+                 net-keys 
+                 popns 
+                 (if indent?-seq (first indent?-seq) true)))))
