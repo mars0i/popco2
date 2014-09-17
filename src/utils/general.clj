@@ -3,6 +3,12 @@
   (:require [clojure.pprint :only [*print-right-margin*]]
             [clojure.set :as st]))
 
+
+(defn remove=
+  "Remove items from coll that are = to x."
+  [x coll]
+  (remove #(= % x) coll))
+
 (defn got
   "Like 'get', but throws an exception if key is not found."
   [m k]
