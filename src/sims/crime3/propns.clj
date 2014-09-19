@@ -125,7 +125,8 @@
 ;    (semantic-iff 'cv-rpa 'b-abp -.1L0)
 ;   ))
 
-(def semantic-iffs [[(/  -1.0  10) :CB-vpp :V-ipa] [(/  -1.0  10) :CV-rpa :B-abp]])
+(def semantic-iffs [[-0.1 :CB-vpp :V-ipa] [-0.1 :CV-rpa :B-abp]])
+;; If this is included in the definition of a person, it will cause there to be links in the proposition network.
 
 (def conceptual-relats [[-1.0 :Causal-if :Preventative-if]])
 ;; This specifies mapnodes that should be provided with a link from SEMANTIC.
