@@ -137,6 +137,9 @@
 ;; when the two mapped predicates are identical.  In that case, a link of
 ;; weight +sem-similarity-link-value+ to SEMANTIC is added automatically.
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Convenient summary collections:
+
 (def virus-propn-ids (map :id virus-propns)) 
 (def beast-propn-ids (map :id beast-propns))
 (def viral-crime-propn-ids (map :id viral-crime-propns)) 
