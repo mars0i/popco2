@@ -119,6 +119,12 @@ good.
 
 This I desire.  I celebrate.
 
+(One of the things I found online about Balinese prayer,
+http://www.filosbali.net/BalinesePrayer.htm, emphasized bringing oneself
+to an internal state of peacefulness and harmony as part of ritual
+offerings.  This seems to contain information for tourists produced by
+people who've visited Bali.)
+
 [an aside: contrast this with recent *1984*-inspired teen movies like
 "Divergent" and "The Giver".]
 
@@ -416,3 +422,30 @@ that you do what is best wrt coordination with neighbors.  So e.g. if
 you would get more in the short-term by not coordinating, the
 spiritual order religious tradition makes it more likely that you
 don't do that.
+
+-----------------------------------
+
+The water temples both manage water distribution and manage certain
+rituals.  The practical and ritual practice are viewed as intrinsically
+connected.  This means that the water distrbution map is also a
+spiritual map, and keeping disorder in check in the water temple system
+keeps disorder in check across the whole mountainside.
+
+-----------------------------------
+
+Spiritual practices provide *spiritual* control over bhutakala.
+But, I claim, also reinforce ways of thinking that suppress the forces
+within people that lead them to act out.
+
+MAYBE I NEED TO KNOW SOME OF THE PRAYERS/INVOCATIONS ETC.
+
+-----------------------------------
+
+I think that bhutakala are:
+
+1. in the world as spirits, monsters, etc.
+2. in the world as pests (rats, etc.)
+3. in persons as jealousy, witch-ness, etc.
+
+Is this correct??
+
