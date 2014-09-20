@@ -12,11 +12,12 @@ software works, see the open access article described below.  (The
 article describes the previous version of popco, but the new version
 incorporates the same functionality except for some peripheral details.)
 
-This software is copyright 2013, 2014, 2015 by Marshall Abrams, and is
-distributed under the Gnu General Public License version 3.0 as
-specified in the file LICENSE, except where noted.  (For example, there
-is source code in src/java that was written by other authors, and that
-is released under different licenses.)
+This software is copyright 2013, 2014, 2015 by [Marshall
+Abrams](http://members.logical.net/~marshall/), and is distributed
+under the Gnu General Public License version 3.0 as specified in the
+file LICENSE, except where noted.  (For example, there is source code
+in src/java that was written by other authors, and that is released
+under different licenses.)
 
 Please feel free to contact me with questions, suggestions, interest
 in help developing popco simulations, etc. at:
