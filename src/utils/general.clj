@@ -1,3 +1,7 @@
+;;; This software is copyright 2013, 2014, 2015 by Marshall Abrams, and
+;;; is distributed under the Gnu General Public License version 3.0 as
+;;; specified in the file LICENSE.
+
 (ns utils.general ; Utility functions handy for any Clojure program
   (:use [clojure.repl :only [dir-fn]])
   (:require [clojure.pprint :only [*print-right-margin*]]

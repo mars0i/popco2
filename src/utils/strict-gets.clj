@@ -1,3 +1,7 @@
+;;; This software is copyright 2013, 2014, 2015 by Marshall Abrams, and
+;;; is distributed under the Gnu General Public License version 3.0 as
+;;; specified in the file LICENSE.
+
 ;; doesn't work
 (defn strict-get-1 [rec key]
   (get rec key (throw (Exception. "No value."))))

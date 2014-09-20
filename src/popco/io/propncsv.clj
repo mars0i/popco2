@@ -1,3 +1,7 @@
+;;; This software is copyright 2013, 2014, 2015 by Marshall Abrams, and
+;;; is distributed under the Gnu General Public License version 3.0 as
+;;; specified in the file LICENSE.
+
 (ns popco.io.propncsv
   (:require [popco.core.constants :as cn]
             [clojure.data.csv :as csv]

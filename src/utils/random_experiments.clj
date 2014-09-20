@@ -1,3 +1,7 @@
+;;; This software is copyright 2013, 2014, 2015 by Marshall Abrams, and
+;;; is distributed under the Gnu General Public License version 3.0 as
+;;; specified in the file LICENSE.
+
 (ns utils.random-experiments
   (:require [clojure.data.generators :as gen]
             [incanter.stats :as incant]

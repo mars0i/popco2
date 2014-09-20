@@ -1,3 +1,7 @@
+;;; This software is copyright 2013, 2014, 2015 by Marshall Abrams, and
+;;; is distributed under the Gnu General Public License version 3.0 as
+;;; specified in the file LICENSE.
+
 ;;;; functions for comparison with output from POPCO 1
 (ns popco.test.popco1comp
   (:use ;[popco.nn.nets :as nn]

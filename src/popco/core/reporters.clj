@@ -1,3 +1,7 @@
+;;; This software is copyright 2013, 2014, 2015 by Marshall Abrams, and
+;;; is distributed under the Gnu General Public License version 3.0 as
+;;; specified in the file LICENSE.
+
 ;; Namespace for aliases to functions used to report data from
 ;; the stream of generations/ticks.  (It was too hard to remember
 ;; where these functions lived, but it still made sense to have them

@@ -1,3 +1,7 @@
+;;; This software is copyright 2013, 2014, 2015 by Marshall Abrams, and
+;;; is distributed under the Gnu General Public License version 3.0 as
+;;; specified in the file LICENSE.
+
 ;; Test of group/talk-to data structure creation
 (ns sims.crime3.groups2
   (:require [popco.nn.analogy :as an]

@@ -1,3 +1,7 @@
+;;; This software is copyright 2013, 2014, 2015 by Marshall Abrams, and
+;;; is distributed under the Gnu General Public License version 3.0 as
+;;; specified in the file LICENSE.
+
 ;;;; FUNCTIONS FOR DISPLAYING MATRICES, NN-STRUS, ETC.
 (ns popco.nn.pprint
   (:use [popco.nn.nets :as nn]
