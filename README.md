@@ -33,11 +33,7 @@ makes the intended sense clear.  This repository was previously called
 
 #### Article on the original (Common Lisp) version of popco:
 
-#### Marshall Abrams, ["A moderate role for cognitive models in
-agent-based modeling of cultural
-change"](http://www.casmodeling.com/content/1/1/16), *Complex Adaptive
-Systems Modeling* 2013, 1(16):1-33.  (Also see this
-[correction](http://www.casmodeling.com/content/2/1/1).)
+#### Marshall Abrams, ["A moderate role for cognitive models in agent-based modeling of cultural change"](http://www.casmodeling.com/content/1/1/16), *Complex Adaptive Systems Modeling* 2013, 1(16):1-33.  (Also see this [correction](http://www.casmodeling.com/content/2/1/1).)
 
 #### Abstract:
 
