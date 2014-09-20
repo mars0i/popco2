@@ -2,14 +2,15 @@ popco2
 =======
 
 Cultural transmission with analogy-influenced biases (rewrite of
-[popco](https://github.com/mars0i/popco) in Clojure).  popco2 is a
-framework for agent-based simulations in which agents' communication of
-their simulated beliefs depends how those beliefs do or do not fit into
-analogies.  For the motivation of this project, an illustration of its
-use, and the primary documentation of how the software works, see the
-open access article described below.  (The article describes the
-previous version of popco, but the new version incorporates the same
-functionality except for some peripheral details.)
+[popco](https://github.com/mars0i/popco) in Clojure).  
+
+popco2 is a framework for agent-based simulations in which agents'
+communication of their simulated beliefs depends how those beliefs do or
+do not fit into analogies.  For the motivation of this project, an
+illustration of its use, and the primary documentation of how the
+software works, see the open access article described below.  (The
+article describes the previous version of popco, but the new version
+incorporates the same functionality except for some peripheral details.)
 
 This software is copyright 2013, 2014, 2015 by Marshall Abrams, and is
 distributed under the Gnu General Public License version 3.0 as
