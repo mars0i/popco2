@@ -449,3 +449,41 @@ I think that bhutakala are:
 
 Is this correct??
 
+-----------------------------------
+
+In the end this has to hook up to enhance successful coordination.
+
+	cooperation is orderly
+	getting along is orderly
+	democracy is orderly
+	scheming is disorderly
+
+	conflict between people is disorderly
+
+	conflict about water is disorderly
+
+	contentious disagreement about water is disorderly
+
+And then make lack of conteniousness or something like that an
+enhancement to cooperation--i.e. it's the noise suppressor in copying.
+i.e. in the combined popco/netlogo model, we have a test for the
+activation value of one or more contentiousness/orderliness propositions
+(maybe only one, but then it should end up being connected to all the
+others), and if it's high, suppress the noise.  i.e. connect that popco
+state to the noise-suppressor state in NetLogo.  So rather than
+religion/noise-suppression being transmitted directly, it's imposed as
+a result of communication in NetLogo.
+
+The last examples above can be expressed as a property of a proposition,
+e.g.:
+
+	x is in conflict with y  (propn name: c-x-y)
+	c-x-y is disorderly
+
+or:
+	My subak is contending with some subak over water. (s-s-w)
+	s-s-w is disorderly.
+
+Something like that.
+
+(Q: Is this necessarily relationship symmetric?)

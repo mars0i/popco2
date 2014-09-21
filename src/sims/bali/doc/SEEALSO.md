@@ -1,6 +1,4 @@
-Also see
+See also
 ====
 
-Marshall's papers/APAdoingPhilWithComputers
-Marshall's papers/Bali
-Marshall's bali repo
+doc/* in the bali repo.
