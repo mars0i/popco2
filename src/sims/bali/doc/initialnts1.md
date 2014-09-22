@@ -125,6 +125,9 @@ to an internal state of peacefulness and harmony as part of ritual
 offerings.  This seems to contain information for tourists produced by
 people who've visited Bali.)
 
+cf. Eiseman vol. I, p. 53 there is a description of the state of mind
+necessary for making water holy.
+
 [an aside: contrast this with recent *1984*-inspired teen movies like
 "Divergent" and "The Giver".]
 
@@ -487,3 +490,38 @@ or:
 Something like that.
 
 (Q: Is this necessarily relationship symmetric?)
+
+-----------------------------------
+
+Rituals emphasize order, mandalic structures (see both Lansing, and
+Geertz _Negara_).
+
+They are organized physically wrt the practical landscape.  For each
+structure, substructure, etc. in the water distribution system, rice
+paddies, etc., there is a little shrine.  So the order you are
+emphasizing is order at all levels of those practices and practical
+concerns.
+
+how can this be described for popco?
+
+it's not just order expressed propositionally in obvious thoughts.
+
+	there is order in this mandala
+	the mandala is symmetric
+	what is symmetric is orderly
+	the mandala places x in relation to y (in relation to z) ...
+	  in way that's orderly
+	(I'd have to go into the details of the Mandala)
+
+	the mandala shows order in the spiritual world
+		wrt the field
+		wrt the collection of fields
+		wrt the small canal
+		wrt the large canal
+		wrt the dam
+		  i.e. wrt the subak
+		  or what the subak decided
+		  i.e. the subak creates the order in the subak
+		  in the dam
+		  in the dam/subak system
+		we are a mandala
