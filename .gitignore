@@ -7,3 +7,6 @@ target/
 .nrepl-port
 checkouts
 checkouts.disabled
+.RData
+.Rapp.history
+.Rhistory
