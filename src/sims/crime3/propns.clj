@@ -3,7 +3,9 @@
 ;;; specified in the file LICENSE.
 
 (ns sims.crime3.propns
-  (:use popco.core.lot))
+  (:use popco.core.lot)
+  (:require [popco.nn.propn :as pn]
+            [popco.nn.analogy :as an]))
 
 ;; declare all proposition names
 ;(declare V-ip V-na V-ia V-ha V-ia->v-ha V-ipa V-ipa->v-ia V-ica V-ica->-v-ipa V-ica->-v-ipa->v-na V-qp V-qp->-v-ipa V-qp->-v-ipa->v-na
@@ -160,9 +162,28 @@
 
 ;; PECEPTION-IFS
 ;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
-(def crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/crime-propns)
-(def living-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/living-propns)
-(def beastly-crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/beastly-crime-propns)
-(def viral-crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/viral-crime-propns)
-(def virus-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/virus-propns)
-(def beast-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/beast-propns)
+(def crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) crime-propns))
+(def beastly-crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) beastly-crime-propns))
+(def viral-crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) viral-crime-propns))
+
+(def living-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) living-propns))
+(def virus-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) virus-propns))
+(def beast-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) beast-propns))
+
+
+;; PROPOSITION NETS (TEMPLATES FOR INDIVIDUAL NETS--i.e. clone from these rather than using them directly)
+;; second arg is bidirectional links; third is unidirectional
+;; more specific versions can be made in specific model files
+
+(def no-perc-pnet (pn/make-propn-net all-propns semantic-iffs nil)) ; nothing perceived
+
+(def crime-perc-pnet (pn/make-propn-net all-propns semantic-iffs crime-perception-ifs))                 ; crime propns perceived
+(def beastly-crime-perc-pnet (pn/make-propn-net all-propns semantic-iffs beastly-crime-perception-ifs)) ; beastly crime propns perceived
+(def viral-crime-perc-pnet (pn/make-propn-net all-propns semantic-iffs viral-crime-perception-ifs))     ; viral crime propns perceived
+
+(def living-perc-pnet (pn/make-propn-net all-propns semantic-iffs living-perception-ifs)) ; living propns perceived
+(def virus-perc-pnet (pn/make-propn-net all-propns semantic-iffs virus-perception-ifs))   ; virus propns perceived
+(def beast-perc-pnet (pn/make-propn-net all-propns semantic-iffs beast-perception-ifs))   ; beast propns perceived
+
+;; STANDARD ANALOGY NET (CAN BE SHARED BY EVERYONE)
+(def anet (an/make-analogy-net crime-propns living-propns conceptual-relats))
