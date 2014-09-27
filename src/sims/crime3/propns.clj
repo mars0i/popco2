@@ -157,3 +157,12 @@
 (def living-propn-ids (concat virus-propn-ids beast-propn-ids))
 (def crime-propn-ids (concat viral-crime-propn-ids beastly-crime-propn-ids))
 (def all-propn-ids (concat crime-propn-ids living-propn-ids))
+
+;; PECEPTION-IFS
+;; Directional activation flows from j to i, i.e. here from salient to the crime propn node
+(def crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/crime-propns)
+(def living-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/living-propns)
+(def beastly-crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/beastly-crime-propns)
+(def viral-crime-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/viral-crime-propns)
+(def virus-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/virus-propns)
+(def beast-perception-ifs (map #(vector 1.0 (:id %) :SALIENT) pns/beast-propns)
