@@ -16,7 +16,7 @@ How to perform a basic sanity check of analogies
    suitble for reading into R.  Here is code that does that with
    the population defined in crime/hermits.clj:
 
-````
+````clojure
 (unlocknload 'sims.crime3.hermits)
 (rpt/write-propn-activns-csv 
    (take 500 (many-times popn))
