@@ -29,16 +29,18 @@ without communication, the proposition networks settle long before tick
 
 
 3. Use the R function `read2multirunRA` defined in *src/R/R/df2ra.R* to
-load the csv file into an R dataframe.  For example, after I renamed the
+load the csv file into an R array.  For example, after I renamed the
 csv file created in the above code to "hermits.csv", I ran this in R
 after making sure that the current directory in R was *data*:
 
 ````R
 hermits <- read2multirunRA("hermits.csv")
 ````
-
 You might want to check that this came out as expected: `dim(hermits)`,
 `dimnames(hermits)`, etc.
+
+The "multi-run array" format that I use is designed to contain data multiple popco runs
+with the parameters.  In this case, there's only one run.
 
 Then, to create a bar chart showing the effects of the analogies, run the function 
 `activnsAtTickBarchart` defined in *src/R/R/popcoplots.R*, for example like this:

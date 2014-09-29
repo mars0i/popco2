@@ -1,0 +1,1058 @@
+R tips:
+
+...........................................................
+# How to use the built-in plot function to plot a continuous function:
+
+# Using the example of the Frechet distribution from the evd package:
+require(evd)
+plot(dfrechet, xlim=c(0,11.5))
+# That's easy, but it doesn't allow specifying optional parameters to the distribution function.
+# Here's a way to do that:
+> plot(function(t){dfrechet(t,shape=2)}, xlim=c(0,11.5))
+# However, neither of those plots was very smooth.  R is sampling on the x axis and then connecting dots.
+# Here's how to make a smooth curve:
+> d=seq(0,11.5,.01)
+> plot(x=d, y=dfrechet(d,shape=2), type="l")
+# Note that that also avoids having to wrap in 'function', since you're sticking the data right into the function call.
+# Also, you don't need the xlim parameter, since the data itself tells R what the range should be.
+
+...........................................................
+# Unfortunately, the documentation for the built-in R cov function
+# is nearly unintelligible, but in fact it works as you'd expect,
+# with the qualification that it's a sample covariance, so the division
+# is by n-1, not n.  You have to convert it by multiplying by (n-1)/n to
+# get the regular covariance.  Here's an illustration with 100 points.
+
+> p
+  [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [70] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+> q
+  [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [70] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+> cov(p,q)
+[1] 0.1616162
+# now I define my own covariance function:
+> mycov <- function(x,y){mean((x - mean(x)) * (y - mean(y)))}
+> mycov(p,q)
+[1] 0.16
+> (100/99) * mycov(p,q)
+[1] 0.1616162
+> (99/100) * cov(p,q)
+[1] 0.16
+# also note:
+> cov(p,q)/(sd(p)*sd(q))
+[1] 1
+> cor(p,q)
+[1] 1
+
+...........................................................
+
+# using lattice for run of the mill plots:
+xyplot(activn~tick|dom, groups=propn, data=yo100, ylim=c(-1,1), xlim=c(1,101), pch=".", type="l")
+
+...........................................................
+
+# with new panel.hanoi, with breaks customized to each panel, and bwplot
+bwplot(CV + CB ~ bias, data=df, ylim=c(-1,1), pch="|", coef=0, outer=T,
+  panel=function(...){panel.hanoi(col="pink", breaks=if(panel.number()==1){cv.ints}else{cb.ints}, ...);
+                      panel.bwplot(...)})
+
+# same thing with fancier colors and added mean
+bwplot(CV + CB ~ bias, data=df, ylim=c(-1,1), pch="|", coef=0, outer=T, 
+  panel=function(x, y, ...){panel.hanoi(x, y, col="pink", breaks=if(panel.number()==1){cv.ints}else{cb.ints}, ...);
+                            panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.5, col="red")}, par.settings=list(box.rectangle=list(col="blue"), box.umbrella=list(col="blue")))
+
+# breaks customized to each panel, using new foci2intervals, blue/red color scheme:
+bwplot(CV + CB ~ bias, data=d, ylim=c(-1,1), coef=0, outer=T, panel=function(x, y, ...){panel.hanoi(x, y, col="blue", border="transparent", breaks=if(panel.number()==1)foci2intervals(cv.foci, 7) else foci2intervals(cb.foci, 7), ...); panel.bwplot(x, y,...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.75, col="black")}, par.settings=list(box.rectangle=list(col="red"), box.umbrella=list(col="red"), box.dot=list(col="red")))
+
+# hanoi histogram as gray shadow behind blue bwplot with median as black dot, mean as red dot:
+bwplot(CV + CB ~ bias, data=df, ylim=c(-1,1), coef=0, outer=T, panel=function(x, y, ...){panel.hanoi(x, y, col="gray90", border="gray90", breaks=if(panel.number()==1){cv.ints}else{cb.ints}, ...); panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=1, col="red")}, par.settings=list(box.rectangle=list(col="blue"), box.umbrella=list(col="blue")), main="socnet5with300runst5000", ylab="per-run mean activations")
+
+# like preceding, but with fine-grained buckets to show the sparseness of convergent data, blue histogram, black bwplot.
+bwplot(CV + CB ~ bias, data=df, ylim=c(-1,1), coef=0, outer=T, panel=function(x, y, ...){panel.hanoi(x, y, col="blue", border="blue", breaks=seq(-1,1,.02), ...); panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=1, col="red")}, par.settings=list(box.rectangle=list(col="black"), box.umbrella=list(col="black")), main="socnet5with300runst5000", ylab="per-run mean activations")
+
+# red bwplot, blue hanoi with no border hence no line where zero:
+bwplot(CV + CB ~ bias, data=d, ylim=c(-1,1), coef=0, outer=T, panel=function(x, y, ...){panel.hanoi(x, y, col="blue", border="transparent", breaks=seq(-1,1,.03), ...); panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.75, col="black")}, par.settings=list(box.rectangle=list(col="red"), box.umbrella=list(col="red"), box.dot=list(col="red")), main="socnet5with300runst5000", ylab="per-run mean activations")
+
+...........................................................
+
+# by adding adjust=n, where n is other than 1, you can modify the
+# "smoothiness" of the violin plots to erase or show multimodality
+# [in the latter case, I would call them "poodle plots".]
+bwplot(CV + CB ~ bias, data=socnet5with300runst5000.df[socnet5with300runst5000.df$rawsum=="raw",], ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T, par.settings=list(box.rectangle=list(col="black"), box.umbrella=list(col="black")), panel=function(x, y, ...){panel.violin(x, y, col="pink", border="pink", adjust=.1, ...); panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, col="black")}, main="socnet5with300runst5000 (dot=mean)")
+
+
+...........................................................
+
+# violin plot:
+bwplot(CV + CB ~ bias, data=socnet5with300runst5000.df, ylim=c(-1,1), outer=T, panel = panel.violin)
+
+# box-whisker plot overlaid on violin plot, with added yellow mean:
+bwplot(CV + CB ~ bias, data=socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T, par.settings=list(box.rectangle=list(col="red"), box.umbrella=list(col="red")), panel=function(x, y, ...){panel.violin(x, y, ...); panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.5, col="yellow")})
+
+# a violin plot with added median (blue dot) and mean (red diamond):
+bwplot(CV + CB ~ bias, data=socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", outer=T, par.settings=list(box.rectangle=list(col="red"), box.umbrella=list(col="red"), box.dot=list(col="red")), panel=function(x, y, ...){panel.violin(x, y, ...); panel.points(tapply(y, factor(x), FUN = median), pch=20, cex=1, col="blue"); panel.points(tapply(y, factor(x), FUN = mean), pch=18, cex=1, col="red")})
+
+...........................................................
+
+# It's interesting to compare boxwhisker, violin plots, and their
+# combination with a single set of data.  Here the box-w plot conveys
+# a difference between the biases more clearly (rightly or wrongly)
+# than does the violin plot, but obscures the fact that one of the
+# distributions is bimodal, with the median at one mode.
+# [Ah, actually, it's not actually bimodal from my point of view.
+# It's just that in that distribution, the mean falls between two
+# convergence values, whereas in the others, it doesn't.  So it
+# looks bimodal or not, but that's not really a significant
+# difference.  It also means that the median is kind of queered.]
+# The combined plot has both advantages ... sortof.  I think the
+# violins distract from the effect of the boxes, and again (rightly or
+# wrongly) somewhat detract from the effect of difference conveyed by
+# the boxes.  
+# um, in these I really out to remove the means from the dataframe first:
+bwplot(CV + CB ~ bias, data=socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T, par.settings=list(box.rectangle=list(col="red"), box.umbrella=list(col="red")), panel=function(x, y, ...){panel.violin(x, y, ...); panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.5, col="blue")})
+dev.new()
+bwplot(CV + CB ~ bias, data=socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T, panel=function(x, y, ...){panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.5, col="red") })
+dev.new()
+bwplot(CV + CB ~ bias, data=socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", outer=T, par.settings=list(box.rectangle=list(col="red"), box.umbrella=list(col="red"), box.dot=list(col="red")), panel=function(x, y, ...){panel.violin(x, y, ...); panel.points(tapply(y, factor(x), FUN = median), pch=20, cex=1, col="blue"); panel.points(tapply(y, factor(x), FUN = mean), pch=18, cex=1, col="red")})
+# Maybe a good way to do it would be to cause the violin
+# to be a very faint, maybe gray underlay behind a very clear (maybe
+# black) box-whisker plot.  Like this:
+# Default b-w color:
+bwplot(CV + CB ~ bias, data=socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T, panel=function(x, y, ...){panel.violin(x, y, col="gray95", border="gray95", ...); panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.5, col="red")})
+# Black b-w color:
+bwplot(CV + CB ~ bias, data=socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T, par.settings=list(box.rectangle=list(col="black"), box.umbrella=list(col="black")), panel=function(x, y, ...){panel.violin(x, y, col="gray95", border="gray95", ...); panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.5, col="red")})
+
+...........................................................
+
+# from
+# http://stackoverflow.com/questions/10219288/r-boxplot-color-according-to-factor
+# Illustrates how to set colors for parts of a bwplot:
+bwplot(CV + CB ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T, par.settings = list(box.umbrella=list(col= c("red", "green", "blue")), box.dot=list(col= c("red", "green", "blue")), box.rectangle = list(col= c("red", "green", "blue")) ),  panel=function(x, y, ...){panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.5, col="red")})
+
+# i.e. that extra arg is:
+par.settings = list( box.umbrella=list(col= c("red", "green", "blue")), 
+                     box.dot=list(col= c("red", "green", "blue")), 
+                     box.rectangle = list(col= c("red", "green", "blue")) )                    
+
+# e.g. to make the whole thing black:
+par.settings = list(box.umbrella=list(col= "black"), box.dot=list(col= "black"), box.rectangle = list(col= "black") )
+
+# note the col parameter only affects the circles/dots.
+
+# Also note use of fill:
+bwplot(Y ~ INDFACT | CLUSFACT, data=mydata, layout=c(2,1),
+        par.settings = list(box.rectangle = list(fill= rep(c('red','blue','green'),2)))
+
+...........................................................
+
+# Suppose you want to do one of the "two plots" in one window bwplot combinations below,
+# but you want to have strip labels as when you use "| conditioningvar"?  Since e.g.
+# CV and CB in my crime/beast/virus datasets are different columns
+# rather than categorical values within a single column, you can't
+# do this without reorganizing the data.  You'd think.
+# But in fact, Lattice has voodoo to do this!
+bwplot(CV + CB ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T)
+# Notes:
+# See p. 168 of the Lattice book for some details.  The "+" on the left says, roughly,
+# combine the data from both vars in one panel.  If you just use "+" without "outer=T",
+# then I think the values from each column are simply added for each row.  But if you use
+# "outer=T", Lattice tries to separate the two values in some way, within each panel.
+# In a barchart, this means you get stacked blocks, as in figs 10.1 and 10.2. 
+# "outer=T" tells Lattice that you want to use the combination of the two variables
+# as if it were a conditioning variable (i.e. the one after "|", normally).
+# Cool! Beautiful.
+
+# with some nice labels:
+bwplot(CV + CB ~ bias, data=df, ylim=c(-1,1), ylab="Per-run mean activations", xlab="Bias due to analogy", horizontal=F, pch="|", coef=0, outer=T)
+
+# Here's a way to add dots for the means:
+bwplot(CV + CB ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T, panel=function(x, y, ...){panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=.5, col="red") })
+# See http://stackoverflow.com/questions/15803149/how-to-add-points-to-multi-panel-lattice-graphics-bwplot for variations.
+
+# To compare the method below with the method above in a single window:
+plot(bwplot(CV ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, panel=function(data, ...){panel.bwplot(data=data,...);panel.points(x=c(mean(df[df$rawsum=="raw" & df$bias=="beast","CV"]), mean(df[df$rawsum=="raw" & df$bias=="virus","CV"])), pch=19, cex=.65, col="red")}), split=c(1,1,3,1))
+plot(bwplot(CB ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, panel=function(data, ...){panel.bwplot(data=data,...);panel.points(x=c(mean(df[df$rawsum=="raw" & df$bias=="beast","CB"]), mean(df[df$rawsum=="raw" & df$bias=="virus","CB"])), pch=19, cex=.65, col="red")}), split=c(3,1,3,1), newpage=F)
+plot(bwplot(CV + CB ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T), split=c(2,1,3,1), newpage=F)
+
+# OK, now I'm trying to add dots for the means, as below.  This attempt doesn't work; I'm just getting the CB values in both panels, it appears:
+yo <- function(df, bias, dom){mean(df[df$rawsum=="raw" & df$bias==bias, dom])}
+bwplot(CB + CV ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, outer=T, panel=function(data, ...){panel.bwplot(data=data,...);panel.points(x=c(yo(df,"beast","CB"), yo(df,"virus","CB"), yo(df,"beast","CV"), yo(df,"virus","CV")), pch=19, cex=.65, col="red")})
+
+bwplot(var1 ~ cat | cat2, data=df, pch="|", coef=0, outer=TRUE, panel=function(x, y, ...){panel.bwplot(x, y, ...); panel.points(tapply(y, factor(x), FUN = mean), pch="x", cex=2, col="red") })
+
+
+...........................................................
+
+# I think this is what I want:
+bwplot(CB ~ bias, socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", coef=0)
+# When coef = 0, the whiskers will extend to the max and min of the data.
+# [coef = 1.5 by default, I think, which means that each whisker extends to the last data
+# point that's within 1.5 times the distance from 25th to 75th percentile from the median.
+# and then additional points are plotted explicitly as outliers (addJitter() won't separate them).]
+
+# note change ylim to xlim if horizontal=F
+
+# two plots in one window:
+plot(bwplot(CV ~ bias, socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", coef=0), split=c(1,1,2,1))
+plot(bwplot(CB ~ bias, socnet5with300runst5000.df, ylim=c(-1,1), horizontal=F, pch="|", coef=0), split=c(2,1,2,1), newpage=F)
+
+# add means
+# note that you have to know the order of the biases to do this:
+bwplot(CV ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0,
+       panel=function(data, ...){
+         panel.bwplot(data=data,...)
+	 panel.points(x=c(mean(df[df$rawsum=="raw" & df$bias=="beast","CV"]), mean(df[df$rawsum=="raw" & df$bias=="virus","CV"])), pch=19, cex=.65, col="red")
+       })
+
+# or:
+bwplot(CV ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0,
+       panel=function(data, ...){
+         panel.bwplot(data=data,...)
+	 mean1 <- mean(df[df$rawsum=="raw" & df$bias=="beast","CV"])
+	 mean2 <- mean(df[df$rawsum=="raw" & df$bias=="virus","CV"])
+	 panel.points(x=c(mean1, mean2), pch=19, cex=.65, col="red")
+       })
+
+# putting it all together:
+plot(bwplot(CV ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, panel=function(data, ...){panel.bwplot(data=data,...);panel.points(x=c(mean(df[df$rawsum=="raw" & df$bias=="beast","CV"]), mean(df[df$rawsum=="raw" & df$bias=="virus","CV"])), pch=19, cex=.65, col="red")}), split=c(1,1,2,1))
+plot(bwplot(CB ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, panel=function(data, ...){panel.bwplot(data=data,...);panel.points(x=c(mean(df[df$rawsum=="raw" & df$bias=="beast","CB"]), mean(df[df$rawsum=="raw" & df$bias=="virus","CB"])), pch=19, cex=.65, col="red")}), split=c(2,1,2,1), newpage=F)
+# same thing, but with notches:
+plot(bwplot(CV ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, notch=T, panel=function(data, ...){panel.bwplot(data=data,...);panel.points(x=c(mean(df[df$rawsum=="raw" & df$bias=="beast","CV"]), mean(df[df$rawsum=="raw" & df$bias=="virus","CV"])), pch=19, cex=.65, col="red")}), split=c(1,1,2,1))
+plot(bwplot(CB ~ bias, data=df, ylim=c(-1,1), horizontal=F, pch="|", coef=0, notch=T, panel=function(data, ...){panel.bwplot(data=data,...);panel.points(x=c(mean(df[df$rawsum=="raw" & df$bias=="beast","CB"]), mean(df[df$rawsum=="raw" & df$bias=="virus","CB"])), pch=19, cex=.65, col="red")}), split=c(2,1,2,1), newpage=F)
+> 
+
+# more notes on bwplots:
+# middle dot or line is the median
+# ends of box are 25th and 75th percentile
+
+# re notches: Wikipedia says:
+# Notches are useful in offering a rough guide to significance of
+# difference of medians; if the notches of two boxes do not overlap,
+# this offers evidence of a statistically significant difference
+# between the medians.[1] The width of the notches is proportional
+# to the interquartile range of the sample and inversely proportional
+# to the square root of the size of the sample. However, there is
+# uncertainty about the most appropriate multiplier (as this may vary
+# depending on the similarity of the variances of the samples).[1]
+# One convention is to use +/-1.58*IQR/sqrt(n).[3]
+
+.......................................
+
+# I don't think this is what I want:
+bwplot(CB ~ CV.fac|bias, socnet5with300runst5000.df, horizontal=F, scales=list(x=list(rot=90)))
+
+plot(bwplot(CB ~ CV.fac|bias, socnet5with300runst5000.df, horizontal=F, scales=list(x=list(rot=90)), pch="|"), split=c(1,1,2,1))
+plot(bwplot(CV ~ CB.fac|bias, socnet5with300runst5000.df, horizontal=F, scales=list(x=list(rot=90)), pch="|"), split=c(2,1,2,1), newpage=F)
+
+...........................................................
+
+How to control font size in the panel label bars:
+
+xyMeanActivnPlot(CV~CB|desc, df[df$model!="crime3socnet2",], yfoci=cv.foci, xfoci=cb.foci, par.strip.text=list(cex=.85))
+
+...........................................................
+
+summary(obj) gives you basic stats: min, max, mean, median, etc.
+
+?"Memory-limits"
+
+..................
+
+for (bs in c("virus","virus-talk","beast","beast-talk")){for (dom in c("CV","CB")){cat(bs,dom,"pvalue =",ks.boot(df[df$bias==bs,dom],dfa[dfa$bias==bs,dom],nboots=1000)$ks.boot.pvalue,"\n")}}
+
+# make a bunch of PDF files of activation plots
+# this one is for a 2-pundit run, so I skip the first two persons, begin with #3, who's named "P01",
+# then graph 1000 ticks.  This is from RUN351493575, which is the 40th run in mra3b2p.
+for (j in 3:22){cat(j,"\n");pdf(file=paste0("mra3b2p1000ticksRUN351493575P",formatC(j-2,width=2,format="d",flag="0"),".pdf")); plot(1, type="n", ylim=c(-1,1), xlim=c(1,1000), ylab="degree of belief", xlab="time"); for (i in 1:38){lines(mra3b2p[j,i,,40], type="l", col=mycolors[i])};dev.off()}
+
+# to display rather than make pdfs:
+for (j in 3:22){dev.new(); plot(1, type="n", ylim=c(-1,1), xlim=c(1,1000), ylab="activation", xlab="time"); for (i in 1:38){lines(mra3b2p[j,i,,40], type="l", col=mycolors[i])}}
+
+
+-----------------
+
+# change bg color of panel labels:
+sb <- trellis.par.get("strip.background") 
+sb[["col"]][1] <- "lightblue"
+trellis.par.set("strip.background", sb)
+
+# or in a function:
+stripbg <- function(colorstring){
+  sb <- trellis.par.get("strip.background") 
+  sb[["col"]][1] <- colorstring
+  trellis.par.set("strip.background", sb)
+}
+
+note to do this in pdf(), you have to run it during the pdf open time.
+
+-----------------
+
+# How to order panels in multi-panel plot:
+# add this to the call:
+index.cond=list(c(1,4,3,2))
+# or whatever permutation of the alpha order you want.
+# you can also make the dimension into factors.
+
+-----------------
+
+Add factors to the dataframe e.g. like this:
+crime3p1t5000.df$cv.fac <- cut(crime3p1t5000.df$CV, foci2intervals(cv.foci))
+(You might need the more recent version in df2ra.R that's not yet in the package?)
+
+This can now be done with addFactors2df()
+
+crime2_2pundits.tab <- table(crime2_2pundits.df[crime2_2pundits.df$rawsum=="raw",c("cb.fac","cv.fac","bias")])
+levelplot(crime2_2pundits.tab, shrink = c(0.7, 1), aspect="fill")
+# make it grayscale:
+trellis.par.set(canonical.theme(color = FALSE))
+
+# change the gray scale:
+levelplot(crime2_2pundits.tab, shrink = c(0.7, 1), aspect="fill", scales=list(x=list(rot=45)), col.regions = gray(0:100/100))
+# this one is nice:
+levelplot(crime2_2pundits.tab, shrink = c(0.7, 1), aspect="fill", scales=list(x=list(rot=45)), col.regions = gray(100:0/100))
+# this too:
+levelplot(crime2_2pundits.tab, shrink = c(0.7, 1), aspect="fill", scales=list(x=list(rot=45)), col.regions = gray(95:0/100))
+# This is nice: no size variation, but you get a gride:
+levelplot(crime3p2t5000.tab, shrink = c(0.9), aspect="fill", scales=list(x=list(rot=45)), col.regions = gray(97:0/100))
+
+-----------------
+make a pdf:
+pdf()
+xyplot(...) or whatever
+dev.off()
+Now look for Rplots.pdf, or see ?pdf for more variations.
+-----------------
+
+plot(histogram(~cvfac|bias, Ex2.df, scales=list(cex=.3)), split=c(1,1,2,1))
+plot(histogram(~cbfac|bias, Ex2.df, scales=list(cex=.3)), split=c(2,1,2,1), newpage=F)
+
+-----------------
+
+# on the cost of repeated abind:
+
+slowbind <- function(nCopies, ra) {
+  newra <- ra
+
+  for (i in 1:(nCopies-1)) {
+    newra <- abind(newra, ra)
+  }
+
+  newra
+}
+
+newbind <- function(nCopies, inRA) {
+  inRA.dims <- dim(inRA)
+  last.idx <- 3 # hardcoded
+  inRA.lastdim <- inRA.dims[last.idx]
+
+  outRA.dims <- inRA.dims
+  outRA.dims[last.idx] <- nCopies * inRA.lastdim
+
+  outRA <- array(0, outRA.dims)  # 0 will get repeated as value of each element
+
+  for ( i in seq(1, nCopies*inRA.lastdim, inRA.lastdim) ) {
+    outRA[,,i:(i+inRA.lastdim-1)] <- inRA
+  }
+
+  outRA
+}
+
+
+> dim(a)
+[1] 100 100 100
+
+> system.time(bnew <- newbind(100,a))
+   user  system elapsed 
+  2.906   0.679   3.564 
+
+> system.time(bslow <- slowbind(100,a))
+   user  system elapsed 
+ 51.763  46.718 100.964 
+
+
+----------------------------------------------------------------------
+
+# This
+mra_g2 <- which(abs(mras[,,,54]-mras[,,,55])>.2, arr.ind=T)
+# gives a matrix of indexes at which runs mras[,,,54] and 55 differ by
+# absolute value more than .2 .  The row names are person names, but that
+# information is already present in column 1, while cols 2 and 3 are
+# propn and tick indexes, respectively.  And this:
+dimnames(mda_g2) <- list(1:dim(mda_g2)[1], c("person", "proposition", "tick"))
+# renames the columns to something sensible, while renaming rows to arbitrary numerical indexes.
+
+# You can view the resulting data in R.app with data.entry(mra_g2)
+
+----------------------------------------------------------------------
+
+# Suppose you've done things to create an array, and you've got the 
+# the names of each index into dimnames.  However, you're missing the
+# top-level category names for the indexes.  i.e. the elements in each
+# dimension have a name, but the dimensions don't have names.  
+# abind (from library abind) has this effect, at least by default.
+# Here is a way to put the dimension names back. (There might be a simpler way.)
+# See other version above.
+
+dimnames(mrax) <- 
+ list(person=dimnames(mrax)[[1]], 
+      proposition=dimnames(mrax)[[2]], 
+      tick=dimnames(mrax)[[3]], 
+      run=dimnames(mrax)[[4]])
+
+# Wrapping it in a function won't change the top level variable:
+restoreTopDimnames <- function(mra) {
+  mra <- list(person=dimnames(mra)[[1]], 
+              proposition=dimnames(mra)[[2]], 
+              tick=dimnames(mra)[[3]], 
+              run=dimnames(mra)[[4]])
+  mra
+}
+# so you have to assign it:
+dimnames(mra) <- restoreTopDimnames(mra)
+# the function is now added to df2ra.R
+
+----------------------------------------------------------------------
+
+# Here's how I merged two multi-run arrays, mra which contained three
+# runs for each random seed, and mraN which contained an additional
+# run for the same random seeds:
+
+# Merge the data, preserving the leaf-level dimname values:
+mra.new <- abind(
+	mraN[,,,1, drop=F],
+	mrax[,,,1:3],
+	mraN[,,,2, drop=F],
+	mrax[,,,4:6],
+	mraN[,,,3, drop=F],
+	mrax[,,,7:9],
+	mraN[,,,4, drop=F],
+	mrax[,,,10:12],
+	mraN[,,,5, drop=F],
+	mrax[,,,13:15],
+	mraN[,,,6, drop=F],
+	mrax[,,,16:18],
+	mraN[,,,7, drop=F],
+	mrax[,,,19:21],
+	mraN[,,,8, drop=F],
+	mrax[,,,22:24],
+	mraN[,,,9, drop=F],
+	mrax[,,,25:27],
+	mraN[,,,10, drop=F],
+	mrax[,,,28:30],
+	mraN[,,,11, drop=F],
+	mrax[,,,31:33]
+)
+
+# abind preserves leaf-level dimname values (the run names,
+# proposition names, person names, tick number strings), but
+# loses the top-level dimname category names ("person", "proposition",
+# "tick", "run).  These names have to be created.  Here's a way to do it:
+dimnames(mra.new) <- list(
+	person=dimnames(mra.new)[[1]], 
+	proposition=dimnames(mra.new)[[2]], 
+	tick=dimnames(mra.new)[[3]], 
+	run=dimnames(mra.new)[[4]]
+)
+
+----------------------------------------------------------------------
+
+# to find the indexes of the max value of an array:
+which(ra==max(ra), arr.ind=T)
+
+----------------------------------------------------------------------
+# Useful barchart representation of all activations, conditioned on person, at a tick, in a run
+# This makes it easy to see whether activations are crossing between domains in the expected way.
+
+# notes:
+# indexing the 4-D array by tick and run produces a 2-D matrix.
+# barchart knows how to use matrices directly.
+# it assumes that you want to use the first dimension as the basic
+#  index, so I transpose the matrix with t() to graph activations by proposition.
+
+barchart(t(mra[,,tickno,runno]), groups=person, scales=list(cex=.5), xlim=c(-1,1), pch=21)
+
+# apparently there's no abline option for barchart, so if you want to add reference lines
+#  (here at -.5 and .5), you need a panel function.  This can be done without much understanding,
+#  it turns out:
+barchart(t(mra[,,tickno,runno]), groups=person, scales=list(cex=.5), xlim=c(-1,1), pch=21,
+         panel = function(...){panel.barchart(...); panel.abline(v=c(-.5,.5), col="gray")})
+
+# this version gives a different color for each proposition domain:
+criment6cols <- c(rep("blue", 7), rep("darkgreen", 7), rep("red", 18), rep("darkorange", 18))
+# where those numbers of replications match the order of domains and number of propns in each
+barchart(t(mra[,,50,]), groups=person, scales=list(cex=.5), xlim=c(-1,1), 
+         panel = function(y, ...){             # make y explicit so code can refer to it
+           panel.barchart(y=y, col=criment6cols[y], ...); # pass y again, but also index into vector to get color
+           panel.abline(v=c(-.5,.5), col="gray")
+         })
+# an alternative to 
+panel.abline(v=c(-.5,.5), col="gray")
+# is
+panel.abline(v=seq(-1,1,.25), col="gray")
+# or
+panel.grid(...) 
+# which also adds horizontal lines, or
+panel.grid(h=0, ...) 
+# which doesn't.
+# And if you put the panel.grid/abline call before the panel.barchart call,
+# the grid lines won't break the bars.  Not sure which is better.
+
+# BIG TIP:
+# I haven't found this documented anywhere:
+# In a barchart in the default orientation, the scale along the vertical
+# (i.e. categorical) axis goes to from 0 to 100.  This can be used in the
+# h argument to panel.abline.
+
+# and this is used below to draw horizontal lines between domains:
+skosh=.45 # adjust position between bars
+criment6divs=c(7,7+7,7+7+18)+skosh # position between domains
+
+# this draws vertical grid lines and lines between domains, with domain-specific colors:
+barchart(t(mra[,,50,]), groups=person, scales=list(cex=.5), xlim=c(-1,1), 
+         panel = function(y, ...){
+            panel.abline(v=c(-.5,.5), h=criment6divs, col="gray");
+            panel.barchart(y=y, col=criment6cols[y], border="transparent", ...)})
+
+# This does the same thing but treats the horizontal and vertical lines differently
+# by calling panel.abline() twice [is there a simpler way?]:
+trellgray <- trellis.par.get("reference.line")$col;  # gets default grid gray, which is lighter than "gray"
+barchart(t(mra[,,50,]), groups=person, 
+         xlim=c(-1,1), 
+         scales=list(cex=.5, y = list(alternating = 3)), 
+         panel = function(y, ...){
+           panel.abline(v=c(-.5,.5), lty=3, col=trellgray);
+           panel.abline(h=criment6divs, lty=2, col="gray");
+           panel.barchart(y=y, col=criment6cols[y], border="transparent", ...)})
+
+----------------------------------------------------------------------
+
+require(latticeExtra)
+
+# 3-D barchart/histogram:
+cloud(freq ~ P * H | bias, data=freqdf[freqdf$freq>1,], 
+    panel.3d.cloud = panel.3dbars,    # makes it a barchart/histogram
+    screen = list(z = -40, x = -55),  # viewing angle
+    zoom = 1,                         # fill up entire display region
+    col.facet = "turquoise", 
+    xbase = 0.6, ybase = 0.6,         # add space between columns
+    aspect = c(1.5, 0.75), 
+    panel.aspect = 0.75, 
+    zlab=NULL)                        # no z label
+
+# 3-D verticle line chart using groups to put it all on one chart:
+cloud(freq ~ P * H, groups=bias, data=freqdf[freqdf$freq>0,], 
+    type="h", 
+    screen = list(z = -15, x = -60), 
+    zoom = 1, 
+    aspect = c(1.5, 0.75), 
+    panel.aspect = 0.75, 
+    zlab=NULL)
+
+
+names(Ex2.df):
+[1] "CV"     "CB"     "rawsum" "bias"   "cvfac"  "cbfac" 
+
+rv <- Ex2.df[Ex2.df$rawsum=="raw" & Ex2.df$bias=="virus",c("cvfac","cbfac")]
+
+cloud(table(rv$cvfac,rv$cbfac), panel.3d.cloud=panel.3dbars, screen=list(z=-40,x=-55), zoom=1, col.facet="turquoise", xbase=0.6, ybase=0.6, aspect=c(1.5, 0.75), panel.aspect=0.75,zlab=NULL, scales=list(cex=.3), ylab="CB", xlab="CV")
+
+# 3rd dimension represented by color and size:
+levelplot(sqrt(Freq) ~ P * H | bias, freqdf, shrink = c(0.7, 1), aspect="iso")   # makes blocks square
+levelplot(sqrt(Freq) ~ P * H | bias, freqdf, shrink = c(0.7, 1), aspect="fill")  # makes plots stretch with window
+levelplot(sqrt(Freq) ~ P * H | bias, freqdf[freqdf$Freq>0,], shrink = c(0.7, 1), aspect="iso")
+
+levelplot(table(crime2_2pundits.df[crime2_2pundits.df$rawsum=="raw",c("cb.fac","cv.fac","bias")]), shrink = c(0.7, 1), aspect="fill")
+
+# make it grayscale:
+trellis.par.set(canonical.theme(color = FALSE))
+
+----------------------------------------------------------------------
+
+# 10/25/2012 I renamed hunting/parenting.seq to hunting/parenting.foci
+# These are lists of points where run means tend to cluster--to converge to.
+
+# Then I created new lists called hunting/parenting.intervals.  These
+# define the bins, more or less by simply shifting the foci half the
+# distance between them.  The bin intervals are created from the foci
+# using a new function foci2intervals in df2ra.R.  The intervals can then
+# be used in histograms using the breaks parameter to define the bins as follows.
+# Note that I exclude the rows which record means, and just use the 'raw' data:
+
+histogram( ~ P | bias, data=one[one$rawsum=="raw",], breaks=parenting.intervals, layout=c(2,2))
+
+histogram( ~ H | bias, data=one[one$rawsum=="raw",], breaks=parenting.intervals, layout=c(2,2))
+
+# To see the bins in xyplot, replace *.foci (formerly *.seq) with *.intervals:
+xyplot(P~H|bias, groups=rawsum, data=one, xlim=c(-1,1), ylim=c(-1,1),
+        aspect="iso", layout=c(2,2), scales=list(cex=.5,
+        x=list(at=hunting.intervals),y=list(at=parenting.intervals), rot=45), type=c("p"),
+        abline=c(list(v=hunting.intervals, h=parenting.intervals),
+        trellis.par.get("reference.line"), list(a=0,b=1)), alpha=.7, cex=.4, pch=c(21,23))
+
+----------------------------------------------------------------------
+
+# this seems to work where two = one of my run mean at tick data frames:
+# SEE ABOVE FOR BETTER METHODS
+
+plot(histogram( ~ cut(two$P, seq(from=-1, to=1, by=1.8/9)) | bias, data=two)
+plot(histogram( ~ cut(two$H, seq(from=-1, to=1, by=1.8/10)) | bias, data=two)
+
+# need to check that it's right (and refine labels, etc.)
+
+----------------------------------------------------------------------
+The x coords for hunting propns are at approx:
+xseq <- seq(from=-9, to=9, by=2*.9)/10
+where 9 = 9 * 1
+
+The y coords for parenting propns are at approx:
+yseq <- seq(from=-8.1, to=8.1, by=2*.9)/9
+where 8.1 = 9 * .9
+
+i.e. where there are N propns, and activations max out at .9,
+the possible averages are multiples of 2*.9 divided by N.
+
+And the plot is:
+
+xyplot(P~H|bias, groups=rawsum, data=TheDataSource, xlim=c(-1,1), ylim=c(-1,1),
+       auto.key=T, aspect="iso", scales=list(cex=.5,
+       x=list(at=hunting.seq),y=list(at=parenting.seq)), type=c("p"),
+       abline=c(list(v=hunting.seq, h=parenting.seq),
+       trellis.par.get("reference.line"), list(a=0,b=1)), alpha=.7, cex=.5)
+
+Add pch=(1,3) or 4, or 9 or 10 or 19 to give the mean a different
+character.  See ?pch for more options.
+
+pch=21 gives those cool filled circles in an early chapter of the
+Lattice book.
+pch=c(21,23) does the same but uses a filled diamond for the mean.
+
+You can add jitter with addJitter() from df2ra.R, which just calls
+update() on the plot, with some additional jitter parameters.
+
+
+
+----------------------------------------------------------------------
+
+mh <- multiRA2meanDF(mra2h, "H", "P", firstTick=1500)
+mi <- multiRA2meanDF(mra2i, "H", "P", firstTick=1500)
+
+# base graphics overlay two datasets:
+plot(P ~ H,  data=mi, xlim=c(-1,1), ylim=c(-1,1), type="p", pch=".", col="red")
+lines(P ~ H, data=mh, xlim=c(-1,1), ylim=c(-1,1), type="p", pch=".", col="blue")
+
+# lattice versions:
+m <- rbind(cbind(mi, bias="sky"), cbind(mh, bias="sky"))
+xyplot(P ~ H | bias, data=m, xlim=c(-1,1), ylim=c(-1,1), aspect="iso", type="p", cex=.3)
+xyplot(P ~ H, groups=bias, data=m, xlim=c(-1,1), ylim=c(-1,1), aspect="iso", type="p", cex=.3)
+
+# add mean to each plot using the new rawsum (i.e. raw vs. summary) column,
+# change ticks to theoretical values that should be converged on, and
+# add a grid more or less by hand at those tick marks, plus a diagonal:
+xyplot(P~H|bias, groups=rawsum, data=onePunditTick1500RunMeans, xlim=c(-1,1), ylim=c(-1,1), 
+       auto.key=list(space="left"), aspect="iso", 
+       type=c("p"), 
+       abline=c(list(h=seq(from=-1,to=1,by=2/9), v=seq(from=-1,to=1,by=2/10)), # grid at theoretical convergence values
+                list(a=0,b=1),  # diagonal line
+                trellis.par.get("reference.line")))  # make lines light gray
+
+note: in abline() and its derivatives:
+h, v are horizontal and vertical coordinates for horizontal and vertical lines.
+a and b are y-intercept and slope, respectively, for other lines.
+
+# This version has fractions as tick labels:
+xyplot(P~H|bias, groups=rawsum, data=onePunditTick1500RunMeans,
+xlim=c(-1,1), ylim=c(-1,1), auto.key=list(space="left"), aspect="iso",
+scales=list(x=list(at=seq(from=-1,to=1,by=2/10),
+labels=fractions(seq(from=-1,to=1,by=2/10))),y=list(at=seq(from=-1,to=1,by=2/9),
+labels=fractions(seq(from=-1,to=1,by=2/9)), alternating=3 )),
+type=c("p"), abline=c(list(h=seq(from=-1,to=1,by=2/9),
+v=seq(from=-1,to=1,by=2/10)),trellis.par.get("reference.line"),list(a=0,b=1)))
+
+# This version also adds jitter ('amount' is the key), as well as 
+# alpha to make circles semi-transparent, and shrinks circle size with 'cex':
+xyplot(P~H|bias, groups=rawsum, data=onePunditTick1500RunMeans, xlim=c(-1,1), ylim=c(-1,1), auto.key=T, aspect="iso", scales=list(x=list(at=seq(from=-1,to=1,by=2/10), labels=fractions(seq(from=-1,to=1,by=2/10))),y=list(at=seq(from=-1,to=1,by=2/9), labels=fractions(seq(from=-1,to=1,by=2/9)), alternating=3 )), type=c("p"), abline=c(list(h=seq(from=-1,to=1,by=2/9), v=seq(from=-1,to=1,by=2/10)),trellis.par.get("reference.line"),list(a=0,b=1)), jitter.x=T, jitter.y=T, amount=.03, alpha=.7, cex=.5)
+
+----------------------------------------------------------------------
+Plotting activations with lattice graphics and as.data.frame.table:
+
+library(lattice)
+
+show.settings()
+
+# plot mean activations with separate box for each non-pundit person in one run:
+xyplot(Freq ~ ticks | persons, as.data.frame.table(apply(mra2j[3:11,,,1], c(1,3), mean)), type="l")  # the run dimension gets dropped
+
+# plot mean activations for with separate box for each non-pundit person in each of two runs:
+xyplot(Freq ~ ticks | persons+runs, as.data.frame.table(apply(mra2j[3:11,,,1:2], c(1,3,4), mean)), type="l")
+
+# plot activation of one proposition with separate box for each non-pundit person in each of three runs:
+xyplot(Freq ~ ticks | persons+runs, as.data.frame.table(mra2j[3:11,"H.GAME.POWER.MYSTERIOUSLY",,1:3]), type="l")
+
+# two runs, two boxes, overlayed persons for one propn:
+> xyplot(Freq ~ tick | run, groups=person, data=as.data.frame.table(mra2h[3:11,"H.GAME.POWER.MYSTERIOUSLY",,1:2]), type="l")
+
+> xyplot(Freq ~ tick | person+run, groups=proposition, data=as.data.frame.table(mra2h[3:6,1:10,,1:2]), type="l", auto.key=list(columns=3, title="propositions:", cex=.8, space="bottom"), abbreviate=T, scales=list(x=list(at=c(1,seq(500,1500,by=500)))), between=list(x=c(.5,.5),y=c(.5)), alternating=3, main="hunting activations")
+
+> xyplot(Freq ~ tick | person+run, groups=proposition, data=as.data.frame.table(mra2h[3:6,21:29,,1:2]), type="l", auto.key=list(columns=3, title="propositions:", cex=.8, space="bottom"), abbreviate=T, scales=list(x=list(at=c(1,seq(500,1500,by=500)))), between=list(x=c(.5,.5),y=c(.5)), alternating=3, main="parenting activations")
+
+
+# labels everywhere, dots rather than lines:
+> xyplot(Freq ~ tick | person+run, groups=proposition, 
++        data=as.data.frame.table(mra2h[3:6,1:10,,1:2]),
++        type="p", pch=".",
++        auto.key=list(columns=3, 
++                      title="propositions:", 
++ 		              cex=.8, 
++ 		              space="bottom"), 
++        scales=list( alternating=3, x=list( at=c(1,seq(500,1500,by=500)) ) ),
++        between=list( x=c(1.25,1.25),
++                      y=c(.5) ),
++        ylab="activation", 
++        main="hunting activations")
+
+# labels alternating, dots rather than lines:
+> xyplot(Freq ~ tick | person+run, groups=proposition, 
++        data=as.data.frame.table(mra2h[3:6,1:10,,1:2]),
++        type="p", pch=".",
++        auto.key=list(columns=3, 
++                      title="propositions:", 
++ 		              cex=.8, 
++ 		              space="bottom"), 
++        scales=list( x=list( at=c(1,seq(500,1500,by=500)) ) ),
++        between=list( x=c(1.5,1.5),
++                      y=c(.5) ),
++        ylab="activation", 
++        main="hunting activations")
+
+# two runs, all 9 nonpundits, in good layout, with smaller strip labels:
+xyplot(Freq ~ tick | person+run, groups=proposition, 
+       data=as.data.frame.table(mra2h[3:11,1:10,,1:2]),  # all nonpundits, all hunting propns, 2 runs
+       type="l", pch=".",          # pch doesn't matter for "l" (lines), but does for "p" (points)
+       auto.key=list(columns=3, 
+                     title="propositions:", 
+ 		            cex=.5, 
+ 		            space="bottom"), 
+        scales=list( x=list( at=c(1,seq(500,1500,by=500)) ) ),  # control ticks
+        between=list( x=c(1.25,1.25),  # add space to avoid label overlap between boxes
+                      y=c(.5) ),
+        ylab="activation", 
+        main="hunting activations", 
+        layout=c(6,3),                # layout of boxes
+        par.strip.text=list(cex=.6))  # shrink font in strips
+
+Try adding 
+	as.table=T
+to sort from upper left to lower right
+
+# refined version which shifts some tick labels left so the 1500 doesn't extend over the next plot:
+xyplot(Freq ~ tick | person+run, groups=proposition, 
+       data=as.data.frame.table(mra2i[3:11,1:10,,1:2]),  
+       type="l", pch=".",          
+       auto.key=list(columns=3, 
+                     title="propositions:", 
+ 		            cex=.5, 
+ 		            space="bottom"), 
+        scales=list( x=list(labels=c(1,500,"1000 ","1500    "),
+	             at=c(1,seq(500,1500,by=500))) ),  
+        between=list( x=c(.5, .5),  
+                      y=c(.5) ),
+        ylab="activation", 
+        main="hunting activations", 
+        layout=c(6,3),                
+        par.strip.text=list(cex=.6),
+	as.table=T)
+
+# extend the default groups colors:
+
+mycolors <- c(trellis.par.get("superpose.symbol")$col, "navyblue", "orange", "purple", "gray75")
+trellis.par.set(superpose.symbol = list(col = mycolors))
+
+
+# replace the default colors in the xyplot call (which cycle after about four or five):
+
+mycols <- c("purple", "red","darkblue", "green", "turquoise",
+            "navyblue", "sienna1",  "darkgreen", "brown", "magenta", "gray50",
+            "chocolate3", "salmon4")
+
+yo <- xyplot(Freq ~ tick | person+run, groups=proposition, 
+       data=as.data.frame.table(mra2i[3:11,1:10,,1:2]),
+       type="l", pch=".",
+       auto.key=list(columns=3, 
+                     title="propositions:", 
+		            cex=.5, 
+ 	              space="bottom"), 
+        scales=list( x=list( at=c(1,seq(500,1500,by=500)) ) ),
+        between=list( x=c(1.25,1.25),
+                      y=c(.5) ),
+        ylab="activation", 
+	main="hunting activations", 
+	layout=c(6,3), 
+	as.table=T,
+	par.strip.text=list(cex=.6), 
+	par.settings=simpleTheme(col=mycols))  
+	# you could just say col=mycols alone, but then it won't
+	# be applied to the legend.  The par.settings stuff deals with that.
+
+-------------------------------------------------
+
+ dim(ra)
+[1]   11   29 4500
+> yo <- array(ra, c(11*4500,29), dimnames=list(persons=rep(dimnames(ra)$persons,4500),propositions=dimnames(ra)$propositions))
+> dim(yo)
+[1] 49500    29
+
+-------------------------------------------------
+
+install.packages("mypkg", dependencies=TRUE)
+library("mypkg")
+
+-------------------------------------------------
+
+> ph <- histogram(cut(pmm, 7))
+> ph <- histogram(cut(pmm, 5))
+> hh <- histogram(cut(hmm, 7))
+> plot(hh, split=c(1,1,1,2))
+> plot(ph, split=c(1,2,1,2), newpage=F)
+
+-------------------------------------------------
+
+?"["
+for help on syntax of indexing.  (There's more to it than you think!)
+
+-------------------------------------------------
+
+> s
+ [1]  1  1  1  1  1  1  2  3  4  4  7  9  9  9 14 22 27 27
+> s[s>8 & s<15]
+[1]  9  9  9 14
+
+-------------------------------------------------
+
+> both1500mm
+
+              ah1500mm  ap1500mm
+RUN007333410 0.5361030 0.5206731
+RUN062627571 0.1800633 0.3004472
+RUN212802379 0.7162206 0.6941171
+RUN233713014 0.5369362 0.6947981
+RUN281044718 0.5353132 0.4960339
+RUN423135909 0.6521371 0.2998646
+RUN442947334 0.5357295 0.2997922
+RUN498437660 0.7123269 0.4961410
+RUN572523585 0.7122199 0.4962430
+RUN589641714 0.8924261 0.8912864
+RUN637198734 0.5352445 0.3008475
+RUN800763153 0.8906272 0.6938957
+RUN903654108 0.5349658 0.6932277
+RUN991213397 0.3578725 0.4975654
+
+> both1500mm[both1500mm[,1]>.5 & both1500mm[,1]<.6, ]
+
+              ah1500mm  ap1500mm
+RUN007333410 0.5361030 0.5206731
+RUN233713014 0.5369362 0.6947981
+RUN281044718 0.5353132 0.4960339
+RUN442947334 0.5357295 0.2997922
+RUN637198734 0.5352445 0.3008475
+RUN903654108 0.5349658 0.6932277
+
+> both1500mm[both1500mm[,1]>.45 & both1500mm[,1]<.6 & both1500mm[,2]>.45 & both1500mm[,2]<.6,]
+
+              ah1500mm  ap1500mm
+RUN007333410 0.5361030 0.5206731
+RUN281044718 0.5353132 0.4960339
+
+-------------------------------------------------
+SORTING:
+
+> yo
+         x        y        z
+1 0.000031 0.000183 0.000824
+2 0.044495 0.155732 0.533939
+3 0.822440 0.873416 0.838542
+4 0.322291 0.648545 0.990648
+5 0.393595 0.826873 0.418881
+> ya <- yo[order(yo["y"]),]
+> ya
+         x        y        z
+1 0.000031 0.000183 0.000824
+2 0.044495 0.155732 0.533939
+4 0.322291 0.648545 0.990648
+5 0.393595 0.826873 0.418881
+3 0.822440 0.873416 0.838542
+> 
+
+-------------------------------------------------
+To time a function call:
+
+system.time(expression)
+
+-------------------------------------------------
+
+# a <- read2multirunRA(csvs)   # defined below: create multi-run array
+# ah <- multiRA2domRA(a, "H")  # defined below: extract subarray for proposition domain H
+# ap <- multiRA2domRA(a, "P")
+# ah1500 <- ah[,,1500,]        # extract subarrays for timestep 1500
+# ap1500 <- ap[,,1500,]
+# ah1500means <- apply(ah1500, c(1,3), mean)  # get average activation for each person in each run
+# ap1500means <- apply(ap1500, c(1,3), mean)
+# ap1500means - ah1500means                   # crude display of difference between H and P activations
+# sum(ap1500means - ah1500means)              # even cruder check to see which is greater on average
+# ap1500means/ah1500means                     # ratios are also interesting
+
+-------------------------------------------------
+notes on apply()
+
+apply(data, margin, fn):
+
+The documentation says:
+MARGIN	a vector giving the subscripts which the function will be applied over.
+
+I would say:
+For example, if the function is mean(), then:
+MARGIN is the number of the dimension, or a vec of dimensions,
+which are *not* averaged over.  i.e. margin is what you *don't*
+apply the function over, in my way of thinking.
+
+In other words, MARGIN is the dimension(s) such that for EACH element in
+it, you will get a value of the function, where the function is applied
+to each thing that has that element as an index.
+
+e.g.:
+> yo <- matrix(1:12, nrow=3, ncol=4)
+> yo
+     [,1] [,2] [,3] [,4]
+[1,]    1    4    7   10
+[2,]    2    5    8   11
+[3,]    3    6    9   12
+
+apply(yo, 1, mean) goes to each row (dimension 1) index, and
+averages over all elements in that row--i.e. over columns in that row.
+
+apply(yo, 2, mean) goes to each column (dimension 2) index, and computes
+the average for all elements in that column.  
+
+e.g.:
+> ya <- array(1:24, c(3,4,2))
+> ya
+, , 1
+
+     [,1] [,2] [,3] [,4]
+[1,]    1    4    7   10
+[2,]    2    5    8   11
+[3,]    3    6    9   12
+
+, , 2
+
+     [,1] [,2] [,3] [,4]
+[1,]   13   16   19   22
+[2,]   14   17   20   23
+[3,]   15   18   21   24
+
+> apply(ya, c(2,3), mean)
+     [,1] [,2]
+[1,]    2   14
+[2,]    5   17
+[3,]    8   20
+[4,]   11   23
+
+That gives the average over row indexed elements for each combination of
+indexes in dimensions 2 (cols) and 3 (2D matrices).  Note though that
+the results are flipped diagonally from what I'd expect: The first
+column corresponds to the middle row of the first matrix, and the second
+column corresponds to the middle row of the second matrix, since these
+middle row elements happen to equal the average across each column
+within each matrix.
+
+> apply(ya, c(1,2), mean)
+     [,1] [,2] [,3] [,4]
+[1,]    7   10   13   16
+[2,]    8   11   14   17
+[3,]    9   12   15   18
+That gives the average for the 2 corresponding elements in each 
+of the 2 matrices which 1, 2 in the third dimension index.
+
+> apply(ya, c(1,3), mean)
+     [,1] [,2]
+[1,]  5.5 17.5
+[2,]  6.5 18.5
+[3,]  7.5 19.5
+These are the averages for each row within a 2D matrix, i.e. we allow
+column indexes to vary, and average over the resulting values, for each
+row and matrix index.
+
+
+
+-------------------------------------------------
+[df2ra is from my popco/R/df2ra.R]
+
+> r1 <- df2ra(d1)
+> r2 <- df2ra(d2)
+> yo <- c(as.vector(r1), as.vector(r2))
+> dim(yo)
+NULL
+> length(yo)
+[1] 54000
+> ya <- array(yo, c(10,27,200))
+> all(r1 == ya[,,101:200])
+[1] FALSE
+> all(r2 == ya[,,101:200])
+[1] TRUE
+> all(r1 == ya[,,1:100])
+[1] TRUE
+> dim(ya)
+[1]  10  27 200
+
+> ra <- array(yo, c(10, 27, 100, 2))
+> dim(ra)
+[1]  10  27 100   2
+> all(r1 == ra[,,,1])
+[1] TRUE
+> all(r2 == ra[,,,2])
+[1] TRUE
+> all(r1 == ra[,,,2])
+
+> newdimnames <- dimnames(r1)
+> newdimnames[[4]] <- c("run1", "run2")
+> rb <- array(c(as.vector(r1), as.vector(r2)), c(10, 27, 100, 2), dimnames=newdimnames)
+> all(ra == rb)
+[1] TRUE
+
+
+RAs2multirunRA <- function(...) {
+  ras <- c(...)
+}
+
+-------------------------------------------------
+
+to clear the console in OX X, cmd-opt-L.
+
+to get data, try something like
+var <- read.csv("mypath")
+var is called a data frame
+Then you can refer to columns by name as var$colname, 
+or refer to cols by index as var[i]
+
+here is something bizarre:
+var[2] refers to the second column
+var[3,2] refers to the third entry in the second column
+var[3,] refers to the third row
+
+to set/get the directory, use getwd() and setwd(path)
+to load a script, use source(script)
+
+for (i in 1:519){names<-colnames(tst); if (pmatch("CHRIS",names[i],nomatch=0)) {print(names[i])}}
+
+ for (n in grep(paste0("CHRIS", "_OE"), colnames(data), value=TRUE)) { # grep searches through array colnames(data)
+   cat(n)                                                              # returning elements that match
+   cat(": ")
+   cat(tst[2,n])  # here we are using the returned name as the column index, and 2 as the row index
+   cat("\n")
+ }
+
+
+To concatenate two data frames in the sense of adding their rows to make new df with the
+same columns but as many rows as both combined, use rbind(df1, df2, ...).
+
+I think cbind might do something similar for adding the second one as new columns, etc.
