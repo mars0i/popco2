@@ -51,10 +51,11 @@ which will display the activation values for each proposition for the
 four members of the population at tick 100.  Experiment with different
 tick numbers instead of 100 to see the process of settling.
 
-Note that some of what `activnsAtTickBarchart` does depens on having
+Note that some of what `activnsAtTickBarchart` does depends on having
 chosen proposition names appropriately.  In particular, different groups
 of propositions corresponding to different parts of analogies should
-have different prefixes.  The function looks for such as scheme.
+have different prefixes.  `activnsAtTickBarchart` expects that kind of
+naming scheme.
 
 If you want to create a PDF file of the plot, with a more informative upper title,
 you can do something like this now:
