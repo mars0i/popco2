@@ -52,8 +52,12 @@ activnsAtTickBarchart(hermits, 100)
 ````
 
 which will display the activation values for each proposition for the
-four members of the population at tick 100.  Experiment with different
-tick numbers instead of 100 to see the process of settling.
+four members of the population at tick 100.  You should what you expect.
+For example, you might expect that (a) perceived propositions have
+activations near 1, (b) those propns that are analogous to perceived
+propositions have positive (or at least non-negative) activations, and
+(c) many other propositions have negative activations.  Experiment with
+different tick numbers instead of 100 to see the process of settling.
 
 Note that some of what `activnsAtTickBarchart` does depends on having
 chosen proposition names appropriately.  In particular, different groups
