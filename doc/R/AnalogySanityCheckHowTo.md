@@ -18,8 +18,6 @@ How to perform a basic sanity check of analogies
 
 ````clojure
 (unlocknload 'sims.crime3.hermits)
-(rpt/write-propn-activns-csv 
-   (take 500 (many-times popn))
-   :cooker csv/cook-name-for-R)
+(rpt/write-propn-activns-csv (take 500 (many-times popn)) :cooker csv/cook-name-for-R)
 ````
 
