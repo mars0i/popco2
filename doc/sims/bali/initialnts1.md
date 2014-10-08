@@ -18,6 +18,19 @@ The Theatre State in Nineteenth-Century Bali*.
 
 -----------------------------------
 
+Marshall's copy of *Perfect Order* has dog ears on special pages, and
+postcard bookmarks on very special pages.
+
+Some key starting point pages in *Perfect Order*: 130-131, 137
+There's also relevant bg info in Priests and Programmers, e.g. some
+basic stuff starting on page 44.
+
+(*Perfect Order* is a better source for analogical material than
+*Priests and Programmers* or any of the articles that I've looked at so
+far.)
+
+-----------------------------------
+
 Remember the goal is to make orderly behavior analogous to something spiritual.  
 Something like that.
 

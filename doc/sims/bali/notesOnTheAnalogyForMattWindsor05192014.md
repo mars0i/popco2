@@ -1,8 +1,6 @@
-Key starting point pages in Perfect Order: 130-131, 137
-There's also relevant bg info in Priests and Programmers, e.g. some
-basic stuff starting on page 44.
-
-I sent the following to Matt Windsor on 5/19/2014:
+Notes I sent to Matt Windsor 5/19/2014
+====
+(notesOnTheAnalogyForMattWindsor05192014.md)
 
 I think that the confluence of historical, cultural, economic, and
 personal forces at play in Stephen Lansing's account in his book
@@ -19,7 +17,7 @@ the influence of  analogies between the Balinese water temple system as a
 means of cooperation on water irrigation and pest control, and the
 water temple system as a focus of various religious traditions.
 
-Background:
+###Background:
 
 Water temples manage sharing of water that comes down the mountainside
 in streams, canals, and tunnels.  In order for farmers to have adequate
@@ -48,7 +46,7 @@ there is conflict within or between villages or water temple groups.
 Another kind of bhutakala-influenced trouble arises when pests infest a
 rice field.
 
-Two levels of analogy:
+###Two levels of analogy:
 
 First, my understanding is that some of the religious rituals that are
 thought to help to produce order in the natural/social world and manage
