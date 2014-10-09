@@ -5,7 +5,7 @@ Raw initial notes working toward Bali analogies in popco.
 
 For anyone other than Marshall who's reading this: It's brainstorming.
 This is part of the process of gradually developing analogies that popco
-can use.  Don't expect it to exhibit much order.
+can use.  Don't expect it to exhibit much order, make sense, etc.
 
 Page and chapter references are to *Perfect Order: Recognizing
 Complexity in Bali* by J. Stephen Lansing, Princeton University Press
@@ -31,20 +31,21 @@ far.)
 
 -----------------------------------
 
-Remember the goal is to make orderly behavior analogous to something spiritual.  
+Remember the goal is to make orderly behavior analogous to something
+spiritual.  
 Something like that.
 
 -----------------------------------
 
-This is from Perfect Order (PO) chapters 4 and 2:
+This is based on Perfect Order (PO) chapters 4 and 2:
 
-	It's holy water not all of it--only the blessed stuff
-	  but still:
-	Belongs to goddess/god
-	One god/ess per subak
-	One holy temple per subak
-	therefore respect temples process etc
-	the water is spiritual.
+>	It's holy water not all of it--only the blessed stuff  
+>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but still:  
+>	Belongs to goddess/god  
+>	One god/ess per subak  
+>	One holy temple per subak  
+>	therefore respect temples process etc  
+>	the water is spiritual.  
 
 The geographic/interactive structure/network of the temples, gods is
 analogous to that of the water network.
@@ -53,57 +54,58 @@ There's more--perhaps more relevant--in chapter 5.
 
 -----------------------------------
 
-	order is good
-	humans push toward order, and should, as Hegel says (PO ch5)
-	this is the nature of the universe
-	good comes from order, harmony
-	making the world
-	and self
-	like a jewel
-	both at the static physical level 
-	(paddies on the mountainside in the moonlight)
-	and over time
-	and at a higher-level
-		i.e. pests
-		lack of growth
-		is not a jewel
-	order inside
-	causes order outside
-	and probably vice versa
-	
-	this is wrt to people as rough equals
-	not wrt castes as in the Indian tradition
+>	order is good    
+>	humans push toward order, and should, as Hegel says (PO ch5)  
+>	this is the nature of the universe  
+>	good comes from order, harmony  
+>	making the world  
+>	and self  
+>	like a jewel  
+>	both at the static physical level   
+>	(paddies on the mountainside in the moonlight)  
+>	and over time  
+>	and at a higher-level  
+>		i.e. pests  
+>		lack of growth  
+>		is not a jewel  
+>	order inside  
+>	causes order outside  
+>	and probably vice versa  
+>	(or maybe order inside *is* order outside)
+>	  
+>	this is wrt to people as rough equals  
+>	not wrt castes as in the Indian tradition  
 
 -----------------------------------
 
 from chapter 5:
 
-	pests are disorder
-	high yield is order
-	good irrigation is order
-	
-	strife is disorder
-	
-	human disorder causes worldly, farming disorder
-	worldly disorder causes human
-	
-	bhutakala cause human disorder,
-	or are caused by it,
-	or are it
+>	pests are disorder  
+>	high yield is order  
+>	good irrigation is order  
+>	  
+>	strife is disorder  
+>	  
+>	human disorder causes worldly, farming disorder  
+>	worldly disorder causes human  
+>	  
+>	bhutakala cause human disorder,  
+>	or are caused by it,  
+>	or are it  
 
 humans (farmers) must work to control disorder:
 
-	inside humans
-		i.e. controlling bhutakala
-	in social relations
-		in subaks
-		between subaks
-	in the world/farming
+>	inside humans  
+>		i.e. controlling bhutakala  
+>	in social relations  
+>		in subaks  
+>		between subaks  
+>	in the world/farming  
 
 if they don't, disorder will come. it's always the default tendency
 
-	order is good
-	disorder is bad
+>	order is good  
+>	disorder is bad  
 
 
 vs.
@@ -116,6 +118,17 @@ and nothing among farmers
 What about rituals?  The rituals represent the world as ordered.
 And maybe also require ordered social relations to create them well.
 Or maybe doing them well causes ordered social relations.
+
+Well I think probably that doing them well certainly encourages order in the
+world, either/both via the non-human spiritual world, and though
+inculcating order within people who watch the rituals and who peform
+the rituals.
+
+At the same time, I suspect that performing the rituals well requires
+internal order (but that's a way to encourage it).  [however, this
+intuition comes from an no-reason-to-consider-trustworthy source that I
+happened to find on the web.]  
+i.e. there's a feedback relationship.  Maybe.
 
 The rituals are also fed by the farming, in that ritual require
 resources from subaks, villages, individuals.
@@ -136,7 +149,9 @@ This I desire.  I celebrate.
 http://www.filosbali.net/BalinesePrayer.htm, emphasized bringing oneself
 to an internal state of peacefulness and harmony as part of ritual
 offerings.  This seems to contain information for tourists produced by
-people who've visited Bali.)
+people who've visited Bali.  No idea whether this is trustworthy.  (I
+could easily imagine that it was influenced by any of several
+alternative spirituality trends, or Indian Hinduism, etc.)
 
 cf. Eiseman vol. I, p. 53 there is a description of the state of mind
 necessary for making water holy.
@@ -190,8 +205,8 @@ Harmony in the subak creates harmony in farming.
 
 Harmony in the individual creates harmony in the world.
 
-	Subak is A.
-	Subak is B.
+	Individual is A.
+	Individual is B.
 
 -----------------------------------
 
@@ -200,7 +215,7 @@ Harmony in the individual creates harmony in the world.
 3. farmer/village/subak is harmonious wrt farming  
 [not real popco proposition candidates, but sketch ideas]
 
-As stated, analogies between 1 and 2 is equally good wrt 2 and 3.
+As stated, analogy between 1 and 2 is equally good wrt 2 and 3.
 
 But 2:3 is better than 1:2 simply because of predicate identities.
 So if you shift to 2, rather than 1, you get better reinforcement of 3.

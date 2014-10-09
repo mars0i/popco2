@@ -103,3 +103,11 @@ social harmony, I think, since social harmony per se isn't part of the
 focus of the elites.  At least not as I read Lansing and Geertz.  Hmm
 although there is a lot of social order in the Court, and in relations
 between lineage groups.
+
+-------------------------------------
+
+	The court creates order.
+	The subak creates order.
+
+	The king creates order.
+	The priest creates order.
