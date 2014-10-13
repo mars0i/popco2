@@ -41,11 +41,44 @@
 (mx/set-current-implementation :vectorz)
 ;(mx/set-current-implementation :ndarray)
 
+
+;; From https://github.com/clojure/tools.cli#example-usage
+;; Needs to be fixed.
+(defn usage [options-summary]
+  "This is my program. There are many like it, but this one is mine.
+   Usage: program-name [options] action")
+
+
+(defn error-msg [errors]
+  (str "The following errors occurred while parsing your command:\n\n" 
+       (apply str errors)))
+
+(defn exit [status msg]
+  (println msg)
+  (System/exit status))
+
+(def cli-options [["-h" "--help" "Print this help"]
+                  ["-n" "--popn-ns" "Namespace for population definition"]
+                  ["-p" "--popn"    "Name of symbol referencing population"
+                   :default "popn"
+                   :parse-fn symbol]])
+
 (defn -main [& args]
-  (let [[opts args banner] (clojure.tools.cli/cli args
-                                ["-h" "--help" "Print this help"
-                                 :default false :flag true])]
-    (when (:help opts)
-      (println banner))
-    ;; FIXME add stuff here
+  (let [{:keys [options arguments errors summary]} (clojure.tools.cli/parse-opts args cli-options)]
+  (cond
+      (:help options) (exit 0 (usage summary))
+      (not= (count arguments) 1) (exit 1 (usage summary))
+      errors (exit 1 (error-msg errors)))
+ ;(case (first arguments)
+ ;  )
+
+  (println "Yow!")
     ))
+
+;(defn -main [& args]
+;  (let [[opts args banner] (clojure.tools.cli/cli args
+;                                ["-h" "--help" "Print this help"
+;                                 :default false :flag true])]
+;    (when (:help opts)
+;      (println banner))))
+
