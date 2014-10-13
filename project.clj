@@ -2,6 +2,8 @@
   :url "https://github.com/mars0i/popco2"
   :license {:name "Gnu General Public License version 3.0"
             :url "http://www.gnu.org/copyleft/gpl.html"}
+  :source-paths ["src"]
+  :java-source-paths ["src/java"]
   :dependencies [[org.clojure/clojure "1.6.0"]]
   :profiles {:dev {:dependencies [[net.mikera/core.matrix "0.30.3-SNAPSHOT"]
                                   [net.mikera/vectorz-clj "0.26.1"]
@@ -11,8 +13,6 @@
                                   [org.clojure/tools.cli "0.3.1"]
                                   [incanter/incanter-core "1.5.5"]
                                   [criterium/criterium "0.4.3"]]
-                   :source-paths ["src"]
-                   :java-source-paths ["src/java"]
                    }}
   :jvm-opts ["-Xmx1g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
   :main popco.core.popco
