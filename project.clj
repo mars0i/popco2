@@ -1,10 +1,10 @@
-(defproject popco2 "0.0.2-SNAPSHOT"
+(defproject popco2 "0.9.0-SNAPSHOT"
   :url "https://github.com/mars0i/popco2"
   :license {:name "Gnu General Public License version 3.0"
             :url "http://www.gnu.org/copyleft/gpl.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]]
-  :profiles {:dev {:dependencies [[net.mikera/core.matrix "0.27.2-SNAPSHOT"]
-                                  [net.mikera/vectorz-clj "0.25.0"]
+  :profiles {:dev {:dependencies [[net.mikera/core.matrix "0.30.3-SNAPSHOT"]
+                                  [net.mikera/vectorz-clj "0.26.1"]
                                   [org.clojure/algo.generic "0.1.1"]
                                   [org.clojure/data.csv "0.1.2"]
                                   [org.clojure/data.xml "0.0.8"]
