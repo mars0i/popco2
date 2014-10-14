@@ -5,6 +5,7 @@
   :source-paths ["src"]
   :java-source-paths ["src/java"]
   :dependencies [[org.clojure/clojure "1.6.0"]]
+  :plugins [[lein-exec "0.3.4"]] ; allows passing expressions to eval on commandline with -e, etc. see lein help exec.
   :profiles {:dev {:dependencies [[net.mikera/core.matrix "0.30.3-SNAPSHOT"]
                                   [net.mikera/vectorz-clj "0.26.1"]
                                   [org.clojure/algo.generic "0.1.1"]
