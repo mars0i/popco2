@@ -57,23 +57,38 @@
   (println msg)
   (System/exit status))
 
+;; Note keys are "normally set to the keywordized name of the long option without the leading dashes." (http://clojure.github.io/tools.cli)
 (def cli-options [["-h" "--help" "Print this help"]
-                  ["-n" "--popn-ns" "Namespace for population definition"]
-                  ["-p" "--popn"    "Name of symbol referencing population"
-                   :default "popn"
-                   :parse-fn symbol]])
+                  ["-n" "--popn-ns NAMESPACE" "Namespace for population definition." :parse-fn symbol]
+                  ["-r" "--run EXPRESSION"    "Clojure expression to execute."]
+                  ["-p" "--popn POPN-NAME"    "Name of symbol referencing population." :default "popn" :parse-fn #(symbol (str "sim/" %))]
+                 ])
+
+(defmacro my-load-string [s] `(read-string ~s))
 
 (defn -main [& args]
-  (let [{:keys [options arguments errors summary]} (clojure.tools.cli/parse-opts args cli-options)]
-  (cond
-      (:help options) (exit 0 (usage summary))
-      (not= (count arguments) 1) (exit 1 (usage summary))
-      errors (exit 1 (error-msg errors)))
- ;(case (first arguments)
- ;  )
+  (let [{:keys [options arguments errors summary]} 
+        (clojure.tools.cli/parse-opts args [["-e" "--exec EXPRESSION" "Expression to execute."]])]
+    (load-string (:run options))        ; works, but is unaware of what I've required at the top of this file
+    (eval (:run options))               ; produces no output
+    (my-load-string (:run options))))   ; produces no output
 
-  (println "Yow!")
-    ))
+;(defn -main [& args]
+;  (let [{:keys [options arguments errors summary]} (clojure.tools.cli/parse-opts args cli-options)]
+;    (cond
+;      (:help options) (exit 0 (usage summary))
+;      errors (exit 1 (error-msg errors)))
+;    (println (:popn options))
+;    (println (:popn-ns options))
+;    (println (:exec options))
+;
+;    (require (vector (:popn-ns options) :as 'sim)) 
+;    (load-string (:exec options)) ; read string and eval. doesn't seem to know about requires in this file, though.
+;;    ;(eval (:exec options)) ; does nothing
+;    ;(my-load-string (:exec options))
+;    ;(my-load (:exec options))
+;
+;))
 
 ;(defn -main [& args]
 ;  (let [[opts args banner] (clojure.tools.cli/cli args
