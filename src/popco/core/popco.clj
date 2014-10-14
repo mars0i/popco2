@@ -32,7 +32,7 @@
            [popco.core.person Person]
            [popco.core.population Population]
            [popco.nn.nets AnalogyNet PropnNet])
-  (:gen-class)) ; for lein uberjar
+  (:gen-class :main true)) ; for lein uberjar
 
 ;; set pretty-print width to terminal width
 (set-pprint-width (Integer/valueOf (System/getenv "COLUMNS"))) ; or read-string
