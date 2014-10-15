@@ -63,8 +63,8 @@
       jake (pers/make-person :jake  pns/living-propns   no-perc-pnet     anet         pns/crime-propn-ids  [:ds9]            [:ds9]                1)  ; enterains both analogies, ignorant of crime
      ]
 
-  (def popn2 (pp/make-population [aa
-                                  vul1 worf ; (pers/new-person-from-old vul1 :vul2)
-                                  baj1 kira ; (pers/new-person-from-old baj1 :baj2)
-                                  jake
-                                  ])))
+  (def popn (pp/make-population [aa
+                                 vul1 worf ; (pers/new-person-from-old vul1 :vul2)
+                                 baj1 kira ; (pers/new-person-from-old baj1 :baj2)
+                                 jake
+                                 ])))
