@@ -8,6 +8,7 @@
         utils.general)
   ;[clojure.data :as da] ; for 'diff'
   (:require [clojure.tools.cli]    ; for making standalone version
+            [clojure.string]
             [utils.random :as ran]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
@@ -41,40 +42,47 @@
 (mx/set-current-implementation :vectorz)
 ;(mx/set-current-implementation :ndarray)
 
-;; From https://github.com/clojure/tools.cli#example-usage
-;; Needs to be fixed.
-(defn usage [options-summary]
-  (cons "This is my program. There are many like it, but this one is mine.
-   Usage: program-name [options] action\n" options-summary))
-
 (defn error-msg [errors]
   (str "The following errors occurred while parsing your command:\n\n" 
        (apply str errors)))
 
-(defn exit [status msgs]
-  (apply println msgs)
-  (System/exit status))
-
+;(defn exit [status msgs]
+;  (println msgs)
+;  (System/exit status))
+;
 ;; Note keys are "normally set to the keywordized name of the long option without the leading dashes." (http://clojure.github.io/tools.cli)
 (def cli-options [["-h" "--help" "Print this help"]
-                  ["-n" "--popn-ns NAMESPACE" "Namespace for population definition." :parse-fn symbol]
-                  ["-r" "--run EXPRESSION"    "Clojure expression to execute."] ; better to avoid -e, since lein exec uses it
-                  ["-p" "--popn POPN-NAME"    "Name of symbol referencing population." :default "popn" :parse-fn #(symbol (str "sim/" %))]
+                  ["-n" "--popn-ns <namespace>" "Namespace that defines a symbol 'popn with a popco population as its value." :parse-fn symbol]
+                  ["-r" "--run <clojure expression>"    "Clojure expression to execute."] ; better to avoid -e, since lein exec uses it
                  ])
 
-(defmacro my-load-string [s] `(read-string ~s))
+(defn usage [options]
+  (let [fmt-line (fn [[short-opt long-opt desc]]
+                   (str short-opt ", " long-opt ": " desc))
+        addl-help ["Note: Symbol 'popns will automatically be defined to be (many-times popn)."
+                   "Example usage:"
+                   "lein run -n sims.crime3.hermits -r '(popco.core.reporters/write-propn-activns-csv (take 100 (map popco.core.reporters/ticker popns)))'"]]
+    (clojure.string/join "\n" (concat (map fmt-line options)
+                                      addl-help))))
 
 ;(require (vector (symbol (System/getProperty "POPCOSIM")) :as 'sim))
 
+;; This will be executed when the program is invoked with 'lein run'.
+;; It won't be executed when the program is invoked with 'lein repl'.
 (defn -main [& args]
-  (let [{:keys [options arguments errors summary]} (clojure.tools.cli/parse-opts args cli-options)]
+  (let [{:keys [options arguments errors summary]} (clojure.tools.cli/parse-opts args cli-options)
+        popn-ns-sym (:popn-ns options)
+        to-run-str (:run options)]
     (cond
-      (:help options) (exit 0 (usage cli-options))
-      errors (exit 1 (error-msg errors)))
-    (println (:popn options))
-    (println (:popn-ns options))
-    (println (:run options))
+      (or (:help options) 
+          (not popn-ns-sym)
+          (not to-run-str))  (do (println (usage cli-options))
+                                 (System/exit 0))
+      errors                 (do (println (error-msg errors))
+                                 (System/exit 1)))
 
     (require (vector (:popn-ns options) :as 'sim)) 
-    (load-string (:run options)) ; read string and eval.
-))
+    (load-string "(def popns (popco.core.main/many-times sim/popn))") ; otherwise compiled too early to know about sim
+    (load-string (str "(do "
+                      (:run options)
+                      " (System/exit 0))" )) ))
