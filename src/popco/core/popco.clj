@@ -41,20 +41,18 @@
 (mx/set-current-implementation :vectorz)
 ;(mx/set-current-implementation :ndarray)
 
-
 ;; From https://github.com/clojure/tools.cli#example-usage
 ;; Needs to be fixed.
 (defn usage [options-summary]
-  "This is my program. There are many like it, but this one is mine.
-   Usage: program-name [options] action")
-
+  (cons "This is my program. There are many like it, but this one is mine.
+   Usage: program-name [options] action\n" options-summary))
 
 (defn error-msg [errors]
   (str "The following errors occurred while parsing your command:\n\n" 
        (apply str errors)))
 
-(defn exit [status msg]
-  (println msg)
+(defn exit [status msgs]
+  (apply println msgs)
   (System/exit status))
 
 ;; Note keys are "normally set to the keywordized name of the long option without the leading dashes." (http://clojure.github.io/tools.cli)
@@ -66,32 +64,17 @@
 
 (defmacro my-load-string [s] `(read-string ~s))
 
-;(defn -main [& args]
-;  (let [{:keys [options arguments errors summary]} 
-;        (clojure.tools.cli/parse-opts args [["-r" "--run EXPRESSION" "Expression to execute."]])]
-;    (load-string (:run options))        ; works, but is unaware of what I've required at the top of this file
-;    (eval (:run options))               ; produces no output
-;    (my-load-string (:run options))))   ; produces no output
+;(require (vector (symbol (System/getProperty "POPCOSIM")) :as 'sim))
 
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} (clojure.tools.cli/parse-opts args cli-options)]
     (cond
-      (:help options) (exit 0 (usage summary))
+      (:help options) (exit 0 (usage cli-options))
       errors (exit 1 (error-msg errors)))
     (println (:popn options))
     (println (:popn-ns options))
-    (println (:exec options))
+    (println (:run options))
 
     (require (vector (:popn-ns options) :as 'sim)) 
-    (load-string (:exec options)) ; read string and eval. doesn't seem to know about requires in this file, though.
-    ;(eval (:exec options)) ; does nothing
-    ;(my-load-string (:exec options)) ; does nothing
+    (load-string (:run options)) ; read string and eval.
 ))
-
-;(defn -main [& args]
-;  (let [[opts args banner] (clojure.tools.cli/cli args
-;                                ["-h" "--help" "Print this help"
-;                                 :default false :flag true])]
-;    (when (:help opts)
-;      (println banner))))
-
