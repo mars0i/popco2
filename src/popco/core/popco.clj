@@ -46,10 +46,6 @@
   (str "The following errors occurred while parsing your command:\n\n" 
        (apply str errors)))
 
-;(defn exit [status msgs]
-;  (println msgs)
-;  (System/exit status))
-;
 ;; Note keys are "normally set to the keywordized name of the long option without the leading dashes." (http://clojure.github.io/tools.cli)
 (def cli-options [["-h" "--help" "Print this help"]
                   ["-n" "--popn-ns <namespace>" "Namespace that defines a symbol 'popn with a popco population as its value." :parse-fn symbol]
@@ -85,4 +81,4 @@
     (load-string "(def popns (popco.core.main/many-times sim/popn))") ; otherwise compiled too early to know about sim
     (load-string (str "(do "
                       (:run options)
-                      " (System/exit 0))" )) ))
+                      "(println) (System/exit 0))" )) ))
