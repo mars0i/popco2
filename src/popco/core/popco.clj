@@ -3,12 +3,12 @@
 ;;; specified in the file LICENSE.
 
 (ns popco.core.popco
-  (:use [clojure.core.matrix :as mx]
-        popco.core.main
+  (:use popco.core.main
         utils.general)
   ;[clojure.data :as da] ; for 'diff'
   (:require [clojure.tools.cli]    ; for making standalone version
             [clojure.string]
+            [clojure.core.matrix :as mx]
             [utils.random :as ran]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
