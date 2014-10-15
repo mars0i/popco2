@@ -17,7 +17,7 @@
                    }}
   :jvm-opts ["-Xmx1g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
   :main popco.core.popco
-  :aot [popco.core.popco] ; for lein uberjar
+  :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
 )
 
                                   ;[slingshot "0.10.3"][org.jblas/jblas "1.2.3"][mars0i/clatrix "0.4.0-SNAPSHOT"]
