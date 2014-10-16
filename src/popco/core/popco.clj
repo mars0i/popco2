@@ -9,6 +9,7 @@
   (:require [clojure.tools.cli]    ; for making standalone version
             [clojure.string]
             [clojure.core.matrix :as mx]
+            ;[mikera.vectorz.matrix-api] ; needed for uberjar?
             [utils.random :as ran]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
@@ -33,7 +34,7 @@
            [popco.core.person Person]
            [popco.core.population Population]
            [popco.nn.nets AnalogyNet PropnNet])
-  (:gen-class)) ; for lein uberjar
+  (:gen-class)) ; for uberjar
 
 ;; set pretty-print width to terminal width
 (set-pprint-width (Integer/valueOf (System/getenv "COLUMNS"))) ; or read-string
@@ -41,10 +42,6 @@
 ;; use one of these:
 (mx/set-current-implementation :vectorz)
 ;(mx/set-current-implementation :ndarray)
-
-(defn error-msg [errors]
-  (str "The following errors occurred while parsing your command:\n\n" 
-       (apply str errors)))
 
 ;; Note keys are "normally set to the keywordized name of the long option without the leading dashes." (http://clojure.github.io/tools.cli)
 (def cli-options [["-h" "--help" "Print this help"]
@@ -61,14 +58,18 @@
     (clojure.string/join "\n" (concat (map fmt-line options)
                                       addl-help))))
 
-;(require (vector (symbol (System/getProperty "POPCOSIM")) :as 'sim))
+(defn error-msg [errors]
+  (str "The following errors occurred while parsing your command:\n\n" 
+       (apply str errors)))
 
 ;; This will be executed when the program is invoked with 'lein run'.
 ;; It won't be executed when the program is invoked with 'lein repl'.
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} (clojure.tools.cli/parse-opts args cli-options)
-        popn-ns-sym (:popn-ns options)
-        to-run-str (:run options)]
+        popn-ns-sym (:popn-ns options) ; symbol representing namespace in which the population, named popn, is defined
+        to-run-str (:run options)]     ; string of Clojure code to run
+
+    ;; Check for reasons to abort:
     (cond
       (or (:help options) 
           (not popn-ns-sym)
@@ -78,7 +79,7 @@
                                  (System/exit 1)))
 
     (require (vector (:popn-ns options) :as 'sim)) 
-    (load-string "(def popns (popco.core.main/many-times sim/popn))") ; otherwise compiled too early to know about sim
+    (load-string "(def popns (popco.core.main/many-times sim/popn))") ; do this here--otherwise it's compiled too early for it to know about sim
     (load-string (str "(do "
                       (:run options)
                       "(println) (System/exit 0))" )) ))
