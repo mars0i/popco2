@@ -78,8 +78,10 @@
       errors                 (do (println (error-msg errors))
                                  (System/exit 1)))
 
+
+    (require '[popco.core.reporters :as rpt])
     (require (vector (:popn-ns options) :as 'sim)) 
-    (load-string "(def popns (popco.core.main/many-times sim/popn))") ; do this here--otherwise it's compiled too early for it to know about sim
+    ;(load-string "(def popns (popco.core.main/many-times sim/popn))") ; don't do this--holds onto the head
     (load-string (str "(do "
                       (:run options)
                       "(println) (System/exit 0))" )) ))
