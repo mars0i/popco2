@@ -38,5 +38,6 @@
 ;; sequence elsewhere if you want to reuse it.
 
 (def write-propn-activns-csv         popco.io.propncsv/write-propn-activns-csv)
+(def write-propn-activns-csv         popco.io.propncsv/cook-name-for-R)
 
 (def spit-graph                      popco.io.gexf-dynamic/spit-graph)
