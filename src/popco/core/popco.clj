@@ -37,7 +37,8 @@
   (:gen-class)) ; for uberjar
 
 ;; set pretty-print width to terminal width
-(set-pprint-width (Integer/valueOf (System/getenv "COLUMNS"))) ; or read-string
+(if-let [colstr (System/getenv "COLUMNS")]
+  (set-pprint-width (Integer/valueOf colstr)))
 
 ;; use one of these:
 (mx/set-current-implementation :vectorz)
