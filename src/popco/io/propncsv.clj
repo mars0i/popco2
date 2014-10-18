@@ -34,7 +34,10 @@
                data 
                (cons (column-names (first popns) name-cooker) ; if not appending, add header row
                      data))]
+
     (apply spit-csv (str cn/+data-dir+ "/activns" cn/session-id ".csv") rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
+
+; or do this to replace the spit-csv line to call write-csv directly:
 ;   (with-open [w (apply io/writer (str cn/+data-dir+ "/activns" cn/session-id ".csv") options)]
 ;     (csv/write-csv w rows))
 
@@ -55,6 +58,11 @@
                    (:activns (:propn-net pers)))))
 
 (defn cook-name-for-R
+  "In strings for names of elements in a popco model, replace characters that
+  cause problems in R with alternative sequences.  In particular, variable
+  names in R can't contain mathematical symbols such as \"-\" and \">\",
+  so we replace \"->\" by \".c.\" (for causes), \"->-\" by \".p.\" (for
+  prevents), and \"-\" alone by \"_\"."
   [nm]
   (-> nm
       (st/replace #"->-" ".p.") ; prevents
