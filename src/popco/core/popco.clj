@@ -54,7 +54,7 @@
                    (str short-opt ", " long-opt ": " desc))
         addl-help ["Note: Symbol 'popns will automatically be defined to be (many-times popn)."
                    "Example usage:"
-                   "lein run -n sims.crime3.hermits -r '(popco.core.reporters/write-propn-activns-csv (take 100 (map popco.core.reporters/ticker popns)))'"]]
+                   "lein run -n sims.crime3.threegroups -r '(rp/write-propn-activns-csv (take 5000 (mn/many-times sim/popn)) :cooker rp/cook-name-for-R)'" ]]
     (clojure.string/join "\n" (concat (map fmt-line options)
                                       addl-help))))
 
@@ -79,7 +79,11 @@
                                  (System/exit 1)))
 
 
-    (require '[popco.core.reporters :as rpt])
+    ;(use 'popco.core.reporters)
+    ;(use 'popco.core.main)
+    ;; We have to define aliases here for load-string to see them.  I don't understand why.  Short aliases are handy.
+    (require '[popco.core.main :as mn])
+    (require '[popco.core.reporters :as rp])
     (require (vector (:popn-ns options) :as 'sim)) 
     ;(load-string "(def popns (popco.core.main/many-times sim/popn))") ; don't do this--holds onto the head
     (load-string (str "(do "
