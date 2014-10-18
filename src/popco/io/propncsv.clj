@@ -35,6 +35,8 @@
                (cons (column-names (first popns) name-cooker) ; if not appending, add header row
                      data))]
     (apply spit-csv (str cn/+data-dir+ "/activns" cn/session-id ".csv") rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
+;   (with-open [w (apply io/writer (str cn/+data-dir+ "/activns" cn/session-id ".csv") options)]
+;     (csv/write-csv w rows))
 
 (defn propn-activns-row
   "Construct a sequence of activations representing all propn activns of all 
