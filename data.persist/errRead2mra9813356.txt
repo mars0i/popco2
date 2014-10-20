@@ -1,5 +1,0 @@
--bash: error importing function definition for `BASH_FUNC_module()'
-
-real	13m32.834s
-user	13m17.463s
-sys	0m9.055s
