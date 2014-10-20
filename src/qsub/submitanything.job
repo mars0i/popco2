@@ -9,5 +9,6 @@
 #$ -M marshall@logical.net
 
 pwd
+echo "$*"
 
 time "$@"
