@@ -261,7 +261,7 @@ spread <- function(x){abs( max(x) - min(x) )}
 # return a vector of names of runs which have at least proposition with disagreement between
 # persons greater than tolerance (where disagreement is measured by spread(), i.e. by distance
 # between max and min activations across persons for a proposition).
-# ACTUALLY, there's no reason to restrict this to a domain.  However, you do want to
+# In some cases there's no reason to restrict this to a domain.  However, you do want to
 # remove pundits, since they are unlikely to agree with everyone, in general.
 # NOTE tickIndex is relative to length of domMultiRA, if numeric.  e.g. if domMultiRA has
 # only one tick, originally tick 1500, then tickIndex should be 1, or the string "1500".
@@ -280,6 +280,21 @@ findRunsWithDisagreement <- function(domMultiRA, tolerance, tickIndex=dim(domMul
   }
 
   runNames[disagreeableRunPositions]   # return names of runs which had some propn with spread > tolerance
+}
+
+# printing wrapper for findRunsWithDisagreement that runs it repeatedly on parts of the same
+# array, where the parts are specified by different ranges in the person dimension.
+# propnRanges must be a list, not a c-vector.
+## DOESN'T WORK YET
+findRunsWithDisagreementPerDomain <- function(multiRA, persRanges, tolerance, tickIndex=dim(domMultiRA)[3], verbose=F) {  # defaults to last tick
+  for (i in 1:length(persRanges)) {
+    #print(paste0("Range ", i, ":"))
+    #print(class(multiRA[propnRanges[[i]]]))
+    #print(propnRanges[i])
+    #print(propnRanges[[i]])
+    #print(multiRA[propnRanges[[i]],,,])
+    print(findRunsWithDisagreement(multiRA[persRanges[[i]],,,], tolerance, tickIndex, verbose))
+  }
 }
 
 # side-effecting increment operators
