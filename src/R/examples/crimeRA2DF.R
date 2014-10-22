@@ -1,4 +1,7 @@
-# R --no-save
+# crimeRA2DF.R
+
+# run e.g. as:
+# qsub submitanything.job R --no-save crimeRA2DF.R
 
 source("~/p2/src/R/R/df2ra.R")
 load("crime3.rdata")
