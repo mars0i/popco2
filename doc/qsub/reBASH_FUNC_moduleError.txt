@@ -1,0 +1,34 @@
+You can ignore that. It comes from using the #$ -V argument. With that argument, SGE tries to send all of your environment variables, etc... to the job, which also includes the module() function.
+
+The error is harmless and SGE doesn't provide any sane work around other than to use "#$ -v" instead of "#$ -V" to selectively pass variables to the job instead passing all.
+
+Mike
+
+
+From: Marshall Abrams <mabrams@uab.edu> <mabrams@uab.edu>
+Sent: Monday, October 20, 2014 11:38PM
+To: uabgrid support (support@vo.uabgrid.uab.edu) <support@vo.uabgrid.uab.edu>
+Subject: [support] -bash: error importing function definition for `BASH_FUNC_module()'
+
+Hi,
+
+I just started using Cheaha again after six months or a year of not using it.  Should I worry about the error message:
+
+-bash: error importing function definition for `BASH_FUNC_module()'
+
+that I get in my stderr output file when I use qsub to submit jobs?  This is new.
+
+I know that this is probably a FAQ.  If there's somewhere I should have searched for an answer, please let me know.  I didn't find/couldn't remember where that would be.  
+
+Thanks!
+
+
+Marshall
+
+
+Marshall Abrams, Associate Professor 
+Department of Philosophy, University of Alabama at Birmingham
+http://http://members.logical.net/~marshall
+Email: mabrams@uab.edu; Phone: (205) 996-7483;  Fax: (205) 975-6610
+Mail: HB 414A, 900 13th Street South, Birmingham, AL 35294-1260;  Office: HB 418
+
