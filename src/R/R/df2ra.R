@@ -509,6 +509,11 @@ multiRA2domMeanRA <- function(multiRA, doms, lastTick=dim(multiRA)[3], firstTick
 # multiRA2meanDF repeatedly on the arrays using the two prefix strings, and then combines the
 # resulting dataframes into one dataframe by passing them along with the vector/list of bias strings 
 # to combineMeanDFsWithBiases.
+# arguments:
+#   mras:   List of multi-run arrays, e.g for different sets of runs or different sets of persons
+#   biases: One column name per elements in mras
+#   dom1, dom2: Domains, specified as strings that are prefixes in proposition names. (Order only affects order of columns in output dataframe (?).)
+#   firstTick, lastTick: These specify the range of ticks to use. Defaults to last tick only.
 # Examples:
 # df <- multiRAs2combinedMeanDF(list(mra1, mra2, mra3), c("virus", "beast", "both"), "CV", "CB")
 # df <- multiRAs2combinedMeanDF(list(mra[2:11,,,], mra[12:21,,,]), c("beast", "virus"), "CV", "CB")

@@ -7,7 +7,15 @@ R/R (redundantly) contains R source code.
 
 R/popco contains an R package made from some of that source code.  The
 file DESCRIPTION has to be in this directory to allow that package to
-be loaded automatically when I start R.
+be loaded automatically when I start R.  I put these lines in my
+.Rprofile file:
+
+`library(lattice)`  
+`library(devtools); load_all("~/p2/src/R/popco")`
+
+If there are recent changes to the files under R/R, they won't be
+reflected in the functions made available automatically in R until the
+files are copied here and the package is updated.
 
 R/shell contains shell scripts.
 
