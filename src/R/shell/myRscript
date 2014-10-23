@@ -1,0 +1,2 @@
+#!/bin/sh
+exec Rscript --no-init-file --verbose "$@"
