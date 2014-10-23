@@ -1,4 +1,4 @@
-# crimeRA2DF.R
+# crimeRA2df.R
 
 # run e.g. as:
 # qsub submitanything.job R --no-save crimeRA2DF.R
