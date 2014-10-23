@@ -11,9 +11,10 @@ purposes as well.
 See <a href="ConvertToRdata.md">ConvertToRdata.md</a>.
 
 
-### Part IV: Generating plots, etc.
+### Part II: Create dataframe
 
-First generate an R dataframe containing means of activations for each
+R's Lattice Graphics package often works only with R dataframes, so we
+need generate an R dataframe containing means of activations for each
 proposition across all members of each proposition using
 `multiRAs2combinedMeanDF`, which does the following:
 
@@ -42,6 +43,10 @@ You probably should save the dataframe to a file, e.g. like this:
 
 `save(crime3.df, file="crime3df.rdata")`
 
+### Part III: Create plots
+
+#### Scatter plots
+
 Then run a command such as this (defined in src/R/R/popcoplots.R):
 
 Relatively simple version:
@@ -51,6 +56,12 @@ Relatively simple version:
 With jitter, lines at points around which jitter occurs, fancier labels, etc:
 
 `xyMeanActivnPlot(CV~CB|bias, groups=rawsum, data=crime3.df[crime3.df$bias!="none",], xfoci=cb.foci, yfoci=cv.foci, auto.key=list(columns=2, space="bottom"), layout=c(3,1), main="Mean activations of \"capture\" vs. \"isolate\" beliefs\n for 3 analogy biases at time step 5000 in 50 simulation runs", xlab="capture\n", ylab="isolate", jitter.x=T, jitter.y=T, amount=.03, par.settings=simpleTheme(col=c("red", "blue1")), pch=c(4,1), cex=c(1.25, 1))`
+
+The three jitter parameters add random noise so that you can see
+overlapping circles (or whatever you're using as points).  NOTE: Noise
+is also added to the means, so if you add a lot of jitter, the means
+can move substantially.  `amount=0.03` is not a lot of jitter, but
+it's enough if you're using unfilled shapes.
 
 About "foci": When activations in a group of persons all converge to the
 same values, they don't go all the way to 1 and -1.  They get close--0.9
@@ -79,3 +90,15 @@ blue:
 `sb <- trellis.par.get("strip.background")`  
 `sb[["col"]][1] <- "lightblue"`  
 `trellis.par.set("strip.background", sb)`  
+
+
+#### Box/Hanoi plots
+
+See src/R/examples/crime3hanoi.R for an example of how to create box
+plots with underlying Hanoi plots.  A  [Hanoi
+plot](http://stackoverflow.com/questions/15846873/symmetrical-violin-plot-like-histogram/15893422#15893422),
+defined for Lattice Graphics in src/R/popco/R/panel.hanoi.R, is
+something I seem to have invented, which displays the actual
+distribution of data symmetrically along a vertical axis.  It's like
+a [violin plot](http://en.wikipedia.org/wiki/Violin_plot) for discrete
+data without smoothing curves.
