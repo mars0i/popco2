@@ -1,6 +1,8 @@
 # read2multirunRA.R
 
-# qsub submitanything.job Rscript --no-init-file --verbose read2multirunRA.R
+# usage, e.g.:
+# qsub submitanything.job Rscript --no-init-file --verbose \
+#  read2multirunRA.R arrayname <csvfile> <csvfile> ...
 
 args <- commandArgs(TRUE)
 
