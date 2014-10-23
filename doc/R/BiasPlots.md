@@ -1,4 +1,4 @@
-How to generate analogy-bias scatter plots
+How to generate analogy-bias plots
 ====
 
 Steps that I would commonly use to generate scatter plots representing
