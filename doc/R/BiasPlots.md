@@ -100,7 +100,7 @@ plot](http://stackoverflow.com/questions/15846873/symmetrical-violin-plot-like-h
 is something I seem to have invented, which displays the actual
 distribution of data symmetrically along a vertical axis.  It's a kind
 of histogram that's like a [violin
-plot](http://en.wikipedia.org/wiki/Violin_plot) for discrete data
-without smoothing curves. My  Lattice Graphics is in
-src/R/popco/R/panel.hanoi.R, and is based on [suggestions by Greg
+plot](http://en.wikipedia.org/wiki/Violin_plot), but without smoothed
+curves over discrete or binned data.  My Lattice Graphics implementation
+is in src/R/popco/R/panel.hanoi.R, and is based on [suggestions by Greg
 Snow](http://stackoverflow.com/a/15852613/1455243).
