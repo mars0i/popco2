@@ -83,9 +83,9 @@ it with `dev.off()`.  This will create a file named Rplots.pdf, which
 you can rename.
 
 Optionally, you can also set up other parameters of the plot before
-running `xyMeanActivnPlot`.  For example,
-this changes the color of the bars at the top of each plot to light
-blue:
+running `xyMeanActivnPlot`.  For example, I like to changes the color of
+the bars at the top of each plot to light blue so that the bars will be
+apparent against the beige background that I often use in presentations:
 
 `sb <- trellis.par.get("strip.background")`  
 `sb[["col"]][1] <- "lightblue"`  
