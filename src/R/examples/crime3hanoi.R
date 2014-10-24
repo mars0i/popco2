@@ -13,6 +13,7 @@ sb <- trellis.par.get("strip.background")
 sb[["col"]][1] <- "lightblue"
 trellis.par.set("strip.background", sb)
 
+# note you can also use fontfamily, fontsize as well as fontface:
 bwplot(isolate + capture ~ bias, data=nobias.df, 
 	ylim=c(-1,1), 
 	coef=0, 
@@ -23,7 +24,7 @@ bwplot(isolate + capture ~ bias, data=nobias.df,
 		panel.points(tapply(y, factor(x), FUN = mean), pch=20, cex=1, col="red");
 	},
 	par.settings=list(box.rectangle=list(col="blue"), box.umbrella=list(col="blue")),
-	main=list(label="Summary of mean activations for two belief sets\nin 50 runs, time step 5000", fontface="bold"), # you can also use fontfamily, fontsize here
+	main=list(label="Summary of mean activations for two belief sets\nin 50 runs, time step 5000", fontface="bold"),
 	xlab="biases\n\n(box: quartiles,  red: mean,  black: median,  gray: distribution)",
 	ylab="per-run mean activations")
 
