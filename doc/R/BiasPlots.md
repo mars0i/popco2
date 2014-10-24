@@ -98,8 +98,9 @@ See src/R/examples/crime3hanoi.R for an example of how to create box
 plots with underlying Hanoi plots.  A  [Hanoi
 plot](http://stackoverflow.com/questions/15846873/symmetrical-violin-plot-like-histogram/15893422#15893422)
 is something I seem to have invented, which displays the actual
-distribution of data symmetrically along a vertical axis.  It's like a
-[violin plot](http://en.wikipedia.org/wiki/Violin_plot) for discrete
-data without smoothing curves. My  Lattice Graphics is in
+distribution of data symmetrically along a vertical axis.  It's a kind
+of histogram that's like a [violin
+plot](http://en.wikipedia.org/wiki/Violin_plot) for discrete data
+without smoothing curves. My  Lattice Graphics is in
 src/R/popco/R/panel.hanoi.R, and is based on [suggestions by Greg
 Snow](http://stackoverflow.com/a/15852613/1455243).
