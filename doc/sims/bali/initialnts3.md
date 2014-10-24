@@ -13,9 +13,22 @@ initialnts3.md
 	Ordered [:ob-rice-fields] :ordered-rice-fields
 	Causal-if [:subak-prays :ordered-rice-fields]
 
+	Is-person [:ob-pers]
+	Is-bhutakala [:ob-bhut]
+	Not-in [:ob-bhut :ob-pers] :bhutakala-not-in-person
+	Disordered [:bhutakala-in-person] :disordered-person
+	Causal-if [:subak-prays :ordered-person]
+	In [:ob-bhut :ob-pers] :bhutakala-in-person
+	Ordered [:bhutakala-not-in-person] :ordered-person
+	Causal-prevent [:subak-prays :disordered-person]
+
 	Is-pest [:ob-rats]
 	In [:ob-rats :ob-rice-fields] :rats-in-rice
 	Disordered [:rats-in-rice]
+
+something here about the process of coordinating with neighbors or
+something?
+
 
 I'm using Ordered and Disordered differently above.  I applied Ordered
 to objects, and Disordered to a situation.  How about, instead, this:
