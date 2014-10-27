@@ -1,4 +1,4 @@
-notes/sims/bali
+doc/sims/bali
 =======
 
 Notes toward analogies for interaction with Lansing-Kremer-Janssen
