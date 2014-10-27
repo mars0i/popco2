@@ -74,9 +74,9 @@ rice holy, water holy by local offerings
 
 ### vs. alternative religious tradition:
 	
-vs. holy by Brahmins.
+vs. holy by Brahmans.
 
-it's about order and control in Brahmins etc.  In the leaders, the
+it's about order and control in Brahmans etc.  In the leaders, the
 elite.
 
 	Offerings help self-mastery of elites.
@@ -90,7 +90,7 @@ OK, so here I've got a contrast and parallel between elites and
 farmers.  Both should play a role in analogous claims about order and
 holiness.  And water can be a part of both.
 
-But the brahmins won't have a role for rice.  So that's one
+But the brahmans won't have a role for rice.  So that's one
 disanalogy.  So if you have a role for rice connected to your analogy,
 then it's going to work better in the rice-farming context.
 
@@ -98,7 +98,7 @@ Also, holy water among the elites (they have that, right?) isn't going
 to evoke the role of water in farming.  (Water is one of the links
 between rice and the spiritual world.)
 
-Nor do the Brahmin have a role for the interference of bhutakala in
+Nor do the Brahman have a role for the interference of bhutakala in
 social harmony, I think, since social harmony per se isn't part of the
 focus of the elites.  At least not as I read Lansing and Geertz.  Hmm
 although there is a lot of social order in the Court, and in relations

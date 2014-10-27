@@ -110,7 +110,7 @@ if they don't, disorder will come. it's always the default tendency
 
 vs.
 other stuff about disorder, but it's all in control of emotions  
-etc among Brahmins  
+etc among Brahmans  
 and nothing among farmers  
 
 -----------------------------------
@@ -161,7 +161,7 @@ necessary for making water holy.
 
 -----------------------------------
 
-In the Brahmin tradition, the order is otherworldly, and internal, and
+In the Brahman tradition, the order is otherworldly, and internal, and
 requires formal study and formal practice.  And guidance from those
 who've done it before.
 
@@ -269,13 +269,13 @@ subak management
 
 Part of the story that I would hypothesize, is that there was a
 (Hofstadterian) slippage at the start.  There was a substitution of
-subak or farmer for brahmin/priest, because they are all people--there
-is an analogy between brahmins and farmers (and therefore subaks),
+subak or farmer for brahman/priest, because they are all people--there
+is an analogy between brahmans and farmers (and therefore subaks),
 and there are analogies between their relations.
 
 So how about:
 
-	Priest is F1, F2, etc.: priest/brahmin-specific properties.
+	Priest is F1, F2, etc.: priest/brahman-specific properties.
 	Priest is G1, G2, etc.: properties that all humans have.
 	Priest bears relationships R1, R2 to X (world, perfect heaven, something)
 
@@ -300,7 +300,7 @@ And given their similarity, it may seem very weird to construct them
 as if they were different.
 
 Still, I wonder if I can do what I need just by focusing on the
-brahmin-specific and farmer-specific properties.  Maybe compress the
+brahman-specific and farmer-specific properties.  Maybe compress the
 F's into a single proposition or something.
 
 Part of the problem is that one of the draws is just that "we" are
@@ -372,7 +372,7 @@ that one set from the contrasting propositions gets chosen.
 Or maybe I should just have the contrasting propositions.
 
 Or I could have the two different versions of the mastery-and-harmony
-propositions--one for brahmins/kings/priests, and one for the folk.
+propositions--one for brahmans/kings/priests, and one for the folk.
 But make sure that each is linked to its related propositions.  (Do
 that with the predicates and individuals.  Maybe with semantic specs.)
 
@@ -398,12 +398,12 @@ Something like that--maybe.
 	Psychic/spiritual disorders can be ameliorated.
 	Pestilence can be ameliorated.
 	Water stress can be ameliorated.
-[But in the Brahmin system if it's disorder, it's done.]
+[But in the Brahman system if it's disorder, it's done.]
 
 	Psychic/spiritual disorders can be followed by improvement.
 	Pestilence can be followed by improvement.
 	Water stress can be followed by improvement.
-[But in the Brahmin system if it's disorder, it can't.]
+[But in the Brahman system if it's disorder, it can't.]
 
 With the water cult, there's a sequence: 
 
