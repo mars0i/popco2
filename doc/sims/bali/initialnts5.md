@@ -41,18 +41,28 @@ Maybe focus on wars etc.  Maybe on the coming of the Dutch.
 		* There is equality (within each sex, at least)
 		* There is democracy (within subaks)
 
+* Who is it that struggles
+
+	* Royal:
+		* The King.
+
+	* Peasant:
+		* The subak, the village, etc.
 
 * The endeavors to which it applies
 
 	* Royal:
 		* state needs management, leadership
+		* when the king's struggle against bhutakala fails,
+		the state dissolves into disorder.  It's all or
+		nothing.
 
 	* Peasant:
 		* rice grows
 		* rice needs water
 		* rice needs tending (kind of like management)
 		* water requires sharing (cf. equality, democracy)
-
+		* There is a continual struggle, rather than 
 
 * Outside dangers
 
@@ -64,3 +74,22 @@ Maybe focus on wars etc.  Maybe on the coming of the Dutch.
 		* Rice pests
 			* are animals, insects
 			* grow and spread naturally
+
+* What is the goal?
+
+	* Royal:
+		* When the king's struggle against bhutakala fails,
+		the state dissolves into disorder.  It's all or
+		nothing.
+
+	* Peasant:
+		* There is a continual struggle against disorder
+		  rather than one final struggle.
+
+* Inside dangers
+
+	* Royal:
+		* Internal aspects of bhutakala
+
+	* Peasant:
+		* Internal aspects of bhutakala
