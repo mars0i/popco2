@@ -14,6 +14,8 @@
 ;; then dash, then rest of propn id.
 ;; Predicate id's start with initial upper, then the rest lowercase.
 ;; Obj ids start with "ob-".
+;;    10/30/2014: I'm also going to experiment with dispensing with "ob-".
+;;    Then objects simply start lowercase.  Less obvious but less verbose.
 ;; Disobeying these conventions should not cause anything to break,
 ;; but adhering to them makes it easier to understand what's happening
 ;; in the program, especially when displaying id's only.
