@@ -52,7 +52,8 @@ It's probably not a measurable difference.
 
 ### On MersenneTwisterFast vs. MersenneTwister
 
-I emailed this question to the author of these classes, Sean Luke:
+I emailed this question to the author of these classes, Sean Luke
+([http://www.cs.gmu.edu/~sean](http://www.cs.gmu.edu/~sean)):
 
 > Is the reason that MersenneTwisterFast doesn't subclass java.util.Random
 > simply that it's not syncrhonized?  Is there any reason why I can't use
