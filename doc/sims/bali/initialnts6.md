@@ -10,40 +10,32 @@ initialnts6.md
 
 Objects:
 
-	Is-king [:king]
+	:Is-king [:king]
 
-	Is-peasant [:peasant1]
-	Is-peasant [:peasant2]
-	Is-peasant [:peasant3]
-	Is-peasant [:peasant4]
+	:Is-peasant [:peasant1]
+	:Is-peasant [:peasant2]
+	:Is-peasant [:peasant3]
+	:Is-peasant [:peasant4]
 
-	Is-subak [:subak1]
-	Is-subak [:subak2]
+	:Is-subak [:subak1]
+	:Is-subak [:subak2]
 
-	Is-bhutakala [:rat]
-	Is-bhutakala [:insect]
-	Is-bhutakala [:demon]
-	Is-bhutakala [:foes]
-	Is-bhutakala [:dutch]
-	Is-bhutakala [:jealousy]
-	Is-bhutakala [:greed]
+	:Is-bhutakala [:rat]
+	:Is-bhutakala [:insect]
+	:Is-bhutakala [:demon]
+	:Is-bhutakala [:foes]
+	:Is-bhutakala [:dutch]
+	:Is-bhutakala [:jealousy]
+	:Is-bhutakala [:greed]
 
-	Is-negara [:state]
-	Is-world [:field] ; i.e. the natural world
-
-	Is-ordered [:state]    :B-state-ordered
-	Is-disordered [:state] :B-state-disordered
-
-	Is-ordered [:subak1]   :B-subak1-ordered
-	Is-ordered [:subak2]   :B-subak2-ordered
-	Is-disordered [:subak1] :B-subak1-disordered
-	Is-disordered [:subak2] :B-subak2-disordered
-
-	Is-ordered [:field]
-	Is-disordered [:field]
+	:Is-negara [:state]
+	:Is-world [:field] ; i.e. the natural world
 
 	
 Brahmanic:
+
+	:Is-ordered [:state]    :B-state-ordered
+	:Is-disordered [:state] :B-state-disordered
 
 	:Subject-of [:king :ob-peasant1] :B-subject-peas1
 	:Subject-of [:king :ob-peasant2] :B-subject-peas2
@@ -78,6 +70,14 @@ Brahmanic:
 	
 
 Peasant:
+
+	:Is-ordered [:subak1]   :B-subak1-ordered
+	:Is-ordered [:subak2]   :B-subak2-ordered
+	:Is-disordered [:subak1] :B-subak1-disordered
+	:Is-disordered [:subak2] :B-subak2-disordered
+
+	:Is-ordered [:field]
+	:Is-disordered [:field]
 
 	:Member-of [:peasant1a :ob-subak1]
 	:Member-of [:peasant1b :ob-subak1]
