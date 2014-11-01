@@ -31,6 +31,9 @@ Maybe focus on wars etc.  Maybe on the coming of the Dutch.
 
 ##### What's different:
 
+(Not that what I want, ideally, is *both* analogy and disanalogy.  This
+part of my notes is supposed to highlight *disanalogies*.)
+
 * The people to whom it applies
 
 	* Royal:
