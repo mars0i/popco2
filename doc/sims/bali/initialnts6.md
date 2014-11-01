@@ -25,7 +25,7 @@ Objects:
 	:Is-bhutakala [:demon]
 	:Is-bhutakala [:foes]
 	:Is-bhutakala [:dutch]
-	:Is-bhutakala [:jealousy]
+	:Is-bhutakala [:envy]
 	:Is-bhutakala [:greed]
 
 	:Is-negara [:state]
@@ -88,17 +88,17 @@ Peasant:
 	:Decides-with [:peasant1a :peasant1a] :P-subak1-democracy
 	:Decides-with [:peasant2a :peasant2a] :P-subak2-democracy
 
-	:Struggles-against [:subak1 :demon]
-	:Struggles-against [:subak1 :rat]
-	:Struggles-against [:subak1 :insect]
-	:Struggles-against [:subak1 :jealousy]
-	:Struggles-against [:subak1 :greed]
+	:Struggles-against [:subak1 :demon]   :P-subak1-against-demon
+	:Struggles-against [:subak1 :rat]     :P-subak1-against-rat
+	:Struggles-against [:subak1 :insect]  :P-subak1-against-insect
+	:Struggles-against [:subak1 :envy]    :P-subak1-against-envy
+	:Struggles-against [:subak1 :greed]   :P-subak1-against-greed
 
-	:Struggles-against [:subak2 :demon]
-	:Struggles-against [:subak2 :rat]
-	:Struggles-against [:subak2 :insect]
-	:Struggles-against [:subak2 :jealousy]
-	:Struggles-against [:subak2 :greed]
+	:Struggles-against [:subak1 :demon]   :P-subak1-against-demon
+	:Struggles-against [:subak1 :rat]     :P-subak1-against-rat
+	:Struggles-against [:subak1 :insect]  :P-subak1-against-insect
+	:Struggles-against [:subak1 :envy]    :P-subak1-against-envy
+	:Struggles-against [:subak1 :greed]   :P-subak1-against-greed
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	;; NEED PROPNS HERE ON SUCCESS, FAILURE, ORDER, DISORDER

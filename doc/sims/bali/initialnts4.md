@@ -34,3 +34,6 @@ darkness that will destroy the world.
 There's more that's useful on p. 150: Lansing says that the actor in
 the case of the state is an individual, the king, whereas the actor is
 collective in the case of the subaks.
+
+Geertz's "Conclusion" chapter of Negara summarizes lots of background
+information on this conception of the monarch and the state.
