@@ -3,10 +3,6 @@ initialnts1.md
 Raw initial notes working toward Bali analogies in popco.  
 (formerly analogies.nt1 in papers/Bali on hard drive)  
 
-For anyone other than Marshall who's reading this: It's brainstorming.
-This is part of the process of gradually developing analogies that popco
-can use.  Don't expect it to exhibit much order, make sense, etc.
-
 Page and chapter references are to *Perfect Order: Recognizing
 Complexity in Bali* by J. Stephen Lansing, Princeton University Press
 2006 except where noted.  Reading the chapters mentioned below will

@@ -8,5 +8,5 @@ repository](https://github.com/mars0i/bali/tree/master/doc), which
 contains variants of the Lansing-Kremer-Janssen simulation and
 architectural notes about interaction between NetLogo and Popco.
 
-initialnts*.md contain brainstorming notes.  Don't expect them to make
+NOTE: initialnts*.md contain brainstorming notes.  Don't expect them to make
 sense or be correct.
