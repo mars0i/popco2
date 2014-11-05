@@ -152,6 +152,9 @@ alternative spirituality trends, or Indian Hinduism, etc.)
 cf. Eiseman vol. I, p. 53 there is a description of the state of mind
 necessary for making water holy.
 
+cf. Lansing's undergraduate overview, in the section on the power and
+significance of letters.
+
 [an aside: contrast this with recent *1984*-inspired teen movies like
 "Divergent" and "The Giver".]
 
