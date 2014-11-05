@@ -17,6 +17,13 @@ farming, water use, and local pest infestations; and those that concern
 events that befall negaras (states): Attacks by enemies, large-scale
 natural disasters, rodent plagues, etc.
 
+(And note that even though for the Balinese these must be the same, there had to be historical
+processes in which slippage occurred.  It's not that the domains that I'm calling spiritual and 
+worldly are *the* domains within which different shifts occurred, and between which analogies
+occurred.  These terms merely distinguish domains that might in some cases have been relevant
+to such processes.  So I am not actually treating Balinese culture in terms of Western
+distinctions between spiritual and the world.)
+
 So we have:
 
 <table>
