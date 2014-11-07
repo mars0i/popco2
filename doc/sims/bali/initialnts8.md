@@ -1,13 +1,13 @@
 initialnts8.md
 ====
 
-## Revision of initialnts8.md: Split into source and target analogues.
+## Revision of initialnts7.md: Split into source and target analogues.
 
 There are two analogue realms, each with two analogues in it, as in the
 Sanday and crime analogy systems.
 
 Let's say that there are "spiritual" analogues and the "worldly"
-analogues (although that distorts Balinese thinking, I suppose).
+analogues (although that distorts Balinese thinking).
 
 There are two kinds of spiritual analogues: Brahmanic/negara/state and
 peasant/subak.
@@ -44,6 +44,8 @@ So we have:
 	   [-0.9 :Subject-of :Member-of] ; probably not needed
 	   [-1.0 :Persists :Ceases]
 	   [-1.0 :Succeeds :Fails]])
+
+Maybe add that bhutakala aren't negaras, etc.
 
 ----------
 
