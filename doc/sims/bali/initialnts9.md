@@ -26,8 +26,14 @@ See previous initialnts*.md for comments deleted here.
 
 ----------------------
 
-There are two analogue realms, each with two analogues in it, as in the
-Sanday and crime analogy systems.
+There are two analogue domains, each with two analogues in it, as in the
+Sanday and crime analogy systems.  I call the higher-level domains
+"source/target domains", and sometimes call the lower-level, embedded
+domains "subdomains".
+
+One goal to be able to get popco to select one subdomain from a
+source/target domain by including only one of the two domains in the
+other source/target domain.
 
 Let's say that there are "spiritual" analogues and the "worldly"
 analogues (although that distorts Balinese thinking).
@@ -63,6 +69,38 @@ So we have:
 To represent the fact that subaks have members, I simply give the
 subak two members.
 
+-------------
+
+Question: What are the effects below of:
+
+1. Sharing the various predicates such as `Is-bhutakala` between the
+spiritual and worldly domains--i.e. between the source/target domains?
+
+	Answer: This will cause the analogy net to generate a link from
+	SEMANTIC to `Blah-blah=Blah-blah`.  So this is fine.
+
+2. Sharing entire propositions between the spiritual and worldly source/taget domains?
+
+	In the analogy net, I don't think anything special happens
+	except via the SEMANTIC link to the predicates.  And other than that, they will be
+	as if different propositions, since they're in different analogue domains.
+
+	But in the proposition net, maybe this will cause confusion?
+	Because what are, on the analogy net side, distinct
+	propositions, will be on the proposition net side, the same
+	proposition.  So maybe this would be a *bad thing*.  (??)
+
+2. Sharing the proposition `Is-bhutakala [:demon]` between the Brahmanic
+and subak domains?
+
+	Answer: Not sure.  It might cause confusion in analogy settling.
+	There's only one proposition there, but they'll be involved with
+	propositions in both subdomains of the spiritual source/target
+	domain.  An option is to arbitrarily distinguish the two kinds
+	of demon.  Maybe it's not arbitary?  A demon involved with kings
+	is a different kind than that gets involved with peasants??
+
+------------------
 
 ### Explicit semantic relationships:
 
@@ -75,30 +113,45 @@ subak two members.
 
 Maybe add that bhutakala aren't negaras, etc.
 
+
 ----------
 
 ### Objects:
 
-##### both spiritual and worldly:
+#### Brahmanic:
+
+##### both:
 
 	:Is-king [:king]
-
-	:Is-peasant [:peasant1]
-	:Is-peasant [:peasant2]
-
-	:Is-subak [:subak]
 	:Is-negara [:state]
 
 ##### spiritual:
 
-	:Is-bhutakala [:demon]
+	:Is-bhutakala [:demon]   ; shared with subak domain
+
+##### worldly:
+
+	:Is-bhutakala [:enemy]
+
+#### Subak:
+
+##### both:
+
+	:Is-peasant [:peasant1]
+	:Is-peasant [:peasant2]
+	:Is-subak [:subak]
+
+##### spiritual:
+
+	:Is-bhutakala [:demon]  ; shared with Brahmanic domain
 
 ##### worldly:
 
 	:Is-bhutakala [:rat]
-	:Is-bhutakala [:enemy]
 
 ----------
+
+### Relations
 	
 #### Brahmanic:
 
