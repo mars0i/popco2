@@ -90,7 +90,7 @@ spiritual and worldly domains--i.e. between the source/target domains?
 	propositions, will be on the proposition net side, the same
 	proposition.  So maybe this would be a *bad thing*.  (??)
 
-2. Sharing the proposition `Is-bhutakala [:demon]` between the Brahmanic
+3. Sharing the proposition `Is-bhutakala [:demon]` between the Brahmanic
 and subak domains?
 
 	Answer: Not sure.  It might cause confusion in analogy settling.
@@ -100,6 +100,13 @@ and subak domains?
 	of demon.  Maybe it's not arbitary?  A demon involved with kings
 	is a different kind than that gets involved with peasants??
 
+Note:
+
+"Both" below means that these propositions will appear in both the
+spiritual and worldly top-level domains.  These propositions will thus
+map themselves.  Is this what I want??  Should they be given different
+names at least?  (What did I do in the Sanday system?)
+
 ------------------
 
 ### Explicit semantic relationships:
@@ -107,6 +114,7 @@ and subak domains?
 	(def conceptual-relats 
 	  [[-1.0 :Causal-if :Preventative-if]
 	   [-1.0 :Is-ordered :Is-disordered]
+	   [-1.0 :Is-king :Is-peasant]
 	   [-0.9 :Subject-of :Member-of] ; probably not needed
 	   [-1.0 :Persists :Ceases]
 	   [-1.0 :Succeeds :Fails]])
@@ -116,9 +124,9 @@ Maybe add that bhutakala aren't negaras, etc.
 
 ----------
 
-### Objects:
+### Brahmanic:
 
-#### Brahmanic:
+#### Objects:
 
 ##### both:
 
@@ -128,32 +136,13 @@ Maybe add that bhutakala aren't negaras, etc.
 ##### spiritual:
 
 	:Is-bhutakala [:demon]   ; shared with subak domain
+	:Is-sacred [:water] :B-water-sacred
 
 ##### worldly:
 
 	:Is-bhutakala [:enemy]
 
-#### Subak:
-
-##### both:
-
-	:Is-peasant [:peasant1]
-	:Is-peasant [:peasant2]
-	:Is-subak [:subak]
-
-##### spiritual:
-
-	:Is-bhutakala [:demon]  ; shared with Brahmanic domain
-
-##### worldly:
-
-	:Is-bhutakala [:rat]
-
-----------
-
-### Relations
-	
-#### Brahmanic:
+#### Relations:
 
 ##### both:
 
@@ -167,6 +156,9 @@ Maybe add that bhutakala aren't negaras, etc.
 	:Causal-if [:B-state-disordered :B-state-ceases]
 
 ##### spiritual:
+
+	:Nourishes [:water :state] :B-water-nourishes-state  ;; "nourishes"??  "state"??
+	:Is-ordered [:B-water-nourishes-state]
 
 	;; STRUGGLE
 	:Struggles-against [:king :demon] :B-king-against-demon
@@ -190,7 +182,26 @@ Maybe add that bhutakala aren't negaras, etc.
 
 ----------
 
-#### Subak:
+### Subak:
+
+#### Objects:
+
+##### both:
+
+	:Is-peasant [:peasant1]
+	:Is-peasant [:peasant2]
+	:Is-subak [:subak]
+
+##### spiritual:
+
+	:Is-bhutakala [:demon]  ; shared with Brahmanic domain
+	:Is-sacred [:water] :S-water-sacred
+
+##### worldly:
+
+	:Is-bhutakala [:rat]
+
+#### Relations:
 
 ##### both:
 
@@ -200,13 +211,18 @@ Maybe add that bhutakala aren't negaras, etc.
 	:Is-ordered [:subak]   :P-subak-ordered
 	:Is-disordered [:subak] :P-subak-disordered
 
-	:Persists [:subak] :B-subak-persists
-	:Causal-if [:B-subak-ordered :B-subak-persists]
+	:Persists [:subak] :S-subak-persists
+	:Causal-if [:S-subak-ordered :S-subak-persists]
 
-	:Ceases [:subak] :B-subak-ceases  ; should always receive negative activation
-	:Causal-if [:B-subak-disordered :B-subak-persists] ; NOTE this differs from Brahmanic
+	:Ceases [:subak] :S-subak-ceases  ; should always receive negative activation
+	:Causal-if [:S-subak-disordered :S-subak-persists] ; NOTE this differs from Brahmanic
+
+	:Shares [:subak :water] :S-subak-shares-water  ; Should really have multiple subaks as args; this is a simplification.
 
 ##### spiritual:
+
+	:Nourishes [:water :peasant] :S-water-nourishes-peasant  ;; "nourishes"??
+	:Is-ordered [:S-water-nourishes-peasant]
 
 	;; STRUGGLE
 	:Struggles-together-against [:peasant1 :peasant2 :demon]   :P-peasants-against-demon
@@ -220,6 +236,9 @@ Maybe add that bhutakala aren't negaras, etc.
 	:Causal-if [:P-subak-fails-against-demon :P-subak-disordered] :P-subak-fail-demon->disorder
 
 ##### worldly:
+
+	:Nourishes [:water :rice] :S-water-nourishes-rice
+	:Is-ordered [:S-water-nourishes-rice]
 
 	;; STRUGGLE
 	:Struggles-together-against [:peasant1 :peasant2 :rat]     :P-peasants-against-rat
