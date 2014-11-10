@@ -12,6 +12,9 @@
 ;;; doc/sims/bali for documentation, including notes on motivation for 
 ;;; this representation in initialnts*.md.
 
+;; TODO: Define collections of propositions, summary collections, id collections, etc.
+;; TODO: Define collections of links to SALIENT.
+
 (defpred Causal-if)
 (defpred Ceases)
 (defpred Fails)
@@ -21,6 +24,7 @@
 (defpred Is-negara)
 (defpred Is-ordered)
 (defpred Is-peasant)
+(defpred Is-rice)
 (defpred Is-sacred)
 (defpred Is-subak)
 (defpred Member-of)
@@ -36,6 +40,7 @@
 (defobj state)
 (defobj demon)
 (defobj water)
+(defobj rice)
 (defobj enemy)
 (defobj peasant1)
 (defobj peasant2)
@@ -96,7 +101,7 @@
 ;;;;; SPIRITUAL
 
 (defpropn BS-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"??
-(defpropn BS-water-state-ordered Is-ordered [B-water-nourishes-state])
+(defpropn BS-water-state-ordered Is-ordered [BS-water-nourishes-state])
 
 ;; STRUGGLE
 (defpropn BS-king-against-demon Struggles [king demon])
@@ -104,7 +109,7 @@
 (defpropn BS-king-succeeds-against-demon Succeeds [BS-king-against-demon])
 (defpropn BS-state-succeed-demon->order Causal-if [BS-king-succeeds-against-demon B-state-ordered])
 
-(defpropn BS-fails-against-demon Fails [BS-king-against-demon])
+(defpropn BS-king-fails-against-demon Fails [BS-king-against-demon])
 (defpropn BS-king-fail-demon->disorder Causal-if [BS-king-fails-against-demon B-state-disordered])
 
 ;;;;; WORLDLY
@@ -128,6 +133,7 @@
 (defpropn P-peasant1 Is-peasant [peasant1])
 (defpropn P-peasant2 Is-peasant [peasant2])
 (defpropn P-subak Is-subak [subak])
+(defpropn PW-rice Is-rice [rice])
 
 ;;;;; SPIRITUAL
 
@@ -157,8 +163,10 @@
 
 ;;;;; SPIRITUAL
 
-(defpropn P-water-nourishes-peasant Nourishes [water peasant])  ;; "nourishes"??
-(defpropn P-water-peasant-ordered Is-ordered [P-water-nourishes-peasant])
+(defpropn P-water-nourishes-peasant1 Nourishes [water peasant1])  ;; "nourishes"??
+(defpropn P-water-nourishes-peasant2 Nourishes [water peasant2])
+(defpropn P-water-peasant1-ordered Is-ordered [P-water-nourishes-peasant1])
+(defpropn P-water-peasant2-ordered Is-ordered [P-water-nourishes-peasant2])
 
 ;; STRUGGLE
 (defpropn PS-peasants-against-demon Struggles-together [peasant1 peasant2 demon])
@@ -166,7 +174,7 @@
 (defpropn PS-peasants->subak-against-demon Causal-if [PS-peasants-against-demon PS-subak-against-demon])
 
 (defpropn PS-subak-succeeds-against-demon Succeeds [PS-subak-against-demon])
-(defpropn PS-subak-succeed-demon->order Causal-if [PS-succeeds-against-demon P-subak-ordered])
+(defpropn PS-subak-succeed-demon->order Causal-if [PS-subak-succeeds-against-demon P-subak-ordered])
 
 (defpropn PS-subak-fails-against-demon Fails [PS-subak-against-demon])
 (defpropn PS-subak-fail-demon->disorder Causal-if [PS-subak-fails-against-demon P-subak-disordered])
