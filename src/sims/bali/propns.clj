@@ -52,136 +52,137 @@
 
 
 ;; PROPOSITION NAMING CONVENTIONS:
-;;    Brahmanic propns start with "B".
-;;    Peasant/subak propns start with "P".
-;;    Spiritual propns start with "BS" or "PS".
-;;    Worldly propns start with "BW" or "PW".
-;;    If a propn is shared between Brahmanic and peasant domains,
-;;     it starts with "XS" or "XW".
+;;
+;; Brahmanic propns start with "B".
+;; Peasant/subak propns start with "P".
+;; Spiritual propns start with "BS" or "PS".
+;; Worldly propns start with "BW" or "PW".
+;; Propns shared between Brahmanic and peasant domains start with "XS" or "XW".
 
 
-;;; Brahmanic
 
-;;;; Objects
+;;; SHARED BETWEEN BRAHMANIC AND PEASANT DOMAINS:
 
-Is-king [king] B-king
-Is-negara [state] B-state
+(defpropn XS-demon-bhutakala Is-bhutakala [demon])
 
-;;;;; spiritual
+;;; BRAHMANIC
 
-Is-bhutakala [demon] XS-demon-bhutakala  ; shared with subak domain
-Is-sacred [water] BS-water-sacred
+;;;; OBJECTS
 
-;;;;; worldly
+(defpropn B-king Is-king [king])
+(defpropn B-state Is-negara [state])
 
-Is-bhutakala [enemy] XW-enemy-bhutakala
+;;;;; SPIRITUAL
 
-;;;; Relations
+(defpropn BS-water-sacred Is-sacred [water])
 
-;;;;; both
+;;;;; WORLDLY
 
-Is-ordered [state] B-state-ordered
-Is-disordered [state] B-state-disordered
-
-Persists [state] B-state-persists
-Causal-if [B-state-ordered B-state-persists] B-state-ordered->persists
-
-Ceases [state] B-state-ceases
-Causal-if [B-state-disordered B-state-ceases] B-state-disordered->ceases
-
-;;;;; spiritual
-
-Nourishes [water state] BS-water-nourishes-state  ;; "nourishes"??  "state"??
-Is-ordered [B-water-nourishes-state] BS-water-state-ordered
-
-;; STRUGGLE
-Struggles [king demon] BS-king-against-demon
-
-Succeeds [BS-king-against-demon] BS-king-succeeds-against-demon
-Causal-if [BS-king-succeeds-against-demon B-state-ordered] BS-state-succeed-demon->order
-
-Fails [BS-king-against-demon] BS-fails-against-demon
-Causal-if [BS-king-fails-against-demon B-state-disordered] BS-king-fail-demon->disorder
-
-;;;;; worldly
-
-;; STRUGGLE
-Struggles [king enemy] BW-king-against-enemy
-
-Succeeds [BW-king-against-enemy] BW-king-succeeds-against-enemy
-Causal-if [BW-king-succeeds-against-enemy B-state-ordered] BW-succeed-enemy-order
-
-Fails [BW-king-against-enemy] BW-king-fails-against-enemy
-Causal-if [BW-king-fails-against-enemy B-state-disordered] BW-state-fail-enemy->disorder
-
-
-;;; Subak
-
-;;;; Objects
-
-;;;;; both
-
-Is-peasant [peasant1] P-peasant1
-Is-peasant [peasant2] P-peasant2
-Is-subak [subak] P-subak
-
-;;;;; spiritual
-
-Is-bhutakala [demon]  ; shared with Brahmanic domain
-Is-sacred [water] S-water-sacred
-
-;;;;; worldly
-
-Is-bhutakala [rat]
+(defpropn XW-enemy-bhutakala Is-bhutakala [enemy])
 
 ;;;; Relations
 
-;;;;; both
+;;;;; BOTH
 
-Member-of [peasant1 subak]
-Member-of [peasant2 subak]
+(defpropn B-state-ordered Is-ordered [state])
+(defpropn B-state-disordered Is-disordered [state])
 
-Is-ordered [subak]   P-subak-ordered
-Is-disordered [subak] P-subak-disordered
+(defpropn B-state-persists Persists [state])
+(defpropn B-state-ordered->persists Causal-if [B-state-ordered B-state-persists])
 
-Persists [subak] S-subak-persists
-Causal-if [S-subak-ordered S-subak-persists]
+(defpropn B-state-ceases Ceases [state])
+(defpropn B-state-disordered->ceases Causal-if [B-state-disordered B-state-ceases])
 
-Ceases [subak] S-subak-ceases  ; should always receive negative activation
-Causal-if [S-subak-disordered S-subak-persists] ; NOTE this differs from Brahmanic
+;;;;; SPIRITUAL
 
-Shares [subak water] S-subak-shares-water  ; Should really have multiple subaks as args; this is a simplification.
-
-;;;;; spiritual
-
-Nourishes [water peasant] S-water-nourishes-peasant  ;; "nourishes"??
-Is-ordered [S-water-nourishes-peasant]
+(defpropn BS-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"??
+(defpropn BS-water-state-ordered Is-ordered [B-water-nourishes-state])
 
 ;; STRUGGLE
-Struggles-together [peasant1 peasant2 demon]   P-peasants-against-demon
-Struggles [subak demon]   P-subak-against-demon
-Causal-if [P-peasants-against-demon P-subak-against-demon] P-peasants->subak-against-demon
+(defpropn BS-king-against-demon Struggles [king demon])
 
-Succeeds [P-subak-against-demon] P-subak-succeeds-against-demon
-Causal-if [P-succeeds-against-demon P-subak-ordered] P-subak-succeed-demon->order
+(defpropn BS-king-succeeds-against-demon Succeeds [BS-king-against-demon])
+(defpropn BS-state-succeed-demon->order Causal-if [BS-king-succeeds-against-demon B-state-ordered])
 
-Fails [P-subak-against-demon] P-subak-fails-against-demon
-Causal-if [P-subak-fails-against-demon P-subak-disordered] P-subak-fail-demon->disorder
+(defpropn BS-fails-against-demon Fails [BS-king-against-demon])
+(defpropn BS-king-fail-demon->disorder Causal-if [BS-king-fails-against-demon B-state-disordered])
 
-;;;;; worldly
-
-Nourishes [water rice] S-water-nourishes-rice
-Is-ordered [S-water-nourishes-rice]
+;;;;; WORLDLY
 
 ;; STRUGGLE
-Struggles-together [peasant1 peasant2 rat]     P-peasants-against-rat
-Struggles [subak rat]     P-subak-against-rat
-Causal-if [P-peasants-against-rat   P-subak-against-rat]   P-peasants->subak-against-rat
+(defpropn BW-king-against-enemy Struggles [king enemy])
 
-Succeeds [P-subak-against-rat]   P-subak-succeeds-against-rat
-Causal-if [P-subak-succeeds-against-rat P-subak-disordered] P-subak-succeed-rat->disorder
+(defpropn BW-king-succeeds-against-enemy Succeeds [BW-king-against-enemy])
+(defpropn BW-succeed-enemy-order Causal-if [BW-king-succeeds-against-enemy B-state-ordered])
 
-Fails [P-subak-against-rat]   P-subak-fails-against-rat
-Causal-if [P-subak-fails-against-rat P-subak-disordered] P-subak-fail-rat->disorder
+(defpropn BW-king-fails-against-enemy Fails [BW-king-against-enemy])
+(defpropn BW-state-fail-enemy->disorder Causal-if [BW-king-fails-against-enemy B-state-disordered])
 
 
+;;; SUBAK
+
+;;;; OBJECTS
+
+;;;;; BOTH
+
+(defpropn P-peasant1 Is-peasant [peasant1])
+(defpropn P-peasant2 Is-peasant [peasant2])
+(defpropn P-subak Is-subak [subak])
+
+;;;;; SPIRITUAL
+
+(defpropn PS-water-sacred Is-sacred [water])
+
+;;;;; WORLDLY
+
+(defpropn PW-rat-bhutakala Is-bhutakala [rat])
+
+;;;; RELATIONS
+
+;;;;; BOTH
+
+(defpropn P-peasant1-in-subak Member-of [peasant1 subak])
+(defpropn P-peasant2-in-subak Member-of [peasant2 subak])
+
+(defpropn P-subak-ordered Is-ordered [subak])
+(defpropn P-subak-disordered Is-disordered [subak])
+
+(defpropn P-subak-persists Persists [subak])
+(defpropn P-subak-ordered->persists Causal-if [P-subak-ordered P-subak-persists])
+
+(defpropn P-subak-ceases Ceases [subak])  ; should always receive negative activation
+(defpropn P-subak-disordered->persists Causal-if [P-subak-disordered P-subak-persists]) ; NOTE this differs from Brahmanic
+
+(defpropn P-subak-shares-water Shares [subak water])  ; Should really have multiple subaks as args; this is a simplification.
+
+;;;;; SPIRITUAL
+
+(defpropn P-water-nourishes-peasant Nourishes [water peasant])  ;; "nourishes"??
+(defpropn P-water-peasant-ordered Is-ordered [P-water-nourishes-peasant])
+
+;; STRUGGLE
+(defpropn PS-peasants-against-demon Struggles-together [peasant1 peasant2 demon])
+(defpropn PS-subak-against-demon Struggles [subak demon])
+(defpropn PS-peasants->subak-against-demon Causal-if [PS-peasants-against-demon PS-subak-against-demon])
+
+(defpropn PS-subak-succeeds-against-demon Succeeds [PS-subak-against-demon])
+(defpropn PS-subak-succeed-demon->order Causal-if [PS-succeeds-against-demon P-subak-ordered])
+
+(defpropn PS-subak-fails-against-demon Fails [PS-subak-against-demon])
+(defpropn PS-subak-fail-demon->disorder Causal-if [PS-subak-fails-against-demon P-subak-disordered])
+
+;;;;; WORLDLY
+
+(defpropn PW-water-nourishes-rice Nourishes [water rice])
+(defpropn PW-water-rice-ordered Is-ordered [PW-water-nourishes-rice])
+
+;; STRUGGLE
+(defpropn PW-peasants-against-rat Struggles-together [peasant1 peasant2 rat])
+(defpropn PW-subak-against-rat Struggles [subak rat])
+(defpropn PW-peasants->subak-against-rat Causal-if [PW-peasants-against-rat PW-subak-against-rat])
+
+(defpropn PW-subak-succeeds-against-rat Succeeds [PW-subak-against-rat])
+(defpropn PW-subak-succeed-rat->disorder Causal-if [PW-subak-succeeds-against-rat P-subak-disordered])
+
+(defpropn PW-subak-fails-against-rat Fails [PW-subak-against-rat])
+(defpropn PW-subak-fail-rat->disorder Causal-if [PW-subak-fails-against-rat P-subak-disordered])
