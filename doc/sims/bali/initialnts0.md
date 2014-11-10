@@ -1,6 +1,6 @@
 Notes I sent to Matt Windsor 5/19/2014
 ====
-(notesOnTheAnalogyForMattWindsor05192014.md)
+(originally notesOnTheAnalogyForMattWindsor05192014.md)
 
 I think that the confluence of historical, cultural, economic, and
 personal forces at play in Stephen Lansing's account in his book
