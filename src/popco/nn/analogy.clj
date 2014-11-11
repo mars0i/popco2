@@ -149,7 +149,9 @@
     (and (= (count args1) (count args2))
          (every? identity (map args-match? args1 args2)))))
 
-;; similar to isomorphic-args in popco 1
+;; TIP: Run 'lein clean' if you get an error like this one, which can occur because you have earlier compiled class files lying around:
+;;    CompilerException java.lang.IllegalArgumentException: No method in multimethod 'args-match?' for dispatch value: [popco.core.lot.Obj popco.core.lot.Obj], compiling:(propns.clj:189:11) 
+;; Similar to isomorphic-args in popco 1:
 (defmulti  args-match? (fn [x y] [(class x) (class y)]) )
 (defmethod args-match? [Obj Propn] [_ _] false)
 (defmethod args-match? [Propn Obj] [_ _] false)
