@@ -2,14 +2,14 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
-
-;; SIMPLE TEST OF WHETHER ANALOGIES WORKING AS INTENDED
-;; No communication.  Everyone has all propositions, but differ in what they perceive.
-;; Should duplicate results of crime*basicCheck*.lisp in popco 1.  cf. crime2BasicCheck.pdf (was in dir software/cohere/data).
 (ns sims.crime3.hermits
   (:require [popco.core.person :as pers]
             [popco.core.population :as pp]
             [sims.crime3.propns :as p]))
+
+;; SIMPLE TEST OF WHETHER ANALOGIES WORKING AS INTENDED
+;; No communication.  Everyone has all propositions, but differ in what they perceive.
+;; Should duplicate results of crime*basicCheck*.lisp in popco 1.  cf. crime2BasicCheck.pdf (was in dir software/cohere/data).
 
 
       ;; args:                 ID      UNMASKED          PROPN-NET                 ANALOGY-NET  UTTERABLE-IDS        GROUPS            TALK-TO-GROUPS        MAX-TALK-TO
