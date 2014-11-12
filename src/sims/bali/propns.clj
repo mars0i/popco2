@@ -36,7 +36,7 @@
 (defpred Member-of)
 (defpred Nourishes)
 (defpred Persists)
-(defpred Preventative-if)  ; not currently used
+;(defpred Preventative-if)  ; not currently used
 (defpred Shares)
 (defpred Struggles)
 (defpred Struggles-together)
@@ -54,15 +54,16 @@
 (defobj rat)
 
 (def conceptual-relats 
-  [[-1.0 :Causal-if :Preventative-if]
-   [-1.0 :Is-ordered :Is-disordered]
+  [[-1.0 :Is-ordered :Is-disordered]
+   ;[-1.0 :Causal-if :Preventative-if]  ; at present, not using Preventative-if, so this causes a NPE since there are no such propns
    [-1.0 :Is-king :Is-peasant]
-   [-0.9 :Subject-of :Member-of] ; probably not needed
    [-1.0 :Persists :Ceases]
    [-1.0 :Succeeds :Fails]])
 
-; example:
+; examples:
 ; (def semantic-iffs [[-0.1 :CB-vpp :V-ipa] [-0.1 :CV-rpa :B-abp]])
+; (def semantic-iffs [[-0.1 :B-king :P-subak]])
+(def semantic-iffs [])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Both Brahmanic and subak
@@ -152,27 +153,53 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Convenient collections
 
+
+;; collections of propositions:
+
 (def spiritual-propns (seq (set (concat spiritual-brahmanic-propns spiritual-peasant-propns)))) ; seq + set to remove dupe shared propns
 (def worldly-propns (seq (set (concat worldly-brahmanic-propns worldly-peasant-propns))))
 (def all-propns (seq (set (concat spiritual-propns worldly-propns))))
 
 
-(def worldly-brahmanic-propn-ids (map :id worldly-brahmanic-propns)) 
-(def spiritual-brahmanic-propn-ids (map :id spiritual-brahmanic-propns)) 
-(def worldly-peasant-propn-ids (map :id worldly-peasant-propns))
-(def spiritual-peasant-propn-ids (map :id spiritual-peasant-propns))
+;; collections of proposition ids:
 
+(def spiritual-brahmanic-propn-ids (map :id spiritual-brahmanic-propns)) 
+(def spiritual-peasant-propn-ids (map :id spiritual-peasant-propns))
 (def spiritual-propn-ids (seq (set (concat spiritual-brahmanic-propn-ids spiritual-peasant-propn-ids)))) ; seq + set to remove dupe shared propn-ids
+
+(def worldly-brahmanic-propn-ids (map :id worldly-brahmanic-propns)) 
+(def worldly-peasant-propn-ids (map :id worldly-peasant-propns))
 (def worldly-propn-ids (seq (set (concat worldly-brahmanic-propn-ids worldly-peasant-propn-ids))))
+
 (def all-propn-ids (seq (set (concat spiritual-propn-ids worldly-propn-ids))))
 
 
-(def worldly-brahmanic-perception-ifs (map #(vector 1.0 % :SALIENT) worldly-brahmanic-propn-ids))
-(def spiritual-brahmanic-perception-ifs (map #(vector 1.0 % :SALIENT) spiritual-brahmanic-propn-ids))
-(def worldly-peasant-perception-ifs (map #(vector 1.0 % :SALIENT) worldly-peasant-propn-ids))
-(def spiritual-peasant-perception-ifs (map #(vector 1.0 % :SALIENT) spiritual-peasant-propn-ids))
+;; collections of specifications that certain propns should be "perceived", i.e. have a fully positive link to SALIENT:
 
+(def spiritual-brahmanic-perception-ifs (map #(vector 1.0 % :SALIENT) spiritual-brahmanic-propn-ids))
+(def spiritual-peasant-perception-ifs (map #(vector 1.0 % :SALIENT) spiritual-peasant-propn-ids))
 (def spiritual-perception-ifs (seq (set (concat spiritual-brahmanic-perception-ifs spiritual-peasant-perception-ifs))))
+
+(def worldly-brahmanic-perception-ifs (map #(vector 1.0 % :SALIENT) worldly-brahmanic-propn-ids))
+(def worldly-peasant-perception-ifs (map #(vector 1.0 % :SALIENT) worldly-peasant-propn-ids))
 (def worldly-perception-ifs (seq (set (concat worldly-brahmanic-perception-ifs worldly-peasant-perception-ifs))))
 
-;; TODO make standard propn and analogy nets (cf. crime3/propns.clj)
+
+;; Proposition nets (templates for individual nets--i.e. clone from these rather than using them directly):
+;; second arg is bidirectional links; third is unidirectional
+;; more specific versions can be made in specific model files
+
+(def no-perc-pnet (pn/make-propn-net all-propns semantic-iffs nil)) ; nothing perceived
+
+(def spiritual-perc-pnet (pn/make-propn-net all-propns semantic-iffs spiritual-perception-ifs))                     ; spiritual propns perceived
+(def spiritual-brahmanic-perc-pnet (pn/make-propn-net all-propns semantic-iffs spiritual-brahmanic-perception-ifs)) ; spiritual brahmanic propns perceived
+(def spiritual-peasant-perc-pnet (pn/make-propn-net all-propns semantic-iffs spiritual-peasant-perception-ifs))     ; spiritual peasant propns perceived
+
+(def worldly-perc-pnet (pn/make-propn-net all-propns semantic-iffs worldly-perception-ifs))                     ; worldly propns perceived
+(def worldly-brahmanic-perc-pnet (pn/make-propn-net all-propns semantic-iffs worldly-brahmanic-perception-ifs)) ; worldly brahmanic propns perceived
+(def worldly-peasant-perc-pnet (pn/make-propn-net all-propns semantic-iffs worldly-peasant-perception-ifs))     ; worldly peasant propns perceived
+
+
+;; Standard analogy net--can be shared by everyone:
+
+(def anet (an/make-analogy-net spiritual-propns worldly-propns conceptual-relats))
