@@ -7,12 +7,12 @@
   (:require [popco.nn.propn :as pn]
             [popco.nn.analogy :as an]))
 
-;;; Propositions for bali analogies based on Stephen Lansing's work,
-;;; especially _Perfect Order_, along with works by other authors.  See
+;;; PROPOSITIONS FOR BALI ANALOGIES BASED ON STEPHEN LANSING's publications,
+;;; especially _Perfect Order_, along with works by other authors such as
+;;; Clifford Geertz and Hildred Geertz.  See
 ;;; doc/sims/bali for documentation, including notes on motivation for 
 ;;; this representation in initialnts*.md.
 
-;; TODO make standard propn and analogy nets (cf. crime3/propns.clj)
 
 ;; PROPOSITION NAMING CONVENTIONS:
 ;; Brahmanic propns start with "B".
