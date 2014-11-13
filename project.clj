@@ -21,7 +21,7 @@
                                   [incanter/incanter-core "1.5.5"]
                                   [criterium/criterium "0.4.3"]]
                    }}
-  :jvm-opts ["-Xmx1g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
+  :jvm-opts ["-Xmx2g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
   :main popco.core.popco
   :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
 )
