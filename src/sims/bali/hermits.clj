@@ -17,5 +17,5 @@
       wilbur     (pers/make-person :wilbur     p/all-propns        p/worldly-brahmanic-perc-pnet   p/anet       []                   []                []                    0)
       sasparilla (pers/make-person :sasparilla p/all-propns        p/spiritual-peasant-perc-pnet   p/anet       []                   []                []                    0)
       winifred   (pers/make-person :winifred   p/all-propns        p/worldly-peasant-perc-pnet     p/anet       []                   []                []                    0)]
-  (def popn (pp/make-population [sabrina wilbur sasparilla winifred])))
+  (def popn (pp/make-population [sabrina sasparilla wilbur winifred])))
 
