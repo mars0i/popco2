@@ -39,5 +39,7 @@
 
 (def write-propn-activns-csv         popco.io.propncsv/write-propn-activns-csv)
 (def cook-name-for-R                 popco.io.propncsv/cook-name-for-R)
+(def write-propn-activns-csv-for-R  popco.io.propncsv/write-propn-activns-csv-for-R)
+
 
 (def spit-graph                      popco.io.gexf-dynamic/spit-graph)
