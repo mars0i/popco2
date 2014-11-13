@@ -11,11 +11,11 @@
 ;; No communication.  Everyone has all propositions, but differ in what they perceive.
 
 
-;; args:                        ID        UNMASKED            PROPN-NET                       ANALOGY-NET  UTTERABLE-IDS        GROUPS            TALK-TO-GROUPS        MAX-TALK-TO
-;;                                      (propns entertained) (propns perceived)                           (propns I can say)   (Groups I'm in)   (Groups I talk to)    (Max number of people I talk to in one tick)
-(let [sabrina  (pers/make-person :sabrina p/all-propns        p/spiritual-brahmanic-perc-pnet p/anet       []                   []                []                    0)
-      wilbur   (pers/make-person :wilbur  p/all-propns        p/worldly-brahmanic-perc-pnet   p/anet       []                   []                []                    0)
-      spiro    (pers/make-person :spiro   p/all-propns        p/spiritual-peasant-perc-pnet   p/anet       []                   []                []                    0)
-      winifred (pers/make-person :winona  p/all-propns        p/worldly-peasant-perc-pnet     p/anet       []                   []                []                    0)]
-  (def popn (pp/make-population [sabrina wilbur spiro winifred])))
+;; args:                          ID           UNMASKED            PROPN-NET                       ANALOGY-NET  UTTERABLE-IDS        GROUPS            TALK-TO-GROUPS        MAX-TALK-TO
+;;                                           (propns entertained) (propns perceived)                           (propns I can say)   (Groups I'm in)   (Groups I talk to)    (Max number of people I talk to in one tick)
+(let [sabrina    (pers/make-person :sabrina    p/all-propns        p/spiritual-brahmanic-perc-pnet p/anet       []                   []                []                    0)
+      wilbur     (pers/make-person :wilbur     p/all-propns        p/worldly-brahmanic-perc-pnet   p/anet       []                   []                []                    0)
+      sasparilla (pers/make-person :sasparilla p/all-propns        p/spiritual-peasant-perc-pnet   p/anet       []                   []                []                    0)
+      winifred   (pers/make-person :winifred   p/all-propns        p/worldly-peasant-perc-pnet     p/anet       []                   []                []                    0)]
+  (def popn (pp/make-population [sabrina wilbur sasparilla winifred])))
 
