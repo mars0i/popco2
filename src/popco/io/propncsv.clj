@@ -14,7 +14,7 @@
 
 ;; ARE THESE FUNCTIONS EFFICIENT ENOUGH?
 
-(declare column-names person-propn-activns propn-activns-row spit-csv write-propn-activns-csv cook-name-for-R)
+(declare column-names person-propn-activns propn-activns-row spit-csv write-propn-activns-csv write-propn-activns-csv cook-name-for-R)
 
 (defn write-propn-activns-csv
   "Collects reads activns from a sequence of opulations into a large seq of 
@@ -40,6 +40,13 @@
 ; or do this to replace the spit-csv line to call write-csv directly:
 ;   (with-open [w (apply io/writer (str cn/+data-dir+ "/activns" cn/session-id ".csv") options)]
 ;     (csv/write-csv w rows))
+
+(defn write-propn-activns-csv-for-R
+  "Abbreviation for '(write-propn-activns popns :cooker cook-name-for-R ...)'.
+  Writes a csv file containing proposition activations, with labels formatted
+  for R--i.e. by replacing characters that R would misinterpret."
+  [popns & options]
+  (apply write-propn-activns-csv popns :cooker cook-name-for-R options))
 
 (defn propn-activns-row
   "Construct a sequence of activations representing all propn activns of all 
