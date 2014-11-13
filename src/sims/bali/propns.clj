@@ -145,7 +145,7 @@
    (defpropn PW-subak-fail-rat->disorder Causal-if [PW-subak-fails-against-rat PW-subak-disordered])])
 
 (def spiritual-peasant-propns
-  [(defpropn PW-demon-bhutakala Is-bhutakala [demon])
+  [(defpropn PS-demon-bhutakala Is-bhutakala [demon])
    (defpropn PS-peasant1 Is-peasant [peasant1])
    (defpropn PS-peasant2 Is-peasant [peasant2])
    (defpropn PS-subak Is-subak [subak])
