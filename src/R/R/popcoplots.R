@@ -122,7 +122,7 @@ stripRightZeros <- function(brks, cnts) {
 # using 4-D array mra of popco data
 # at tick
 # this version assumes 4 domains
-activnsAtTickBarchart <- function(mra, tick, run=1, main=paste("tick", tick), xlab="activation") {
+activnsAtTickBarchart <- function(mra, tick, run=1, main=paste("tick", tick), xlab="activation", cex=.5) {
   require(lattice)
 
   divadj <- .50 # pushes inter-domain lines up a bit
@@ -138,7 +138,7 @@ activnsAtTickBarchart <- function(mra, tick, run=1, main=paste("tick", tick), xl
 
   barchart(t(mra[,,tick,run]), groups=person, 
            xlim=c(-1,1), 
-           scales=list(cex=.5, y = list(alternating = 3)), 
+           scales=list(cex=cex, y = list(alternating = 3)), 
 	   xlab=xlab,
 	   layout=c(npersons,1),
 	   main=main,
