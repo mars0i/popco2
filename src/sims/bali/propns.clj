@@ -97,8 +97,8 @@
    ;(defpropn SB-king Is-king [king])
    ;(defpropn SB-state Is-negara [state])
    ;(defpropn SB-water-sacred Is-sacred [water])
-   (defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"??
-   (defpropn SB-water-state-ordered Is-ordered [SB-water-nourishes-state])
+   ;(defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
+   ;(defpropn SB-water-state-ordered Is-ordered [SB-water-nourishes-state])
    (defpropn SB-king-against-demon Struggles [king demon])
    (defpropn SB-king-succeeds-against-demon Succeeds [SB-king-against-demon])
    (defpropn SB-state-ordered Is-ordered [state])
@@ -128,13 +128,13 @@
    (defpropn WP-subak-ceases Ceases [subak])  ; should always receive negative activation
    (defpropn WP-subak-disordered->persists Causal-if [WP-subak-disordered WP-subak-persists]) ; NOTE this differs from Brahmanic
    (defpropn WP-subak-shares-water Shares [subak water]) ; Should really have multiple subaks as args; this is a simplification.
-   (defpropn WP-water-nourishes-peasant1 Nourishes [water peasant1])  ;; "nourishes"??
-   (defpropn WP-water-nourishes-peasant2 Nourishes [water peasant2])
+   (defpropn WP-water-nourishes-peasant1 Nourishes [water peasant1])  ;; "nourishes"?? ;
+   (defpropn WP-water-nourishes-peasant2 Nourishes [water peasant2]) ;
    (defpropn WP-water-peasant1-ordered Is-ordered [WP-water-nourishes-peasant1])
    (defpropn WP-water-peasant2-ordered Is-ordered [WP-water-nourishes-peasant2])
    ;(defpropn WP-rice Is-rice [rice])
    ;(defpropn WP-rat-bhutakala Is-bhutakala [rat])
-   (defpropn WP-water-nourishes-rice Nourishes [water rice])
+   (defpropn WP-water-nourishes-rice Nourishes [water rice]) ;
    (defpropn WP-water-rice-ordered Is-ordered [WP-water-nourishes-rice])
    (defpropn WP-peasants-against-rat Struggles-together [peasant1 peasant2 rat])
    (defpropn WP-subak-against-rat Struggles [subak rat])
