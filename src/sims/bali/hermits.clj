@@ -11,11 +11,20 @@
 ;; No communication.  Everyone has all propositions, but differ in what they perceive.
 
 
-;; args:                          ID           UNMASKED            PROPN-NET                       ANALOGY-NET  UTTERABLE-IDS        GROUPS            TALK-TO-GROUPS        MAX-TALK-TO
-;;                                           (propns entertained) (propns perceived)                           (propns I can say)   (Groups I'm in)   (Groups I talk to)    (Max number of people I talk to in one tick)
-(let [sabrina    (pers/make-person :sabrina    p/all-propns        p/spiritual-brahmanic-perc-pnet p/anet       []                   []                []                    0)
-      wilbur     (pers/make-person :wilbur     p/all-propns        p/worldly-brahmanic-perc-pnet   p/anet       []                   []                []                    0)
-      sasparilla (pers/make-person :sasparilla p/all-propns        p/spiritual-peasant-perc-pnet   p/anet       []                   []                []                    0)
-      winifred   (pers/make-person :winifred   p/all-propns        p/worldly-peasant-perc-pnet     p/anet       []                   []                []                    0)]
-  (def popn (pp/make-population [sabrina sasparilla wilbur winifred])))
+;; args:                                            ID      UNMASKED            PROPN-NET                       ANALOGY-NET  UTTERABLE-IDS        GROUPS            TALK-TO-GROUPS        MAX-TALK-TO
+;;                                                        (propns entertained) (propns perceived)                           (propns I can say)   (Groups I'm in)   (Groups I talk to)    (Max # of people I talk to in a tick)
+(let [spiritual-brahman-perceiver (pers/make-person :siobhan p/all-propns        p/spiritual-brahmanic-perc-pnet p/anet       []                   []                []                    0)
+      spiritual-peasant-perceiver (pers/make-person :sophie  p/all-propns        p/spiritual-peasant-perc-pnet   p/anet       []                   []                []                    0)
+      worldly-brahman-perceiver   (pers/make-person :wilbur  p/all-propns        p/worldly-brahmanic-perc-pnet   p/anet       []                   []                []                    0)
+      worldly-peasant-perceiver   (pers/make-person :wilfred p/all-propns        p/worldly-peasant-perc-pnet     p/anet       []                   []                []                    0)]
 
+  (def popn (pp/make-population [spiritual-brahman-perceiver
+                                 spiritual-peasant-perceiver
+                                 worldly-brahman-perceiver
+                                 worldly-peasant-perceiver])))
+
+
+;; spiritual peasant names: shep, spencer, stephen, stephan, sophia, sophie, stephanie, sasparilla
+;; spiritutal brahman names: sebastian, shelby, sabrina, sybil, siobhan
+;; worldly peasant names: none with p. using f for p: winifred, wilfred
+;; worldly brahman names: wilbur, webster 
