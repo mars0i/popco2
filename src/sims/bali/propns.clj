@@ -128,10 +128,10 @@
    (defpropn WP-subak-ceases Ceases [subak])  ; should always receive negative activation
    (defpropn WP-subak-disordered->persists Causal-if [WP-subak-disordered WP-subak-persists]) ; NOTE this differs from Brahmanic
    (defpropn WP-subak-shares-water Shares [subak water]) ; Should really have multiple subaks as args; this is a simplification.
-   (defpropn WP-water-nourishes-peasant1 Nourishes [water peasant1])  ;; "nourishes"?? ;
-   (defpropn WP-water-nourishes-peasant2 Nourishes [water peasant2]) ;
-   (defpropn WP-water-peasant1-ordered Is-ordered [WP-water-nourishes-peasant1])
-   (defpropn WP-water-peasant2-ordered Is-ordered [WP-water-nourishes-peasant2])
+   ;(defpropn WP-water-nourishes-peasant1 Nourishes [water peasant1])  ;; "nourishes"?? ;
+   ;(defpropn WP-water-nourishes-peasant2 Nourishes [water peasant2]) ;
+   ;(defpropn WP-water-peasant1-ordered Is-ordered [WP-water-nourishes-peasant1])
+   ;(defpropn WP-water-peasant2-ordered Is-ordered [WP-water-nourishes-peasant2])
    ;(defpropn WP-rice Is-rice [rice])
    ;(defpropn WP-rat-bhutakala Is-bhutakala [rat])
    (defpropn WP-water-nourishes-rice Nourishes [water rice]) ;
