@@ -102,11 +102,27 @@ pegged in siobhan or wilbur:
 
 	(defpropn SB-king-against-demon Struggles [king demon])
 
-And maybe that's how it should be?  Or should I remove some of these propositions?
+And maybe that's how it should be?  Or should I remove some of these
+propositions?
 
 Well, on one hand, maybe this should be fixed, since the Brahmanic folk
 would have no direct dealings with rats in the sense that I intend it
 here.  So that they can map propns having to do with rats and subaks it
-doesn't seem right.  On the other hand, the point is that the Brahmanic
-ideas have to be available to the peasants, and they have to reject
-them.
+doesn't seem right.  And there are no kings among the peasants, so that
+ought to be a problem.  On the other hand, the point is that the
+Brahmanic ideas have to be available to the peasants, and they have to
+reject
+
+OK: One point is to show that the Spiritual Peasant propositions, will
+generate "good" beliefs about rice growing, and that the Spiritual
+Brahmanic propositions will not, or will produce the wrong ones, or will
+bias to make the Worldly Peasant propositions low.  So I want that the
+SB propositions make the WP propositions low.  All low--would be nice.
+But perhaps it's more realistic if it's messier?
+
+But in any event, it *is* a significant thing for me if in siobhan
+(pegging the SP propns), some WP propositions go high.  That's not
+optimal, and is acceptable only if I want to allow such suboptimality.
+(And my current hypothesis is that it's SB-king-against-demon that's
+causing this result.)
+
