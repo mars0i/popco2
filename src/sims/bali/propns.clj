@@ -57,6 +57,7 @@
   [[-1.0 :Is-ordered :Is-disordered]
    ;[-1.0 :Causal-if :Preventative-if]  ; at present, not using Preventative-if, so this causes a NPE since there are no such propns
    ;[-1.0 :Is-king :Is-peasant]
+   ;[-0.9 :Is-king :Is-subak]
    [-1.0 :Persists :Ceases]
    [-1.0 :Succeeds :Fails]])
 
