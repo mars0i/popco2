@@ -173,3 +173,5 @@ which won't map `SB-king-against-demon` because the arities are
 different, reflecting the fact that a subak is a bunch of individuals,
 while a king is just one.
 
+The result is that all propns in "anti" analogies are either negative or 
+near zero.  That's good--how it should be.
