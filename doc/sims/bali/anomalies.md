@@ -126,3 +126,50 @@ optimal, and is acceptable only if I want to allow such suboptimality.
 (And my current hypothesis is that it's SB-king-against-demon that's
 causing this result.)
 
+I thought that maybe adding back the `Is-king`, `Is-peasant[12]`, and
+`Is-subak` propns, and uncommenting or adding negative semantic specs
+for those predicates, would solve the problem.  but it doesn't change
+anything.
+
+Well: One option is to simply take out WP-subak-against-rat and the
+corresponding SP proposition, and just leave the individual subaks doing
+it using e.g.  WP-peasants-against-rat.  Because it's this one that's
+mapping with the Brahmanic propns, I believe.  But leave the
+"struggles-together" ones involving peasants.  But also I'd have to leave
+out the causal/logical connection between peasant struggle and subak struggle.
+
+OK! I have a new solution.  Seems OK.  I got rid of (commented) the following:
+
+	;(defpropn SP-subak-against-demon Struggles [subak demon])
+	;(defpropn SP-peasants->subak-against-demon Causal-if [SP-peasants-against-demon SP-subak-against-demon])
+	;(defpropn SP-subak-succeeds-against-demon Succeeds [SP-subak-against-demon])
+
+	;(defpropn WP-subak-against-rat Struggles [subak rat])
+	;(defpropn WP-peasants->subak-against-rat Causal-if [WP-peasants-against-rat WP-subak-against-rat])
+	;(defpropn WP-subak-succeeds-against-rat Succeeds [WP-subak-against-rat])
+
+and made these deal directly with the subak propns rather than via the
+subak propns above:
+
+	(defpropn SP-subak-succeeds-against-demon Succeeds [SP-peasants-against-demon])
+	(defpropn SP-subak-fails-against-demon Fails [SP-peasants-against-demon])
+
+	(defpropn WP-subak-succeeds-against-rat Succeeds [WP-peasants-against-rat])
+	(defpropn WP-subak-fails-against-rat Fails [WP-peasants-against-rat])
+
+This got rid of e.g. 
+
+	(defpropn WP-subak-against-rat Struggles [subak rat])
+
+which was mapping (I believe) 
+
+	(defpropn SB-king-against-demon Struggles [king demon])
+
+and the only thing left to map would be e.g.
+
+	(defpropn WP-peasants-against-rat Struggles-together [peasant1 peasant2 rat])
+
+which won't map `SB-king-against-demon` because the arities are
+different, reflecting the fact that a subak is a bunch of individuals,
+while a king is just one.
+

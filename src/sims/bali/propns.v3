@@ -138,12 +138,11 @@
    (defpropn WP-water-nourishes-rice Nourishes [water rice]) ;
    (defpropn WP-water-rice-ordered Is-ordered [WP-water-nourishes-rice])
    (defpropn WP-peasants-against-rat Struggles-together [peasant1 peasant2 rat])
-   ;(defpropn WP-subak-against-rat Struggles [subak rat])
-   ;(defpropn WP-peasants->subak-against-rat Causal-if [WP-peasants-against-rat WP-subak-against-rat])
-   ;(defpropn WP-subak-succeeds-against-rat Succeeds [WP-subak-against-rat])
-   (defpropn WP-subak-succeeds-against-rat Succeeds [WP-peasants-against-rat])
+   (defpropn WP-subak-against-rat Struggles [subak rat])
+   (defpropn WP-peasants->subak-against-rat Causal-if [WP-peasants-against-rat WP-subak-against-rat])
+   (defpropn WP-subak-succeeds-against-rat Succeeds [WP-subak-against-rat])
    (defpropn WP-subak-succeed-rat->disorder Causal-if [WP-subak-succeeds-against-rat WP-subak-disordered])
-   (defpropn WP-subak-fails-against-rat Fails [WP-peasants-against-rat])
+   (defpropn WP-subak-fails-against-rat Fails [WP-subak-against-rat])
    (defpropn WP-subak-fail-rat->disorder Causal-if [WP-subak-fails-against-rat WP-subak-disordered])])
 
 (def spiritual-peasant-propns
@@ -151,7 +150,6 @@
    ;(defpropn SP-peasant1 Is-peasant [peasant1])
    ;(defpropn SP-peasant2 Is-peasant [peasant2])
    ;(defpropn SP-subak Is-subak [subak])
-   ;(defpropn SP-water-sacred Is-sacred [water])
    (defpropn SP-peasant1-in-subak Member-of [peasant1 subak])
    (defpropn SP-peasant2-in-subak Member-of [peasant2 subak])
    (defpropn SP-subak-ordered Is-ordered [subak])
@@ -165,13 +163,13 @@
    (defpropn SP-water-nourishes-peasant2 Nourishes [water peasant2])
    (defpropn SP-water-peasant1-ordered Is-ordered [SP-water-nourishes-peasant1])
    (defpropn SP-water-peasant2-ordered Is-ordered [SP-water-nourishes-peasant2])
+   ;(defpropn SP-water-sacred Is-sacred [water])
    (defpropn SP-peasants-against-demon Struggles-together [peasant1 peasant2 demon])
-   ;(defpropn SP-subak-against-demon Struggles [subak demon])
-   ;(defpropn SP-peasants->subak-against-demon Causal-if [SP-peasants-against-demon SP-subak-against-demon])
-   ;(defpropn SP-subak-succeeds-against-demon Succeeds [SP-subak-against-demon])
-   (defpropn SP-subak-succeeds-against-demon Succeeds [SP-peasants-against-demon])
+   (defpropn SP-subak-against-demon Struggles [subak demon])
+   (defpropn SP-peasants->subak-against-demon Causal-if [SP-peasants-against-demon SP-subak-against-demon])
+   (defpropn SP-subak-succeeds-against-demon Succeeds [SP-subak-against-demon])
    (defpropn SP-subak-succeed-demon->order Causal-if [SP-subak-succeeds-against-demon SP-subak-ordered])
-   (defpropn SP-subak-fails-against-demon Fails [SP-peasants-against-demon])
+   (defpropn SP-subak-fails-against-demon Fails [SP-subak-against-demon])
    (defpropn SP-subak-fail-demon->disorder Causal-if [SP-subak-fails-against-demon SP-subak-disordered])])
 
 
