@@ -1,4 +1,4 @@
-propnsNotes.md
+anomalies.md
 ====
 
 Notes on anomalies in the analogies occurring during the development of bali/propns.clj.
@@ -70,11 +70,12 @@ same in both siobhan and wilbur, and in both of the anti domains.  So
 fixing one domain and person will probably fix the others.
 
 
-II. In git commits up to f54492e, proposition activations are doing the right
-thing in response to pegging analog propositions high in every one of the
-four persons in hermits.clj, but there are a few propositions that are not
-going negative in response to the competing analog propositions being high.
-The propositions involved seem related.
+II. In git commits up to at least f54492e, proposition activations are
+doing the right thing in response to pegging analog propositions high
+in every one of the four persons in hermits.clj, but there are a few
+propositions that are not going negative in response to the competing
+analog propositions being high. The propositions involved seem
+related.
 
 These propositions are going high in siobhan (spiritual brahmanic pegged) and wilbur
 (worldly brahmanic pegged), but you'd expect them to go low.
@@ -102,3 +103,10 @@ pegged in siobhan or wilbur:
 	(defpropn SB-king-against-demon Struggles [king demon])
 
 And maybe that's how it should be?  Or should I remove some of these propositions?
+
+Well, on one hand, maybe this should be fixed, since the Brahmanic folk
+would have no direct dealings with rats in the sense that I intend it
+here.  So that they can map propns having to do with rats and subaks it
+doesn't seem right.  On the other hand, the point is that the Brahmanic
+ideas have to be available to the peasants, and they have to reject
+them.
