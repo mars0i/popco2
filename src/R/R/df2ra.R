@@ -258,7 +258,7 @@ spread <- function(x){abs( max(x) - min(x) )}
 
 # Given a domain-specific subset of a multirun array e.g. produced by multiRA2punditFreeDomRA(),
 # i.e. with dimensions person, proposition, tick, run (even if there is only one tick),
-# return a vector of names of runs which have at least proposition with disagreement between
+# return a vector of names of runs which have at least one proposition with disagreement between
 # persons greater than tolerance (where disagreement is measured by spread(), i.e. by distance
 # between max and min activations across persons for a proposition).
 # In some cases there's no reason to restrict this to a domain.  However, you do want to
@@ -384,21 +384,21 @@ read2multirunRA <- function(csvs, firstTick=1) {
 # The optional parameters exist to avoid using gobs of memory, causing the machine to thrash:
 # firstTick: starting tick to keep in data
 # perload: number of csv files to process at one time
-read2multirunRA.old <- function(csvs, firstTick=1, perload=length(csvs)) {
-  require(abind)
-
-  mra <- NULL
-
-  for (i in seq(1, length(csvs), perload)) {
-    runidxs <- i:(i+perload-1)  # -1 because we want the seq *up to* but not including next i
-    cat("abind-ing run(s)", runidxs, "to main array ...\n")
-    mra <- abind( mra, 
-                 RAs2multirunRA(read2RAs(csvs[runidxs], firstTick=firstTick),
-		                stripcsv(csvs[runidxs])) )
-  }
-
-  restoreTopDimnames(mra) # add back the top-level dim names that abind loses
-}
+#read2multirunRA.old <- function(csvs, firstTick=1, perload=length(csvs)) {
+#  require(abind)
+#
+#  mra <- NULL
+#
+#  for (i in seq(1, length(csvs), perload)) {
+#    runidxs <- i:(i+perload-1)  # -1 because we want the seq *up to* but not including next i
+#    cat("abind-ing run(s)", runidxs, "to main array ...\n")
+#    mra <- abind( mra, 
+#                 RAs2multirunRA(read2RAs(csvs[runidxs], firstTick=firstTick),
+#		                stripcsv(csvs[runidxs])) )
+#  }
+#
+#  restoreTopDimnames(mra) # add back the top-level dim names that abind loses
+#}
 
 # original memory hog version of read2multirunRA (v1):
 #read2multirunRA <- function(csvs, firstTick=1) {
