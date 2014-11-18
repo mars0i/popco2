@@ -44,6 +44,9 @@ wherever popco is running.  On Cheaha, I have the "data" dir under my
 popco2 git repository aliased to my data dir on the Cheaha scratch
 filesystem.
 
+When this is done, you might want to run `wc -l` on each csv file to
+make sure they all have the correct number of rows.
+
 <small>(You can do the same thing on a system that doesn't have qsub to
 submit batch jobs by simply running everything starting with `popco` as
 many times as you want.  Note that `many-times` will try to split
