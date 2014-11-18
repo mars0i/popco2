@@ -157,7 +157,7 @@
 
 (defn node-entry-to-node
   "Expects one hashmap entry from node-data."
-  [[k tick-data-entries] & size-s] ; size-s is a hack so that you can special-case size for some nodes
+  [dynamic? [k tick-data-entries] & size-s] ; size-s is a hack so that you can special-case size for some nodes
 
   (swap! popco-to-gexf-node-id ug/assoc-if-new k (swap! node-id-num inc)) ; update popco-id to id-num hashmap
 
@@ -171,10 +171,10 @@
                    :person person-name}
         make-tick-data-attr (fn [[tick activn]]
                               (let [activn-spec {:for "popco-activn" :value (str activn)}]
-                                [:attvalue (if tick
+                                [:attvalue (if dynamic?
                                              (merge activn-spec {:start (str (float tick)) :endopen (str (inc (float tick)))})
                                              activn-spec)])) ]
-    [:node  (if first-tick
+    [:node  (if dynamic?
               (merge node-spec {:start (str (float first-tick))})
               node-spec)
      (into [:attvalues {}] (map make-tick-data-attr tick-data-entries))
@@ -183,7 +183,7 @@
 
 
 (defn edge-entry-to-edge
-  [[k tick-data-entries] & size-s]
+  [dynamic? [k tick-data-entries] & size-s]
   (let [first-tick (ffirst tick-data-entries) ; if tick, i.e. first element of first entry is nil, assume that they're all nil.
         [id-set person] k
         [node1-id node2-id] (vec id-set)  ; each key is a seq containing :id, :person
@@ -194,10 +194,10 @@
                    :label (str (name person) ":" (name node1-id) "<->" (name node2-id))}
         make-tick-data-attr (fn [[tick wt]]
                               (let [wt-spec {:for "popco-wt" :value (str wt)}]
-                                [:attvalue (if tick
+                                [:attvalue (if dynamic?
                                              (merge wt-spec {:start (str (float tick)) :endopen (str (inc (float tick)))})
                                              wt-spec)])) ]
-    [:edge  (if first-tick
+    [:edge  (if dynamic?
               (merge edge-spec {:start (str (float first-tick))})
               edge-spec)
      (into [:attvalues {}] (map make-tick-data-attr tick-data-entries))]))
@@ -214,17 +214,17 @@
   one of the keywords :static (default) or :dynamic, which determine the GEXF 
   graph mode.  Dynamic graphs allow time indexing.  first-tick is ignored
   if mode is :static."
-  [nodes edges mode first-tick]
-  (let [mode-str (name mode)]
+  [nodes edges dynamic? first-tick]
+  (let [mode-str (if dynamic? "dynamic" "static")]
     (x/sexp-as-element [:gexf {:xmlns "http://www.gexf.net/1.2draft"
                                :xmlns:viz "http://www.gexf.net/1.1draft/viz"
                                :xmlns:xsi "http://www.w3.org/2001/XMLSchema-instance"
                                :xsi:schemaLocation "http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd"
                                :version "1.2"}
                         [:graph 
-                         (cond (= mode :static) {:defaultedgetype "undirected" :mode "static"} 
-                               (= mode :dynamic) {:defaultedgetype "undirected" :mode "dynamic" :timeformat "double" :start (str first-tick)}  ; TODO Is that the correct timeformat??
-                               :else (throw (Exception. (str "Bad GEXF graph mode: " mode))))
+                         (if dynamic? 
+                           {:defaultedgetype "undirected" :mode "dynamic" :timeformat "double" :start (str first-tick)}  ; TODO Is that the correct timeformat??
+                           {:defaultedgetype "undirected" :mode "static"})
                          [:attributes {:class "node" :mode mode-str}
                           [:attribute {:id "popco-activn" :title "popco-activn" :type "float"}
                            [:default {} "0.0"]]]
@@ -253,11 +253,12 @@
   (let [nets (apply concat
                     (for [person-id person-ids
                           net-key net-keys]
-                      (nets-with-origin-info person-id net-key popns)))]
+                      (nets-with-origin-info person-id net-key popns)))
+        dynamic? (> (count popns) 1)]
     (gexf-graph-from-data
-      (map node-entry-to-node (net-node-data-from-nets {} nets)) 
-      (map edge-entry-to-edge (net-edge-data-from-nets {} nets))
-      (if (> (count popns) 1) :dynamic :static)
+      (map (partial node-entry-to-node dynamic?) (net-node-data-from-nets {} nets)) 
+      (map (partial edge-entry-to-edge dynamic?) (net-edge-data-from-nets {} nets))
+      dynamic?
       (:tick (first popns)))))
 
 (defn spit-graph
