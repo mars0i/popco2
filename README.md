@@ -9,8 +9,8 @@ data structures, algorithms, etc., but with the same functionality
 except for some peripheral details.
 
 popco2 is a framework for agent-based simulations in which agents'
-communication of their simulated beliefs depends how those beliefs do
-or do not fit into analogies.  It involves "coherence" in two senses:
+communication of their simulated beliefs depends how those beliefs do,
+or do not, fit into analogies.  It involves "coherence" in two senses:
 (a) it often tends to generate agreement between agents, and (b) the
 ACME model of analogy processing can be viewed as based on ideas about
 coherence (see references below). For the motivation of this project,
