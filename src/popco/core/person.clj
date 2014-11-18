@@ -112,10 +112,18 @@
             (ran/make-rng (ran/next-long cn/initial-rng))))
 
 (defn new-person-from-old
-  "Create a clone of person pers, but with name new-name, or a generated name,
-  if not."
+  "Create a clone of person pers, but with name new-name, or a name generated
+  using clojure.core/gensym, if not."
   ([pers] (new-person-from-old pers (keyword (gensym (name (:id pers))))))
   ([pers new-name] (assoc (clone pers) :id new-name)))
+
+(defn new-person-seq-from-old
+  "Create a lazy sequence of clones of person pers with ids that consist of
+  pers's id plus \"0\", \"1\", \"2\", etc."
+  [pers]
+  (let [old-name (name (:id pers))
+        new-names (map str (repeat old-name) (range))]
+    (map (partial new-person-from-old pers) new-names)))
 
 (defn propn-net-zeroed
   "Accepts a single argument, a person pers, and returns a person containing

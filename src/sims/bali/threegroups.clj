@@ -18,7 +18,11 @@
   (def popn (pp/make-population (vec
                                   (concat
                                     [aa]
-                                    (take 40 (repeatedly (partial pers/new-person-from-old brahman)))
-                                    (take 40 (repeatedly (partial pers/new-person-from-old peasant)))
-                                    (take 40 (repeatedly (partial pers/new-person-from-old both))))
-                                  ))))
+                                    (take 40 (pers/new-person-seq-from-old brahman))
+                                    (take 40 (pers/new-person-seq-from-old peasant))
+                                    (take 40 (pers/new-person-seq-from-old both)))))))
+
+;; old version:
+;                                    (take 40 (repeatedly (partial pers/new-person-from-old brahman)))
+;                                    (take 40 (repeatedly (partial pers/new-person-from-old peasant)))
+;                                    (take 40 (repeatedly (partial pers/new-person-from-old both))))
