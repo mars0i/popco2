@@ -120,10 +120,12 @@
 (defn new-person-seq-from-old
   "Create a lazy sequence of clones of person pers with ids that consist of
   pers's id plus \"0\", \"1\", \"2\", etc."
-  [pers]
-  (let [old-name (name (:id pers))
-        new-names (map str (repeat old-name) (range))]
-    (map (partial new-person-from-old pers) new-names)))
+  ([pers] (new-person-seq-from-old pers 0))
+  ([pers start]
+   (let [old-name (name (:id pers))
+         new-names (map (fn [nm i] (str nm (+ i start))) ; adding n here shifts numbers up while remaining lazy
+                        (repeat old-name) (range))]
+     (map (partial new-person-from-old pers) new-names))))
 
 (defn propn-net-zeroed
   "Accepts a single argument, a person pers, and returns a person containing
