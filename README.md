@@ -1,23 +1,28 @@
 popco2
 =======
 
-Cultural transmission with analogy-influenced biases (rewrite of
-[popco](https://github.com/mars0i/popco) in Clojure).  
+**Pop**ulation **Co**herence: Cultural transmission with
+analogy-influenced biases, using Holyoak and Thagard's (1989) ACME model
+of analogy recognition.   This is a rewrite of
+[popco](https://github.com/mars0i/popco) in Clojure, using different
+data structures, algorithms, etc., but with the same functionality
+except for some peripheral details.
 
 popco2 is a framework for agent-based simulations in which agents'
-communication of their simulated beliefs depends how those beliefs do or
-do not fit into analogies.  For the motivation of this project, an
-illustration of its use, and the primary documentation of how the
-software works, see the open access article described below.  (The
-article describes the previous version of popco, but the new version
-incorporates the same functionality except for some peripheral details.)
+communication of their simulated beliefs depends how those beliefs do
+or do not fit into analogies.  It involves "coherence" in two senses:
+(a) it often tends to generate agreement between agents, and (b) the
+ACME model of analogy processing can be viewed as based on ideas about
+coherence (see references below). For the motivation of this project,
+an illustration of its use, and the primary documentation of how the
+software works, see the open access article described below.
 
 This software is copyright 2013, 2014, 2015 by [Marshall
 Abrams](http://members.logical.net/~marshall/), and is distributed
 under the [Gnu General Public License version
 3.0](http://www.gnu.org/copyleft/gpl.html) as specified in the file
 LICENSE, except where noted.  (For example, there is source code in
-src/java that was written by other authors, and that is released under
+src/java that was written by other authors, which is released under
 different licenses.)
 
 Please feel free to contact me with questions, suggestions, interest
@@ -26,8 +31,8 @@ in help developing popco simulations, etc. at:
 	mabrams ([at]) uab [(dot)] edu
 	marshall ([at]) logical [(dot)] net  
 
-In some documents I refer to the original popco as "popco1".  I often
-refer to the current version as popco rather than popco2 when contact
+In some documents here I refer to the original popco as "popco1".  I often
+refer to the current version as "popco" rather than "popco2" when context
 makes the intended sense clear.  This repository was previously called
 "popco-x".
 
@@ -79,3 +84,21 @@ relationships involving cultural patterns and cognitive processes.
 
 Keywords: Simulation; Culture; Cognition; Analogy; Metaphor;
 Hermeneutics
+
+-------
+
+#### Other sources:
+
+Keith Holyoak and Paul Thagard (1989), "Analogical mapping by constraint
+satisfaction". *Cognitive Science* 13:295–355.
+
+Keith Holyoak and Paul Thagard (1995), *Mental Leaps: Analogy in
+Creative Thought*. Cambridge, Massachusetts: MIT Press.
+
+Paul Thagard (2000), *Coherence in Thought and Action*. Cambridge,
+Massachusetts: MIT Press.
+
+<br/>
+
+For additional relevant sources, see the article in *Complex Adaptive
+Systems Modeling* that's described above.
