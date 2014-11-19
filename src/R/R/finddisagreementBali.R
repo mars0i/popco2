@@ -1,0 +1,10 @@
+source("~/pop/R/df2ra.R")
+load(bali.rdata)
+
+print("tolerance 0.1:")
+print("worldly brahmanic bias:")
+print(findRunsWithDisagreement(bali[2:41,,,], 0.1))
+print("worldly peasant bias:")
+print(findRunsWithDisagreement(bali[42:81,,,], 0.1))
+print("both bias:")
+print(findRunsWithDisagreement(bali[82:121,,,], 0.1))
