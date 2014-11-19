@@ -1,5 +1,5 @@
 source("~/p2/src/R/R/df2ra.R")
-load(bali.rdata)
+load("bali.rdata")
 
 print("tolerance 0.1:")
 print("worldly brahmanic bias:")
