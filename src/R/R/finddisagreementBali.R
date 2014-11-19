@@ -1,4 +1,4 @@
-source("~/pop/R/df2ra.R")
+source("~/p2/src/R/R/df2ra.R")
 load(bali.rdata)
 
 print("tolerance 0.1:")
