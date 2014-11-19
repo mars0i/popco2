@@ -13,12 +13,15 @@ up to 1.5G RAM:
 
 3. Extract a dataframe from the last tick of the array.
 
-With 100 runs, however, I only the first task works with the
-`vf=1.5G` setting.  Upping `vf` to 16GB allowed the second two to
-succeed.  Not sure if I need all that, but it worked.
+With 100 runs, however, I only the first task works with the `vf=1.5G`
+setting.  Upping `vf` to 16GB allowed the second two to succeed.  Not
+sure if I need all that, but it worked.  Note that you can override
+flags in a job script with command line flags.
 
-Note that you can override flags in a job script with command line
-flags.
+Example:
+
+	qsub -l vf=16G ~/p2/src/qsub/submitanything.job Rscript ~/p2/src/R/R/finddisagreementBali.R
+
 
 
 #### Combining arrays with `abind`:
