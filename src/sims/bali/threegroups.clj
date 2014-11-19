@@ -22,7 +22,7 @@
                                     (take 40 (pers/new-person-seq-from-old peasant))
                                     (take 40 (pers/new-person-seq-from-old both)))))))
 
-;; old version:
+;; old version used 11/17-18/2014 to make bali.rdata:
 ;                                    (take 40 (repeatedly (partial pers/new-person-from-old brahman)))
 ;                                    (take 40 (repeatedly (partial pers/new-person-from-old peasant)))
 ;                                    (take 40 (repeatedly (partial pers/new-person-from-old both))))
