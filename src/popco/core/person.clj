@@ -123,7 +123,7 @@
   ([pers] (new-person-seq-from-old pers 0))
   ([pers start]
    (let [old-name (name (:id pers))
-         new-names (map (fn [nm i] (str nm (+ i start))) ; adding n here shifts numbers up while remaining lazy
+         new-names (map (fn [nm i] (keyword (str nm (+ i start)))) ; adding n here shifts numbers up while remaining lazy
                         (repeat old-name) (range))]
      (map (partial new-person-from-old pers) new-names))))
 
