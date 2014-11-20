@@ -52,8 +52,13 @@
   functions, try using map instead of pmap.) Should be purely functional.
   Sketch of sequence of operations:
   1. Update networks in each person: ...nn.update/update-person-nets.
+     This involves, in each person:
+     a. partially settling the analogy net
+     b. updating proposition link weights from proposition map nodes in analogy net
+     c. partially settling the proposition net
   2. Persons create utterances for listeners: ...communic.speak/speaker-plus-utterances.
-  3. Send utterances to designated listeners: ...communic.listen/receive-utterances."
+  3. Send utterances to designated listeners: ...communic.listen/receive-utterances.
+     This can cause changes to both the proposition net and the analogy net."
   ([popn] (once pmap popn))
   ([mapfn popn]
    ;; next mapfn expression creates seq of [person, utterance-map] pairs; transpose groups them as persons, utterance-maps.
