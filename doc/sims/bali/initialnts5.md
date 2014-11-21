@@ -31,7 +31,7 @@ Maybe focus on wars etc.  Maybe on the coming of the Dutch.
 
 ##### What's different:
 
-(Not that what I want, ideally, is *both* analogy and disanalogy.  This
+(Note that what I want, ideally, is *both* analogy and disanalogy.  This
 part of my notes is supposed to highlight *disanalogies*.)
 
 * The people to whom it applies
@@ -55,6 +55,7 @@ part of my notes is supposed to highlight *disanalogies*.)
 * The endeavors to which it applies
 
 	* Royal:
+		* all of Bali, and maybe the whole universe.
 		* state needs management, leadership
 		* when the king's struggle against bhutakala fails,
 		the state dissolves into disorder.  It's all or
