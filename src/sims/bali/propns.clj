@@ -38,8 +38,9 @@
 (defpred Persists)
 ;(defpred Preventative-if)  ; not currently used
 (defpred Shares)
-(defpred Struggles)
+(defpred Struggles-alone)
 (defpred Struggles-together)
+(defpred Struggles-on-behalf)
 (defpred Succeeds)
 
 (defobj king)
@@ -81,7 +82,11 @@
    ;(defpropn WB-king Is-king [king])
    ;(defpropn WB-state Is-negara [state])
    ;(defpropn WB-enemy-bhutakala Is-bhutakala [enemy])
-   (defpropn WB-king-against-enemy Struggles [king enemy])
+   (defpropn WB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
+   (defpropn WB-king-for-subaks Struggles-on-behalf [king subak])
+   (defpropn WB-king-for-peasant1 Struggles-on-behalf [king peasant1])
+   (defpropn WB-king-for-peasant2 Struggles-on-behalf [king peasant2])
+   (defpropn WB-king-against-enemy Struggles-alone [king enemy])
    (defpropn WB-king-succeeds-against-enemy Succeeds [WB-king-against-enemy])
    (defpropn WB-state-ordered Is-ordered [state])
    (defpropn WB-state-disordered Is-disordered [state])
@@ -98,9 +103,12 @@
    ;(defpropn SB-king Is-king [king])
    ;(defpropn SB-state Is-negara [state])
    ;(defpropn SB-water-sacred Is-sacred [water])
-   ;(defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
+   (defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
    ;(defpropn SB-water-state-ordered Is-ordered [SB-water-nourishes-state])
-   (defpropn SB-king-against-demon Struggles [king demon])
+   (defpropn SB-king-for-subaks Struggles-on-behalf [king subak])
+   (defpropn SB-king-for-peasant1 Struggles-on-behalf [king peasant1])
+   (defpropn SB-king-for-peasant2 Struggles-on-behalf [king peasant2])
+   (defpropn SB-king-against-demon Struggles-alone [king demon])
    (defpropn SB-king-succeeds-against-demon Succeeds [SB-king-against-demon])
    (defpropn SB-state-ordered Is-ordered [state])
    (defpropn SB-state-disordered Is-disordered [state])
@@ -138,7 +146,7 @@
    (defpropn WP-water-nourishes-rice Nourishes [water rice]) ;
    (defpropn WP-water-rice-ordered Is-ordered [WP-water-nourishes-rice])
    (defpropn WP-peasants-against-rat Struggles-together [peasant1 peasant2 rat])
-   ;(defpropn WP-subak-against-rat Struggles [subak rat])
+   ;(defpropn WP-subak-against-rat Struggles-alone [subak rat])
    ;(defpropn WP-peasants->subak-against-rat Causal-if [WP-peasants-against-rat WP-subak-against-rat])
    ;(defpropn WP-subak-succeeds-against-rat Succeeds [WP-subak-against-rat])
    (defpropn WP-subak-succeeds-against-rat Succeeds [WP-peasants-against-rat])
@@ -166,7 +174,7 @@
    (defpropn SP-water-peasant1-ordered Is-ordered [SP-water-nourishes-peasant1])
    (defpropn SP-water-peasant2-ordered Is-ordered [SP-water-nourishes-peasant2])
    (defpropn SP-peasants-against-demon Struggles-together [peasant1 peasant2 demon])
-   ;(defpropn SP-subak-against-demon Struggles [subak demon])
+   ;(defpropn SP-subak-against-demon Struggles-alone [subak demon])
    ;(defpropn SP-peasants->subak-against-demon Causal-if [SP-peasants-against-demon SP-subak-against-demon])
    ;(defpropn SP-subak-succeeds-against-demon Succeeds [SP-subak-against-demon])
    (defpropn SP-subak-succeeds-against-demon Succeeds [SP-peasants-against-demon])
