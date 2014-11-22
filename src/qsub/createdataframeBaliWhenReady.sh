@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ -z "$1" ]; then
-	echo "usage $0 jobid"
+	echo usage: `basename $0` jobid
 	echo "checks every 15 minutes to see if qstat still shows job jobid, and"
 	echo "runs createdataframeBali.R when it's done."
 	exit 1
@@ -14,8 +14,9 @@ while [ -n "`qstat | grep $1`" ] ; do sleep 15m ; done
 
 if [ -f bali.rdata ]; then
 	cd ~/data
-	qsub -l vf=16G -N df ~/p2/src/qsub/submitanything.job Rscript ~/p2/src/R/R/createdataframeBali.R
+	qsub -l h_rt=18:00:00,vf=20G -N createdf ~/p2/src/qsub/submitanything.job Rscript --no-init-file --verbose ~/p2/src/R/R/createdataframeBali.R
+	qsub -l h_rt=18:00:00,vf=20G -N finddisg ~/p2/src/qsub/submitanything.job Rscript --no-init-file --verbose ~/p2/src/R/R/crimeFindDisagreementBali.R
 else
-	echo $0: datafile missing
+	echo `basename $0`: datafile missing
 	exit 2
 fi
