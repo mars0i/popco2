@@ -12,6 +12,10 @@ while [ -n "`qstat | grep $1`" ] ; do sleep 15m ; done
 
 # job is done
 
-cd ~/data
-
-qsub -l vf=16G -N df ~/p2/src/qsub/submitanything.job Rscript ~/p2/src/R/R/createdataframeBali.R
+if [ -f bali.rdata ]; then
+	cd ~/data
+	qsub -l vf=16G -N df ~/p2/src/qsub/submitanything.job Rscript ~/p2/src/R/R/createdataframeBali.R
+else
+	echo $0: datafile missing
+	exit 2
+fi
