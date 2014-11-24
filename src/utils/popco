@@ -1,0 +1,3 @@
+#!/bin/sh
+cd ~/p2
+lein run
