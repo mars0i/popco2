@@ -3,6 +3,8 @@ anomalies.md
 
 Notes on anomalies in the analogies occurring during the development of bali/propns.clj.
 
+-------
+
 I. In git commits up to 2a1b956, sophie, i.e. the person with spiritual
 peasant bels pegged `WP-water-rice-ordered` was going low, which is not
 what's supposed to happen.
@@ -69,6 +71,7 @@ anomalies in these persons.  Note, however, that the anomalies are the
 same in both siobhan and wilbur, and in both of the anti domains.  So
 fixing one domain and person will probably fix the others.
 
+-------
 
 II. In git commits up to at least f54492e, proposition activations are
 doing the right thing in response to pegging analog propositions high
@@ -175,3 +178,28 @@ while a king is just one.
 
 The result is that all propns in "anti" analogies are either negative or 
 near zero.  That's good--how it should be.
+
+-------
+
+III. In mid-November 2014 versions of Bali propns, the mean of worldly
+peasant bias propns activn run means at tick 5000 is only very slightly
+to the right of the mean for worldly brahman bias.  What I expect is
+that the peasant bias mean be moved left relative to brahman mean (i.e.
+toward more peasant spiritual activations).
+
+Also the effect in the brahmanic spiritual dimension is visible in the
+mean, but it's not very big.
+
+I thought that this might have to do with the fact that I had more
+propns in the peasant analogues (see issue #35 in github), but the first
+change I made in correcting this (11/18/2014 to 11/21/2014) didn't help.
+Now I'm trying again (11/23/2014) with exactly 16 propns in each domain.
+
+However, maybe it's not so bad of a problem.  When you look at the
+whole spread of run means, you see that the only reason that the mean
+with the worldly brahman bias in the peasant-spiritual is the same as for the
+worldy peasant bias only because it's so spread out left-right.
+Whereas the peasant bias propns are compressed to the right.  Maybe
+that's enough.  And there's an analogous relation in the vertical
+direction.  This pattern isn't new--I had it with crime3, too--but
+maybe it's enough.
