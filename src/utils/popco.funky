@@ -1,3 +1,0 @@
-#!/bin/sh
-cd ~/p2
-java -jar target/popco2-0.9.0-SNAPSHOT-standalone.jar "$@"
