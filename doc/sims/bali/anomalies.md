@@ -203,3 +203,8 @@ Whereas the peasant bias propns are compressed to the right.  Maybe
 that's enough.  And there's an analogous relation in the vertical
 direction.  This pattern isn't new--I had it with crime3, too--but
 maybe it's enough.
+
+UH-OH: I think that I've just been running the same version of
+propns.clj over and over again.  On cheaha, I was using the jar file
+I'd compiled.  i.e it's not getting new versions.  I'm switching to
+'lein run'.
