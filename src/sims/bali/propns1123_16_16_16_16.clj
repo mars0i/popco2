@@ -26,6 +26,7 @@
 (defpred Fails)
 (defpred Is-ordered)
 (defpred Is-disordered)
+(defpred Calmly)
 ;(defpred Is-bhutakala)
 ;(defpred Is-king)
 ;(defpred Is-negara)
@@ -46,9 +47,10 @@
 (defobj king)
 (defobj state)
 (defobj demon)
-(defobj water)
-(defobj rice)
 (defobj enemy)
+(defobj water)
+(defobj rice-field1)
+(defobj rice-field1)
 (defobj peasant1)
 (defobj peasant2)
 (defobj subak)
@@ -87,6 +89,7 @@
    (defpropn WB-king-for-peasant1 Struggles-on-behalf [king peasant1])
    (defpropn WB-king-for-peasant2 Struggles-on-behalf [king peasant2])
    (defpropn WB-king-against-enemy Struggles-alone [king enemy])
+   (defpropn WB-king-struggles-calmly Calmly [WB-king-against-enemy])  ; King succeeds through calm, contemplative connection to wisdom
    (defpropn WB-king-succeeds-against-enemy Succeeds [WB-king-against-enemy])
    (defpropn WB-state-ordered Is-ordered [state])
    (defpropn WB-state-disordered Is-disordered [state])
@@ -103,13 +106,14 @@
    ;(defpropn SB-king Is-king [king])
    ;(defpropn SB-state Is-negara [state])
    ;(defpropn SB-water-sacred Is-sacred [water])
-   (defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
    ;(defpropn SB-water-state-ordered Is-ordered [SB-water-nourishes-state])
+   (defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
    (defpropn SB-king-for-subaks Struggles-on-behalf [king subak])
    (defpropn SB-king-for-peasant1 Struggles-on-behalf [king peasant1])
    (defpropn SB-king-for-peasant2 Struggles-on-behalf [king peasant2])
    (defpropn SB-king-against-demon Struggles-alone [king demon])
    (defpropn SB-king-succeeds-against-demon Succeeds [SB-king-against-demon])
+   (defpropn SB-king-struggles-calmly Calmly [SB-king-against-demon])  ; King succeeds through calm, contemplative connection to wisdom
    (defpropn SB-state-ordered Is-ordered [state])
    (defpropn SB-state-disordered Is-disordered [state])
    (defpropn SB-state-succeed-demon->order Causal-if [SB-king-succeeds-against-demon SB-state-ordered])
@@ -128,8 +132,8 @@
    ;(defpropn WP-peasant1 Is-peasant [peasant1])
    ;(defpropn WP-peasant2 Is-peasant [peasant2])
    ;(defpropn WP-subak Is-subak [subak])
-   (defpropn WP-peasant1-in-subak Member-of [peasant1 subak])
-   (defpropn WP-peasant2-in-subak Member-of [peasant2 subak])
+   ;(defpropn WP-peasant1-in-subak Member-of [peasant1 subak])
+   ;(defpropn WP-peasant2-in-subak Member-of [peasant2 subak])
    (defpropn WP-subak-ordered Is-ordered [subak])
    (defpropn WP-subak-disordered Is-disordered [subak])
    (defpropn WP-subak-persists Persists [subak])
@@ -143,8 +147,11 @@
    ;(defpropn WP-water-peasant2-ordered Is-ordered [WP-water-nourishes-peasant2])
    ;(defpropn WP-rice Is-rice [rice])
    ;(defpropn WP-rat-bhutakala Is-bhutakala [rat])
-   (defpropn WP-water-nourishes-rice Nourishes [water rice]) ;
-   (defpropn WP-water-rice-ordered Is-ordered [WP-water-nourishes-rice])
+   ;(defpropn WP-water-nourishes-rice Nourishes [water rice]) ;
+   (defpropn WP-nourishes-rice-field1 Nourishes [water rice-field1]) ; i.e. water nourishes peasant1's rice fields
+   (defpropn WP-nourishes-rice-field2 Nourishes [water rice-field1]) ; i.e. water nourishes peasant2's rice fields
+   (defpropn WP-water-rice-field1-ordered Is-ordered [WP-nourishes-rice-field1])
+   (defpropn WP-water-rice-field2-ordered Is-ordered [WP-nourishes-rice-field2])
    (defpropn WP-peasants-against-rat Struggles-together [peasant1 peasant2 rat])
    ;(defpropn WP-subak-against-rat Struggles-alone [subak rat])
    ;(defpropn WP-peasants->subak-against-rat Causal-if [WP-peasants-against-rat WP-subak-against-rat])
@@ -160,8 +167,8 @@
    ;(defpropn SP-peasant2 Is-peasant [peasant2])
    ;(defpropn SP-subak Is-subak [subak])
    ;(defpropn SP-water-sacred Is-sacred [water])
-   (defpropn SP-peasant1-in-subak Member-of [peasant1 subak])
-   (defpropn SP-peasant2-in-subak Member-of [peasant2 subak])
+   ;(defpropn SP-peasant1-in-subak Member-of [peasant1 subak])
+   ;(defpropn SP-peasant2-in-subak Member-of [peasant2 subak])
    (defpropn SP-subak-ordered Is-ordered [subak])
    (defpropn SP-subak-disordered Is-disordered [subak])
    (defpropn SP-subak-persists Persists [subak])
@@ -182,12 +189,12 @@
    (defpropn SP-subak-fails-against-demon Fails [SP-peasants-against-demon])
    (defpropn SP-subak-fail-demon->disorder Causal-if [SP-subak-fails-against-demon SP-subak-disordered])])
 
+
 (println "Numbers of propositions:")
 (println "worldly brahman: " (count worldly-brahmanic-propns))
 (println "spiritual brahman: " (count spiritual-brahmanic-propns))
 (println "worldly peasant: " (count worldly-peasant-propns))
 (println "spiritual peasant: " (count spiritual-peasant-propns))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Convenient collections
