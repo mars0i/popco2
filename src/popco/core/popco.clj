@@ -45,6 +45,7 @@
 
 ;; Note keys are "normally set to the keywordized name of the long option without the leading dashes." (http://clojure.github.io/tools.cli)
 (def cli-options [["-h" "--help" "Print this help"]
+                  ["-i" "--initial <file>" "Will attempt to load Clojure source file <file>' before doing anything else. (Use for random seed files.)"]
                   ["-n" "--popn-ns <namespace>" "Namespace that defines a symbol 'popn with a popco population as its value." :parse-fn symbol]
                   ["-r" "--run <clojure expression>"    "Clojure expression to execute."] ; better to avoid -e, since lein exec uses it
                  ])
@@ -67,7 +68,8 @@
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} (clojure.tools.cli/parse-opts args cli-options)
         popn-ns-sym (:popn-ns options) ; symbol representing namespace in which the population, named popn, is defined
-        to-run-str (:run options)]     ; string of Clojure code to run
+        to-run-str (:run options)     ; string of Clojure code to run
+        initial-file (:initial options)]
 
     ;; Check for reasons to abort:
     (cond
@@ -79,8 +81,9 @@
                                  (System/exit 1)))
 
 
-    ;(use 'popco.core.reporters)
-    ;(use 'popco.core.main)
+
+    (when initial-file
+      (load-file initial-file))
     ;; We have to define aliases here for load-string to see them.  I don't understand why.  Short aliases are handy.
     (require '[popco.core.main :as mn])
     (require '[popco.core.reporters :as rp])
