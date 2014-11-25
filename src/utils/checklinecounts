@@ -1,2 +1,2 @@
 #!/bin/sh
-wc -l *.csv > yo.lis
+wc -l *.csv > linecounts.txt
