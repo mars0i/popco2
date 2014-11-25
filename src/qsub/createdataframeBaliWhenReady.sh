@@ -2,13 +2,13 @@
 
 if [ -z "$1" ]; then
 	echo usage: `basename $0` jobid
-	echo "checks every 15 minutes to see if qstat still shows job jobid, and"
+	echo "checks every 10 minutes to see if qstat still shows job jobid, and"
 	echo "runs createdataframeBali.R when it's done."
 	exit 1
 fi
 
-# wait until first job is done, checking every 15 minutes (hope for no error)
-while [ -n "`qstat | grep $1`" ] ; do sleep 15m ; done
+# wait until first job is done, checking every 10 minutes (hope for no error)
+while [ -n "`qstat | grep $1`" ] ; do sleep 10m ; done
 
 # job is done
 
