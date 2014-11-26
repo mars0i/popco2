@@ -16,6 +16,10 @@ filename="${arrayname}.rdata"
 R --no-save << END
 source("~/p2/src/R/R/df2ra.R")
 setwd("$datadir")
+gc()
 $arrayname <- read2multirunRA($csvvec)
+print("Done with read2multirRunRA. About to save.")
+gc()
+gc()
 save($arrayname, file="$filename")
 END
