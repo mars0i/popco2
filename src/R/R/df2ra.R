@@ -370,10 +370,14 @@ read2multirunRA <- function(csvs, firstTick=1) {
     }
   }
 
+  cat("\nDone loading csvs into array.  Fixing names ...\n")
+
   # now add the dim names:
   mra <- restoreTopDimnames(mra)
   dimnames(mra)[1:3] <- dimnames(mra.run1)[1:3]
   dimnames(mra)$run <- stripcsv(csvs)
+
+  cat("Done fixing names.  Returning mra.\n")
 
   mra
 }
