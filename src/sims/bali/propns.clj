@@ -26,6 +26,8 @@
 (defpred Fails)
 (defpred Is-ordered)
 (defpred Is-disordered)
+(defpred Is-pest)
+(defpred Is-enemy-of-state)
 ;(defpred Is-bhutakala)
 ;(defpred Is-king)
 ;(defpred Is-negara)
@@ -59,6 +61,7 @@
    ;[-1.0 :Causal-if :Preventative-if]  ; at present, not using Preventative-if, so this causes a NPE since there are no such propns
    ;[-1.0 :Is-king :Is-peasant]
    ;[-0.9 :Is-king :Is-subak]
+   [-1.0 :Is-pest :Is-enemy-of-state] ; TODO **CAUSING NPE**:  Why?
    [-1.0 :Persists :Ceases]
    [-1.0 :Succeeds :Fails]])
 
@@ -82,6 +85,7 @@
    ;(defpropn WB-king Is-king [king])
    ;(defpropn WB-state Is-negara [state])
    ;(defpropn WB-enemy-bhutakala Is-bhutakala [enemy])
+   (defpropn WB-is-enemy Is-enemy-of-state [enemy])
    (defpropn WB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
    (defpropn WB-king-for-subaks Struggles-on-behalf [king subak])
    (defpropn WB-king-for-peasant1 Struggles-on-behalf [king peasant1])
@@ -128,6 +132,7 @@
    ;(defpropn WP-peasant1 Is-peasant [peasant1])
    ;(defpropn WP-peasant2 Is-peasant [peasant2])
    ;(defpropn WP-subak Is-subak [subak])
+   (defpropn WP-is-pest Is-pest [rat])
    (defpropn WP-peasant1-in-subak Member-of [peasant1 subak])
    (defpropn WP-peasant2-in-subak Member-of [peasant2 subak])
    (defpropn WP-subak-ordered Is-ordered [subak])
