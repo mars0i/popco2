@@ -106,8 +106,8 @@
    ;(defpropn SB-king Is-king [king])
    ;(defpropn SB-state Is-negara [state])
    ;(defpropn SB-water-sacred Is-sacred [water])
-   ;(defpropn SB-water-state-ordered Is-ordered [SB-water-nourishes-state])
    (defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
+   ;(defpropn SB-water-state-ordered Is-ordered [SB-water-nourishes-state])
    (defpropn SB-king-for-subaks Struggles-on-behalf [king subak])
    (defpropn SB-king-for-peasant1 Struggles-on-behalf [king peasant1])
    (defpropn SB-king-for-peasant2 Struggles-on-behalf [king peasant2])
