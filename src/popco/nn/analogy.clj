@@ -375,7 +375,13 @@
                                (* mplier cn/+sem-similarity-link-value+)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
 
 (defn conc-specs-to-idx-multiplier-pairs
-  "ADD DOCSTRING"
+  "Given an id-to-idx map from a nascent AnalogyNet and a collection conc-specs
+  of conceptual relations in the form [weight predicate-id1 predicate-id2],
+  returns a collection of pairs in which the first element is the weight,
+  unchanged, and the second element is a mapnode index--i.e. an index into
+  the AnalogyNet's node-vec, or a coordinate for its matrix, etc.  The indexes
+  are for mapnodes with the predicates in both orders, so there may be twice
+  as many elements returned as were in the conc-specs argument."
   [id-to-idx conc-specs]
   (filter identity ; strip the nils
           (concat
