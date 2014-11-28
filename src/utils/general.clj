@@ -7,6 +7,11 @@
   (:require [clojure.pprint :only [*print-right-margin*]]
             [clojure.set :as st]))
 
+(defn println-stderr
+  "Like println, but prints to stderr."
+  [& more]
+  (binding [*out* *err*]
+    (apply println more)))
 
 (defn remove=
   "Remove items from coll that are = to x."
