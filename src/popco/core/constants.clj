@@ -27,6 +27,9 @@
          "(intern 'popco.core.constants 'initial-rng (utils.random/make-rng popco.core.constants/session-id))"
          "\n"]))
 
+(def ^:const +warnings?+ true)
+;(def ^:const +warnings?+ false)
+
 ;; java.lang.Double:
 
 ;; TODO: get rid of these from all of the source?  or not?  purpose is to allow alt numbers, but it's confusing
