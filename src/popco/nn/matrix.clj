@@ -26,6 +26,31 @@
   [v]
   (square-from-row (mx/matrix [v])))
 
+
+(defn zero-index-val-pairs
+  "Return [indices val] pairs for zero vals in matrix m.
+  (See docstring for zeros.)"
+  [m]
+  (filter (comp zero? second) 
+          (map vector (mx/index-seq m) (mx/eseq m))))
+
+(defn zeros
+  "Gets the zero indices of an array mapped to the values.
+  (By Matt Revelle at https://github.com/mikera/core.matrix/issues/102
+  Something like this will probably be incorporated into core.matrix
+  with the name zero-map.)"
+  [m]
+  (into {} (zero-index-val-pairs m)))
+
+(defn zero-indices
+  [m]
+  (map first (zero-index-val-pairs m)))
+
+(defn zero-vals
+  [m]
+  (map second (zero-index-val-pairs m)))
+
+
 (defn non-zero-index-val-pairs
   "Return [indices val] pairs for non-zero vals in matrix m.
   (See docstring for non-zeros.)"
@@ -39,18 +64,16 @@
   Something like this will probably be incorporated into core.matrix
   with the name non-zero-map.)"
   [m]
-  (into {}
-        (non-zero-index-val-pairs m)))
+  (into {} (non-zero-index-val-pairs m)))
 
 (defn non-zero-indices
   [m]
-  (map first 
-       (non-zero-index-val-pairs m)))
+  (map first (non-zero-index-val-pairs m)))
 
 (defn non-zero-vals
   [m]
-  (map second
-       (non-zero-index-val-pairs m)))
+  (map second (non-zero-index-val-pairs m)))
+
 
 (defn col1
   [m]
