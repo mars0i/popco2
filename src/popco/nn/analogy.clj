@@ -374,6 +374,28 @@
                                idx
                                (* mplier cn/+sem-similarity-link-value+)))) ; ASSYMETRIC LINK from the semantic node to a mapnode
 
+(defn conc-spec-to-idx-multiplier-pair
+  "Given an id-to-idx map from a nascent AnalogyNet and a conceptual relation
+  conc-spec in the form [weight predicate-id1 predicate-id2], returns
+  a pairs in which the first element is the weight, unchanged, and the 
+  second element is a mapnode index--i.e. an index into the AnalogyNet's 
+  node-vec, or a coordinate for its matrix, etc.  If there is no such node,
+  returns nil, after printing a warning to stderr if +warnings?+ is true."
+  [id-to-idx conc-spec]
+  (let [[mplier lot-id1 lot-id2] conc-spec
+        idx (id-to-idx (ids-to-mapnode-id lot-id1 lot-id2))]
+    (if idx
+      [mplier idx]
+      (do (when cn/+warnings?+
+            (ug/println-stderr (str "Warning: No node for conceptual relation between " lot-id1 " and " lot-id2)))
+          nil))))
+
+(defn swap-2nd-3rd
+  "Given a 3-element sequence, returns a vector with the same first element,
+  but with the second and third elements swapped."
+  [[elt1 elt2 elt3]]
+   [elt1 elt3 elt2])
+
 (defn conc-specs-to-idx-multiplier-pairs
   "Given an id-to-idx map from a nascent AnalogyNet and a collection conc-specs
   of conceptual relations in the form [weight predicate-id1 predicate-id2],
@@ -383,15 +405,12 @@
   are for mapnodes with the predicates in both orders, so there may be twice
   as many elements returned as were in the conc-specs argument."
   [id-to-idx conc-specs]
-  (filter identity ; strip the nils
-          (concat
-            (map
-              (fn [[mplier lot-id1 lot-id2]] [mplier (id-to-idx (ids-to-mapnode-id lot-id1 lot-id2))])
-              conc-specs)
-            (map
-              (fn [[mplier lot-id1 lot-id2]] [mplier (id-to-idx (ids-to-mapnode-id lot-id2 lot-id1))])
-              conc-specs))))
-
+  (let [wt-idx-pair-maker1 (partial conc-spec-to-idx-multiplier-pair id-to-idx)
+        wt-idx-pair-maker2 (comp wt-idx-pair-maker1 swap-2nd-3rd)]
+    (filter identity ; strip nils generated when there is no such mapnode
+            (concat
+              (map wt-idx-pair-maker1 conc-specs)
+              (map wt-idx-pair-maker2 conc-specs)))))
 
 (defn dupe-pred-idx-multiplier-pairs
   "Return pairs consisting of 1.0 and indexes of nodes that map a predicate 
