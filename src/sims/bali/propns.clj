@@ -21,6 +21,22 @@
 ;; Worldly propns start with "BW" or "PW".
 ;; Propns shared between Brahmanic and peasant domains start with "XS" or "XW".
 
+
+;; YO
+;popco.core.popco=> (list :siobhan :wilbur (first (map #(apply concat %) (map zero-indices (map :activns (map :propn-net (:persons p100)))))))
+;(:siobhan :wilbur (20 24 25 30 31 55 59 60 65 66))
+;popco.core.popco=> (list :sophie :wilfred (second (map #(apply concat %) (map zero-indices (map :activns (map :propn-net (:persons p100)))))))
+;(:sophie :wilfred (2 15 46 50))
+;popco.core.popco=> ((:id-vec (:propn-net (popn/get-person :sophie p100))) 2)
+;:SB-king-fail-demon->disorder
+;popco.core.popco=> ((:id-vec (:propn-net (popn/get-person :sophie p100))) 15)
+;:SB-state-succeed-demon->order
+;popco.core.popco=> ((:id-vec (:propn-net (popn/get-person :sophie p100))) 46)
+;:WB-state-fail-enemy->disorder
+;popco.core.popco=> ((:id-vec (:propn-net (popn/get-person :sophie p100))) 50)
+;:WB-succeed-enemy-order
+
+
 (defpred Causal-if)
 (defpred Ceases)
 (defpred Fails)
@@ -28,7 +44,7 @@
 (defpred Is-disordered)
 (defpred Is-pest)
 (defpred Is-enemy-of-state)
-;(defpred Is-bhutakala)
+(defpred Is-demon)
 ;(defpred Is-king)
 ;(defpred Is-negara)
 ;(defpred Is-peasant)
@@ -48,8 +64,8 @@
 (defobj king)
 (defobj state)
 ;(defobj demon)
-(defobj royal-demon)
-(defobj peasant-demon)
+(defobj demon)
+(defobj demon)
 (defobj water)
 (defobj rice)
 (defobj enemy)
@@ -64,18 +80,26 @@
 ;; in one of the major analogues (i.e. "source" and "target", formerly), and one
 ;; in the other.  Here the major analogues are "worldly" and "spiritual".
 (def conceptual-relats 
-  [[-1.0 :Is-ordered :Is-disordered]
-   ;[-1.0 :Causal-if :Preventative-if]  ; at present there are no such propns
+  [;[-1.0 :Causal-if :Preventative-if]  ; at present there are no such propns
    ;[-1.0 :Is-king :Is-peasant]
    ;[-0.9 :Is-king :Is-subak]
    ;[-1.0 :Is-pest :Is-enemy-of-state] ; no effect since these would be used only in worldly propositions
+   ;[-1.0 :Is-pest :Is-demon]
+   ;[-1.0 :Is-enemy-of-state :Is-demon]
+   [-1.0 :Is-ordered :Is-disordered]
    [-1.0 :Persists :Ceases]
    [-1.0 :Succeeds :Fails]])
 
 ; examples:
 ; (def semantic-iffs [[-0.1 :CB-vpp :V-ipa] [-0.1 :CV-rpa :B-abp]])
 ; (def semantic-iffs [[-0.1 :B-king :P-subak]])
-(def semantic-iffs [])
+(def semantic-iffs [
+                    ;[-0.1 :SB-king-fail-demon->disorder ]
+                    ;[-0.1 :SB-state-succeed-demon->order :WP-subak-succeed-rat->disorder]
+                    ;[-0.1 :WB-state-fail-enemy->disorder ]
+                    ;[-0.1 :WB-succeed-enemy-order ]
+
+                    ])
 
 ;; QUESTIONS:
 ;; There are several completely parallel propns here--i.e. identical but for the propn name/id.
@@ -92,7 +116,7 @@
    ;(defpropn WB-king Is-king [king])
    ;(defpropn WB-state Is-negara [state])
    ;(defpropn WB-enemy-bhutakala Is-bhutakala [enemy])
-   (defpropn WB-is-enemy Is-enemy-of-state [enemy])
+   ;(defpropn WB-is-enemy Is-enemy-of-state [enemy])
    (defpropn WB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
    (defpropn WB-king-for-subaks Struggles-on-behalf [king subak])
    (defpropn WB-king-for-peasant1 Struggles-on-behalf [king peasant1])
@@ -101,9 +125,9 @@
    (defpropn WB-king-succeeds-against-enemy Succeeds [WB-king-against-enemy])
    (defpropn WB-state-ordered Is-ordered [state])
    (defpropn WB-state-disordered Is-disordered [state])
-   (defpropn WB-succeed-enemy-order Causal-if [WB-king-succeeds-against-enemy WB-state-ordered])
+   (defpropn WB-succeed-enemy->order Causal-if [WB-king-succeeds-against-enemy WB-state-ordered]) ;; THIS ONE
    (defpropn WB-king-fails-against-enemy Fails [WB-king-against-enemy])
-   (defpropn WB-state-fail-enemy->disorder Causal-if [WB-king-fails-against-enemy WB-state-disordered])
+   (defpropn WB-state-fail-enemy->disorder Causal-if [WB-king-fails-against-enemy WB-state-disordered]) ;; THIS ONE
    (defpropn WB-state-persists Persists [state])
    (defpropn WB-state-ordered->persists Causal-if [WB-state-ordered WB-state-persists])
    (defpropn WB-state-ceases Ceases [state])
@@ -114,7 +138,7 @@
    ;(defpropn WP-peasant1 Is-peasant [peasant1])
    ;(defpropn WP-peasant2 Is-peasant [peasant2])
    ;(defpropn WP-subak Is-subak [subak])
-   (defpropn WP-is-pest Is-pest [rat])
+   ;(defpropn WP-is-pest Is-pest [rat])
    (defpropn WP-peasant1-in-subak Member-of [peasant1 subak])
    (defpropn WP-peasant2-in-subak Member-of [peasant2 subak])
    (defpropn WP-subak-ordered Is-ordered [subak])
@@ -137,7 +161,7 @@
    ;(defpropn WP-peasants->subak-against-rat Causal-if [WP-peasants-against-rat WP-subak-against-rat])
    ;(defpropn WP-subak-succeeds-against-rat Succeeds [WP-subak-against-rat])
    (defpropn WP-subak-succeeds-against-rat Succeeds [WP-peasants-against-rat])
-   (defpropn WP-subak-succeed-rat->disorder Causal-if [WP-subak-succeeds-against-rat WP-subak-disordered])
+   (defpropn WP-subak-succeed-rat->order Causal-if [WP-subak-succeeds-against-rat WP-subak-ordered])
    (defpropn WP-subak-fails-against-rat Fails [WP-peasants-against-rat])
    (defpropn WP-subak-fail-rat->disorder Causal-if [WP-subak-fails-against-rat WP-subak-disordered])])
 
@@ -151,6 +175,7 @@
    ;(defpropn SB-water-sacred Is-sacred [water])
    (defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
    ;(defpropn SB-water-state-ordered Is-ordered [SB-water-nourishes-state])
+   ;(defpropn SB-demon Is-demon [demon])
    (defpropn SB-king-for-subaks Struggles-on-behalf [king subak])
    (defpropn SB-king-for-peasant1 Struggles-on-behalf [king peasant1])
    (defpropn SB-king-for-peasant2 Struggles-on-behalf [king peasant2])
@@ -158,9 +183,9 @@
    (defpropn SB-king-succeeds-against-demon Succeeds [SB-king-against-demon])
    (defpropn SB-state-ordered Is-ordered [state])
    (defpropn SB-state-disordered Is-disordered [state])
-   (defpropn SB-state-succeed-demon->order Causal-if [SB-king-succeeds-against-demon SB-state-ordered])
+   (defpropn SB-state-succeed-demon->order Causal-if [SB-king-succeeds-against-demon SB-state-ordered]) ;; THIS ONE
    (defpropn SB-king-fails-against-demon Fails [SB-king-against-demon])
-   (defpropn SB-king-fail-demon->disorder Causal-if [SB-king-fails-against-demon SB-state-disordered])
+   (defpropn SB-king-fail-demon->disorder Causal-if [SB-king-fails-against-demon SB-state-disordered]) ;; THIS ONE
    (defpropn SB-state-persists Persists [state])
    (defpropn SB-state-ordered->persists Causal-if [SB-state-ordered SB-state-persists])
    (defpropn SB-state-ceases Ceases [state])
@@ -172,6 +197,7 @@
    ;(defpropn SP-peasant2 Is-peasant [peasant2])
    ;(defpropn SP-subak Is-subak [subak])
    ;(defpropn SP-water-sacred Is-sacred [water])
+   ;(defpropn SP-demon Is-demon [demon])
    (defpropn SP-peasant1-in-subak Member-of [peasant1 subak])
    (defpropn SP-peasant2-in-subak Member-of [peasant2 subak])
    (defpropn SP-subak-ordered Is-ordered [subak])
