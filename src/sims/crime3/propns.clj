@@ -143,6 +143,11 @@
 ;; are between predicates.  ALSO note that these directives are NOT needed
 ;; when the two mapped predicates are identical.  In that case, a link of
 ;; weight +sem-similarity-link-value+ to SEMANTIC is added automatically.
+;; Note further: 
+;; These have no effect if there is no map node that maps the two predicates.
+;; There can only be a map node if there exist propositions using one predicate
+;; in one of the major analogues (i.e. "source" and "target", formerly), and one
+;; in the other.  Here the major analogues are "worldly" and "spiritual".
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Convenient summary collections:

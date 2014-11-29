@@ -8,8 +8,8 @@
             [popco.nn.analogy :as an]))
 
 ;;; PROPOSITIONS FOR BALI ANALOGIES BASED ON STEPHEN LANSING's publications,
-;;; especially _Perfect Order_, along with works by other authors such as
-;;; Clifford Geertz and Hildred Geertz.  See
+;;; especially _Perfect Order_ (e.g. p. 150), along with works by other authors
+;;; such as Clifford Geertz and Hildred Geertz.  See
 ;;; doc/sims/bali for documentation, including notes on motivation for 
 ;;; this representation in initialnts*.md.
 
@@ -47,7 +47,9 @@
 
 (defobj king)
 (defobj state)
-(defobj demon)
+;(defobj demon)
+(defobj royal-demon)
+(defobj peasant-demon)
 (defobj water)
 (defobj rice)
 (defobj enemy)
@@ -56,12 +58,17 @@
 (defobj subak)
 (defobj rat)
 
+;; Note two things:
+;; These have no effect if there is no map node that maps the two predicates.
+;; There can only be a map node if there exist propositions using one predicate
+;; in one of the major analogues (i.e. "source" and "target", formerly), and one
+;; in the other.  Here the major analogues are "worldly" and "spiritual".
 (def conceptual-relats 
   [[-1.0 :Is-ordered :Is-disordered]
-   ;[-1.0 :Causal-if :Preventative-if]  ; at present, not using Preventative-if, so this causes a NPE since there are no such propns
+   ;[-1.0 :Causal-if :Preventative-if]  ; at present there are no such propns
    ;[-1.0 :Is-king :Is-peasant]
    ;[-0.9 :Is-king :Is-subak]
-   [-1.0 :Is-pest :Is-enemy-of-state] ; TODO **CAUSING NPE**:  Why?
+   ;[-1.0 :Is-pest :Is-enemy-of-state] ; no effect since these would be used only in worldly propositions
    [-1.0 :Persists :Ceases]
    [-1.0 :Succeeds :Fails]])
 
@@ -77,8 +84,8 @@
 ;; worldly meaning.  Maybe that's a stretch.  However, is it at all reasonable to talk of persisting
 ;; as having both spiritual and worldly versions??
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Brahmanic
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; "WORLDLY" PROPOSITIONS (one of the two major analogues--one side of the mappings in the analogy net)
 
 (def worldly-brahmanic-propns 
   [;(defpropn WB-demon-bhutakala Is-bhutakala [demon])
@@ -101,31 +108,6 @@
    (defpropn WB-state-ordered->persists Causal-if [WB-state-ordered WB-state-persists])
    (defpropn WB-state-ceases Ceases [state])
    (defpropn WB-state-disordered->ceases Causal-if [WB-state-disordered WB-state-ceases])])
-
-(def spiritual-brahmanic-propns 
-  [;(defpropn SB-demon-bhutakala Is-bhutakala [demon])
-   ;(defpropn SB-king Is-king [king])
-   ;(defpropn SB-state Is-negara [state])
-   ;(defpropn SB-water-sacred Is-sacred [water])
-   (defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
-   ;(defpropn SB-water-state-ordered Is-ordered [SB-water-nourishes-state])
-   (defpropn SB-king-for-subaks Struggles-on-behalf [king subak])
-   (defpropn SB-king-for-peasant1 Struggles-on-behalf [king peasant1])
-   (defpropn SB-king-for-peasant2 Struggles-on-behalf [king peasant2])
-   (defpropn SB-king-against-demon Struggles-alone [king demon])
-   (defpropn SB-king-succeeds-against-demon Succeeds [SB-king-against-demon])
-   (defpropn SB-state-ordered Is-ordered [state])
-   (defpropn SB-state-disordered Is-disordered [state])
-   (defpropn SB-state-succeed-demon->order Causal-if [SB-king-succeeds-against-demon SB-state-ordered])
-   (defpropn SB-king-fails-against-demon Fails [SB-king-against-demon])
-   (defpropn SB-king-fail-demon->disorder Causal-if [SB-king-fails-against-demon SB-state-disordered])
-   (defpropn SB-state-persists Persists [state])
-   (defpropn SB-state-ordered->persists Causal-if [SB-state-ordered SB-state-persists])
-   (defpropn SB-state-ceases Ceases [state])
-   (defpropn SB-state-disordered->ceases Causal-if [SB-state-disordered SB-state-ceases])])
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Subak
 
 (def worldly-peasant-propns
   [;(defpropn WP-demon-bhutakala Is-bhutakala [demon])
@@ -158,6 +140,31 @@
    (defpropn WP-subak-succeed-rat->disorder Causal-if [WP-subak-succeeds-against-rat WP-subak-disordered])
    (defpropn WP-subak-fails-against-rat Fails [WP-peasants-against-rat])
    (defpropn WP-subak-fail-rat->disorder Causal-if [WP-subak-fails-against-rat WP-subak-disordered])])
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; "SPIRITUAL" PROPOSITIONS (one of the two major analogues--one side of the mappings in the analogy net)
+
+(def spiritual-brahmanic-propns 
+  [;(defpropn SB-demon-bhutakala Is-bhutakala [demon])
+   ;(defpropn SB-king Is-king [king])
+   ;(defpropn SB-state Is-negara [state])
+   ;(defpropn SB-water-sacred Is-sacred [water])
+   (defpropn SB-water-nourishes-state Nourishes [water state])  ;; "nourishes"??  "state"?? 
+   ;(defpropn SB-water-state-ordered Is-ordered [SB-water-nourishes-state])
+   (defpropn SB-king-for-subaks Struggles-on-behalf [king subak])
+   (defpropn SB-king-for-peasant1 Struggles-on-behalf [king peasant1])
+   (defpropn SB-king-for-peasant2 Struggles-on-behalf [king peasant2])
+   (defpropn SB-king-against-demon Struggles-alone [king demon])
+   (defpropn SB-king-succeeds-against-demon Succeeds [SB-king-against-demon])
+   (defpropn SB-state-ordered Is-ordered [state])
+   (defpropn SB-state-disordered Is-disordered [state])
+   (defpropn SB-state-succeed-demon->order Causal-if [SB-king-succeeds-against-demon SB-state-ordered])
+   (defpropn SB-king-fails-against-demon Fails [SB-king-against-demon])
+   (defpropn SB-king-fail-demon->disorder Causal-if [SB-king-fails-against-demon SB-state-disordered])
+   (defpropn SB-state-persists Persists [state])
+   (defpropn SB-state-ordered->persists Causal-if [SB-state-ordered SB-state-persists])
+   (defpropn SB-state-ceases Ceases [state])
+   (defpropn SB-state-disordered->ceases Causal-if [SB-state-disordered SB-state-ceases])])
 
 (def spiritual-peasant-propns
   [;(defpropn SP-demon-bhutakala Is-bhutakala [demon])
