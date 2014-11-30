@@ -22,19 +22,15 @@
 ;; Propns shared between Brahmanic and peasant domains start with "XS" or "XW".
 
 
-;; YO
-;popco.core.popco=> (list :siobhan :wilbur (first (map #(apply concat %) (map zero-indices (map :activns (map :propn-net (:persons p100)))))))
+;; YO: These propns get zero activation when they are part of the contrary analogue.  Should be negative.
 ;(:siobhan :wilbur (20 24 25 30 31 55 59 60 65 66))
-;popco.core.popco=> (list :sophie :wilfred (second (map #(apply concat %) (map zero-indices (map :activns (map :propn-net (:persons p100)))))))
-;(:sophie :wilfred (2 15 46 50))
-;popco.core.popco=> ((:id-vec (:propn-net (popn/get-person :sophie p100))) 2)
-;:SB-king-fail-demon->disorder
-;popco.core.popco=> ((:id-vec (:propn-net (popn/get-person :sophie p100))) 15)
-;:SB-state-succeed-demon->order
-;popco.core.popco=> ((:id-vec (:propn-net (popn/get-person :sophie p100))) 46)
-;:WB-state-fail-enemy->disorder
-;popco.core.popco=> ((:id-vec (:propn-net (popn/get-person :sophie p100))) 50)
-;:WB-succeed-enemy-order
+;;
+;(:sophie :wilfred (2 15 46 50)):
+;; 46 :WB-state-fail-enemy->disorder
+;; 50 :WB-succeed-enemy-order
+;;  2 :SB-king-fail-demon->disorder
+;; 15 :SB-state-succeed-demon->order
+;; Those 4 propns are IN THEIR OWN ISOLATED SUBNET in the propn net in WILFRED (wordly peasant propns pegged)
 
 
 (defpred Causal-if)
