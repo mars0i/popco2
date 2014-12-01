@@ -23,14 +23,31 @@
 
 
 ;; YO: These propns get zero activation when they are part of the contrary analogue.  Should be negative.
-;(:siobhan :wilbur (20 24 25 30 31 55 59 60 65 66))
 ;;
-;(:sophie :wilfred (2 15 46 50)):
-;; 46 :WB-state-fail-enemy->disorder
-;; 50 :WB-succeed-enemy-order
-;;  2 :SB-king-fail-demon->disorder
-;; 15 :SB-state-succeed-demon->order
-;; Those 4 propns are IN THEIR OWN ISOLATED SUBNET in the propn net in WILFRED (wordly peasant propns pegged)
+;; SOMETHING WIERD IN GEXF FILES.  I'M GETTING "<->"s.
+;;
+;; In sophie (spiritual peasant pegged) and wilfred (worldly peasant pegged),
+;; these 4 propns are IN THEIR OWN ISOLATED SUBNET:
+;; 
+;;  :WB-state-fail-enemy->disorder
+;;  :WB-succeed-enemy->order
+;;  :SB-king-fail-demon->disorder
+;;  :SB-state-succeed-demon->order
+;;
+;; In siobhan (and wilbur?), these 10 propns are in three isolated subnets:
+;; 
+;; [51 :WP-peasants-against-rat]
+;; [18 :SP-peasants-against-demon]
+;;
+;; [56 :WP-subak-fails-against-rat]
+;; [62 :WP-subak-succeeds-against-rat])
+;; [23 :SP-subak-fails-against-demon]
+;; [29 :SP-subak-succeeds-against-demon]
+;;
+;; [61 :WP-subak-succeed-rat->order]
+;; [55 :WP-subak-fail-rat->disorder]
+;; [28 :SP-subak-succeed-demon->order]
+;; [22 :SP-subak-fail-demon->disorder]
 
 
 (defpred Causal-if)
@@ -93,7 +110,7 @@
                     ;[-0.1 :SB-king-fail-demon->disorder ]
                     ;[-0.1 :SB-state-succeed-demon->order :WP-subak-succeed-rat->disorder]
                     ;[-0.1 :WB-state-fail-enemy->disorder ]
-                    ;[-0.1 :WB-succeed-enemy-order ]
+                    ;[-0.1 :WB-succeed-enemy->order ]
 
                     ])
 
@@ -121,7 +138,7 @@
    (defpropn WB-king-succeeds-against-enemy Succeeds [WB-king-against-enemy])
    (defpropn WB-state-ordered Is-ordered [state])
    (defpropn WB-state-disordered Is-disordered [state])
-   (defpropn WB-succeed-enemy->order Causal-if [WB-king-succeeds-against-enemy WB-state-ordered]) ;; THIS ONE
+   (defpropn WB-king-succeed-enemy->order Causal-if [WB-king-succeeds-against-enemy WB-state-ordered]) ;; THIS ONE
    (defpropn WB-king-fails-against-enemy Fails [WB-king-against-enemy])
    (defpropn WB-state-fail-enemy->disorder Causal-if [WB-king-fails-against-enemy WB-state-disordered]) ;; THIS ONE
    (defpropn WB-state-persists Persists [state])
