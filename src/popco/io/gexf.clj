@@ -2,7 +2,7 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
-(ns popco.io.gexf-dynamic
+(ns popco.io.gexf
   (:require [clojure.data.xml :as x]
             [clojure.core.matrix :as mx]
             [popco.core.population :as popn]

@@ -11,7 +11,7 @@
   (:require [popco.communic.listen]
             [popco.core.main]
             [popco.io.propncsv]
-            [popco.io.gexf-dynamic] ; will probably change
+            [popco.io.gexf] ; will probably change
             [popco.nn.nets]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -42,4 +42,4 @@
 (def write-propn-activns-csv-for-R  popco.io.propncsv/write-propn-activns-csv-for-R)
 
 
-(def spit-graph                      popco.io.gexf-dynamic/spit-graph)
+(def spit-graph                      popco.io.gexf/spit-graph)
