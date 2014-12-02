@@ -99,6 +99,8 @@
    ;[-1.0 :Is-pest :Is-enemy-of-state] ; no effect since these would be used only in worldly propositions
    ;[-1.0 :Is-pest :Is-demon]
    ;[-1.0 :Is-enemy-of-state :Is-demon]
+   ;[-1.0 :Struggles-together :Struggles-alone]      ; applies to no nodes
+   ;[-1.0 :Struggles-together :Struggles-on-brehalf] ; applies to no nodes
    [-1.0 :Is-ordered :Is-disordered]
    [-1.0 :Persists :Ceases]
    [-1.0 :Succeeds :Fails]])
@@ -107,11 +109,12 @@
 ; (def semantic-iffs [[-0.1 :CB-vpp :V-ipa] [-0.1 :CV-rpa :B-abp]])
 ; (def semantic-iffs [[-0.1 :B-king :P-subak]])
 (def semantic-iffs [
-                    ;[-0.1 :SB-king-fail-demon->disorder ]
-                    ;[-0.1 :SB-state-succeed-demon->order :WP-subak-succeed-rat->disorder]
-                    ;[-0.1 :WB-state-fail-enemy->disorder ]
-                    ;[-0.1 :WB-king-succeed-enemy->order ]
-
+                    ; TODO EXPERIMENT:
+                    ; adding this links the 2-node subnet into the rest in siobhan e.g.
+                    ; but the negative activn isn't flowing into the other node.
+                    ;; TODO Question: In what sense do I ignore negative activns?
+                    ;; Is that what's supposed to happen *in the propn net*??
+                    [-0.1 :WP-peasants-against-rat :SB-king-against-demon]
                     ])
 
 ;; QUESTIONS:
