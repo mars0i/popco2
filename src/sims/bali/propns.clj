@@ -22,9 +22,11 @@
 ;; Propns shared between Brahmanic and peasant domains start with "XS" or "XW".
 
 
-;; YO: These propns get zero activation when they are part of the contrary analogue.  Should be negative.
-;;
-;; SOMETHING WIERD IN GEXF FILES.  I'M GETTING "<->"s.
+;; YO: These propns get zero activation when they are part of the contrary analogue.  Should be negative, possibly.
+;; Well, no, it's OK.  crime3 didn't have these isolated subnets, maybe, but sanday definitely did.
+;; And trying to get rid of them is difficult given that I'm using the Grossberg algorithm on the proposition net,
+;; since it means that if you create a semantic link that pushes one member of the net to negative, it will
+;; have no effect on any other member of the subnet--the Grossberg algorithm doesn't transmit negative activations.
 ;;
 ;; In sophie (spiritual peasant pegged) and wilfred (worldly peasant pegged),
 ;; these 4 propns are IN THEIR OWN ISOLATED SUBNET:
@@ -114,7 +116,7 @@
                     ; but the negative activn isn't flowing into the other node.
                     ;; TODO Question: In what sense do I ignore negative activns?
                     ;; Is that what's supposed to happen *in the propn net*??
-                    [-0.1 :WP-peasants-against-rat :SB-king-against-demon]
+                    ;[-0.1 :WP-peasants-against-rat :SB-king-against-demon]
                     ])
 
 ;; QUESTIONS:
