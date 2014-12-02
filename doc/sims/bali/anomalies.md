@@ -1,7 +1,8 @@
 anomalies.md
 ====
 
-Notes on anomalies in the analogies occurring during the development of bali/propns.clj.
+Notes on anomalies in the analogies occurring during the development of
+bali/propns.clj.
 
 -------
 
@@ -208,3 +209,35 @@ UH-OH: I think that I've just been running the same version of
 propns.clj over and over again.  On cheaha, I was using the jar file
 I'd compiled.  i.e it's not getting new versions.  I'm switching to
 'lein run'.
+
+-------
+
+cf. propnVersionsNotes.md
+
+In the scatterplost for 15-15-16-18 propositions, there is a
+good-looking effect of worldly peasant propns on spiritual propns
+(i.e. roughly as if everyone was a "Wilfred")--the mean is moved right.  But 
+the effect of worldly Brahmanic propns (i.e. roughly like if everyone was a
+"Wilbur"), the degree to which the mean is moved up seems very small.
+(And in the 16-16-16-16 propns, the mean in the worldly-Brahmanic
+condition is *lower* than in the worldly-peasant condition. !)
+
+One reason for this might be simply that there are more spiritual
+peasant propns (18) than spiritual brahman propns (15).  So in the
+worldly peasant condition, you have 18 propns being pushed up, rather
+than 15.  So the averages are higher.  On this hypothesis, *one solution
+would be to add more propositions to the spiritual brahmanic analogue*.
+(Although that doesn't explain why things are weird in the 4x16 propns
+model.)
+
+Another possible reason for the weakness of the effect on the
+spiritual brahmanic propositions in the worldly brahmanic condition is
+this:  In the contrary worldly analogues--i.e. the propositions that
+are expected to be to be zero or negative in a given bias case--the
+spiritual Brahmanic propositions have more zero-activn, isolated
+subnet propositions (5) than do the spiritual peasant propositions (2).
+So maybe the issue is that there's more negativity, so to speak, in
+the spiritual brahmanic dimension in the worldly peasant condition,
+than negativity in the spiritual peasant dimension during the worldly
+brahmanic condition.  **Does this help explain the problem?**  Or make it
+worse?
