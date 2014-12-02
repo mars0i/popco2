@@ -28,13 +28,13 @@
 ;;
 ;; In sophie (spiritual peasant pegged) and wilfred (worldly peasant pegged),
 ;; these 4 propns are IN THEIR OWN ISOLATED SUBNET:
-;; 
 ;;  :WB-state-fail-enemy->disorder
-;;  :WB-succeed-enemy->order
+;;  :WB-king-succeed-enemy->order
 ;;  :SB-king-fail-demon->disorder
 ;;  :SB-state-succeed-demon->order
+;; But e.g. in wilbur, the two WB propns are connected to SALIENT.
 ;;
-;; In siobhan (and wilbur?), these 10 propns are in three isolated subnets:
+;; In siobhan (spiritual brahman) and wilbur (worldly brahman), these 10 propns are in three isolated subnets:
 ;; 
 ;; [51 :WP-peasants-against-rat]
 ;; [18 :SP-peasants-against-demon]
@@ -110,7 +110,7 @@
                     ;[-0.1 :SB-king-fail-demon->disorder ]
                     ;[-0.1 :SB-state-succeed-demon->order :WP-subak-succeed-rat->disorder]
                     ;[-0.1 :WB-state-fail-enemy->disorder ]
-                    ;[-0.1 :WB-succeed-enemy->order ]
+                    ;[-0.1 :WB-king-succeed-enemy->order ]
 
                     ])
 
