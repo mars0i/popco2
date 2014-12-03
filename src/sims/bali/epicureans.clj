@@ -13,7 +13,7 @@
       spiritual+worldly-peasant-propns   (concat p/spiritual-propns p/worldly-peasant-propns)
 ;; args:                        ID  UNMASKED            PROPN-NET             ANALOGY-NET UTTERABLE-IDS          GROUPS            TALK-TO-GROUPS     MAX-TALK-TO
       aa     (pers/make-person :aa  p/spiritual-propns  p/spiritual-perc-pnet p/anet      p/spiritual-propn-ids  [:pundits]        [:epicurean-gods]  1)
-      nina   (pers/make-person :aa  p/spiritual-propns  p/no-perc-pnet        p/anet      p/spiritual-propn-ids  [:epicurean-gods] [:epicurean-gods]  1)]
+      nina   (pers/make-person :nina  p/spiritual-propns  p/no-perc-pnet        p/anet      p/spiritual-propn-ids  [:epicurean-gods] [:epicurean-gods]  1)]
       
   (def popn (pp/make-population (vec
                                   (concat
