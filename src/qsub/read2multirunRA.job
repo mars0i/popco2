@@ -16,6 +16,7 @@ pwd
 
 # if there's a 4th arg, it's a jobid.  We are to wait until all jobs with that id are done.
 if [ -n "$4" ]; then
+	echo
 	while [ -n "`qstat | grep $4`" ] ; do echo -n '.' ; sleep 10m ; done
 fi
 
