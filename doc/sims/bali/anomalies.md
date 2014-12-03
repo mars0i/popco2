@@ -222,6 +222,12 @@ the effect of worldly Brahmanic propns (i.e. roughly like if everyone was a
 (And in the 16-16-16-16 propns, the mean in the worldly-Brahmanic
 condition is *lower* than in the worldly-peasant condition. !)
 
+(This heightens the need for a statistical test in the end, such as the
+Kolmogorov-Smirnov tests I did on the crime3 distributions, but since
+I'm focusing on means, informally, maybe a more commonplace test would
+be appropriate.  At this stage *looking* significant is a worthwhile
+starting point.)
+
 One reason for this might be simply that there are more spiritual
 peasant propns (18) than spiritual brahman propns (15).  So in the
 worldly peasant condition, you have 18 propns being pushed up, rather
@@ -230,14 +236,15 @@ would be to add more propositions to the spiritual brahmanic analogue*.
 (Although that doesn't explain why things are weird in the 4x16 propns
 model.)
 
-Another possible reason for the weakness of the effect on the
-spiritual brahmanic propositions in the worldly brahmanic condition is
-this:  In the contrary worldly analogues--i.e. the propositions that
+??:
+
+Another difference that might be relevant:
+In the contrary worldly analogues--i.e. the propositions that
 are expected to be to be zero or negative in a given bias case--the
 spiritual Brahmanic propositions have more zero-activn, isolated
 subnet propositions (5) than do the spiritual peasant propositions (2).
 So maybe the issue is that there's more negativity, so to speak, in
 the spiritual brahmanic dimension in the worldly peasant condition,
 than negativity in the spiritual peasant dimension during the worldly
-brahmanic condition.  **Does this help explain the problem?**  Or make it
-worse?
+brahmanic condition.  
+
