@@ -8,16 +8,22 @@
 #$ -m eas
 #$ -M marshall@logical.net
 
-cd $UABGRID_SCRATCH/data
-pwd
-# usage: ~/bin/read2multirunRA.sh data-dir mra-name 'c("csv1","csv2",...)'
-# or:    ~/bin/read2multirunRA.sh data-dir mra-name "`echo *.csv | files2vec`"
-# (Don't forget the outer quotes.)`
+# Usage: qsub read2multirunRA.job mra-name [jobid]
+# Should be run from the directory containing the csv files.
+# The output R datafile will be deposited there as well.
 
-# if there's a 4th arg, it's a jobid.  We are to wait until all jobs with that id are done.
-if [ -n "$4" ]; then
+date
+
+# if there's a 2th arg, it's a jobid.  We are to wait until all jobs with that id are done.
+if [ -n "$2" ]; then
 	echo
-	while [ -n "`qstat | grep $4`" ] ; do echo -n '.' ; sleep 10m ; done
+	while [ -n "`qstat | grep $2`" ] ; do echo '. ' ; sleep 10m ; done
 fi
 
-time ~/p2/src/qsub/read2multirunRA.sh $1 $2 $3
+date
+cd $UABGRID_SCRATCH/data
+pwd
+
+csvvec=`echo *.csv | ~/p2/src/R/shell/files2vec`
+
+time ~/p2/src/qsub/read2multirunRA.sh `pwd` $1 "$csvvec"
