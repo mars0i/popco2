@@ -14,7 +14,7 @@
 
 date
 
-# if there's a 2th arg, it's a jobid.  We are to wait until all jobs with that id are done.
+# if there's a 2nd arg, it's a jobid.  We are to wait until all jobs with that id are done.
 if [ -n "$2" ]; then
 	echo
 	while [ -n "`qstat | grep $2`" ] ; do echo '. ' ; sleep 10m ; done
