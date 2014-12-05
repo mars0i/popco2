@@ -517,19 +517,20 @@ multiRAs2combinedMeanDF <- function(mras, biases, dom1, dom2, lastTick=dim(mras[
 # Example of typical usage: 
 #   mi <- multiRA2meanDF(mra2i, "H", "P", firstTick=1500)
 # which would produce a two-column dataframe of per-run means for hunting and parenting
-multiRA2meanDF <- function(multiRA, dom1, dom2, lastTick=dim(multiRA)[3], firstTick=lastTick) {
+multiRA2meanDF <- function(mra, dom1, dom2, lastTick=dim(mra)[3], firstTick=lastTick) {
   print("In multiRA2meanDF") # DEBUG 
-  # mra <- stripRunPaths(multiRA) # for large runs I'm getting "Error: cannot allocate vector of size 9.5 Gb" in this step
-  # now doing this step later to the dataframe
+  # mra <- stripRunPaths(mra) # for large runs I'm getting "Error: cannot allocate vector of size 9.5 Gb" in this step, I think
+  # now doing this step later, to the dataframe
   df <- data.frame(apply(multiRA2punditFreeDomRA(mra[,,firstTick:lastTick,,drop=F], dom1), 4, mean),
                    apply(multiRA2punditFreeDomRA(mra[,,firstTick:lastTick,,drop=F], dom2), 4, mean))
+  print("In multiRA2meanDF: created dataframe") # DEBUG 
   names(df) <- c(dom1, dom2)
   df$rawsum <- "raw"
+  dimnames(df)[[1]] <- lapply(dimnames(df)[[1]], basename) # replaces stripRunPaths step above
   df <- rbind(df, c(colMeans(df[,1:2]), rawsum="mean"))
   # One of the steps above--not sure which--coerces the numbers to strings; undo that change:
   df[[dom1]] <- as.numeric(df[[dom1]])
   df[[dom2]] <- as.numeric(df[[dom2]])
-  dimnames(df)[[1]] <- lapply(dimnames(df)[[1]], basename) # replaces stripRunPaths step above
   df
 }
 
