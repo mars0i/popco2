@@ -14,8 +14,8 @@ while [ -n "`qstat | grep $1`" ] ; do sleep 10m ; done
 
 if [ -f bali.rdata ]; then
 	cd ~/data
-	qsub -l h_rt=18:00:00,vf=20G -N finddisg ~/p2/src/qsub/submitanything.job Rscript --no-init-file --verbose ~/p2/src/R/R/finddisagreementBali.R
-	qsub -l h_rt=18:00:00,vf=20G -N createdf ~/p2/src/qsub/submitanything.job Rscript --no-init-file --verbose ~/p2/src/R/R/createdataframeBali.R
+	qsub -l h_rt=18:00:00,vf=30G -N finddisg ~/p2/src/qsub/submitanything.job Rscript --no-init-file --verbose ~/p2/src/R/R/finddisagreementBali.R
+	qsub -l h_rt=18:00:00,vf=40G -N createdf ~/p2/src/qsub/submitanything.job Rscript --no-init-file --verbose ~/p2/src/R/R/createdataframeBali.R
 else
 	echo `basename $0`: datafile missing
 	exit 2
