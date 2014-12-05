@@ -1,0 +1,18 @@
+source("~/p2/src/R/R/df2ra.R")
+load("bali.rdata")
+
+print("tolerance 0.1:")
+print("worldly brahmanic bias:")
+print(findRunsWithDisagreement(bali[3:42,,,], 0.1))
+print("worldly peasant bias:")
+print(findRunsWithDisagreement(bali[43:82,,,], 0.1))
+print("both bias:")
+print(findRunsWithDisagreement(bali[83:122,,,], 0.1))
+
+print("tolerance 0.01:")
+print("worldly brahmanic bias:")
+print(findRunsWithDisagreement(bali[3:42,,,], 0.01))
+print("worldly peasant bias:")
+print(findRunsWithDisagreement(bali[43:82,,,], 0.01))
+print("both bias:")
+print(findRunsWithDisagreement(bali[83:122,,,], 0.01))

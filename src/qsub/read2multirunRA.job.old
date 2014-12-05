@@ -1,0 +1,27 @@
+#!/bin/bash
+#$ -cwd
+#$ -V
+#$ -S /bin/bash
+#$ -l h_rt=20:00:00,vf=48G
+#$ -e errRead2mra$JOB_ID.txt
+#$ -o outRead2mra$JOB_ID.txt
+#$ -m eas
+#$ -M marshall@logical.net
+
+# usage: ~/bin/read2multirunRA.sh data-dir mra-name 'c("csv1","csv2",...)' [jobid]
+# or:    ~/bin/read2multirunRA.sh data-dir mra-name "`echo *.csv | files2vec`" [jobid]
+# (Don't forget the outer quotes.)`
+
+date
+
+# if there's a 4th arg, it's a jobid.  We are to wait until all jobs with that id are done.
+if [ -n "$4" ]; then
+	echo
+	while [ -n "`qstat | grep $4`" ] ; do echo -n '.' ; sleep 10m ; done
+fi
+
+date
+cd $UABGRID_SCRATCH/data
+pwd
+
+time ~/p2/src/qsub/read2multirunRA.sh $1 $2 $3
