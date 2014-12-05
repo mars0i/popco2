@@ -56,6 +56,7 @@ basename <- function(path) paste(sub(".*/", "", path), collapse=", ")
 
 # usage: mra <- stripRunPaths(mra)
 stripRunPaths <- function(mra) {
+  print("In stripRunPaths") # DEBUG
   dimnames(mra)$run <- lapply(dimnames(mra)$run, basename)
   mra
 }
@@ -443,6 +444,7 @@ getNumPundits <- function(multiRA) {
 
 # given a multi-run array and propn domain name string, strip pundits and return a list containing domain-specific array
 multiRA2punditFreeDomRA <- function(multiRA, dom) {
+  print("In multiRA2punditFreeDomRA") # DEBUG
   removePersons(multiRA2domRA(multiRA, dom), punditPrefix)
 }
 
@@ -459,25 +461,9 @@ domRA2runMeanVec <- function(domRA) {
   personMeanMat2runMeanVec(domRA2personMeanMat(domRA))
 }
 
-# Produce a dataframe of mean activations in two domains
-# Example of typical usage: 
-#   mi <- multiRA2meanDF(mra2i, "H", "P", firstTick=1500)
-# which would produce a two-column dataframe of per-run means for hunting and parenting
-multiRA2meanDF <- function(multiRA, dom1, dom2, lastTick=dim(multiRA)[3], firstTick=lastTick) {
-  mra <- stripRunPaths(multiRA)
-  df <- data.frame(apply(multiRA2punditFreeDomRA(mra[,,firstTick:lastTick,,drop=F], dom1), 4, mean),
-                   apply(multiRA2punditFreeDomRA(mra[,,firstTick:lastTick,,drop=F], dom2), 4, mean))
-  names(df) <- c(dom1, dom2)
-  df$rawsum <- "raw"
-  df <- rbind(df, c(colMeans(df[,1:2]), rawsum="mean"))
-  # One of the steps above--not sure which--coerces the numbers to strings; undo that change:
-  df[[dom1]] <- as.numeric(df[[dom1]])
-  df[[dom2]] <- as.numeric(df[[dom2]])
-  df
-}
-
 # Compress a normal mra by replacing the proposition activations with averages over propositions in each domain.
 multiRA2domMeanRA <- function(multiRA, doms, lastTick=dim(multiRA)[3], firstTick=1) {
+  print("In multiRA2domMeanRA") # DEBUG
   mra <- stripRunPaths(multiRA)
   dimnms <- dimnames(mra)
   numdoms <- length(doms)
@@ -522,11 +508,31 @@ multiRA2domMeanRA <- function(multiRA, doms, lastTick=dim(multiRA)[3], firstTick
 # df <- multiRAs2combinedMeanDF(list(mra1, mra2, mra3), c("virus", "beast", "both"), "CV", "CB")
 # df <- multiRAs2combinedMeanDF(list(mra[2:11,,,], mra[12:21,,,]), c("beast", "virus"), "CV", "CB")
 multiRAs2combinedMeanDF <- function(mras, biases, dom1, dom2, lastTick=dim(mras[[1]])[3], firstTick=lastTick) {
+  print("In multiRAs2combinedMeanDF") # DEBUG
   combineMeanDFsWithBiases(lapply(mras, multiRA2meanDF, dom1, dom2, lastTick, firstTick), biases)
+}
+
+# Produce a dataframe of mean activations in two domains
+# Example of typical usage: 
+#   mi <- multiRA2meanDF(mra2i, "H", "P", firstTick=1500)
+# which would produce a two-column dataframe of per-run means for hunting and parenting
+multiRA2meanDF <- function(multiRA, dom1, dom2, lastTick=dim(multiRA)[3], firstTick=lastTick) {
+  print("In multiRA2meanDF") # DEBUG
+  mra <- stripRunPaths(multiRA)
+  df <- data.frame(apply(multiRA2punditFreeDomRA(mra[,,firstTick:lastTick,,drop=F], dom1), 4, mean),
+                   apply(multiRA2punditFreeDomRA(mra[,,firstTick:lastTick,,drop=F], dom2), 4, mean))
+  names(df) <- c(dom1, dom2)
+  df$rawsum <- "raw"
+  df <- rbind(df, c(colMeans(df[,1:2]), rawsum="mean"))
+  # One of the steps above--not sure which--coerces the numbers to strings; undo that change:
+  df[[dom1]] <- as.numeric(df[[dom1]])
+  df[[dom2]] <- as.numeric(df[[dom2]])
+  df
 }
 
 # dfs must be a list, but biases can be either a list or a vector
 combineMeanDFsWithBiases <- function(dfs=NULL, biases=NULL) {
+  print("In combinedMeanDFsWithBiases") # DEBUG
   if (length(dfs) == 0 || length(biases) == 0) {stop("dfs or biases is empty.")}
   if (length(dfs) != length(biases)) {stop("lengths of dfs and biases are not the same.")}
 
