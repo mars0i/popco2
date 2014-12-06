@@ -1,0 +1,15 @@
+On 12/4/2014 and 12/5/2014, I ran bali/threegroups2pundits.clj with the
+15-15-16-18 and 4x16 propositions, respectively.  There was the following
+error in creation of the run mean dataframes:
+In threegroups2pundits.clj, as opposed to threegroups.clj (one pundit), I
+put the persons in the order: brahmans, boths, peasants.
+However, the script for creating the dataframes, createdataframeBali2pundits.R,
+assumed that the order was brahmans, peasants, boths (which was the order in
+threegroups.clj).  Thus the both data was labeled "peasant", and the peasant
+data was labeled "both".
+
+Now (12/5/2014 evening), I'm going to (a) fix the dataframes, and (b) change
+the order of persons in threegroups2pundits.clj to match the order in
+threegroups.clj.
+Note however, that the order of persons in the main datafile, bali.rdata, though
+labeled correctly, is in a different order than in the one-pundit runs.
