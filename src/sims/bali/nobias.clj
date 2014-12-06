@@ -2,7 +2,8 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
-(ns sims.bali.epicureans
+;; Formerly sims.bali.epicureans
+(ns sims.bali.nobias
   (:require [popco.core.person :as pers]
             [popco.core.population :as pp]
             [sims.bali.collections :as c]))
