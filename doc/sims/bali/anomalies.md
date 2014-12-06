@@ -248,3 +248,16 @@ the spiritual brahmanic dimension in the worldly peasant condition,
 than negativity in the spiritual peasant dimension during the worldly
 brahmanic condition.  
 
+-------
+
+(1) I'm getting the expected effects using two worldy-speaking pundits,
+one all positive and one all negative.  Previous discussion uses only
+one pundit, an all-positive speaker.  The two-pundit model was in fact
+what I was doing with crime3.  I'll investigate further, but two
+pundits seems to be the appropriate system.
+
+(2) This works fine with the 15-15-16-18 propositions, which are
+intuitively more sensible than the 16-16-16-16 propositions (4x16)
+that I explored.  The 15-15-16-18 propositions also gives better
+results, which is perhaps due to the fact that they better capture the
+relevant analogies.
