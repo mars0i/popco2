@@ -13,12 +13,12 @@
       aat     (pers/make-person :aat  c/spiritual-propns                 c/spiritual-perc-pnet     c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1)
       aaf     (pers/make-person :aaf  c/spiritual-propns                 c/spiritual-neg-perc-pnet c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1)
       brahman (pers/make-person :brah spiritual+worldly-brahmanic-propns c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:brahmans] [:brahmans]                     1) 
-      both    (pers/make-person :both c/all-propns                       c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:bothans]  [:bothans]                      1)
-      peasant (pers/make-person :peas spiritual+worldly-peasant-propns   c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:peasants] [:peasants]                     1)] 
+      peasant (pers/make-person :peas spiritual+worldly-peasant-propns   c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:peasants] [:peasants]                     1)
+      both    (pers/make-person :both c/all-propns                       c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:bothans]  [:bothans]                      1)] 
       
   (def popn (pp/make-population (vec
                                   (concat
                                     [aat aaf]
                                     (take 40 (pers/new-person-seq-from-old brahman))
-                                    (take 40 (pers/new-person-seq-from-old both))
-                                    (take 40 (pers/new-person-seq-from-old peasant)))))))
+                                    (take 40 (pers/new-person-seq-from-old peasant))
+                                    (take 40 (pers/new-person-seq-from-old both)))))))
