@@ -143,9 +143,9 @@
    (defpropn WB-king-succeeds-against-enemy Succeeds [WB-king-against-enemy])
    (defpropn WB-state-ordered Is-ordered [state])
    (defpropn WB-state-disordered Is-disordered [state])
-   (defpropn WB-king-succeed-enemy->order Causal-if [WB-king-succeeds-against-enemy WB-state-ordered]) ;; THIS ONE
+   (defpropn WB-king-succeed-enemy->order Causal-if [WB-king-succeeds-against-enemy WB-state-ordered])
    (defpropn WB-king-fails-against-enemy Fails [WB-king-against-enemy])
-   (defpropn WB-state-fail-enemy->disorder Causal-if [WB-king-fails-against-enemy WB-state-disordered]) ;; THIS ONE
+   (defpropn WB-state-fail-enemy->disorder Causal-if [WB-king-fails-against-enemy WB-state-disordered])
    (defpropn WB-state-persists Persists [state])
    (defpropn WB-state-ordered->persists Causal-if [WB-state-ordered WB-state-persists])
    (defpropn WB-state-ceases Ceases [state])
@@ -201,9 +201,9 @@
    (defpropn SB-king-succeeds-against-demon Succeeds [SB-king-against-demon])
    (defpropn SB-state-ordered Is-ordered [state])
    (defpropn SB-state-disordered Is-disordered [state])
-   (defpropn SB-state-succeed-demon->order Causal-if [SB-king-succeeds-against-demon SB-state-ordered]) ;; THIS ONE
+   (defpropn SB-state-succeed-demon->order Causal-if [SB-king-succeeds-against-demon SB-state-ordered])
    (defpropn SB-king-fails-against-demon Fails [SB-king-against-demon])
-   (defpropn SB-king-fail-demon->disorder Causal-if [SB-king-fails-against-demon SB-state-disordered]) ;; THIS ONE
+   (defpropn SB-king-fail-demon->disorder Causal-if [SB-king-fails-against-demon SB-state-disordered])
    (defpropn SB-state-persists Persists [state])
    (defpropn SB-state-ordered->persists Causal-if [SB-state-ordered SB-state-persists])
    (defpropn SB-state-ceases Ceases [state])
