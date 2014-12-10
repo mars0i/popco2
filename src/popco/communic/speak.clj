@@ -59,7 +59,7 @@
                                 (mx/emul propn-mask utterable-mask propn-activns))]
     (for [i (range (count propn-id-vec))
           :let [activn (mx/mget utterable-abs-activns i)]
-          :when ((:worth-saying pers) pers activn)]
+          :when ((:worth-saying-fn pers) pers activn)]
       (propn-id-vec i))))
 
 (defn choose-propn-ids-to-say
