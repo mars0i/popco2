@@ -7,6 +7,7 @@
   (:require [utils.general :as ug]
             [utils.random :as ran]
             [popco.communic.listen :as cl]
+            [popco.communic.speak :as cs]
             [popco.core.constants :as cn]
             [popco.nn.nets :as nn]
             [popco.nn.propn :as pn]
@@ -21,7 +22,7 @@
                    analogy-net
                    analogy-idx-to-propn-idxs utterable-ids utterable-mask
                    groups  talk-to-groups  talk-to-persons
-                   max-talk-to rng])
+                   max-talk-to rng worth-saying-fn])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
@@ -42,7 +43,10 @@
    :max-talk-to     - Maximum number of people that this person will talk to in
                       any one tick.  If >= (count talk-to-persons), has no 
                       effect.(popco1: num-listeners)
-   :rng             - A random number generator object.  e.g. can be passed to rand-idx.")
+   :rng             - A random number generator object.  e.g. can be passed to rand-idx.
+   :worth-saying-fn - A function of a person and an activation value that will decide
+                      whether the proposition the activation value came from is worth saying.
+                      Defaults to a standard test, but can be replaced.")
 
 ;; MAYBE: Consider making code below more efficient if popco is extended
 ;; to involve regularly creating new persons in the middle of simulation runs
@@ -58,7 +62,7 @@
   with every other person, however, since this will not be modified.  (The 
   analogy mask might be modified.)  See docstring for ->Person for info on other
   arguments."
-  [id propns propn-net analogy-net utterable-ids groups talk-to-groups max-talk-to]
+  [id propns propn-net analogy-net utterable-ids groups talk-to-groups max-talk-to & worth-saying-fn-seq]
   (let [num-poss-propn-nodes (count (:node-vec propn-net))
         num-poss-analogy-nodes (count (:node-vec analogy-net))
         propn-ids (map :id propns)
@@ -75,7 +79,10 @@
                        (vec talk-to-groups)
                        nil  ; talk-to-persons will get filled when make-population calls update-talk-to-persons
                        max-talk-to
-                       (ran/make-rng (ran/next-long cn/initial-rng)))]
+                       (ran/make-rng (ran/next-long cn/initial-rng))
+                       (if worth-saying-fn-seq 
+                         (first worth-saying-fn-seq)
+                         cs/worth-saying))] ; this function defaults to one defined in communic.speak
     ;; set up propn net and associated vectors:
     (doseq [propn-id propn-ids] (cl/add-to-propn-net! (:propn-net pers) propn-id))                ; unmask propn nodes
     (nn/set-mask! (:mask (:propn-net pers)) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))        ; special mask val to undo next-activn's decay on this node
