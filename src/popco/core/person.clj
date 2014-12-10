@@ -105,7 +105,7 @@
            analogy-net
            analogy-idx-to-propn-idxs  utterable-ids  utterable-mask
            groups  talk-to-groups  talk-to-persons
-           max-talk-to]}]
+           max-talk-to worth-saying-fn]}]
   (->Person id
             (pn/clone propn-net)
             (an/clone analogy-net) ; has new mask and activns, but shares the rest, including weight matrices
@@ -116,7 +116,8 @@
             talk-to-groups             ;  they'll have to be replaced anyway.           
             talk-to-persons
             max-talk-to  ; an integer
-            (ran/make-rng (ran/next-long cn/initial-rng))))
+            (ran/make-rng (ran/next-long cn/initial-rng))
+            worth-saying-fn))
 
 (defn new-person-from-old
   "Create a clone of person pers, but with name new-name, or a name generated
