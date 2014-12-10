@@ -54,6 +54,11 @@
 ;(defmethod next-long ec.util.MersenneTwisterFast [rng] (.nextLong rng))
 ;(defmethod next-long java.util.Random            [rng] (.nextLong rng))
 
+(defn next-double
+"Returns a random double in the half-open range from [0.0,1.0)."
+  [rng]
+  (.nextDouble rng))
+
 ;; lazy
 ;; This version repeatedly calls nth coll with a new random index each time.
 ;(defn sample-with-repl-1
