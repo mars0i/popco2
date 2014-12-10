@@ -14,7 +14,7 @@ while [ -n "`qstat | grep $1`" ] ; do sleep 10m ; done
 
 if [ -f bali.rdata ]; then
 	cd ~/data
-	qsub -l h_rt=18:00:00,vf=16G -N `basename "$2"` ~/p2/src/qsub/submitanything.job "$2"
+	qsub -l h_rt=18:00:00,vf=40G -N `basename "$2"` ~/p2/src/qsub/submitanything.job Rscript --no-init-file --verbose "$2"
 else
 	echo `basename $0`: datafile missing
 	exit 2
