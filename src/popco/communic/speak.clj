@@ -22,6 +22,11 @@
     talk-to-persons
     (ran/sample-without-repl rng max-talk-to talk-to-persons)))
 
+(defn worth-saying
+  [pers activn]
+  (< (ran/next-double (:rng pers)) 
+     activn))
+
 ;; Note that SALIENT will be filtered out because the usual procedures for creating
 ;; persons in a population puts only proposition ids in the utterable-ids field
 ;; of each person.  utterable-mask, used here, is created from utterable-ids.
@@ -35,7 +40,7 @@
   willing to communicate (ones unmasked in utterable-mask).  Each proposition
   in this intersection is then selected with probability equal to the absolute
   value of its activation."
-  [{:keys [propn-net utterable-mask rng]}] ; argument is a Person
+  [{:keys [propn-net utterable-mask rng] :as pers}] ; argument is a Person
   ;; absolute values of activns of unmasked utterable propns:
   (let [propn-mask (:mask propn-net)
         propn-activns (:activns propn-net)
@@ -43,9 +48,8 @@
         utterable-abs-activns (mx/abs
                                 (mx/emul propn-mask utterable-mask propn-activns))]
     (for [i (range (count propn-id-vec))
-          :let [randnum (ran/next-double rng)
-                activn (mx/mget utterable-abs-activns i)]
-          :when (< randnum activn)]
+          :let [activn (mx/mget utterable-abs-activns i)]
+          :when (worth-saying pers activn)]
       (propn-id-vec i))))
 
 (defn choose-propn-ids-to-say
