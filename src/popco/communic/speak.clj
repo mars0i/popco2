@@ -35,7 +35,7 @@
   willing to communicate (ones unmasked in utterable-mask).  Each proposition
   in this intersection is then selected with probability equal to the absolute
   value of its activation."
-  [{:keys [propn-net utterable-mask]}] ; argument is a Person
+  [{:keys [propn-net utterable-mask rng]}] ; argument is a Person
   ;; absolute values of activns of unmasked utterable propns:
   (let [propn-mask (:mask propn-net)
         propn-activns (:activns propn-net)
@@ -43,7 +43,7 @@
         utterable-abs-activns (mx/abs
                                 (mx/emul propn-mask utterable-mask propn-activns))]
     (for [i (range (count propn-id-vec))
-          :let [randnum (rand)
+          :let [randnum (ran/next-double rng)
                 activn (mx/mget utterable-abs-activns i)]
           :when (< randnum activn)]
       (propn-id-vec i))))
