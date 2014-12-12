@@ -53,6 +53,7 @@
 ;; See FakeNetLogo.md or files referenced there.
 (def success spiritual-peasant-ness)
 
+;; TODO THIS IS NOT SUCCESS BIAS PER SE.  See doc/general/SuccessBias.md.
 (defn worth-saying
   [pers abs-activn]
   (let [prob (+ abs-activn (success pers))]
