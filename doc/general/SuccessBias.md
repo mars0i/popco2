@@ -23,6 +23,14 @@ yields, on average, a simple popco-only kind of success would be some
 measure strength of spiritual-peasant beliefs--not because they are
 true, but because they are useful, in effect.
 
+Note that since I can implement whatever success function I want,
+it can equally well be considered a prestige bias, for example.
+
+A frequency-bias would maybe be implemented solely on the listener
+side, with lots of utterances (max-talk-to > 1), and allowing the
+filtering function on the listener side to examine all of the
+utterances (or a sample from them) and calculate frequencies.
+
 ------------------
 
 It's not hard to implement some kind of probabilistic success bias.  As
@@ -67,12 +75,14 @@ Note that if I do this sort of thing, it might be best to increase the
 
 ------------
 
-I've got a prototype success function illustration in sims/bali/functions.clj.
+I've got a prototype success function illustration in
+sims/bali/functions.clj.
 
-To add that to utterances, I could alter communic/utterance.clj, or not--since records
-are maps, and can have arbitrary fields added--and need to alter `speak/make-utterances`.
-However, it would be natural to modify `utterance/make-utterance`, since that's what's
-called in `speak/make-utterances`.  Maybe send `nil` when there's no success bias?  Or a
-constant--0, maybe.  And then I'd have to add an extra filtering step in
-`listen/receive-utterances`.
+To add that to utterances, I could alter communic/utterance.clj, or
+not--since records are maps, and can have arbitrary fields added--and
+need to alter `speak/make-utterances`.  However, it would be natural to
+modify `utterance/make-utterance`, since that's what's called in
+`speak/make-utterances`.  Maybe send `nil` when there's no success bias?
+Or a constant--0, maybe.  And then I'd have to add an extra filtering
+step in `listen/receive-utterances`.
 
