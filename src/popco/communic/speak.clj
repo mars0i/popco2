@@ -17,7 +17,7 @@
 (defn choose-listeners
   "Given a person as argument, return a sequence of persons to whom
   the argument person wants to talk on this tick."
-  [{:keys [talk-to-persons max-talk-to rng]}]
+  [{:keys [talk-to-persons max-talk-to rng]}] ; a person
   (if (>= max-talk-to (count talk-to-persons))
     talk-to-persons
     (ran/sample-without-repl rng max-talk-to talk-to-persons)))
