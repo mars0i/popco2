@@ -27,9 +27,12 @@
   in the sequence.  Note that the contents of field :utterance-map contains the 
   utterances that have been received by the persons in the :persons field, but that 
   these utterances won't have their full effects on each person's internal networks 
-  until the next tick."
-  [popn]
-  (iterate once popn))
+  until the next tick.  If the function more is present, it should be a function that
+  takes a population as an argument and returns a population.  This function can be
+  used, for example, to modify or add information to persons in the population,
+  without having to modify the core communication processes of popco."
+  ([popn] (iterate once popn))
+  ([popn more] (iterate (comp once more) popn)))
 
 (defn unparalleled-many-times
   "Returns a lazy sequence of population states, one for each tick.  Does not
