@@ -86,3 +86,74 @@ modify `utterance/make-utterance`, since that's what's called in
 Or a constant--0, maybe.  And then I'd have to add an extra filtering
 step in `listen/receive-utterances`.
 
+------------
+
+How to allow success/prestige/similarity/skill biases, i.e.
+model-based biases?
+
+For both frequency and model-based biases, there should be a function
+called from `receive-utterance` or somewhere else in `communic.listen`
+that decides which speaker(s) to listen to.  For frequency biases, this
+should probably be computed on the set of utterances received in a given
+tick.  (Or you could implement some kind of memory to allow
+multiple-tick biases, but that should be avoided unless it's important.)
+
+But for the model biases, how to communicate the relevant information to
+this function?
+
+Currently (up to Mid-December 2014), Utterances contain a proposition
+id, a valence (1 or -1), and a person id.  The latter was originally
+included just for debugging, etc.
+
+I. One option is to calculate a value that's sent as a fourth component of
+the Utterance.  This could be some calculated or assigned prestige or
+success value, for example--calculated on the `speak` side.  Call this
+`model-quality` for now.  (Though if it's constant, it might be
+implemented by other means.)
+
+Since a person will normally have the same model-quality value, in a
+given tick, for all of its utterances, this value could be memoized
+in some way--maybe by `assoc`ing it into the person.
+
+Note that it might be possible to interpose the model-quality
+calculation without any hooks simply by creating an alternative version
+of `main/many-times` that intersperses mapping a special function
+between each call to `once`.
+
+II. Another method would be to replace the speaker-id field of the Utterance
+with the speaker itself at the time of the utterance.  Clojure would
+implement this, presumably, but simply including a pointer to the person
+in the utterance, so it wouldn't be wasteful of memory.  This method
+would allow the model-evaluation function on the listener side to
+examine arbitrary aspects of the person in order to decide whether to
+accept its utterances.  
+
+Obviously, this could be used to do things that are unrealistic--the
+listener could plumb everything about the internal state of the
+speaker--so it would be up to the modeler to write evaluation functions
+that are reasonable.
+
+However, I think it would be more difficult to memoize the model-quality
+calculations.  Well, the listener could memoize them in its own
+structures, but each listener would have to perform the calculations
+anew.
+
+-----
+
+Method II provides a superset of functionality of method I, if the
+model-quality calculation is stored in the person.  i.e. the person
+would be passed in the utterance, but would then be used only as the
+repository for the model-quality variable.
+
+Method I provides the functionality of method II, as well, since we
+need make no restriction on what goes into the model-quality variable,
+or on what the function that evaluates it expects.  So you could just
+pass the person in the model-quality variable (along with a separate
+person-id value).
+
+In a sense, the two methods differ only in what the default expectation
+is about what's in the extra Utterance field, and in whether or not
+there is a separate `speaker-id` field.
+
+I'm going to go with "method I".  i.e. I'm going to start by keeping
+`speaker-id`, and exploring passing only a float in an extra field.
