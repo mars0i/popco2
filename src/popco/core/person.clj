@@ -82,9 +82,9 @@
                         nil  ; talk-to-persons will get filled when make-population calls update-talk-to-persons
                         max-talk-to
                         (ran/make-rng (ran/next-long cn/initial-rng))
-                        bias-fn
-                        quality-fn
-                        nil)] ; this function defaults to one defined in communic.speak
+                        bias-fn     ; defaults to nil (see param lists above)
+                        quality-fn  ; defaults to nil (see param lists above)
+                        nil)]
      ;; set up propn net and associated vectors:
      (doseq [propn-id propn-ids] (cl/add-to-propn-net! (:propn-net pers) propn-id))                ; unmask propn nodes
      (nn/set-mask! (:mask (:propn-net pers)) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))        ; special mask val to undo next-activn's decay on this node
