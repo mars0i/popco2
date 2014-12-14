@@ -22,7 +22,7 @@
                    analogy-net
                    analogy-idx-to-propn-idxs utterable-ids utterable-mask
                    groups  talk-to-groups  talk-to-persons
-                   max-talk-to rng model-quality quality-fn bias-fn])
+                   max-talk-to rng quality quality-fn bias-fn])
 (ug/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
@@ -46,7 +46,7 @@
    :rng             - A random number generator object.  e.g. can be passed to rand-idx.
    :bias-fn         - TODO
    :quality-fn      - TODO
-   :model-quality   - TODO")
+   :quality   - TODO")
 
 ;; MAYBE: Consider making code below more efficient if popco is extended
 ;; to involve regularly creating new persons in the middle of simulation runs

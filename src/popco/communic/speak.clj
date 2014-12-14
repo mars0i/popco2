@@ -80,14 +80,22 @@
   the map created by this function with other similar maps, in order to
   create one large map in which the values are sequences of utterances."
   [speaker]
-  (let [listeners (choose-listeners speaker) ; may be empty
+  (let [quality (:quality speaker)
+        listeners (choose-listeners speaker) ; may be empty
         to-say-ids (choose-propn-ids-to-say speaker (count listeners))] ; nil if no listeners, possibly nil if so
     (if to-say-ids
       (zipmap listeners 
-              (map #(vector (ut/make-utterance speaker %)) to-say-ids)) ; wrapping each single utterance
+              (map #(vector (ut/make-utterance speaker % quality)) to-say-ids)) ; wrapping each single utterance
       {})))
 
 ;; So person will get passed through
 (defn speaker-plus-utterances
   [pers]
   [pers (make-utterances pers)])
+
+(defn update-qualities
+  [pers]
+  (let [quality-fn (:quality-fn pers)]
+    (if quality-fn
+      (assoc pers :quality (quality-fn pers))
+      pers))) ; :quality should normally be nil at this point, because it was initalized to have that value
