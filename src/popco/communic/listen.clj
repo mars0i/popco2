@@ -34,10 +34,10 @@
   (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
         new-propns (filter (partial propn-still-masked? listener) 
                            (map :propn-id utterances))
-        listener (if new-propns
-                   (unmask-for-new-propns listener new-propns) ; First primary call
-                   listener)]
-    (update-propn-net-from-utterances listener utterances)))   ; Second primary call
+        new-listener (if new-propns
+                       (unmask-for-new-propns listener new-propns) ; First primary call
+                       listener)]
+    (update-propn-net-from-utterances new-listener utterances)))   ; Second primary call
 
 ;; Note: This function is purely functional despite calling mutational functions
 ;; Question: Do I have to reapply semantic-iffs here?
