@@ -11,8 +11,7 @@
             [popco.communic.utterance :as ut]
             [clojure.core.matrix :as mx]))
 
-(declare choose-listeners worth-saying-ids choose-propn-ids-to-say
-         make-utterances speaker-plus-utterances)
+(declare choose-listeners worth-saying worth-saying-ids choose-propn-ids-to-say make-utterances speaker-plus-utterances update-qualities)
 
 (defn choose-listeners
   "Given a person as argument, return a sequence of persons to whom
@@ -93,9 +92,8 @@
   [pers]
   [pers (make-utterances pers)])
 
-(defn update-qualities
+(defn update-quality
   [pers]
-  (let [quality-fn (:quality-fn pers)]
-    (if quality-fn
-      (assoc pers :quality (quality-fn pers))
-      pers))) ; :quality should normally be nil at this point, because it was initalized to have that value
+  (if-let [quality-fn (:quality-fn pers)]
+    (assoc pers :quality (quality-fn pers))
+    pers)) ; btw quality should normally be nil at this point because it was initalized to have that value, and there's no quality update function.

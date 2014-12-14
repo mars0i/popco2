@@ -67,7 +67,7 @@
    ;; next mapfn expression creates seq of [person, utterance-map] pairs; transpose groups them as persons, utterance-maps.
    ;; Note speaker-plus-utterances merely passes through persons from update-person-nets. (Avoids restarting pmap.)
    (let [[pre-communic-persons speaker-utterance-maps] (mx/transpose
-                                                         (mapfn (comp cs/speaker-plus-utterances cs/update-qualities up/update-person-nets)
+                                                         (mapfn (comp cs/speaker-plus-utterances cs/update-quality up/update-person-nets)
                                                                 (:persons popn)))
          utterance-map (cl/combine-speaker-utterance-maps speaker-utterance-maps) ; combine speaker-specific maps
          ;; Communication crossover: switch from mapping over speakers to mapping over listeners.
