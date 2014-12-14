@@ -32,12 +32,25 @@
   update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
   (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
-        new-propns (filter (partial propn-still-masked? listener)  ; if uttered propns are still unknown in listener, we'll have to add them
-                           (map :propn-id utterances))
+        new-propns (filter #(propn-still-masked? listener (:propn-id %))  ; if uttered propns are still unknown in listener, we'll have to add them
+                           utterances)
         new-listener (if new-propns
-                       (unmask-for-new-propns listener new-propns) ; add any new propositions to listener
+                       (unmask-for-new-propns listener (map :id new-propns)) ; add any new propositions to listener
                        listener)]
     (update-propn-net-from-utterances new-listener utterances)))   ; now update links to SALIENT (both for new and old propositions)
+
+;(defn receive-utterances
+;  "Retrieves utterances intended for listener, calls unmask-for-new-propns
+;  if any propns in the utterances are new to listener, and then calls
+;  update-propn-net-from-utterances.  See these functions' docstrings for more."
+;  [utterance-map listener]
+;  (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
+;        new-propns (filter (partial propn-still-masked? listener)  ; if uttered propns are still unknown in listener, we'll have to add them
+;                           (map :propn-id utterances))
+;        new-listener (if new-propns
+;                       (unmask-for-new-propns listener new-propns) ; add any new propositions to listener
+;                       listener)]
+;    (update-propn-net-from-utterances new-listener utterances)))   ; now update links to SALIENT (both for new and old propositions)
 
 
 ;; Note: This function is purely functional despite calling mutational functions
@@ -80,16 +93,16 @@
   "Returns person with modified propn-mask and analogy-mask so that the neural 
   networks' weight matrices will reflect the fact that new propositions are now
   part of listener's thought processes."
-  [original-pers new-propns]
+  [original-pers new-propn-ids]
   (let [pers (person-masks-clone original-pers) ; new copy since will modify person's internal structures. TODO Is this really necesary?
         pnet (:propn-net pers)]
-    (doseq [new-propn new-propns]
-      (add-to-propn-net! pnet new-propn) ; note modifying propn net that's inside the person that will get returned
+    (doseq [new-propn-id new-propn-ids]
+      (add-to-propn-net! pnet new-propn-id) ; note modifying propn net that's inside the person that will get returned
       (let [propn-to-extended-fams (:propn-to-extended-fams-ids (:propn-net pers))
-            fams (propn-to-extended-fams new-propn)]
+            fams (propn-to-extended-fams new-propn-id)]
         (doseq [fam fams                           ; loop through all extended fams containing this propn
-                propn fam]                         ; and each propn in that family
-          (try-add-to-analogy-net! pers propn))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
+                propn-id fam]                         ; and each propn in that family
+          (try-add-to-analogy-net! pers propn-id))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
     pers))
 
 (defn masks-clone
