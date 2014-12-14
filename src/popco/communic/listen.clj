@@ -24,6 +24,7 @@
   (flush)
   popn)
 
+
 ;; Entry point from main.clj. Purely functional, since unmask-for-new-propns
 ;; and update-propn-net-from-utterances are purely functional.
 (defn receive-utterances
@@ -32,25 +33,12 @@
   update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
   (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
-        new-propns (filter #(propn-still-masked? listener (:propn-id %))  ; if uttered propns are still unknown in listener, we'll have to add them
-                           utterances)
-        new-listener (if new-propns
-                       (unmask-for-new-propns listener (map :id new-propns)) ; add any new propositions to listener
+        new-propn-ids (filter (partial propn-still-masked? listener)  ; if uttered propns are still unknown in listener, we'll have to add them
+                              (map :propn-id utterances))
+        new-listener (if new-propn-ids
+                       (unmask-for-new-propns listener new-propn-ids) ; add any new propositions to listener
                        listener)]
     (update-propn-net-from-utterances new-listener utterances)))   ; now update links to SALIENT (both for new and old propositions)
-
-;(defn receive-utterances
-;  "Retrieves utterances intended for listener, calls unmask-for-new-propns
-;  if any propns in the utterances are new to listener, and then calls
-;  update-propn-net-from-utterances.  See these functions' docstrings for more."
-;  [utterance-map listener]
-;  (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
-;        new-propns (filter (partial propn-still-masked? listener)  ; if uttered propns are still unknown in listener, we'll have to add them
-;                           (map :propn-id utterances))
-;        new-listener (if new-propns
-;                       (unmask-for-new-propns listener new-propns) ; add any new propositions to listener
-;                       listener)]
-;    (update-propn-net-from-utterances new-listener utterances)))   ; now update links to SALIENT (both for new and old propositions)
 
 
 ;; Note: This function is purely functional despite calling mutational functions
