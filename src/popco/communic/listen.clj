@@ -24,6 +24,9 @@
   (flush)
   popn)
 
+;; TODO: After getting utterances, sort into collections by speaker-id maybe in the bias-fn (or here?)
+;; NOTE: need new example model for this, since I need multiple utterances per speaker,
+;; and also should test new utterances, which models so far mostly don't use.
 
 ;; Entry point from main.clj. Purely functional, since unmask-for-new-propns
 ;; and update-propn-net-from-utterances are purely functional.
