@@ -104,49 +104,49 @@
          :analogy-net (masks-clone (:analogy-net pers))))
 
 (defn add-to-propn-net!
-  "Add proposition with id propn to proposition network pnet by
+  "Add proposition with id propn-id to proposition network pnet by
   unmasking at the corresponding index in the proposition mask."
-  [pnet propn]
+  [pnet propn-id]
   (let [id-to-idx (:id-to-idx pnet)]
-    (nn/unmask! (:mask pnet) (id-to-idx propn))))
+    (nn/unmask! (:mask pnet) (id-to-idx propn-id))))
 
 (defn try-add-to-analogy-net!
   "ADD DOCSTRING.  See communic.md for further explanation."
-  [pers propn]
-  (when (propn-components-already-unmasked? pers propn)                ; if sent propn missing extended-family propns, can't match
-    (doseq [a-propn ((:propn-to-analogs (:analogy-net pers)) propn)] ; check possible analog propns to sent propn
+  [pers propn-id]
+  (when (propn-components-already-unmasked? pers propn-id)                ; if sent propn missing extended-family propns, can't match
+    (doseq [a-propn ((:propn-to-analogs (:analogy-net pers)) propn-id)] ; check possible analog propns to sent propn
       (when (and (propn-already-unmasked? pers a-propn)                ; if pers has this analog propn
                  (propn-components-already-unmasked? pers a-propn))    ; and its extended-family-propns 
-        (let [mn-id (or (ids-to-poss-mn-id pers a-propn propn)         ; then unmask mapnode corresponding to this propn pair
-                        (ids-to-poss-mn-id pers propn a-propn))]
+        (let [mn-id (or (ids-to-poss-mn-id pers a-propn propn-id)         ; then unmask mapnode corresponding to this propn pair
+                        (ids-to-poss-mn-id pers propn-id a-propn))]
           (unmask-mapnode-extended-family! pers mn-id))))))            ; and all extended family mapnodes
 
 (defn propn-still-masked?
-  "Return true if, in person (first arg), propn (second arg) doesn't exist
+  "Return true if, in person (first arg), propn-id (second arg) doesn't exist
   in the proposition net in the sense that it's masked; false otherwise."
-  [pers propn]
+  [pers propn-id]
   (let [pnet (:propn-net pers)]
     (nn/node-masked? (:mask pnet)
-                     ((:id-to-idx pnet) propn))))
+                     ((:id-to-idx pnet) propn-id))))
 
 (defn propn-already-unmasked?
-  "Return true if, in person (first arg), propn (second arg) exists in the
+  "Return true if, in person (first arg), propn-id (second arg) exists in the
   proposition net in the sense that it has been unmasked; false otherwise."
-  [pers propn]
+  [pers propn-id]
   (let [pnet (:propn-net pers)]
     (nn/node-unmasked? (:mask pnet)
-                       ((:id-to-idx pnet) propn))))
+                       ((:id-to-idx pnet) propn-id))))
 
 (defn propn-components-already-unmasked?
-  "Return true if, in person (first arg), propn (second arg) is a possible
+  "Return true if, in person (first arg), propn-id (second arg) is a possible
   candidate for matching--i.e. if its component propns (and therefore
   preds, objs) already exist, i.e. have been unmasked.  Returns false if not."
-  [pers propn]
+  [pers propn-id]
   (let [pnet (:propn-net pers)
         propn-to-descendant-propn-idxs (:propn-to-descendant-propn-idxs pnet)
         propn-mask (:mask pnet)]
     (every? (partial nn/node-unmasked? propn-mask) 
-            (propn-to-descendant-propn-idxs propn)))) ; if propn is missing extended-descendant propns, can't match
+            (propn-to-descendant-propn-idxs propn-id)))) ; if propn is missing extended-descendant propns, can't match
 
 (defn ids-to-poss-mn-id
   "Given two id keywords and a person, constructs and returns 
