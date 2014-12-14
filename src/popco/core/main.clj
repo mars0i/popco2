@@ -31,8 +31,8 @@
   takes a population as an argument and returns a population.  This function can be
   used, for example, to modify or add information to persons in the population,
   without having to modify the core communication processes of popco."
-  ([popn] (iterate once popn))
-  ([popn more] (iterate (comp once more) popn)))
+  [popn]
+  (iterate once popn))
 
 (defn unparalleled-many-times
   "Returns a lazy sequence of population states, one for each tick.  Does not
