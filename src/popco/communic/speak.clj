@@ -23,16 +23,8 @@
     (ran/sample-without-repl rng max-talk-to talk-to-persons)))
 
 (defn worth-saying
-  "Default function for testing whether a proposition is worth saying
-  given that it is otherwise utterable.  We pass the person so that facts
-  about the person can be used as part of the test, but the default test
-  here only uses the activation.  (Though defined in popco.communic.speak,
-  since that's this function's natural home, it is normally inserted into
-  persons by make-person, and worth-saying-ids here then gets it out of the
-  person.  We don't try to 'partial' or close over the person, and thereby
-  avoid passing person as argument, because then the version closed over
-  not be the same as the person containing the function, and certainly
-  not the same as any later, updated version.)"
+  "Function for testing whether a proposition is worth saying given that it is
+  otherwise utterable."
   [pers activn]
   (< (ran/next-double (:rng pers)) 
      activn))
@@ -59,7 +51,7 @@
                                 (mx/emul propn-mask utterable-mask propn-activns))]
     (for [i (range (count propn-id-vec))
           :let [abs-activn (mx/mget utterable-abs-activns i)]
-          :when ((:worth-saying-fn pers) pers abs-activn)]
+          :when (worth-saying pers abs-activn)]
       (propn-id-vec i))))
 
 (defn choose-propn-ids-to-say
