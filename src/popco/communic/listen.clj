@@ -32,12 +32,13 @@
   update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
   (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
-        new-propns (filter (partial propn-still-masked? listener) 
+        new-propns (filter (partial propn-still-masked? listener)  ; if uttered propns are still unknown in listener, we'll have to add them
                            (map :propn-id utterances))
         new-listener (if new-propns
-                       (unmask-for-new-propns listener new-propns) ; First primary call
+                       (unmask-for-new-propns listener new-propns) ; add any new propositions to listener
                        listener)]
-    (update-propn-net-from-utterances new-listener utterances)))   ; Second primary call
+    (update-propn-net-from-utterances new-listener utterances)))   ; now update links to SALIENT (both for new and old propositions)
+
 
 ;; Note: This function is purely functional despite calling mutational functions
 ;; Question: Do I have to reapply semantic-iffs here?
