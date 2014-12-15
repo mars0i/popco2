@@ -8,20 +8,22 @@
             [clojure.set :as st]))
 
 
-;; TODO this can't be the best way to write this.  Needs to use loop, probably, too.
+;; TODO this can't be the nicest way to write this.  But it works.  And should be rewritten with loop/recur?
 (defn maxes
-  "Return a sequence of elements from coll all having the maximum value of (f elt)."
-  [f coll]
-  (letfn [(maxes-helper [coll best-yet maxes]
-            (if-let [this-elt (first coll)]
-              (let [this-val (f this-elt)]
-                (cond (> this-val best-yet) (maxes-helper (rest coll) this-val [this-elt])
-                      (= this-val-best-yet) (maxes-helper (rest coll) best-yet (conj this-elt maxes))
-                      :else (maxes-helper (rest coll) best-yet maxes))a)
-              maxes))]
-    (if-let [this-elt (first coll)]
-      (let [this-val (f this-elt)]
-        (maxes-helper (rest coll) this-elt [this-elt])))))
+  "Returns a sequence of elements from coll, all of which have the maximum value
+  of (f element), or (identity element) if f is not provided."
+  ([coll] (maxes identity coll))
+  ([f coll]
+   (letfn [(maxes-helper [coll best-yet maxes]
+             (if-let [this-elt (first coll)]
+               (let [this-val (f this-elt)]
+                 (cond (> this-val best-yet) (maxes-helper (rest coll) this-val [this-elt])
+                       (== this-val best-yet) (maxes-helper (rest coll) best-yet (conj maxes this-elt))
+                       :else (maxes-helper (rest coll) best-yet maxes)))
+               maxes))]
+     (if-let [this-elt (first coll)]
+       (let [this-val (f this-elt)]
+         (maxes-helper (rest coll) this-val [this-elt]))))))
 
 (defn println-stderr
   "Like println, but prints to stderr."
