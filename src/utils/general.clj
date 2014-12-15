@@ -19,6 +19,7 @@
             :else (recur f (rest s) best collected)))))
 
 ;; There's a version called 'reduce-maxes' in general.x that uses reduce and is easier to understand, but twice as slow.
+;; There's also a partially lazy version there, which is 30% slower on small sequences, at least, and provides little benefit in most situations.
 (defn maxes
   "Returns a sequence of elements from s, all of which have the maximum value
   of (f element), or (identity element) if f is not provided."

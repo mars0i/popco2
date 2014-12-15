@@ -1,3 +1,30 @@
+
+(defn- lazy-maxes-helper
+  "Helper function for maxes0."
+  [f s best collected]
+  (if (empty? s)
+    collected
+    (let [new-elt (first s)
+          new-val (f new-elt)]
+      (cond (== new-val best) (recur f (rest s) best (lazy-seq (conj collected new-elt)))
+            (> new-val best) (recur f (rest s) new-val (lazy-seq [new-elt]))
+            :else (recur f (rest s) best collected)))))
+
+;; Note:
+;; On small sequences, this is about 30% slower than the simple maxes above.
+;; Note that the only thing that's laze is the collected maxes, which would
+;; usually be small; the function still has to recurse through the entire input.
+(defn lazy-maxes
+  "Returns a lazy sequence of elements from s, all of which have the maximum value
+  of (f element), or (identity element) if f is not provided."
+  ([s] (lazy-maxes identity s))
+  ([f s]
+   (if (empty? s)
+     nil
+     (let [new-elt (first s)]
+       (lazy-maxes-helper f (rest s) (f new-elt) (lazy-seq [new-elt]))))))
+
+
 ;; Twice as slow as maxes using recur
 (defn- max-collector
   "Helper function for maxes."
