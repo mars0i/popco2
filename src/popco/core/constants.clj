@@ -4,7 +4,7 @@
 
 (ns popco.core.constants
   (require [utils.random :as ran]
-           [utils.general :as ug]))
+           [utils.file :as uf]))
 ;; constants for use throughout popco
 
 ;; Consistent use of these facilitate allowing global change
@@ -18,7 +18,7 @@
 (def session-id (ran/make-long-seed)) (println "Session id/seed:" session-id)
 (def initial-rng (ran/make-rng session-id))
 ;; Now create a source file that will recreate this initial-rng later if desired:
-(ug/make-dir-if-none +data-dir+)
+(uf/make-dir-if-none +data-dir+)
 (spit (str +data-dir+ "/restoreRNG" session-id ".clj")
       (clojure.string/join 
         "\n"

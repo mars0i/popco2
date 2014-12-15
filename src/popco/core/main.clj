@@ -8,7 +8,7 @@
             [popco.nn.nets :as nn]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
-            [utils.general :as ug]
+            [utils.string :as us]
             [clojure.core.matrix :as mx])) ; for transpose
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -85,7 +85,7 @@
   the population unchanged."
   [popn]
   (let [tickstr (str (:tick popn))]
-    (ug/erase-chars (count tickstr)) ; new tick string is always at least as long as previous
+    (us/erase-chars (count tickstr)) ; new tick string is always at least as long as previous
     (print tickstr)
     (flush))
   popn)

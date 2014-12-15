@@ -3,8 +3,8 @@
 ;;; specified in the file LICENSE.
 
 ;; General-purpose utility functions
-(ns utils.general)
-
+(ns utils.general
+  (require [clojure.set :as st]))
 
 ;; TODO this can't be the nicest way to write this.  But it works.  And should be rewritten with loop/recur?
 (defn maxes

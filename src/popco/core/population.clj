@@ -4,6 +4,7 @@
 
 (ns popco.core.population
   (:require [utils.general :as ug]
+            [utils.string :as us]
             [popco.core.person :as pers]))
 
 (declare make-population init-popn make-population)
@@ -13,7 +14,7 @@
                        groups
                        utterance-map])
 
-(ug/add-to-docstr ->Population
+(us/add-to-docstr ->Population
   "\n  tick: timestep.
   persons: members of the population at time tick.
   groups: map from group id to person ids representing membership.

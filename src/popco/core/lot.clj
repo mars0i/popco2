@@ -3,7 +3,7 @@
 ;;; specified in the file LICENSE.
 
 (ns popco.core.lot
-  (:require [utils.general :as ug]))
+  (:require [utils.string :as us]))
 
 ;;; LOT, language of thought: records/classes that represent what
 ;;; is believed, entertained, or communicated between persons.
@@ -24,7 +24,7 @@
 ;; Propn's represent what's believed, entertained, or communicated.
 
 (defrecord Propn [pred args id])
-(ug/add-to-docstr ->Propn
+(us/add-to-docstr ->Propn
   "\n  pred: Predicate - should be keyword with initial uppercase.
   args: Array of argments, which could either be objects (keyword 
         starting with 'ob-' [OBSOLETE?]) or names of other propositions.
@@ -48,7 +48,7 @@
 ;; Pred's represent the main property or predicate of a Propn
 
 (defrecord Pred [id])
-(ug/add-to-docstr ->Pred
+(us/add-to-docstr ->Pred
   "\n  id: Name for proposition, which have initial cap and rest lowercase.")
 
 (defmacro defpred
@@ -67,7 +67,7 @@
 ;; Obj's represent arguments which may satisfy a pred
 
 (defrecord Obj [id])
-(ug/add-to-docstr ->Obj
+(us/add-to-docstr ->Obj
   "\n  id: Name for proposition, which should start with 'ob-'.")
 
 (defmacro defobj

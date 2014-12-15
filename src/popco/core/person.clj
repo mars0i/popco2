@@ -4,8 +4,8 @@
 
 ;; Definition of person and related functions
 (ns popco.core.person
-  (:require [utils.general :as ug]
-            [utils.random :as ran]
+  (:require [utils.string :as us]
+            [utils.random :as ur]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
             [popco.core.constants :as cn]
@@ -15,15 +15,13 @@
             [clojure.core.matrix :as mx]))
 
 
-                                                               
-;; TODO: Add specification of groups with which to communicate, using Kristen Hammack's popco1 code as a model
 (defrecord Person [id 
                    propn-net 
                    analogy-net
                    analogy-idx-to-propn-idxs utterable-ids utterable-mask
                    groups  talk-to-groups  talk-to-persons
                    max-talk-to rng quality quality-fn bias-fn])
-(ug/add-to-docstr ->Person
+(us/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
    :propn-net -       PropnNet for this person
@@ -81,7 +79,7 @@
                         (vec talk-to-groups)
                         nil  ; talk-to-persons will get filled when make-population calls update-talk-to-persons
                         max-talk-to
-                        (ran/make-rng (ran/next-long cn/initial-rng))
+                        (ur/make-rng (ur/next-long cn/initial-rng))
                         bias-fn     ; defaults to nil (see param lists above)
                         quality-fn  ; defaults to nil (see param lists above)
                         nil)]
@@ -118,7 +116,7 @@
             talk-to-groups             ;  they'll have to be replaced anyway.           
             talk-to-persons
             max-talk-to  ; an integer
-            (ran/make-rng (ran/next-long cn/initial-rng))
+            (ur/make-rng (ur/next-long cn/initial-rng))
             bias-fn
             quality-fn
             nil))

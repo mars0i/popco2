@@ -40,7 +40,7 @@
 
 ;; set pretty-print width to terminal width
 (if-let [colstr (System/getenv "COLUMNS")]
-  (set-pprint-width (Integer/valueOf colstr)))
+  (us/set-pprint-width (Integer/valueOf colstr)))
 
 ;; use one of these:
 (mx/set-current-implementation :vectorz)

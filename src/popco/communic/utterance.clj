@@ -4,11 +4,12 @@
 
 (ns popco.communic.utterance
   (:require [clojure.core.matrix :as mx]
-            [utils.general :as ug]))
+            [utils.string :as us]
+            [utils.math :as um]))
 
 (defrecord Utterance [propn-id valence speaker-id speaker-quality])
 
-(ug/add-to-docstr ->Utterance
+(us/add-to-docstr ->Utterance
   "Make an utterance to be communicated to a listener.
   :propn-id -        id for propn being communicated.
   :valence -         Effect of utterance on speaker is proportional to this.
@@ -27,7 +28,7 @@
   (let [pnet (:propn-net speaker)
         id-to-idx (:id-to-idx pnet)
         propn-activns (:activns pnet)]
-    (ug/sign-of (mx/mget propn-activns (id-to-idx propn-id)))))
+    (um/sign-of (mx/mget propn-activns (id-to-idx propn-id)))))
     
 (defn make-utterance
   ([speaker propn-id] (make-utterance speaker propn-id nil))
