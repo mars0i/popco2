@@ -6,22 +6,29 @@
 (ns utils.general
   (require [clojure.set :as st]))
 
-;; TODO this can't be the nicest way to write this.  But it works.  And should be rewritten with loop/recur?
+
+(defn- maxes-helper
+  "Helper function for maxes0."
+  [f s best collected]
+  (if (empty? s)
+    collected
+    (let [new-elt (first s)
+          new-val (f new-elt)]
+      (cond (== new-val best) (recur f (rest s) best (conj collected new-elt))
+            (> new-val best) (recur f (rest s) new-val [new-elt])
+            :else (recur f (rest s) best collected)))))
+
+;; There's a version called 'reduce-maxes' in general.x that uses reduce and is easier to understand, but twice as slow.
 (defn maxes
-  "Returns a sequence of elements from coll, all of which have the maximum value
+  "Returns a sequence of elements from s, all of which have the maximum value
   of (f element), or (identity element) if f is not provided."
-  ([coll] (maxes identity coll))
-  ([f coll]
-   (letfn [(maxes-helper [coll best-yet maxes]
-             (if-let [this-elt (first coll)]
-               (let [this-val (f this-elt)]
-                 (cond (> this-val best-yet) (maxes-helper (rest coll) this-val [this-elt])
-                       (== this-val best-yet) (maxes-helper (rest coll) best-yet (conj maxes this-elt))
-                       :else (maxes-helper (rest coll) best-yet maxes)))
-               maxes))]
-     (if-let [this-elt (first coll)]
-       (let [this-val (f this-elt)]
-         (maxes-helper (rest coll) this-val [this-elt]))))))
+  ([s] (maxes identity s))
+  ([f s]
+   (if (empty? s)
+     s
+     (let [new-elt (first s)
+           new-val (f new-elt)]
+       (maxes-helper f (rest s) new-val [new-elt])))))
 
 (defn rotations
   "Generate all rotations of a sequence."

@@ -1,3 +1,22 @@
+;; Twice as slow as maxes using recur
+(defn- max-collector
+  "Helper function for maxes."
+  [f collected new-elt]
+  (let [best-elt (first collected)
+        best-val (f best-elt)
+        new-val (f new-elt)]
+    (cond
+      (== best-val new-val) (conj collected new-elt)
+      (> new-val best-val) [new-elt]
+      :else collected)))
+(defn reduce-maxes
+  "Returns a sequence of elements from coll, each of which has the same maximum
+  value of (f element), or (identity element) if f is not provided."
+  ([coll] (maxes identity coll))
+  ([f coll]
+   (if (empty? coll)
+     coll
+     (reduce (partial max-collector f) [(first coll)] (rest coll)))))
 
 
 ;(defn collect
