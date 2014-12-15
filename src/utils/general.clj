@@ -2,10 +2,8 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
-(ns utils.general ; Utility functions handy for any Clojure program
-  (:use [clojure.repl :only [dir-fn]])
-  (:require [clojure.pprint :only [*print-right-margin*]]
-            [clojure.set :as st]))
+;; General-purpose utility functions
+(ns utils.general)
 
 
 ;; TODO this can't be the nicest way to write this.  But it works.  And should be rewritten with loop/recur?
@@ -25,11 +23,29 @@
        (let [this-val (f this-elt)]
          (maxes-helper (rest coll) this-val [this-elt]))))))
 
-(defn println-stderr
-  "Like println, but prints to stderr."
-  [& more]
-  (binding [*out* *err*]
-    (apply println more)))
+(defn rotations
+  "Generate all rotations of a sequence."
+  [xs]
+  (map #(concat (drop % xs) (take % xs))
+       (range (count xs))))
+;; Notes:
+;; You can do the same thing using split-at and reverse, but the speed
+;; is the same, and the drop/take version is easier to read.
+;; Another version, by Ray Miller in response to my question at
+;; https://groups.google.com/forum/#!topic/clojure/VO8V8m6bfEI:
+;; (defn rotations
+;;   [xs]
+;;   (take (count xs) 
+;;         (partition (count xs) 1  ; start again 1 past where you last started
+;;                    (cycle xs))))
+;; My later version above is twice as fast, at least on seqs up to
+;; count = 100K, even though my version has to concat.
+;; See also https://groups.google.com/forum/#!topic/clojure/SjmevTjZPcQ
+;; for other versions.
+
+(defn domap
+  ([f coll] (doseq [e coll] (f e)))
+  ([f coll1 & colls] (mapv f (cons coll1 colls)) nil))
 
 (defn remove=
   "Remove items from coll that are = to x."
@@ -56,114 +72,6 @@
     (throw (Exception. (str "Trying to set value for key " k "a second time, with new value " v)))
     (assoc m k v)))
 
-(defn add-quotes
-  "Append initial and terminal double-quote characters to string."
-  [string]
-  (str "\"" string "\""))
-
-(defn add-quotes-if-str
-  [x]
-  (if (string? x)
-    (add-quotes x)
-    x))
-
-(defn seq-to-csv-row-str
-  "Given a sequence, create a string representing a row in csv format, with
-  each element in the sequence as an element in the csv row.  Strings will
-  be surrounded by quote characters.  Comma is used as the delimiter.  A
-  terminating newline is not added."
-  [s]
-  (apply str 
-         (interpose ", " (map add-quotes-if-str s))))
-
-;; This is a slightly modified version of an example at clojure-doc.org:
-(defn round2
-  "Round a double to the given precision (number of significant digits)"
-  [precision d]
-  (let [factor (Math/pow 10 precision)]
-    (/ (Math/round (* d factor)) factor)))
-
-(defn file-exists?
-  [f]
-  (.exists (clojure.java.io/as-file f)))
-
-(defn make-dir
-  [f]
-  (.mkdir (java.io.File. f)))
-
-(defn make-dir-if-none
-  [f]
-  (when-not (file-exists? f)
-    (make-dir f)))
-
-(defn domap
-  ([f coll] (doseq [e coll] (f e)))
-  ([f coll1 & colls] (mapv f (cons coll1 colls)) nil))
-
-(defn unlocknload 
-  "Given a symbol representing a namespace, converts the symbol
-  into the corresponding path + clojure source fileanem, tries to 
-  load the file, and then uses (\"unlocks\") the namespace."
-  [nssym]
-  (load-file 
-    (str "src/" 
-         (clojure.string/replace (clojure.string/replace nssym \. \/) \- \_) 
-         ".clj"))
-    (use nssym))
-
-(defn set-pprint-width 
-  "Sets width for pretty-printing with pprint and pp."
-  [cols] 
-  (alter-var-root 
-    #'clojure.pprint/*print-right-margin* 
-    (constantly cols)))
-
-(defn extract-fn-name
-  "Given a function, extracts the original function name from Clojure's
-  internal string identifier associated with the function, returning this
-  name as a string.  Note that the internal string indentifier uses underlines,
-  where the original name used dashes, but this function replaces them with 
-  dashes to get back the original name.  (If there were underlines in the
-  original function name this will replace them with dashes anyway.)"
-  [f]
-  (clojure.string/replace 
-    (clojure.string/replace (str f) #".*\$(.*)@.*" "$1") ; strip off initial and trailing parts of the identifier
-    #"_" "-")) ; replace underlines with dashes
-
-(defmacro add-to-docstr
-  "Appends string addlstr onto end of existing docstring for symbol sym.
-  (Tip: Consider beginning addlstr with \"\\n  \".)"
-  [sym addlstr] 
-  `(alter-meta! #'~sym update-in [:doc] str ~addlstr))
-
-(defn rotations
-  "Generate all rotations of a sequence."
-  [xs]
-  (map #(concat (drop % xs) (take % xs))
-       (range (count xs))))
-
-;; Notes:
-;; You can do the same thing using split-at and reverse, but the speed
-;; is the same, and the drop/take version is easier to read.
-;; Another version, by Ray Miller in response to my question at
-;; https://groups.google.com/forum/#!topic/clojure/VO8V8m6bfEI
-;; My later version above is twice as fast, at least on seqs up to
-;; count = 100K, even though my version has to concat.
-;; (defn rotations
-;;   [xs]
-;;   (take (count xs) 
-;;         (partition (count xs) 1  ; start again 1 past where you last started
-;;                    (cycle xs))))
-;; See also https://groups.google.com/forum/#!topic/clojure/SjmevTjZPcQ
-;; for other versions.
-
-(defn println-and-ret
-  "Print a single argument with println, then return that argument.
-  Useful for debugging."
-  [arg]
-  (println arg)
-  arg)
-
 (defn partition-sort-by
   "Return a function that will sort a collection by keyfn and then 
   partition by the same function."
@@ -188,18 +96,6 @@
   [xs]
   (map reverse xs))
 
-(defn upper-case-keyword
-  "Converts a keyword to its uppercase analogue."
-  [kw]
-  (keyword 
-    (clojure.string/upper-case (name kw))))
-
-(defn lower-case-keyword
-  "Converts a keyword to its lowercase analogue."
-  [kw]
-  (keyword 
-    (clojure.string/lower-case (name kw))))
-
 (defn third [s] (nth s 2))
 
 (defn fourth [s] (nth s 3))
@@ -216,17 +112,6 @@
   [n xs]
   (nth xs n))
 
-(defn erase-chars
-  "Erase up to len characters from the console on the current line."
-  [len]
-  (print (apply str (repeat len \backspace))))
-
-(defn dorun-nl
-  "Like dorun, but prints a newline to console before returning."
-  [s]
-  (dorun s)
-  (println))
-
 (defn lized?
   "Utility function to test whether the output of iterate has been realized
   at all.  Iterate returns a Cons around a LazySeq.  realized? throws an
@@ -237,6 +122,12 @@
   (or (and (instance? clojure.lang.Cons xs)
            (realized? (rest xs)))
       (realized? (rest xs))))
+
+;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;
 
 ;; This is like (nth (iterate f x) n), but doesn't create an intermediate lazy seq.
 (defn fn-pow
@@ -251,16 +142,6 @@
   "Like comp, but expects a sequence of functions.  Applies comp to them."
   [fs]
   (apply comp fs))
-
-;(defn collect
-;  "If args are collections, concats them; if neither is, creates a collection 
-;  containing the two args; otherwise conjs the non-coll onto the coll."
-;  [x y]
-;  (cond
-;    (and (coll? x) (coll? y)) (concat x y)
-;    (coll? x) (conj x y)
-;    (coll? y) (conj y x)
-;    :else [x y]))
 
 (defn collectivize
   "If x is a collection, returns it unchanged.  Otherwise returns a collection
@@ -323,34 +204,3 @@
   (join-pairs-to-coll-map
     (map st/map-invert 
          (coll-map-to-join-pairs coll-map))))
-
-(defn sign-of [x] (if (neg? x) -1 1))
-
-;; Quick tests show suggest that this may be only slightly slower than the non-lazy version,
-;; even though it has to traverse the input twice--and even if you map doall over the result.
-;; Doing something like the recur version with lazy-seq embedded in it seems slower than this one.
-;(defn lazy-split-elements
-;  "Given a collection of pairs, returns a pair of two sequences, one containing
-;  the first elements of the pairs, in order, and the other containing the
-;  second elements of the pairs, in order.  Note that if the input collection
-;  is empty, split-elements returns a pair containing two empty sequences."
-;  [pairs]
-;  (list (map first pairs) (map second pairs)))
-
-;; Version with recur and lazy split
-;(defn lazy-split-elements2
-;  "Given a collection of pairs, returns a pair of two sequences, one containing
-;  the first elements of the pairs, in order, and the other containing the
-;  second elements of the pairs, in order.  Note that if the input collection
-;  is empty, split-elements returns a pair containing two empty sequences."
-;  [pairs]
-;  (loop [prs pairs
-;         firsts []
-;         seconds []]
-;    (if (empty? prs)
-;      (list firsts seconds)
-;      (let [[fst snd] (first prs)]
-;        (recur (rest prs)
-;               (cons fst (lazy-seq firsts))
-;               (cons snd (lazy-seq seconds)) )))))
-
