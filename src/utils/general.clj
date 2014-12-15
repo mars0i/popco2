@@ -6,23 +6,43 @@
 (ns utils.general
   (require [clojure.set :as st]))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Function combination
+
+;; This is like (nth (iterate f x) n), but doesn't create an intermediate lazy seq.
+(defn fn-pow
+  "Apply function f to x, then to the result of that, etc., n times.
+  If n <= 0, just returns x."
+  [f x ^long n]
+  (if (> n 0) 
+    (recur f (f x) (dec n))
+    x))
+
+(defn comp*
+  "Like comp, but expects a sequence of functions.  Applies comp to them."
+  [fs]
+  (apply comp fs))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Operations on collections
 
 (defn- maxes-helper
-  "Helper function for maxes0."
+  "Helper function for maxes."
   [f s best collected]
   (if (empty? s)
     collected
     (let [new-elt (first s)
           new-val (f new-elt)]
-      (cond (== new-val best) (recur f (rest s) best (conj collected new-elt))
-            (> new-val best) (recur f (rest s) new-val [new-elt])
-            :else (recur f (rest s) best collected)))))
+      (cond (== new-val best) (recur f (rest s) best    (conj collected new-elt))
+            (> new-val best)  (recur f (rest s) new-val [new-elt])
+            :else             (recur f (rest s) best    collected)))))
 
 ;; There's a version called 'reduce-maxes' in general.x that uses reduce and is easier to understand, but twice as slow.
 ;; There's also a partially lazy version there, which is 30% slower on small sequences, at least, and provides little benefit in most situations.
 (defn maxes
   "Returns a sequence of elements from s, all of which have the maximum value
-  of (f element), or (identity element) if f is not provided."
+  of (f element)'s, or the max values of elements if f is not provided.  
+  (Numerically equal numbers are treated as equal, and are returned as is.)"
   ([s] (maxes identity s))
   ([f s]
    (if (empty? s)
@@ -49,6 +69,7 @@
 ;; count = 100K, even though my version has to concat.
 ;; See also https://groups.google.com/forum/#!topic/clojure/SjmevTjZPcQ
 ;; for other versions.
+
 
 (defn domap
   ([f coll] (doseq [e coll] (f e)))
@@ -130,25 +151,6 @@
            (realized? (rest xs)))
       (realized? (rest xs))))
 
-;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;
-
-;; This is like (nth (iterate f x) n), but doesn't create an intermediate lazy seq.
-(defn fn-pow
-  "Apply function f to x, then to the result of that, etc., n times.
-  If n <= 0, just returns x."
-  [f x ^long n]
-  (if (> n 0) 
-    (recur f (f x) (dec n))
-    x))
-
-(defn comp*
-  "Like comp, but expects a sequence of functions.  Applies comp to them."
-  [fs]
-  (apply comp fs))
 
 (defn collectivize
   "If x is a collection, returns it unchanged.  Otherwise returns a collection
