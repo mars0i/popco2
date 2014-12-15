@@ -25,7 +25,7 @@
   ([s] (maxes identity s))
   ([f s]
    (if (empty? s)
-     s
+     nil
      (let [new-elt (first s)
            new-val (f new-elt)]
        (maxes-helper f (rest s) new-val [new-elt])))))
