@@ -26,9 +26,8 @@
   ([f s]
    (if (empty? s)
      nil
-     (let [new-elt (first s)
-           new-val (f new-elt)]
-       (maxes-helper f (rest s) new-val [new-elt])))))
+     (let [new-elt (first s)]
+       (maxes-helper f (rest s) (f new-elt) [new-elt])))))
 
 (defn rotations
   "Generate all rotations of a sequence."
