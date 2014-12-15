@@ -7,6 +7,22 @@
   (:require [clojure.pprint :only [*print-right-margin*]]
             [clojure.set :as st]))
 
+
+;; TODO this can't be the best way to write this.  Needs to use loop, probably, too.
+(defn maxes
+  "Return a sequence of elements from coll all having the maximum value of (f elt)."
+  [f coll]
+  (letfn [(maxes-helper [coll best-yet maxes]
+            (if-let [this-elt (first coll)]
+              (let [this-val (f this-elt)]
+                (cond (> this-val best-yet) (maxes-helper (rest coll) this-val [this-elt])
+                      (= this-val-best-yet) (maxes-helper (rest coll) best-yet (conj this-elt maxes))
+                      :else (maxes-helper (rest coll) best-yet maxes))a)
+              maxes))]
+    (if-let [this-elt (first coll)]
+      (let [this-val (f this-elt)]
+        (maxes-helper (rest coll) this-elt [this-elt])))))
+
 (defn println-stderr
   "Like println, but prints to stderr."
   [& more]
