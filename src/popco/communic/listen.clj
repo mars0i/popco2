@@ -36,7 +36,7 @@
   update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
   (let [raw-utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
-        utterances (if-let [bias-filter (:bias-fn listener)]
+        utterances (if-let [bias-filter (:bias-filter listener)]
                      (bias-filter utterance-map)
                      utterance-map)
         new-propn-ids (filter (partial propn-still-masked? listener)  ; if uttered propns are still unknown in listener, we'll have to add them
