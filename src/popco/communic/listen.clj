@@ -37,8 +37,8 @@
   [utterance-map listener]
   (let [raw-utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
         utterances (if-let [bias-filter (:bias-filter listener)]
-                     (bias-filter utterance-map)
-                     utterance-map)
+                     (bias-filter raw-utterances)
+                     raw-utterances)
         new-propn-ids (filter (partial propn-still-masked? listener)  ; if uttered propns are still unknown in listener, we'll have to add them
                               (map :propn-id utterances))
         new-listener (if new-propn-ids
