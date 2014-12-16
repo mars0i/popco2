@@ -20,7 +20,7 @@
                    analogy-net
                    analogy-idx-to-propn-idxs utterable-ids utterable-mask
                    groups  talk-to-groups  talk-to-persons
-                   max-talk-to rng quality quality-fn bias-fn])
+                   max-talk-to rng quality quality-fn bias-filter])
 (us/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
@@ -42,9 +42,9 @@
                       any one tick.  If >= (count talk-to-persons), has no 
                       effect.(popco1: num-listeners)
    :rng             - A random number generator object.  e.g. can be passed to rand-idx.
-   :bias-fn         - TODO
-   :quality-fn      - TODO
-   :quality   - TODO")
+   :bias-filter     - Will decide who to listen to based on the 'quality' value passed in utterances.
+   :quality-fn      - Assesses 'quality' of person, fills quality field with a value.
+   :quality         - May contain a 'quality' to be passed in utterances for use by bias-filters.")
 
 ;; MAYBE: Consider making code below more efficient if popco is extended
 ;; to involve regularly creating new persons in the middle of simulation runs
@@ -80,7 +80,7 @@
                         nil  ; talk-to-persons will get filled when make-population calls update-talk-to-persons
                         max-talk-to
                         (ur/make-rng (ur/next-long cn/initial-rng))
-                        bias-fn     ; defaults to nil (see param lists above)
+                        bias-filter ; defaults to nil (see param lists above)
                         quality-fn  ; defaults to nil (see param lists above)
                         nil)]
      ;; set up propn net and associated vectors:
@@ -105,7 +105,7 @@
            analogy-net
            analogy-idx-to-propn-idxs  utterable-ids  utterable-mask
            groups  talk-to-groups  talk-to-persons
-           max-talk-to bias-fn quality-fn]}]
+           max-talk-to bias-filter quality-fn]}]
   (->Person id
             (pn/clone propn-net)
             (an/clone analogy-net) ; has new mask and activns, but shares the rest, including weight matrices
@@ -117,7 +117,7 @@
             talk-to-persons
             max-talk-to  ; an integer
             (ur/make-rng (ur/next-long cn/initial-rng))
-            bias-fn
+            bias-filter
             quality-fn
             nil))
 
