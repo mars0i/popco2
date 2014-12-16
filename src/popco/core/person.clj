@@ -62,7 +62,7 @@
   arguments."
   ([id propns propn-net analogy-net utterable-ids groups talk-to-groups max-talk-to]
    (make-person id propns propn-net analogy-net utterable-ids groups talk-to-groups max-talk-to nil nil))
-  ([id propns propn-net analogy-net utterable-ids groups talk-to-groups max-talk-to bias-fn quality-fn]
+  ([id propns propn-net analogy-net utterable-ids groups talk-to-groups max-talk-to bias-filter quality-fn]
    (let [num-poss-propn-nodes (count (:node-vec propn-net))
          num-poss-analogy-nodes (count (:node-vec analogy-net))
          propn-ids (map :id propns)
