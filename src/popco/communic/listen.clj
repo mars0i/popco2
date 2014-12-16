@@ -26,11 +26,10 @@
 
 (defn quality-filter
   "Success/prestige/etc-bias function suitable as a value for persons'
-  :quality-fn field, causing this function to be called subsequently
-  in popco.communic.listen/receive-utterances.  Given a collection of
-  utterances, returns a sequence those utterances with the highest 
-  :speaker-quality value.  This sequence will have length 1 if there is
-  a uniquely highest value; it will be longer if there are several
+  :quality-fn field, which is then used in communic.listen/receive-utterances.
+  Given a collection of utterances, returns a sequence those utterances with 
+  the highest :speaker-quality value.  This sequence will have length 1 if 
+  there is a uniquely highest value; it will be longer if there are several
   utterances with the same highest value."
   [utterances]
   (ug/maxes :speaker-quality utterances))
