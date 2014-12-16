@@ -35,7 +35,10 @@
   if any propns in the utterances are new to listener, and then calls
   update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
-  (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
+  (let [raw-utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
+        utterances (if-let [bias-filter (:bias-fn listener)]
+                     (bias-filter utterance-map)
+                     utterance-map)
         new-propn-ids (filter (partial propn-still-masked? listener)  ; if uttered propns are still unknown in listener, we'll have to add them
                               (map :propn-id utterances))
         new-listener (if new-propn-ids
