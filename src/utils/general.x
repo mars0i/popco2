@@ -1,3 +1,30 @@
+;; There's a version called 'reduce-maxes' in general.x that uses reduce and is easier to understand, but twice as slow.
+;; There's also a partially lazy version there, which is 30% slower on small sequences, at least, and provides little benefit in most situations.
+(declare maxes-helper)
+
+(defn maxes
+  "Returns a sequence of elements from s, each with the maximum value of
+  (f element).  If f isn't provided, identity is used."
+  ([s] (maxes identity s))
+  ([f s]
+   (if (empty? s)
+     nil
+     (let [new-elt (first s)
+           new-val (f new-elt)]
+       (when-not (number? new-val) (throw (Exception. (str "Non-numeric value " new-val " returned from element " new-elt " by extractor function " f "."))))
+       (maxes-helper f (rest s) new-val [new-elt])))))
+
+(defn- maxes-helper
+  "Helper function for maxes."
+  [f s best collected]
+  (if (empty? s)
+    collected
+    (let [new-elt (first s)
+          new-val (f new-elt)]
+      (when-not (number? new-val) (throw (Exception. (str "Non-numeric value " new-val " returned from element " new-elt " by extractor function " f "."))))
+      (cond (== new-val best) (recur f (rest s) best    (conj collected new-elt))
+            (> new-val best)  (recur f (rest s) new-val [new-elt])
+            :else             (recur f (rest s) best    collected)))))
 
 (defn- lazy-maxes-helper
   "Helper function for maxes0."
