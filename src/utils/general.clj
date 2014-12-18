@@ -44,7 +44,7 @@
      (let [new-elt (first s)
            new-val (f new-elt)]
        (when-not (number? new-val)
-         (throw (Exception. (pp/cl-format nil "in maxes: Non-numeric value ~a returned from element ~a by function ~a." new-val new-elt f)))) ; str and format don't format nil as "nil".
+         (throw (Exception. (pp/cl-format nil "utils.general.maxes: Non-numeric value ~a returned from element ~a by function ~a" new-val new-elt f)))) ; str and format don't format nil as "nil".
        (cond (>  new-val best-val) (recur f (rest s) new-val  [new-elt])
              (== new-val best-val) (recur f (rest s) best-val (conj collected new-elt))
              :else                 (recur f (rest s) best-val collected))))))
