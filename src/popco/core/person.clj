@@ -20,7 +20,7 @@
                    analogy-net
                    analogy-idx-to-propn-idxs utterable-ids utterable-mask
                    groups  talk-to-groups  talk-to-persons
-                   max-talk-to rng quality quality-fn bias-filter])
+                   max-talk-to rng bias-filter quality-fn quality])
 (us/add-to-docstr ->Person
    "Makes a POPCO Person, with these fields:
    :id -              name of person (a keyword)
@@ -82,7 +82,7 @@
                         (ur/make-rng (ur/next-long cn/initial-rng))
                         bias-filter ; defaults to nil (see param lists above)
                         quality-fn  ; defaults to nil (see param lists above)
-                        nil)]
+                        nil)] ; quality: should be filled by quality-fn before being transmitted to bias-filter through utterances
      ;; set up propn net and associated vectors:
      (doseq [propn-id propn-ids] (cl/add-to-propn-net! (:propn-net pers) propn-id))                ; unmask propn nodes
      (nn/set-mask! (:mask (:propn-net pers)) cn/+feeder-node-idx+ (/ 1.0 cn/+decay+))        ; special mask val to undo next-activn's decay on this node
