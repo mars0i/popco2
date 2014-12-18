@@ -24,7 +24,7 @@
   (flush)
   popn)
 
-(defn quality-filter
+(defn max-quality-filter
   "Success/prestige/etc-bias function suitable as a value for persons'
   :quality-fn field, which is then used in communic.listen/receive-utterances.
   Given a collection of utterances, returns a sequence those utterances with 
@@ -32,6 +32,7 @@
   there is a uniquely highest value; it will be longer if there are several
   utterances with the same highest value."
   [utterances]
+  ;(println utterances) ; DEBUG
   (ug/maxes :speaker-quality utterances))
 
 ;; Entry point from main.clj. Purely functional, since unmask-for-new-propns
@@ -41,6 +42,7 @@
   if any propns in the utterances are new to listener, and then calls
   update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
+  ;(println (:bias-filter listener)) ; DEBUG
   (let [raw-utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
         utterances (if-let [bias-filter (:bias-filter listener)]
                      (bias-filter raw-utterances)
