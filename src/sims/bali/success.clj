@@ -2,7 +2,7 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
-(ns sims.bali.functions
+(ns sims.bali.success
   (:require [sims.bali.collections :as bc]
             [clojure.core.matrix :as mx]
             [utils.random :as ran]))
