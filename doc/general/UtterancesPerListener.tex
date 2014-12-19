@@ -132,4 +132,42 @@ ofutterances, the mean number of utterances per listener will be
 
 (All correct?)
 
+\vspace{4ex}
+
+
+{\Large\sc What fraction of utterances are selected by success bias?}
+
+Similarly, since the number of utterances produced by any one
+speaker is $m$, the expectation and variance of the number of utterances
+received by a given listener $l$ from any one speaker $s$, are
+\[
+\expct(X_s) = mp = \frac{m}{N}
+\]
+%
+\[
+\var(X_s) = m\frac{1}{N}\left(1 - \frac{1}{N}\right) = \frac{m(N-1)}{N^2}
+\]
+and the standard deviation is
+\[
+\stdv(X_s) = \frac{\sqrt{m(N-1)}}{N} \;.
+\]
+
+If we assume that a listener's success-bias function always
+selects a single speaker's utterances on any given tick (which
+would generally obtain if success varies continuously and is
+rarely equal to its maximum value), then we might we treat the
+ratio between the above two means as an estimate of the average
+fraction of most-sucessful utterance among all utterances
+received by a listener:
+\[
+    \frac{\frac{m}{N}}{\;\;\;m\;\;\;} = \frac{m^2}{N}
+\]
+For example, for $N=100$ persons, with $m=5$ utterances per person,
+roughly 1/4 of the utterances received, on average, by a
+listener, would be the most successful for that listener on that
+tick.
+
+(Yeah, but that's not the real way to calculate this.  A ratio of
+expectations isn't an expectation, in general.)
+
 \end{document}

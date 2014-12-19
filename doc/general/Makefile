@@ -1,4 +1,4 @@
-BASE=SuccessBiasedProbs
+BASE=UtterancesPerListener
 all: $(BASE).pdf
 bib: $(BASE).bbl
 
