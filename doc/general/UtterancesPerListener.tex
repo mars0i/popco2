@@ -1,0 +1,135 @@
+\documentclass[12pt]{article}
+
+%\usepackage{natbib}
+\usepackage{xspace}
+%\usepackage{epsfig}
+%\usepackage{graphics}
+\usepackage{color}
+\usepackage{relsize} % provides \relscale, \larger, etc. to be used *in the document*
+%\usepackage{hyperref}\hypersetup{pdftex,colorlinks=true,allcolors=blue}
+
+%\usepackage{anyfontsize} % e.g.: \fontsize{13}{14.5}\selectfont cmr12
+                         % [I think this is 13 on 14.5, 
+			 % i.e. 13pt with 1.5pts extra space between lines.]
+
+%\usepackage{amsmath}
+
+%\newcommand{\SetFont}[1]{\setmainfont[Mapping=tex-text]{#1}} % font sel abbrev
+\newcommand{\SetFont}[1]{\setmainfont[Ligatures=TeX]{#1}} % preferred to "Mapping=tex-text"
+%\newcommand{\SetFont}[1]{\setmainfont[OpticalSize=0]{#1}} % font sel abbrev
+%\newcommand{\SetFont}[1]{\setmainfont[Mapping=tex-text,Ligatures=TeX,Scale=1.20]{#1}} % font sel abbrev
+
+%\setmainfont[Mapping=tex-text]{GaramondNo8}
+
+% Args: EB Garamond/GaramondNo8/Garamond/Crimson
+\newcommand{\UseGaramond}[1]{%
+	\usepackage[urw-garamond]{mathdesign}  % goes before fontenc, fontspec, etc.
+	\usepackage[T1]{fontenc}
+	\usepackage{fontspec,xltxtra,xunicode}
+	\SetFont{#1}
+}
+
+% Args: TeX Gyre Pagella/URWPalladioL/Palatino/Palatino Linotype/Book Antiqua
+% [broken?]
+\newcommand{\UsePalatino}[1]{%
+ 	\usepackage[T1]{fontenc}
+ 	\usepackage{fontspec,xltxtra,xunicode}
+ 	%\usepackage{tgpagella} % better to select via Mac fonts:
+ 	\SetFont{#1}
+ 	\usepackage{unicode-math} 
+ 	%\setmathfont{texgyrepagella-math.otf}
+ 	\setmathfont{TeX Gyre Pagella Math}
+}
+
+%\UseGaramond{GaramondNo8}
+\UseGaramond{EB Garamond}
+%\UsePalatino{TeX Gyre Pagella}
+%\UsePalatino{Book Antiqua}
+
+
+%\renewcommand{\baselinestretch}{1.66}\normalsize % my trad double-space
+%\renewcommand{\baselinestretch}{1.25}\normalsize % 12 on 15 (if base is 12)
+%\renewcommand{\baselinestretch}{1.17}\normalsize % 12 on 14 (if base is 12)
+\renewcommand{\baselinestretch}{1.08}\normalsize % 12 on 13 (if base is 12)
+%\renewcommand{\baselinestretch}{1.10}\normalsize % 
+
+\usepackage{vmargin}
+\setpapersize{USletter}
+%\setmarginsrb{1in}{1.15in}{1in}{1.15in}{0pt}{0in}{0pt}{.3in} % MBP
+%\setmarginsrb{1in}{1.40in}{1in}{1.40in}{0pt}{0in}{0pt}{.3in} % MBA
+%\setmarginsrb{1.25in}{1in}{1.25in}{1in}{0pt}{0in}{0pt}{.3in}
+\setmarginsrb{1.0in}{1in}{1.0in}{1in}{0pt}{0in}{0pt}{.3in}
+
+\setlength{\parindent}{0in}  % Don't indent paragraphs
+\setlength{\parskip}{2.5ex}    % Add space between paragraphs
+
+\newcommand{\ie}{i.e.\@\xspace}
+\newcommand{\eg}{e.g.\@\xspace}
+\newcommand{\cf}{cf.\@\xspace}
+\newcommand{\etc}{etc.\@\xspace}
+\newcommand{\viz}{viz.\@\xspace}
+\newcommand{\vs}{vs.\@\xspace}
+
+\newcommand{\pr}{\mathsf{P}} % probability
+\newcommand{\expct}{\mathsf E\,}
+\newcommand{\var}{\sigma^2}
+%\newcommand{\var}{\mathop{\mathrm{var}}\nolimits}
+\newcommand{\stdv}{\sigma}
+%\newcommand{\stdv}{\mbox{stddev}}
+%\newcommand{\comb}[2]{\left(^{#1}_{#2}\right)}
+%\newcommand{\comb}[2]{\left(^{#1}_{#2}\rule{0em}{1em}\right)}
+%\newcommand{\comb}[2]{\binom{#1}{#2}} % from amsmath
+\newcommand{\comb}[2]{{{#1}\choose{#2}}}
+% [0-width rule functions as a strut, makes parentheses a good size.]
+
+\newcommand{\cmnt}[1]{}
+%\renewcommand{\cmnt}[1]{{\color{red}[#1]}}
+
+\newcommand{\fn}[1]{\footnote{#1}}
+
+\begin{document}
+\relscale{1.3} % change size globally
+
+{\Large\sc How many utterances does each listener receive?}
+
+Let there be $N$ popco persons all in the same fully
+interconnected group.  (For the moment, ignore pundits.)  Assume
+that each person has {\sf max-talk-to} = $m$.
+
+Then on any given tick, there are $N$ speakers with up to $m$ utterances
+each, \ie up to $mN$ utterances in total, distributed between $N$
+listeners.  The probability that any given listener $l$ will
+receive a particular utterance is $p=\frac{1}{N}$.
+
+How many utterances does each listener receive?
+
+The probability that a given listener $l$ will receive $k$
+utterances during a tick follows a binomial distribution:
+\[
+    \pr(X=k) = \comb{mN}{k} \left(\frac{1}{N}\right)^k
+    \left(1-\frac{1}{N}\right)^{mN-k} \;.
+\]
+The expected number of utterances received by a given listener is
+\[
+    \expct(X) = \sum_{k=0}^{mN}k\comb{mN}{k}
+    \left(\frac{1}{N}\right)^k \left(1-\frac{1}{N}\right)^{mN-k}
+    = mNp = mN\frac{1}{N} = m \;,
+\]
+and the variance is
+\[
+    \var(X) = mNp(1-p) = mN\frac{1}{N}\left(1-\frac{1}{N}\right)
+    = m\left(\frac{N-1}{N}\right) \;.
+\]
+The standard deviation is therefore
+\[
+    \stdv(X) = \sqrt{m}\sqrt{\frac{N-1}{N}} \;.
+\]
+For a slightly large $N$, the second term is close to 1.  For
+example, the NetLogo Bali model has $N=172$ subaks, so if {\sf
+max-talk-to} $=m=4$, and all subaks generate that the max number
+ofutterances, the mean number of utterances per listener will be
+4, and the standard deviation will be slightly less than $2$.
+
+(All correct?)
+
+\end{document}
