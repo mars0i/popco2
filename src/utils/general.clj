@@ -49,6 +49,33 @@
              (== new-val best-val) (recur f (rest s) best-val (conj collected new-elt))
              :else                 (recur f (rest s) best-val collected))))))
 
+(defn maxes-split
+  "Returns a pair containing [a] a sequence of elements from s, each with
+  the maximum value of (f element), and [b] the rest of the elements.  
+  If f is not provided where s is a collection of numbers, the identity 
+  function is used for f.  (The 5-argument version is primarily intended 
+  to be called recursively.)"
+  ([s] (maxes-split identity s))
+  ([f s] (maxes-split f s Double/NEGATIVE_INFINITY [] []))
+  ([f s best-val collected uncollected]
+   (if (empty? s)
+     [collected uncollected]
+     (let [new-elt (first s)
+           new-val (f new-elt)]
+       (when-not (number? new-val)
+         (throw (Exception. (pp/cl-format nil "utils.general.maxes-split: Non-numeric value ~a returned from element ~a by function ~a" new-val new-elt f)))) ; str and format don't format nil as "nil".
+       (cond (>  new-val best-val) (recur f (rest s) new-val  [new-elt] (concat collected uncollected)) ; we have a new winner, so old winners are added to the losers
+             (== new-val best-val) (recur f (rest s) best-val (conj collected new-elt) uncollected)
+             :else                 (recur f (rest s) best-val collected (conj uncollected new-elt)))))))
+
+;; There is a more efficient way to do this.
+(defn maxes-top-two
+  "Returns a collection of the elements with the maximum value of (f element)
+  along with those that are max (f element) of the remaining elements."
+  ([s] (maxes-top-two identity s))
+  ([f s]
+   (let [[top-ones rest-of-em] (maxes-split f s)]
+     (concat top-ones (maxes f rest-of-em)))))
 
 (defn rotations
   "Generate all rotations of a sequence."
