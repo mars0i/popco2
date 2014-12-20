@@ -24,6 +24,26 @@
   (flush)
   popn)
 
+(defn max-quality-filter
+  "Success/prestige/etc-bias function suitable as a value for persons'
+  :quality-fn field, which is then used in communic.listen/receive-utterances.
+  Given a collection of utterances, returns a sequence those utterances with 
+  the highest :speaker-quality value.  This sequence will have length 1 if 
+  there is a uniquely highest value; it will be longer if there are several
+  utterances with the same highest value."
+  [utterances]
+  ;(println utterances) ; DEBUG
+  (ug/maxes :speaker-quality utterances))
+
+(defn max-2-quality-filter
+  "Success/prestige/etc-bias function suitable as a value for persons'
+  :quality-fn field, which is then used in communic.listen/receive-utterances.
+  Given a collection of utterances, returns a sequence those utterances with 
+  the highest :speaker-quality value as well as those with the second highest value."
+  [utterances]
+  ;(println utterances) ; DEBUG
+  (ug/maxes-top-two :speaker-quality utterances))
+
 ;; Entry point from main.clj. Purely functional, since unmask-for-new-propns
 ;; and update-propn-net-from-utterances are purely functional.
 (defn receive-utterances
@@ -31,13 +51,18 @@
   if any propns in the utterances are new to listener, and then calls
   update-propn-net-from-utterances.  See these functions' docstrings for more."
   [utterance-map listener]
-  (let [utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
-        new-propns (filter (partial propn-still-masked? listener) 
-                           (map :propn-id utterances))
-        listener (if new-propns
-                   (unmask-for-new-propns listener new-propns) ; First primary call
-                   listener)]
-    (update-propn-net-from-utterances listener utterances)))   ; Second primary call
+  ;(println (:bias-filter listener)) ; DEBUG
+  (let [raw-utterances (utterance-map (:id listener)) ; get seq of utterances intended for this listener
+        utterances (if-let [bias-filter (:bias-filter listener)]
+                     (bias-filter raw-utterances)
+                     raw-utterances)
+        new-propn-ids (filter (partial propn-still-masked? listener)  ; if uttered propns are still unknown in listener, we'll have to add them
+                              (map :propn-id utterances))
+        new-listener (if new-propn-ids
+                       (unmask-for-new-propns listener new-propn-ids) ; add any new propositions to listener
+                       listener)]
+    (update-propn-net-from-utterances new-listener utterances)))   ; now update links to SALIENT (both for new and old propositions)
+
 
 ;; Note: This function is purely functional despite calling mutational functions
 ;; Question: Do I have to reapply semantic-iffs here?
@@ -79,16 +104,16 @@
   "Returns person with modified propn-mask and analogy-mask so that the neural 
   networks' weight matrices will reflect the fact that new propositions are now
   part of listener's thought processes."
-  [original-pers new-propns]
+  [original-pers new-propn-ids]
   (let [pers (person-masks-clone original-pers) ; new copy since will modify person's internal structures. TODO Is this really necesary?
         pnet (:propn-net pers)]
-    (doseq [new-propn new-propns]
-      (add-to-propn-net! pnet new-propn) ; note modifying propn net that's inside the person that will get returned
+    (doseq [new-propn-id new-propn-ids]
+      (add-to-propn-net! pnet new-propn-id) ; note modifying propn net that's inside the person that will get returned
       (let [propn-to-extended-fams (:propn-to-extended-fams-ids (:propn-net pers))
-            fams (propn-to-extended-fams new-propn)]
+            fams (propn-to-extended-fams new-propn-id)]
         (doseq [fam fams                           ; loop through all extended fams containing this propn
-                propn fam]                         ; and each propn in that family
-          (try-add-to-analogy-net! pers propn))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
+                propn-id fam]                         ; and each propn in that family
+          (try-add-to-analogy-net! pers propn-id))))  ; see whether we can now add analogies using it. [redundantly tries to add analogies for recd-propn-id repeatedly, though will not do much after the first time]
     pers))
 
 (defn masks-clone
@@ -104,49 +129,49 @@
          :analogy-net (masks-clone (:analogy-net pers))))
 
 (defn add-to-propn-net!
-  "Add proposition with id propn to proposition network pnet by
+  "Add proposition with id propn-id to proposition network pnet by
   unmasking at the corresponding index in the proposition mask."
-  [pnet propn]
+  [pnet propn-id]
   (let [id-to-idx (:id-to-idx pnet)]
-    (nn/unmask! (:mask pnet) (id-to-idx propn))))
+    (nn/unmask! (:mask pnet) (id-to-idx propn-id))))
 
 (defn try-add-to-analogy-net!
   "ADD DOCSTRING.  See communic.md for further explanation."
-  [pers propn]
-  (when (propn-components-already-unmasked? pers propn)                ; if sent propn missing extended-family propns, can't match
-    (doseq [a-propn ((:propn-to-analogs (:analogy-net pers)) propn)] ; check possible analog propns to sent propn
+  [pers propn-id]
+  (when (propn-components-already-unmasked? pers propn-id)                ; if sent propn missing extended-family propns, can't match
+    (doseq [a-propn ((:propn-to-analogs (:analogy-net pers)) propn-id)] ; check possible analog propns to sent propn
       (when (and (propn-already-unmasked? pers a-propn)                ; if pers has this analog propn
                  (propn-components-already-unmasked? pers a-propn))    ; and its extended-family-propns 
-        (let [mn-id (or (ids-to-poss-mn-id pers a-propn propn)         ; then unmask mapnode corresponding to this propn pair
-                        (ids-to-poss-mn-id pers propn a-propn))]
+        (let [mn-id (or (ids-to-poss-mn-id pers a-propn propn-id)         ; then unmask mapnode corresponding to this propn pair
+                        (ids-to-poss-mn-id pers propn-id a-propn))]
           (unmask-mapnode-extended-family! pers mn-id))))))            ; and all extended family mapnodes
 
 (defn propn-still-masked?
-  "Return true if, in person (first arg), propn (second arg) doesn't exist
+  "Return true if, in person (first arg), propn-id (second arg) doesn't exist
   in the proposition net in the sense that it's masked; false otherwise."
-  [pers propn]
+  [pers propn-id]
   (let [pnet (:propn-net pers)]
     (nn/node-masked? (:mask pnet)
-                     ((:id-to-idx pnet) propn))))
+                     ((:id-to-idx pnet) propn-id))))
 
 (defn propn-already-unmasked?
-  "Return true if, in person (first arg), propn (second arg) exists in the
+  "Return true if, in person (first arg), propn-id (second arg) exists in the
   proposition net in the sense that it has been unmasked; false otherwise."
-  [pers propn]
+  [pers propn-id]
   (let [pnet (:propn-net pers)]
     (nn/node-unmasked? (:mask pnet)
-                       ((:id-to-idx pnet) propn))))
+                       ((:id-to-idx pnet) propn-id))))
 
 (defn propn-components-already-unmasked?
-  "Return true if, in person (first arg), propn (second arg) is a possible
+  "Return true if, in person (first arg), propn-id (second arg) is a possible
   candidate for matching--i.e. if its component propns (and therefore
   preds, objs) already exist, i.e. have been unmasked.  Returns false if not."
-  [pers propn]
+  [pers propn-id]
   (let [pnet (:propn-net pers)
         propn-to-descendant-propn-idxs (:propn-to-descendant-propn-idxs pnet)
         propn-mask (:mask pnet)]
     (every? (partial nn/node-unmasked? propn-mask) 
-            (propn-to-descendant-propn-idxs propn)))) ; if propn is missing extended-descendant propns, can't match
+            (propn-to-descendant-propn-idxs propn-id)))) ; if propn is missing extended-descendant propns, can't match
 
 (defn ids-to-poss-mn-id
   "Given two id keywords and a person, constructs and returns 

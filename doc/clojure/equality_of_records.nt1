@@ -1,0 +1,51 @@
+equality_of_records.nt1
+
+These examples below show that Clojure's = function does the right thing
+with records, comparing their fields recursively.  (Note these examples don't
+bother creating embedded Objs or Preds, but the principle should be the same.)
+
+Interesting stuff on equality here:
+http://stackoverflow.com/questions/10995655/clojure-equality-of-collections-with-sequences
+
+So I think these will hash identically.  But be careful.
+http://nathanmarz.com/blog/fun-with-equality-in-clojure.html:
+When integers are of different types, "... the map equality breaks down
+because Long and Integer have different hashcodes for the same numeric
+value."
+
+.....................................................
+
+popco.core.popco=> (use 'popco.core.lot)
+nil
+
+; compare the same Propn recreated twice:
+popco.core.popco=> (= (->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Yo [:ob-yo1 :ob-yo2] :yo))
+true
+
+; compare two different Propns:
+popco.core.popco=> (= (->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Ya [:ob-ya1 :ob-ya2] :ya))
+false
+
+; compare the same Propn recreated twice, with arguments that are themselves new creations of the same Propns:
+popco.core.popco=> (= (->Propn :Hey [(->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Ya [:ob-ya1 :ob-ya2] :ya)] :hey) 
+                      (->Propn :Hey [(->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Ya [:ob-ya1 :ob-ya2] :ya)] :hey))
+true
+
+; same as preceding, but this time change one of the argument Propns:
+popco.core.popco=> (= (->Propn :Hey [(->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Ya [:ob-ya1 :ob-ya2] :ya)] :hey) 
+                      (->Propn :Hey [(->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Yo [:ob-yo1 :ob-yo2] :yo)] :hey))
+false
+
+; compare identical newly-created three-level embedded Propns:
+popco.core.popco=> (= (->Propn :Hi (->Propn :Hey [(->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Ya [:ob-ya1 :ob-ya2] :ya)] :hey) 
+                                   (->Propn :Hoy [(->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Ya [:ob-ya1 :ob-ya2] :ya)] :hoy))  
+                      (->Propn :Hi (->Propn :Hey [(->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Ya [:ob-ya1 :ob-ya2] :ya)] :hey)
+		                   (->Propn :Hoy [(->Propn :Yo [:ob-yo1 :ob-yo2] :yo) (->Propn :Ya [:ob-ya1 :ob-ya2] :ya)] :hoy)))
+true
+
+; same thing using the special form creators instead of the functions:
+popco.core.popco=> (= (Propn. :Hi (Propn. :Hey [(Propn. :Yo [:ob-yo1 :ob-yo2] :yo) (Propn. :Ya [:ob-ya1 :ob-ya2] :ya)] :hey) 
+                                  (Propn. :Hoy [(Propn. :Yo [:ob-yo1 :ob-yo2] :yo) (Propn. :Ya [:ob-ya1 :ob-ya2] :ya)] :hoy))  
+                      (Propn. :Hi (Propn. :Hey [(Propn. :Yo [:ob-yo1 :ob-yo2] :yo) (Propn. :Ya [:ob-ya1 :ob-ya2] :ya)] :hey)
+                                  (Propn. :Hoy [(Propn. :Yo [:ob-yo1 :ob-yo2] :yo) (Propn. :Ya [:ob-ya1 :ob-ya2] :ya)] :hoy)))
+true

@@ -1,0 +1,14 @@
+
+
+;; NOTE The function match-args differs from an earlier version (now called 
+;; deep-match-args) in that it
+;; doesn't try to perform matching on args of propns that appear as args
+;; of propns.  Rather, we *just* match the propns themselves when they appear
+;; in argument place.  (We *did* need to recurse on args to decide what propns
+;; match what propns--that was the desired behavior in H&T1989, but not the
+;; actual behavior in ACME, nor what was described in the p. 314 specification,
+;; but it was what happened in POPCO 1 and what "Moderate Role" described.)
+;; However, at this stage we should assume that we are only looking
+;; at propn pairs that match in this deep way.  That doesn't mean that weights
+;; get calculated from matchings that have to do with what's inside the propns
+;; that are args.  The H&T1989 algorithm does *not* do this, nor did POPCO 1.

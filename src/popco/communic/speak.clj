@@ -11,16 +11,22 @@
             [popco.communic.utterance :as ut]
             [clojure.core.matrix :as mx]))
 
-(declare choose-listeners worth-saying-ids choose-propn-ids-to-say
-         make-utterances speaker-plus-utterances)
+(declare choose-listeners worth-saying worth-saying-ids choose-propn-ids-to-say make-utterances speaker-plus-utterances update-qualities)
 
 (defn choose-listeners
   "Given a person as argument, return a sequence of persons to whom
   the argument person wants to talk on this tick."
-  [{:keys [talk-to-persons max-talk-to rng]}]
+  [{:keys [talk-to-persons max-talk-to rng]}] ; a person
   (if (>= max-talk-to (count talk-to-persons))
     talk-to-persons
     (ran/sample-without-repl rng max-talk-to talk-to-persons)))
+
+(defn worth-saying
+  "Function for testing whether a proposition is worth saying given that it is
+  otherwise utterable."
+  [pers activn]
+  (< (ran/next-double (:rng pers)) 
+     activn))
 
 ;; Note that SALIENT will be filtered out because the usual procedures for creating
 ;; persons in a population puts only proposition ids in the utterable-ids field
@@ -35,7 +41,7 @@
   willing to communicate (ones unmasked in utterable-mask).  Each proposition
   in this intersection is then selected with probability equal to the absolute
   value of its activation."
-  [{:keys [propn-net utterable-mask rng]}] ; argument is a Person
+  [{:keys [propn-net utterable-mask rng] :as pers}] ; argument is a Person
   ;; absolute values of activns of unmasked utterable propns:
   (let [propn-mask (:mask propn-net)
         propn-activns (:activns propn-net)
@@ -43,9 +49,8 @@
         utterable-abs-activns (mx/abs
                                 (mx/emul propn-mask utterable-mask propn-activns))]
     (for [i (range (count propn-id-vec))
-          :let [randnum (ran/next-double rng)
-                activn (mx/mget utterable-abs-activns i)]
-          :when (< randnum activn)]
+          :let [abs-activn (mx/mget utterable-abs-activns i)]
+          :when (worth-saying pers abs-activn)]
       (propn-id-vec i))))
 
 (defn choose-propn-ids-to-say
@@ -74,14 +79,21 @@
   the map created by this function with other similar maps, in order to
   create one large map in which the values are sequences of utterances."
   [speaker]
-  (let [listeners (choose-listeners speaker) ; may be empty
+  (let [quality (:quality speaker)
+        listeners (choose-listeners speaker) ; may be empty
         to-say-ids (choose-propn-ids-to-say speaker (count listeners))] ; nil if no listeners, possibly nil if so
     (if to-say-ids
       (zipmap listeners 
-              (map #(vector (ut/make-utterance speaker %)) to-say-ids)) ; wrapping each single utterance
+              (map #(vector (ut/make-utterance speaker % quality)) to-say-ids)) ; wrapping each single utterance
       {})))
 
 ;; So person will get passed through
 (defn speaker-plus-utterances
   [pers]
   [pers (make-utterances pers)])
+
+(defn update-quality
+  [pers]
+  (if-let [quality-fn (:quality-fn pers)]
+    (assoc pers :quality (quality-fn pers))
+    pers)) ; btw quality should normally be nil at this point because it was initalized to have that value, and there's no quality update function.

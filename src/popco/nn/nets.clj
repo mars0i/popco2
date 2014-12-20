@@ -3,7 +3,8 @@
 ;;; specified in the file LICENSE.
 
 (ns popco.nn.nets
-  (:require [utils.general :as ug]
+  (:require [utils.math :as um]
+            [utils.string :as us]
             [popco.core.lot :as lot]
             [popco.core.constants :as cn]
             [popco.nn.matrix :as px]
@@ -53,7 +54,7 @@
   (neg-wt-mat [nnstru] (:neg-wt-mat nnstru))
   (links [nnstru] (wt-mat nnstru))) ; Analogy nets never have zero-weight links, so we can use the regular weight matrix.
 
-(ug/add-to-docstr ->AnalogyNet
+(us/add-to-docstr ->AnalogyNet
   "Makes an ACME analogy neural-net structure, i.e. a structure that 
   represents an ACME analogy constraint satisfaction network.  See docstring 
   for make-analogy-net for details.")
@@ -74,7 +75,7 @@
   (links [nnstru] (or (:link-mat nnstru) (wt-mat nnstru)))) ; By default, propn net's link-mat is empty (contains nil).  An external function applied to the popn can be used to fill it.
 
 ;; TODO DOCSTRING IS OBSOLETE?
-(ug/add-to-docstr ->PropnNet
+(us/add-to-docstr ->PropnNet
   "Makes a proposition neural-net structure, i.e. a structure that represents a
   POPCO proposition constraint satisfaction network.  Has these fields in addition
   to those documented for make-nn-core:
@@ -299,7 +300,7 @@
        (pp/cl-format true "~s: " (:tick curr))
        (pp/pprint (map 
                     #(vector (:id %) 
-                             (map (fn [[[idx] wt]] [(:id (node-vec idx)) (ug/round2 3 wt)]) ; round to strip spurious small decimals from float noise
+                             (map (fn [[[idx] wt]] [(:id (node-vec idx)) (um/round2 3 wt)]) ; round to strip spurious small decimals from float noise
                                   (px/non-zeros (salient-wts %))))
                     (drop to-skip (:persons curr))))))))
 

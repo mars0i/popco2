@@ -1,0 +1,88 @@
+acme.nt1
+
+A map node is
+(a) an activation in a vector
+(b) information about the two entities that are mapped
+
+Similarly, a propn node is 
+(a) an activation in a vector
+(b) information about the propn
+
+At least for reporting, it's necessary to be able to: 
+- Look up node information from node indexes.
+- Look up node indexes from node information.
+- Probably: Look up map node "sides" from map nodes (but that's in the info)
+
+So how about:
+
+Propn node info contains the propn.
+
+Map node info contains the two elements: two Propns, two Preds, two Objs.
+
+Note:
+
+For each link there must be a link matrix that just indicates whether
+the link exists or not.  Or else there must be a separate non-matrix
+representation of this.  Otherwise we can't tell whether zero-weight
+links are links.  These will at least occur in the propn network.
+They might not occur elsewhere, but we should store the information
+anyway.
+
+And it's useful to use a matrix rep of 1's and 1's for the existence
+of links: That way, we can construct one analogy network for all
+persons at the start.  Those that are missing some propns, and hence
+some links, will simply have zeros for those links.  Then we do an
+element-wise multiplication between the population-wide weight matrix
+and the individual link matrix to derive the individual weight matrix.
+Well, maybe there's a faster way, but this is nice and simple, at
+least.
+
+Therefore, it's not necessary to record interrelationships between
+propns and their components, as Thagard's ACME does.  As long as ACME
+continues to use those relationships in the neural net, they are
+thereby recorded.  You can look up the relationships by seeing what
+rows have 1's in the appropriate column.
+
+And maybe we need something similar wrt the activation vector.  Not
+that we need to multiply it, but we need some way of saying whether
+there really is a node there, rather than just an activation that
+happens to be zero.
+
+Maybe this can be done with a Clojure vector of node info, with nil's
+where there are none.  Or maybe the node info vector is global, with
+something else--maybe a vector of 1's and 0's--to say whether a
+particular person has that node.
+
+--------------------------------------------------
+
+So now we have, for each of the two kinds of network (analogy, propn):
+
+A per-person vector of activations.  This can have slots for
+nodes not present in the person.
+
+A per-person structure indicating which propns the person has and
+doesn't have.
+
+Global data structures that allow looking up node info from node
+indexes, and vice versa.
+
+A per-person link matrix of 1's and 0's.  
+(Maybe this can be shared across persons in some cases?  e.g. if
+a person is created by copying another, maybe the link matrix can be
+copy-on-right?  Well maybe that should be left to Clojure to
+implement.)
+
+A single weight matrix ("possible-weight" matrix) for all persons.
+
+--------------------------------------------------
+
+Question: How should I allow for the existence of one-way links in the future?
+Easy:     The normal matrix of 2-way links will be a symmetric matrix.
+          Make it assymetric to implement 1-way links.
+(?)
+
+Hmm: also, I wonder whether I can implement the mechanism by which
+activations of propn-map-nodes in the analogy network affect link
+weights in the propn network using matrix/vector operations.  This
+requires being able to determine from the analogy net vector info what
+the corresponding node ends/indexes in the propn link matrix.

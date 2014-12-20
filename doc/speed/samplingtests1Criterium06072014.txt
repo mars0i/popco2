@@ -1,0 +1,41 @@
+Speed comparison of sampling functions with a single RNG		
+		
+"git hist | head -1: * f798bdd 2014-06-07 | added/renamed for new sampling functions (HEAD, origin/master, origin/HEAD, master) [mars0i]"		
+Clojure 1.6.0		
+"(load-file ""test/samplingfunctions.clj"")"		
+		
+"Sample size = 5 , stuff size = 25 "		
+function	map	pmap
+incanter_sample_with_repl	582.292438	461.355167
+incanter_sample_without_repl	2268.933	1296.551
+generators_sample_with_repl	245.196872	275.429429
+generators_reservoir_sample_without_repl	424.504569	484.117669
+hybrid_generators_incanter_sample_without_repl	254.157353	281.90627
+bigml_sample_with_repl	322.688778	310.038539
+bigml_sample_without_repl	470.218653	392.265051
+bigml_sample_twister_with_repl	925.142978	594.652761
+bigml_sample_twister_without_repl	1114.285	680.590995
+		
+"Sample size = 1 , stuff size = 25 "		
+function	map	pmap
+incanter_sample_with_repl	127.475178	230.486884
+incanter_sample_without_repl	128.044736	229.409021
+generators_sample_with_repl	77.349116	178.072344
+generators_reservoir_sample_without_repl	354.204482	503.754495
+hybrid_generators_incanter_sample_without_repl	38.023656	113.262627
+bigml_sample_with_repl	177.772811	258.19428
+bigml_sample_without_repl	163.404554	249.620274
+bigml_sample_twister_with_repl	760.410729	492.065784
+bigml_sample_twister_without_repl		749.309482	487.09513
+
+"Sample size = 25 , stuff size = 50"		
+function	map	pmap
+incanter_sample_with_repl	852.63932	868.603271
+incanter_sample_without_repl	12706.622	5856.54
+generators_sample_with_repl	1064.718	640.743207
+generators_reservoir_sample_without_repl	817.673173	671.991547
+hybrid_generators_incanter_sample_without_repl	1525.951	983.080919
+bigml_sample_with_repl	904.652326	593.052472
+bigml_sample_without_repl	1935.129	1221.522
+bigml_sample_twister_with_repl	1622.021	888.988049
+bigml_sample_twister_without_repl	2714.728	1525.723

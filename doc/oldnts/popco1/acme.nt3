@@ -1,0 +1,10 @@
+acme.nt3
+
+Here's a simple but multi-pass version
+First lay out all of the items in order in in a sorted hashset or something
+
+
+Then a second pass identifies multiple 1's in rows/cols,
+and fills in neg links
+
+

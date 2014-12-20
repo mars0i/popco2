@@ -238,8 +238,8 @@
    (defpropn SP-subak-fails-against-demon Fails [SP-peasants-against-demon])
    (defpropn SP-subak-fail-demon->disorder Causal-if [SP-subak-fails-against-demon SP-subak-disordered])])
 
-(println "Numbers of propositions:")
-(println "worldly brahman: " (count worldly-brahmanic-propns))
-(println "spiritual brahman: " (count spiritual-brahmanic-propns))
-(println "worldly peasant: " (count worldly-peasant-propns))
-(println "spiritual peasant: " (count spiritual-peasant-propns))
+;(println "Numbers of propositions:")
+;(println "worldly brahman: " (count worldly-brahmanic-propns))
+;(println "spiritual brahman: " (count spiritual-brahmanic-propns))
+;(println "worldly peasant: " (count worldly-peasant-propns))
+;(println "spiritual peasant: " (count spiritual-peasant-propns))

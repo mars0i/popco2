@@ -1,0 +1,67 @@
+acme.nt2
+
+Pairs represent map nodes.
+
+Coming from the same propn pair means that you will be positively linked.
+
+Coming from different pairs but sharing an element on one analogue side
+means you will be negatively linked.
+
+Or simply: Sharing an element on one side but not the other means you
+get negative links.
+
+(This need not be fast as long as it's only done once at the beginning.)
+
+		analogues
+		A	B
+
+		a1	b1
+		a2	b1
+propns/		a3	b1
+components	a1	b2
+		a3	b2
+		a3	b3
+		a2	b3
+
+We can represent pairings by 1's in a (not-necessarily symmetric)
+"map-node" matrix:
+
+   b1 b2 b3
+a1  1  1
+a2  1     1
+a3  1  1  1
+
+There should be negative links between any pairings represented by 1's
+in the same row.
+
+There should be negative links between any pairings represented by 1's
+in the same column.
+
+So if the row sum or column sum is > 1, then we need negative links.
+
+
+For any 1 in the map-node matrix, there will be a node in the
+analogy-net vector.
+
+Let there be a 1 in the analogy-net link matrix whenever map nodes
+come from the same propn.  this is not represented in the map-node
+matrix.
+
+Let there be a -1 in the analogy-net link matrix whenever map nodes have
+1's in the same row or column of the map-node matrix.
+
+---------------------------
+
+QUESTION: How are relationships between propositions due to occurring in
+the same argument place of matched propns (but not necessarily analogous
+otherwise) supposed to be handled?
+
+ANSWER 1: If the propns in which these propns occur as arguments do
+match, then these argument propns match as well.  That's a requirement
+of the recursive mapping method. SO THE FACT THAT THE ARGUMENT PROPNS
+ARE PAIRED CAN SIMPLY BE IGNORED IN DETERMINING *WHERE* THERE WILL BE
+POSITIVE AND NEGATIVE LINKS.
+
+ANSWER 2: However, THIS WILL MATTER WHEN CALCULATING WEIGHTS.
+The extra pairings due to occurring in the same argument place will
+add to the link weights.

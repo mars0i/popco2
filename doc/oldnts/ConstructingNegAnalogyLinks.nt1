@@ -1,0 +1,69 @@
+
+In writing the code to construct negative links in the analogy network,
+I was not clear, at first, on one point.  The basic idea, in ACME, is
+that if there are distinct mapnodes that share "sides"--i.e. that have
+the same analog element from one analog structure, but differ in the
+other analog element--then these mapnodes are in competition and should
+have a negative link between them. (See p. 314 in H&T1989 and p. 11 in
+"Moderate Role".)
+
+Question: Can I go through each of the analogs separately, sorting by
+elements on that "side", and then just add negative links between
+mapnodes that have the same element on that side?  This is really just a
+question about combinatorial procedures, but I went and looked at CL
+source in acme.lisp.  The relevant function is inhibit-multiple-mappings, 
+which is called several times in make-constraint-net, which is called on
+the two analog structures in a person.
+
+Note this comment on inhibit-multiple-mappings:
+;;; This fixes a bug which mixes up source and target components when
+;;; considering inhibitory connections. For example, num5=num3 was
+;;; inhibited by num6=num5.
+
+Interestingly, inhibit-multiple-mappings is called separately on
+predicates from each of the two analog structures, and separately on
+objects from each of the two analog structures--or rather, on arguments
+from the two analog structures, whether the arguments are objects or
+propositions. (So that suggests that yes, I should go through both sides
+separately.)
+
+But then inhibit-multiple-mappings is simply called on all propositions
+within the person, without regard to analog structures.  (This is
+Thagard et al.'s algorithm, modified only to deal with POPCO's use of
+multiple persons and networks.)
+
+Why is there a difference between how propositions are treated at the
+top level, and how predicates and arguments are treated?
+
+Well, note that the separate calls with the second analog structure are
+optional (but used in POPCO).  So maybe I should just ignore that--it
+has to do with things that I don't care about.
+
+Also, despite being called separately on the two analog structs in some
+cases, inhibit-multiple-mappings actually looks at both sides for
+competition, calling make-inhib-links on each.  make-inhib-links is
+defined in echo.lisp, and in turn calls make-inhib-links-for-unit.
+
+-----------------------------------------------------------
+
+12/7/2013: I believe the current rule I've implemented (as of 12/5/2013
+I think) is correct, at least ignoring higher-order propositions:
+
+I sort map-pairs on one side--i.e. one analog--and then group into
+subsequences with the same element on that side.  Then I do the same
+thing with respect to the other side.  Then within each group of
+mapnodes, every pair of mapnodes is linked.
+
+This produces no duplicate links (ignoring H-O propositions for the
+moment) because the groups from each side are like little n-leaf 1-level
+trees from a common root, and there are no roots common to both sides.
+Well no that's not true in the case of predicates.  e.g. you could have
+both [causal-if preventative-if] and [preventative-if causal-if].  But,
+on each side, those will be in distinct groups.  On the alog1 side,
+[causal-if preventative-if] will be in a group [causal-if *], and
+[preventative-if causal-if] will be in a group [preventative-if *].  On
+the the alog2 side, [causal-if preventative-if] will be in a group 
+[* preventative-if], while [preventative-if causal-if] will be in a group
+[* causal-if].
+
+??

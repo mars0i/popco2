@@ -3,14 +3,17 @@
 ;;; specified in the file LICENSE.
 
 (ns popco.core.popco
-  (:use popco.core.main
-        utils.general)
+  (:use popco.core.main)
   ;[clojure.data :as da] ; for 'diff'
-  (:require [clojure.tools.cli]    ; for making standalone version
+  (:require [utils.general :as ug]
+            [utils.random :as ur]
+            [utils.file :as uf]
+            [utils.math :as um]
+            [utils.string :as us]
+            [clojure.tools.cli]    ; for making standalone version
             [clojure.string]
             [clojure.core.matrix :as mx]
             ;[mikera.vectorz.matrix-api] ; needed for uberjar?
-            [utils.random :as ran]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
             [popco.communic.utterance :as cu]
@@ -27,8 +30,8 @@
             [popco.nn.pprint :as pp]
             [popco.nn.propn :as pn]
             [popco.nn.update :as up])
-            ;popco.nn.testtools
-            ;popco.test.popco1comp
+  ;popco.nn.testtools
+  ;popco.test.popco1comp
   (:import [popco.core.lot Propn Pred Obj]
            [popco.core.person Person]
            [popco.core.population Population]
@@ -37,7 +40,7 @@
 
 ;; set pretty-print width to terminal width
 (if-let [colstr (System/getenv "COLUMNS")]
-  (set-pprint-width (Integer/valueOf colstr)))
+  (us/set-pprint-width (Integer/valueOf colstr)))
 
 ;; use one of these:
 (mx/set-current-implementation :vectorz)

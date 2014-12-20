@@ -1,0 +1,24 @@
+The default floats in Clojure are Java Doubles which wrap doubles, and
+this is what vectorz uses, so this is what I'm using in popco2.
+
+In popco1, I use CL long-floats, which in SBCL are CL double-floats.
+
+CL double-floats and Clojure Doubles appear to be (about) the same:
+
+Note that in either case, the last three digits are rounded up into an 8:
+
+Clojure:
+
+popco.core.popco=> 0.1234567890123456789
+0.12345678901234568
+
+popco.core.popco=> (class 0.1234567890123456789)
+java.lang.Double
+
+SBCL:
+
+* 0.1234567890123456789L0
+0.12345678901234568d0
+
+* (type-of 0.1234567890123456789L0)
+DOUBLE-FLOAT

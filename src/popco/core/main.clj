@@ -8,7 +8,7 @@
             [popco.nn.nets :as nn]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
-            [utils.general :as ug]
+            [utils.string :as us]
             [clojure.core.matrix :as mx])) ; for transpose
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27,7 +27,10 @@
   in the sequence.  Note that the contents of field :utterance-map contains the 
   utterances that have been received by the persons in the :persons field, but that 
   these utterances won't have their full effects on each person's internal networks 
-  until the next tick."
+  until the next tick.  If the function more is present, it should be a function that
+  takes a population as an argument and returns a population.  This function can be
+  used, for example, to modify or add information to persons in the population,
+  without having to modify the core communication processes of popco."
   [popn]
   (iterate once popn))
 
@@ -64,7 +67,7 @@
    ;; next mapfn expression creates seq of [person, utterance-map] pairs; transpose groups them as persons, utterance-maps.
    ;; Note speaker-plus-utterances merely passes through persons from update-person-nets. (Avoids restarting pmap.)
    (let [[pre-communic-persons speaker-utterance-maps] (mx/transpose
-                                                         (mapfn (comp cs/speaker-plus-utterances up/update-person-nets)
+                                                         (mapfn (comp cs/speaker-plus-utterances cs/update-quality up/update-person-nets)
                                                                 (:persons popn)))
          utterance-map (cl/combine-speaker-utterance-maps speaker-utterance-maps) ; combine speaker-specific maps
          ;; Communication crossover: switch from mapping over speakers to mapping over listeners.
@@ -82,7 +85,7 @@
   the population unchanged."
   [popn]
   (let [tickstr (str (:tick popn))]
-    (ug/erase-chars (count tickstr)) ; new tick string is always at least as long as previous
+    (us/erase-chars (count tickstr)) ; new tick string is always at least as long as previous
     (print tickstr)
     (flush))
   popn)
