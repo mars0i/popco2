@@ -11,6 +11,7 @@
 (ns popco.nn.analogy
   (:use popco.core.lot)
   (:require [utils.general :as ug]
+            [utils.string :as us]
             [popco.core.constants :as cn]
             [popco.nn.nets :as nn]
             [clojure.core.matrix :as mx]
@@ -387,7 +388,7 @@
     (if idx
       [mplier idx]
       (do (when cn/+warnings?+
-            (ug/println-stderr (str "Warning: No node for conceptual relation between " lot-id1 " and " lot-id2)))
+            (us/println-stderr (str "Warning: No node for conceptual relation between " lot-id1 " and " lot-id2)))
           nil))))
 
 (defn swap-2nd-3rd
