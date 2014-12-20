@@ -1,0 +1,7 @@
+source("~/p2/src/R/R/df2ra.R")
+gc()
+load("bali.rdata")
+gc()
+bali.df <- multiRAs2combinedMeanDF(list(bali[3:52,,,]), c("worldly peasant"), "SB", "SP")
+gc()
+save(bali.df, file="balidf.rdata")
