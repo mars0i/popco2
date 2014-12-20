@@ -11,13 +11,12 @@
 
 (let [;spiritual+worldly-brahmanic-propns (concat c/spiritual-propns c/worldly-brahmanic-propns)
       spiritual+worldly-peasant-propns   (concat c/spiritual-propns c/worldly-peasant-propns)
-;; args:                        ID    UNMASKED                           PROPN-NET                 ANALOGY-NET UTTERABLE-IDS          GROUPS      TALK-TO-GROUPS                  MAX-TALK-TO
-; TODO: Is (constantly 1) what I want for the pundits??
-      aat     (pers/make-person :aat  c/spiritual-propns                 c/spiritual-perc-pnet     c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1 nil (constantly 1))
-      aaf     (pers/make-person :aaf  c/spiritual-propns                 c/spiritual-neg-perc-pnet c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1 nil (constantly 1))
-      ;brahman (pers/make-person :brah spiritual+worldly-brahmanic-propns c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:brahmans] [:brahmans]                     1) 
-      peasant (pers/make-person :peas spiritual+worldly-peasant-propns   c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:peasants] [:peasants]                     5 cl/max-quality-filter s/success)
-      ;both    (pers/make-person :both c/all-propns                       c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:bothans]  [:bothans]                      1)
+;; args:                        ID    UNMASKED                           PROPN-NET                 ANALOGY-NET UTTERABLE-IDS          GROUPS      TALK-TO-GROUPS             MAX-TALK-TO BIAS-FILTER           QUALITY-FN
+      aat     (pers/make-person :aat  c/spiritual-propns                 c/spiritual-perc-pnet     c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1      nil                   (constantly 1))
+      aaf     (pers/make-person :aaf  c/spiritual-propns                 c/spiritual-neg-perc-pnet c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1      nil                   (constantly 1))
+     ;brahman (pers/make-person :brah spiritual+worldly-brahmanic-propns c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:brahmans] [:brahmans]                     1) 
+      peasant (pers/make-person :peas spiritual+worldly-peasant-propns   c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:peasants] [:peasants]                     5      cl/max-quality-filter s/success)
+     ;both    (pers/make-person :both c/all-propns                       c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:bothans]  [:bothans]                      1)
      ] 
       
   (def popn (pp/make-population (vec
