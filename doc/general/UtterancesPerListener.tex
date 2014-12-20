@@ -170,4 +170,35 @@ tick.
 (Yeah, but that's not the real way to calculate this.  A ratio of
 expectations isn't an expectation, in general.)
 
+\vspace{3ex}
+
+So let's try again.
+
+The probability that $l$ gets $j$ utterances from speaker $s$,
+where $j\leq m$, is:
+\[
+    \pr(X_s=j) = \comb{m}{j} \left(\frac{1}{N}\right)^j
+    \left(1-\frac{1}{N}\right)^{m-j} \;.
+\]
+($j$ must also be $\leq k$.)
+
+The probability that a given listener $l$ will receive $k-j$
+utterances from any person but $s$ during a tick is:
+\[
+    \pr(X=(k-j)) = \comb{m(N-1)}{k-j}
+    \left(\frac{1}{N-1}\right)^{k-j}
+    \left(1-\frac{1}{N-1}\right)^{m(N-1)-(k-j)} \;.
+\]
+
+The probability that $l$ receives $k$ utterances, and $j$ of
+them are from $s$, is the probability that $l$ receives $j$
+utterances from $s$ and $k-j$ utterances from all of the other
+speakers is 
+\[
+\pr(X_s=j) \; \pr(X=(k-j)) 
+\]
+since each person generates utterances independently of every
+other. (Is this correct?)
+
+
 \end{document}
