@@ -2,7 +2,9 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
-(ns sims.bali.successbias
+;; Model with worldly-peasant (WP) bias and (1-winner) success bias.
+;; 2 pundits, each with constant maximum quality.
+(ns sims.bali.successWPbias
   (:require [popco.core.person :as pers]
             [popco.core.population :as pp]
             [popco.communic.listen :as cl]
