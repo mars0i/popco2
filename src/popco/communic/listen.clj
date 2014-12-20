@@ -35,6 +35,15 @@
   ;(println utterances) ; DEBUG
   (ug/maxes :speaker-quality utterances))
 
+(defn max-2-quality-filter
+  "Success/prestige/etc-bias function suitable as a value for persons'
+  :quality-fn field, which is then used in communic.listen/receive-utterances.
+  Given a collection of utterances, returns a sequence those utterances with 
+  the highest :speaker-quality value as well as those with the second highest value."
+  [utterances]
+  ;(println utterances) ; DEBUG
+  (ug/maxes-top-two :speaker-quality utterances))
+
 ;; Entry point from main.clj. Purely functional, since unmask-for-new-propns
 ;; and update-propn-net-from-utterances are purely functional.
 (defn receive-utterances
