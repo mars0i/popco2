@@ -11,3 +11,5 @@ checkouts.disabled
 .Rapp.history
 .Rhistory
 data
+*.aux
+*.log
