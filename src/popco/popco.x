@@ -1,3 +1,11 @@
+
+;; TODO THIS IS NOT SUCCESS BIAS PER SE.  See doc/general/SuccessBias.md.
+(defn worth-saying
+  [pers abs-activn]
+  (let [prob (+ abs-activn (success pers))]
+    (< (ran/next-double (:rng pers)) 
+       prob)))
+
 ;;; This file contains deleted code that I might possibly want later
 
 (defn format-top-labels-for-csv
