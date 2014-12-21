@@ -10,13 +10,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Extra functions for Bali sims
 
-;; utility function
-(defn clip-to-prob
-  "Restict x to the probability range: Returns 0 if x < 0, 1 if x > 1,
-  and x otherwise."
-  [x]
-  (max 0.0 (min 1.0 x)))
-
 ;; Define function that returns the overall influence of spiritual-peasant propositions.
 ;; This will be a function of the mean of their activations.
 ;; For the Bali sim, this will 

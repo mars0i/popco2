@@ -14,3 +14,8 @@
 
 (defn sign-of [x] (if (neg? x) -1 1))
 
+(defn clip-to-prob
+  "Restict x to the probability range: Returns 0 if x < 0, 1 if x > 1,
+  and x otherwise."
+  [x]
+  (max 0.0 (min 1.0 x)))
