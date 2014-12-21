@@ -16,15 +16,9 @@
 ;; args:                        ID    UNMASKED                           PROPN-NET                 ANALOGY-NET UTTERABLE-IDS          GROUPS      TALK-TO-GROUPS             MAX-TALK-TO BIAS-FILTER           QUALITY-FN
       aat     (pers/make-person :aat  c/spiritual-propns                 c/spiritual-perc-pnet     c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1      nil                   (constantly 1))
       aaf     (pers/make-person :aaf  c/spiritual-propns                 c/spiritual-neg-perc-pnet c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1      nil                   (constantly 1))
-     ;brahman (pers/make-person :brah spiritual+worldly-brahmanic-propns c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:brahmans] [:brahmans]                     1) 
-      peasant (pers/make-person :peas spiritual+worldly-peasant-propns   c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:peasants] [:peasants]                     5      cl/max-quality-filter s/success)
-     ;both    (pers/make-person :both c/all-propns                       c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:bothans]  [:bothans]                      1)
-     ] 
+      peasant (pers/make-person :peas spiritual+worldly-peasant-propns   c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:peasants] [:peasants]                     5      cl/max-quality-filter s/success)] 
       
   (def popn (pp/make-population (vec
                                   (concat
                                     [aat aaf]
-                                    ;(take 50 (pers/new-person-seq-from-old brahman))
-                                    (take 50 (pers/new-person-seq-from-old peasant))
-                                    ;(take 50 (pers/new-person-seq-from-old both))
-                                   )))))
+                                    (take 50 (pers/new-person-seq-from-old peasant)))))))
