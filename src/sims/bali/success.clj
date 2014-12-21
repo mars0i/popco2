@@ -12,12 +12,11 @@
 
 ;; Define function that returns the overall influence of spiritual-peasant propositions.
 ;; This will be a function of the mean of their activations.
-;; For the Bali sim, this will 
 
 ;; Define start, end, len from continuous sequence of indexes of activations the spiritual-peasant propositions:
 (let [idxs (sort 
              (map (:id-to-idx bc/no-perc-pnet)
-                  bc/spiritual-peasant-propn-ids))]
+                  bc/spiritual-peasant-propn-ids))] ; CHANGE THIS LINE to use a different range of propositions for success
   (def ^:const +idxs-len+ (count idxs))
   (def ^:const +idxs-start+ (first idxs))
   (def ^:const +idxs-end+ (inc (last idxs)))
@@ -35,11 +34,11 @@
 
 (defn make-spiritual-peasant-ness
   "Return a function of the mean of a subvector of activations defined
-  by sp-subvector-mean."
+  by sp-subvector-mean, scaled by scaling-fn."
   [scaling-fn pers]
   (scaling-fn (sp-subvector-mean pers)))
 
-(def spiritual-peasant-ness (partial make-spiritual-peasant-ness identity))
+(def spiritual-peasant-ness (partial make-spiritual-peasant-ness identity)) ; using identity as scaling-fn makes success a linear function of mean activation in the domain
 
 ;; When NetLogo is involved, these will be different, 
 ;; but for a popco-only system we close the loop.
