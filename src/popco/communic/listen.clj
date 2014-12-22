@@ -76,6 +76,7 @@
   this won't have any effect on the main proposition weight matrix until the
   tick after the utterance is received."
   [listener utterances]
+  (println "trust is: " cn/*trust*)
   (let [propn-net (:propn-net listener)
         id-to-idx (:id-to-idx propn-net)
         linger-wt-mat (mx/clone (:linger-wt-mat propn-net))]
@@ -85,7 +86,7 @@
       ; TODO next line clips to extrema, but that will happen elsewhere in this file.  Is that redundant?
       (nn/add-from-feeder-node! linger-wt-mat
                                 (id-to-idx (:propn-id utterance))
-                                (* cn/+trust+ (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
+                                (* cn/*trust* (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
     ;; TODO can I do this with assoc-in or update-in?
     (assoc listener
            :propn-net (assoc propn-net

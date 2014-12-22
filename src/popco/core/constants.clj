@@ -5,7 +5,7 @@
 (ns popco.core.constants
   (require [utils.random :as ran]
            [utils.file :as uf]))
-;; constants for use throughout popco
+;; constants and other global parameters for use throughout popco
 
 ;; Consistent use of these facilitate allowing global change
 ;; of numeric types used instead of the default, i.e. java.lang.Double, with an implementation
@@ -40,7 +40,7 @@
 (def ^:const +settling-iters+ 5) ; default number of times to run through the settling algorithm in each tick
 (def ^:const +decay+ 0.9)        ; amount to decay the old activn before adding inputs from other nodes
 
-(def ^:const +trust+ 0.05)       ; in popco.communic.receive, governs influence of utterances on listener's salient links
+(def *trust* 0.05)       ; in popco.communic.receive, governs influence of utterances on listener's salient links
 
 ;; For explanation of these next two, see section "Belief network concepts and initialization",
 ;; page 12, item #1 in the "Moderate Role" paper about popco1.
