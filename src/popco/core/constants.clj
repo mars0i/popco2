@@ -40,7 +40,7 @@
 (def ^:const +settling-iters+ 5) ; default number of times to run through the settling algorithm in each tick
 (def ^:const +decay+ 0.9)        ; amount to decay the old activn before adding inputs from other nodes
 
-(def *trust* 0.05)       ; in popco.communic.receive, governs influence of utterances on listener's salient links
+(def trust 0.05)       ; in popco.communic.receive, governs influence of utterances on listener's salient links
 
 ;; For explanation of these next two, see section "Belief network concepts and initialization",
 ;; page 12, item #1 in the "Moderate Role" paper about popco1.

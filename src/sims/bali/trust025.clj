@@ -6,5 +6,5 @@
 (ns sims.bali.trust025)
 
 (in-ns 'popco.core.constants)
-(def *trust* 0.025)
+(def trust 0.025)
 (in-ns 'sims.bali.trust025)
