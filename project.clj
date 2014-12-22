@@ -8,6 +8,7 @@
                  [net.mikera/core.matrix "0.31.1"]
                  [net.mikera/vectorz-clj "0.26.2"]
                  [org.clojure/algo.generic "0.1.1"]
+                 [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/data.csv "0.1.2"]
                  [org.clojure/data.xml "0.0.8"]
                  [org.clojure/tools.cli "0.3.1"]]

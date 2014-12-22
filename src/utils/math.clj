@@ -21,31 +21,40 @@
   [x]
   (max 0.0 (min 1.0 x)))
 
-;; Generalized logistic function.
-
-;; TODO: Change these into parametes of logistic
-(def ^:const +logistic-growth-rate+ 35)  ; sometimes called B
-(def ^:const +logistic-position+ .3) ; sometimes called M
-(def ^:const +logistic-taughtness+ 1) ; sometimes called v
-
 (def ^:const +e+ (. java.lang.Math E))
-(def ^:const +logistic-upper-asymptote+ 1) ; sometimes called K
-(def ^:const +logistic-lower-asymptote+ 0) ; sometimes called A
+(defn exp
+  "Raises e to the x."
+  [x]
+  (math/expt +e+ x))
 
-; Does same thing as *logistic-position*, but with exponential scale, and without interacting with growth rate:
-(def ^:const +logistic-exponential-position+ 1) ; sometimes called Q
+(defn simple-sigmoid
+  [x]
+  (/ 1 (inc (exp (- x)))))
+
+;; Generalized logistic function--another sigmoid
 
 ; MAIN DEFINITION
 (defn logistic
-  [x]
-  (+
-   +logistic-lower-asymptote+
-   (/
-    (- +logistic-upper-asymptote+ +logistic-lower-asymptote+)
-    (math/expt 
-      (inc (* +logistic-exponential-position+
-              (exp +e+ (- (* +logistic-growth-rate+
-                             (- x +logistic-position+))))))
-      (/ 1 +logistic-taughtness+)))))
+  [lower-asymptote upper-asymptote position exponential-position growth-rate taughtness x]
+  (+ lower-asymptote
+     (/ (- upper-asymptote lower-asymptote)
+        (math/expt 
+          (inc (* exponential-position
+                  (exp (- (* growth-rate
+                             (- x position))))))
+          (/ 1 taughtness)))))
 
+(def ^:const +logistic-lower-asymptote+ 0.0) ; sometimes called A
+(def ^:const +logistic-upper-asymptote+ 1.0) ; sometimes called K
+(def ^:const +logistic-position+ 0.3) ; sometimes called M
+(def ^:const +logistic-exponential-position+ 1.0) ; sometimes called Q: Does same thing as *logistic-position*, but with exponential scale, and without interacting with growth rate:
+(def ^:const +logistic-growth-rate+ 35.0)  ; sometimes called B
+(def ^:const +logistic-taughtness+ 1.0) ; sometimes called v
 
+(def my-logistic (partial logistic
+                          +logistic-lower-asymptote+
+                          +logistic-upper-asymptote+
+                          +logistic-position+
+                          +logistic-exponential-position+
+                          +logistic-growth-rate+
+                          +logistic-taughtness+))
