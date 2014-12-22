@@ -35,10 +35,10 @@
                (cons (column-names (first popns) name-cooker) ; if not appending, add header row
                      data))]
 
-    (apply spit-csv (str cn/+data-dir+ "/activns" cn/session-id ".csv") rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
+    (apply spit-csv (str cn/data-dir "/activns" cn/session-id ".csv") rows options))) ; could pass the hashmap to write, but spit-csv is convenient and should require separate args
 
 ; or do this to replace the spit-csv line to call write-csv directly:
-;   (with-open [w (apply io/writer (str cn/+data-dir+ "/activns" cn/session-id ".csv") options)]
+;   (with-open [w (apply io/writer (str cn/data-dir "/activns" cn/session-id ".csv") options)]
 ;     (csv/write-csv w rows))
 
 (defn write-propn-activns-csv-for-R

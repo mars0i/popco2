@@ -97,8 +97,8 @@
   that the corresponding link in the propn network should get by default."
   [a-activn]
   (if (pos? a-activn)
-    (* a-activn cn/+analogy-to-propn-pos-multiplier+)
-    (* a-activn cn/+analogy-to-propn-neg-multiplier+)))
+    (* a-activn cn/analogy-to-propn-pos-multiplier)
+    (* a-activn cn/analogy-to-propn-neg-multiplier)))
 
 (defn settle-analogy-net
   "Return person pers with its analogy net updated by 1 or more iters of settling."

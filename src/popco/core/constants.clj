@@ -11,15 +11,15 @@
 ;; of numeric types used instead of the default, i.e. java.lang.Double, with an implementation
 ;; that supports other number types, such as ndarray.
 
-(def ^:const +data-dir+ "data")
+(def data-dir "data")
 
 ;; These arent' constant per se, but will usually be the same for an entire session,
 ;; and this is a good, central place to put them in order to avoid cyclic dependencies.
 (def session-id (ran/make-long-seed)) (println "Session id/seed:" session-id)
 (def initial-rng (ran/make-rng session-id))
 ;; Now create a source file that will recreate this initial-rng later if desired:
-(uf/make-dir-if-none +data-dir+)
-(spit (str +data-dir+ "/restoreRNG" session-id ".clj")
+(uf/make-dir-if-none data-dir)
+(spit (str data-dir "/restoreRNG" session-id ".clj")
       (clojure.string/join 
         "\n"
         [(str "(intern 'popco.core.constants 'session-id " session-id ")")
@@ -45,8 +45,8 @@
 ;; For explanation of these next two, see section "Belief network concepts and initialization",
 ;; page 12, item #1 in the "Moderate Role" paper about popco1.
 ;; (These vars were called *propn-excit-weight* and *propn-inhib-weight* in popco1.)
-(def ^:const +analogy-to-propn-pos-multiplier+ 0.2)    ; *propn-excit-weight* in popco1
-(def ^:const +analogy-to-propn-neg-multiplier+ 0.025)  ; *propn-inhib-weight* in popco1
+(def analogy-to-propn-pos-multiplier 0.2)    ; *propn-excit-weight* in popco1
+(def analogy-to-propn-neg-multiplier 0.025)  ; *propn-inhib-weight* in popco1
 (def ^:const +feeder-node-idx+ 0) ; "feeder", i.e. only for sending activn, i.e. index of SALIENT in propn net and SEMANTIC in analogy net
 
 ;; These next few intended to be used *only* in popco.nn.analogy:
