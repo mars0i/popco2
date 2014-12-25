@@ -13,3 +13,4 @@ checkouts.disabled
 data
 *.aux
 *.log
+notes
