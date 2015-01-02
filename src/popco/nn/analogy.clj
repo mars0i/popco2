@@ -93,13 +93,13 @@
     (write-wts-to-mat! neg-wt-mat  ; add neg wts between mapnodes that compete
                        (competing-mapnode-idx-fams (:ids-to-idx analogy-map)) 
                        cn/+neg-link-value+)
-    ;; Write one-way links from SEMANTIC node. These wont' conflict with preceding links.
+    ;; Write one-way links from SEMANTIC node. These won't conflict with preceding links.
     (write-semantic-links! pos-wt-mat   ; add pos wts to mapnodes for semantically related predicates
                            (concat (dupe-pred-idx-multiplier-pairs node-seq id-to-idx)             ; indexes and weights for semantically related predicates
                                    (conc-specs-to-idx-multiplier-pairs id-to-idx pos-conc-specs))) ; ditto
-    (write-semantic-links! neg-wt-mat   ; add pos wts to mapnodes for semantically related predicates
+    (write-semantic-links! neg-wt-mat   ; add neg wts to mapnodes for semantically related predicates
                            (conc-specs-to-idx-multiplier-pairs id-to-idx neg-conc-specs)); indexes and weights for semantically related predicates
-    (nn/map->AnalogyNet analogy-map)))
+    (nn/map->AnalogyNet analogy-map))) ; make it into an object of class AnalogyNet
 
 
 (defn assoc-ids-to-idx-nn-map
