@@ -17,3 +17,7 @@ functionality.
    Role" paper or popco.lisp in popco1 for the order in popco1.  In
    popco2, see `popco.core.main/once` and functions called there, such
    as `popco.nn.update/update-person-nets`.
+
+2. Popco1 uses .99 as the max activation value, and -.99 for the min
+   value.  This derives from Thagard's code.  In popco2, the max and
+   min are 1 and -1, respectively.
