@@ -12,6 +12,9 @@
 
 ;; See csv.md for notes on laziness and performance.
 
+;; Consider rewriting using https://github.com/metasoarous/semantic-csv
+;; if major rehab is done.
+
 ;; ARE THESE FUNCTIONS EFFICIENT ENOUGH?
 
 (declare column-names person-propn-activns propn-activns-row spit-csv write-propn-activns-csv write-propn-activns-csv cook-name-for-R)
