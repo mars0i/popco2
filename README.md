@@ -1,6 +1,7 @@
 popco2
 =======
 
+[Marshall Abrams](http://members.logical.net/~marshall/)'s
 **Pop**ulation **Co**herence: Cultural transmission with
 analogy-influenced biases, using Holyoak and Thagard's (1989) ACME model
 of analogy recognition.   This is a rewrite of
