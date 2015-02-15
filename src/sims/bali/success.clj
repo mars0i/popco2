@@ -38,7 +38,8 @@
   [scaling-fn pers]
   (scaling-fn (sp-subvector-mean pers)))
 
-(def spiritual-peasant-ness (partial make-spiritual-peasant-ness identity)) ; using identity as scaling-fn makes success a linear function of mean activation in the domain
+; Using identity as scaling-fn makes success a linear function of mean activation in the domain:
+(def spiritual-peasant-ness (partial make-spiritual-peasant-ness identity))
 
 ;; When NetLogo is involved, these will be different, 
 ;; but for a popco-only system we close the loop.
