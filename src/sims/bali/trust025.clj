@@ -2,7 +2,7 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
-;; Redefine popco.core.constants/+trust+ to 0.025 (vs 0.05).
+;; Redefine popco.core.constants/trust to 0.025 (vs 0.05).
 (ns sims.bali.trust025)
 
 ;; Override definition of trust in popco.core.constants.

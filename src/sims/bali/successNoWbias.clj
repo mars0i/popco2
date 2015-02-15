@@ -17,6 +17,7 @@
       aat     (pers/make-person :aat  c/spiritual-propns                 c/spiritual-perc-pnet     c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1      nil                   (constantly 1))
       aaf     (pers/make-person :aaf  c/spiritual-propns                 c/spiritual-neg-perc-pnet c/anet      c/spiritual-propn-ids  [:pundits]  [:brahmans :peasants :bothans]  1      nil                   (constantly 1))
       peasant (pers/make-person :peas c/spiritual-propns                 c/no-perc-pnet            c/anet      c/spiritual-propn-ids  [:peasants] [:peasants]                     5      cl/max-quality-filter s/success)] 
+                                    ; only differance w/ successWPbias
       
   (def popn (pp/make-population (vec
                                   (concat
