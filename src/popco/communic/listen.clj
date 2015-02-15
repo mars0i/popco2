@@ -26,7 +26,7 @@
 
 (defn max-quality-filter
   "Success/prestige/etc-bias function suitable as a value for persons'
-  :quality-fn field, which is then used in communic.listen/receive-utterances.
+  :bias-filter field, which is then used in communic.listen/receive-utterances.
   Given a collection of utterances, returns a sequence of those utterances with 
   the highest :speaker-quality value.  This sequence will have length 1 if 
   there is a uniquely highest value; it will be longer if there are several
