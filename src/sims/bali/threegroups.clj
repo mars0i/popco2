@@ -2,6 +2,8 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
+;;; One pundit, three isolated groups, each with spiritual propns, but 
+;;; with different worldly biases: worldly-brahmanic, worldly-peasant, and both.
 (ns sims.bali.threegroups
   (:require [popco.core.person :as pers]
             [popco.core.population :as pp]

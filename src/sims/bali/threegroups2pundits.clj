@@ -2,6 +2,8 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
+;;; Two pundits, three isolated groups, each with spiritual propns, but 
+;;; with different worldly biases: worldly-brahmanic, worldly-peasant, and both.
 (ns sims.bali.threegroups2pundits
   (:require [popco.core.person :as pers]
             [popco.core.population :as pp]
@@ -22,3 +24,7 @@
                                     (take 40 (pers/new-person-seq-from-old brahman))
                                     (take 40 (pers/new-person-seq-from-old peasant))
                                     (take 40 (pers/new-person-seq-from-old both)))))))
+
+
+;; Note that the non-pundits that are first defined never do anything; they're simply models
+;; for the creation of the actual population members.
