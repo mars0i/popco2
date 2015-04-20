@@ -245,7 +245,9 @@
   emit and related functions.  popns is a collection of populations: If there
   is more than one population, the GEXF graph will be dynamic; otherwise it
   will be static.  pers-ids is a collection of person ids to be selected from
-  each population.  net-ids contains one or both of :propn-net, :analogy-net."
+  each population.  net-ids contains one or both of :propn-net, :analogy-net.
+  Tip: When generating graphs for a single tick, the population at that tick 
+  must be wrapped in a sequence, e.g.: [(nth (many-times popn) 1000)]."
   [person-ids net-keys popns]
   (reset! node-id-num 0) ; TODO Is this necessary? Desirable?
   (reset! edge-id-num 0) ; TODO Is this necessary? Desirable?
@@ -269,6 +271,8 @@
   might be read a little more quickly by the program that uses the
   GEXF file.  With many ticks or many persons, it's possible that emit
   will need less Java heap.  Humans will of course prefer indented output.
+  Tip: When generating graphs for a single tick, the population at that tick 
+  must be wrapped in a sequence, e.g.: [(nth (many-times popn) 1000)].
   See gexf-graph for documentation on the other arguments."
   ([filename person-ids net-keys popns]
    (spit-graph filename person-ids net-keys popns true))
@@ -281,8 +285,10 @@
   "Run spit-graph on each person individually, so as to produce separate 
   graph files, one for each person, with names that begin with basename 
   and end with (name person-id).gexf .  The last optional argument is
-  the same as the optional argument of spit-graph.  See gexf-graph for
-  documentation on the other arguments."
+  the same as the optional argument of spit-graph.  Tip: When generating
+  graphs for a single tick, the population at that tick must be wrapped
+  in a sequence, e.g.: [(nth (many-times popn) 1000)].
+  See spit-graph and gexf-graph for additional documentation."
   ([basename person-ids net-keys popns & indent?-seq]
    (doseq [person-id person-ids
            :let [filename (str basename (name person-id) ".gexf")]]
