@@ -23,7 +23,7 @@
             [popco.core.population :as popn]
             [popco.core.reporters :as rpt]
             [popco.io.propncsv :as csv]
-            [popco.io.gexf :as gxd]
+            [popco.io.gexf :as gx]
             [popco.nn.analogy :as an]
             [popco.nn.matrix :as px]
             [popco.nn.nets :as nn]
