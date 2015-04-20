@@ -268,7 +268,8 @@
   as one long line.  It usually takes slightly less time, and the result
   might be read a little more quickly by the program that uses the
   GEXF file.  With many ticks or many persons, it's possible that emit
-  will need less Java heap.  Humans will of course prefer indented output."
+  will need less Java heap.  Humans will of course prefer indented output.
+  See gexf-graph for documentation on the other arguments."
   ([filename person-ids net-keys popns]
    (spit-graph filename person-ids net-keys popns true))
   ([filename person-ids net-keys popns indent?]
@@ -280,7 +281,8 @@
   "Run spit-graph on each person individually, so as to produce separate 
   graph files, one for each person, with names that begin with basename 
   and end with (name person-id).gexf .  The last optional argument is
-  the same as the optional argument of spit-graph."
+  the same as the optional argument of spit-graph.  See gexf-graph for
+  documentation on the other arguments."
   ([basename person-ids net-keys popns & indent?-seq]
    (doseq [person-id person-ids
            :let [filename (str basename (name person-id) ".gexf")]]
