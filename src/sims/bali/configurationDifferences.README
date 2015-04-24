@@ -1,0 +1,61 @@
+"15-15-16-18" refers to a set of propositions for the Bali sim that I
+ultimately settled on.  So this same set of propns is used for all of
+the simulations under data/popco2/bali/twopundits.
+
+----------------------------
+
+15-15-16-18/ contains the original simulations with the base
+configuration.  The main runs (there is a set of separate runs
+underneath this) used sims/bali/threegroups2pundits.clj.  This gives
+three groups of 40 persons each that don't communicate between groups.
+i.e. this could have been done in three separate runs.  The three
+groups are:
+	Worldly Peasant bias
+	Worldly Brahman bias
+	No bias
+
+----------------------------
+
+randomWPbias/, which is the result of sims/bali/randomWPbias.clj,
+should--and does--give results similar to the peasant (Worldly Peasant)
+group in 15-15-16-18, but randomWPbias does so in a different way.
+
+threegroups2pundits.clj uses no bias filter (in fact I don't believe I
+had added this option yet), in randomWPbias.clj, listeners decide
+which speaker to copy, of those attempting to speak to the listener, 
+by deciding which of the speakers has higher quality.  However, in
+randomWPbias.clj, this quality is determined randomly.
+randomWPbias.clj also differs from the peasant group in
+threegroups2pundits.clj in that max-talk-to is 1 for each regular
+person (not a pundit), whereas in randomWPbias.clj, max-talk-to is 5.
+That means that each speaker tries to talk to five listeners.  That
+way, each listener gets more speakers trying to talk to it, and thus
+will generally have a few listeners to choose between.
+
+----------------------------
+
+successWPbias/ is like randomWPbias/, except that in determining which
+speaker is of higher "quality", successWPbias.clj uses a success
+function--rather than a random function.  This success function is
+sims.bali.succes/spiritual-peasant-ness, whose value is a function of
+the mean activation of the Spiritual Peasant propositions.
+
+i.e. in successWPbias.clj, there is a Worldly Peasant bias on
+propositions, which increases the likelihood that persons will adopt
+Spiritual Peasant propns.  But then success bias amplifies this effect
+(sort of--see below) by treating those speakers with higher Spiritual
+Peasant activations as more worthy of being listened to.
+
+----------------------------
+
+successNoWbias/ is like successWPbias, except that successNoWbias.clj
+gives no role to Worldly Peasant bias.  i.e. this uses pure Spiritual
+Peasant success bias.
+
+And the interesting thing is that this produces *more* extreme
+effects on Spiritual Peasant propositions than when there was an
+analogy bias.  The results from SuccessWPbias are intermediate between
+those of RandomWPbias (and the original threegroups peasant group),
+and results of SuccessNoWbias.  The analogy bias in effect produces a
+braking effect.  Maybe because it leads to fixation too quickly.
+
