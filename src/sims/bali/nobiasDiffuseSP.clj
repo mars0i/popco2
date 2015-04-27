@@ -8,9 +8,19 @@
 ;; spiritual brahmanic propns, in response to worldly-peasant propns.
 
 ;; innov is the person who's supposed to diffuse the spiritual peasant propns.
-;; she's the innovator.  (How did I do this in the Sanday sims in "Moderate Role"?)
+;; she's the innovator.  
 
 ;; Question: What do I want the pundits to do???
+
+;; Q: How did I do this in the Sanday sims in "Moderate Role"?
+;; A: I gave most members of pop all propositions except the ones to
+;; be diffused (the earth origin propns).  Then for each earth origin
+;; propn, added one indiv that had all of the propns that the other
+;; indvivs had, plus a unique earth origin propn.  These played the
+;; pundit role.  The diffusion happened while the contrary worldly
+;; analog, hunting, was salient.  Then I switched the salience from
+;; hunting to parenting, and the earth origin propns kicked in.
+
 
 (ns sims.bali.nobiasDiffuseSP
   (:require [popco.core.person :as pers]
