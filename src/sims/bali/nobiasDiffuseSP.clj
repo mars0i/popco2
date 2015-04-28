@@ -48,19 +48,20 @@
   (:require [popco.core.person :as pers]
             [popco.core.population :as pp]
             [popco.communic.listen :as cl]
+            [popco.nn.analogy :as an]
             [sims.bali.collections :as c]
             [sims.bali.success :as s]))
 
 (let [;spiritual+worldly-brahmanic-propns (concat c/spiritual-propns c/worldly-brahmanic-propns)
       ;spiritual+worldly-peasant-propns   (concat c/spiritual-propns c/worldly-peasant-propns)
       allButSPpropns (concat c/spiritual-brahmanic-propns c/worldly-peasant-propns)
-      allButSPanet (an/make-analogy-net spiritual-brahmanic-propns worldly-propns conceptual-relats) ;; DO I WANT WORLDLY BRAHMANIC PROPNS??
+      allButSPanet (an/make-analogy-net c/spiritual-brahmanic-propns c/worldly-propns c/conceptual-relats) ;; DO I WANT WORLDLY BRAHMANIC PROPNS??
 
 ;; args:                        ID     UNMASKED                 PROPN-NET                 ANALOGY-NET    UTTERABLE-IDS                 GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER           QUALITY-FN
       aat     (pers/make-person :aat   c/worldly-peasant-propns c/spiritual-perc-pnet     c/anet         c/spiritual-propn-ids         [:pundits]  [:peasants]    1           nil                   (constantly 1))
       aaf     (pers/make-person :aaf   c/worldly-peasant-propns c/spiritual-neg-perc-pnet c/anet         c/spiritual-propn-ids         [:pundits]  [:peasants]    1           nil                   (constantly 1))
       innov   (pers/make-person :innov c/all-propns             c/no-perc-pnet            c/anet         c/spiritual-peasant-propn-ids [:peasants] [:peasants]    1           nil                   (constantly 1))
-      peasant (pers/make-person :peas  allButSPpropns           c/no-perc-pnet            c/allButSPanet c/spiritual-propn-ids         [:peasants] [:peasants]    1           nil                   (constantly 1))] 
+      peasant (pers/make-person :peas  allButSPpropns           c/no-perc-pnet            allButSPanet c/spiritual-propn-ids         [:peasants] [:peasants]    1           nil                   (constantly 1))] 
       
   (def popn (pp/make-population (vec (concat [aat aaf innov]
                                              (take 100 (pers/new-person-seq-from-old peasant)))))))
