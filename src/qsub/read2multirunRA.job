@@ -2,7 +2,7 @@
 #$ -cwd
 #$ -V
 #$ -S /bin/bash
-#$ -l h_rt=20:00:00,vf=48G
+#$ -l h_rt=20:00:00,vf=60G
 #$ -e errRead2mra$JOB_ID.txt
 #$ -o outRead2mra$JOB_ID.txt
 #$ -m eas
