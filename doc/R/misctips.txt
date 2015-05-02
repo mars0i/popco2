@@ -1,6 +1,11 @@
 R tips:
 
 ...........................................................
+
+names(dimnames(bali))
+[1] "person"      "proposition" "tick"        "run" 
+
+...........................................................
 # How to use the built-in plot function to plot a continuous function:
 
 # Using the example of the Frechet distribution from the evd package:
