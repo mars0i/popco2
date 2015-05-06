@@ -304,3 +304,9 @@
                                   (px/non-zeros (salient-wts %))))
                     (drop to-skip (:persons curr))))))))
 
+(defn id-activn-map
+  "Given a popco net structure, returns a map from node ids to the 
+  corresponding node activations."
+  [net]
+  (zipmap (:id-vec net)
+          (mx/matrix :persistent-vector (:activns net))))
