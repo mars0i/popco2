@@ -149,11 +149,12 @@
 
 (defn update-talk-to-persons
   "Fill person's talk-to-persons field based on its talk-to-groups field
-  and the map group-to-persons that maps groups to their members."
+  and the map group-to-persons that maps groups to their members.  [NOTE:
+  5/2015 changed behavior: Duplicate persons are no longer removed, so
+  that the resulting sequence of persons is a bag rather than a set.]"
   [group-to-persons pers]
   (assoc pers 
          :talk-to-persons
          (vec 
-           (set 
-             (remove #(identical? % (:id pers))  ; people don't talk to themselves in popco
-                     (mapcat group-to-persons (:talk-to-groups pers)))))))
+           (remove #(identical? % (:id pers))  ; people don't talk to themselves in popco
+                   (mapcat group-to-persons (:talk-to-groups pers))))))
