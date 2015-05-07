@@ -16,14 +16,14 @@ non-SP propns.
 
 Question: What do I want the pundits to do???
 
-Q: How did I do this in the Sanday sims in "Moderate Role"?
-A: I gave most members of pop all propositions except the ones to
-be diffused (the earth origin propns).  Then for each earth origin
-propn, added one indiv that had all of the propns that the other
-indvivs had, plus a unique earth origin propn.  These played the
-pundit role.  The diffusion happened while the contrary worldly
-analog, hunting, was salient.  Then I switched the salience from
-hunting to parenting, and the earth origin propns kicked in.
+Q: How did I do this in the Sanday sims in "Moderate Role"?  A: I gave
+most members of pop all propositions except the ones to be diffused (the
+earth origin propns).  Then for each earth origin propn, added one indiv
+that had all of the propns that the other indvivs had, plus a unique
+earth origin propn.  These played the pundit role.  The diffusion
+happened while the contrary worldly analog, hunting, was salient.  For
+everyone.  Then I switched the salience from hunting to parenting, and
+the earth origin propns kicked in.
 
 The thing is, I want the propns to diffuse, but I don't want them to
 necessarily have high activation.  I just want them available in the

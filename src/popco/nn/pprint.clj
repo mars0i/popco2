@@ -19,6 +19,11 @@
          format-mat-with-row-labels format-matrix-with-labels format-nn
          pprint-nn dotformat dotformat-nn dotprint-nn)
 
+(defn pprint-activns
+  "pretty-prints an alphabetically sorted sequence of node id/activn pairs."
+  [net]
+  (clojure.pprint/pprint (sort (vec (nn/id-activn-map net)))))
+
 (defn list-analogy-links
   "ADD DOCSTRING"
   [pers]
