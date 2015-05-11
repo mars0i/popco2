@@ -158,3 +158,5 @@
          (vec 
            (remove #(identical? % (:id pers))  ; people don't talk to themselves in popco
                    (mapcat group-to-persons (:talk-to-groups pers))))))
+
+(def constantly1 (constantly 1)) ; the neutral quality function
