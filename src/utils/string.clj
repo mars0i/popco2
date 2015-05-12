@@ -2,9 +2,22 @@
 ;;; is distributed under the Gnu General Public License version 3.0 as
 ;;; specified in the file LICENSE.
 
-;; Utility functions having to do with strings and printing
+;; Miscellaneous utility functions having to do with strings and printing
 (ns utils.string
   (:require [clojure.pprint :only [*print-right-margin*]]))
+
+
+(defn re-matching-idxs
+  "Given a sequence xs of things, returns the indexes of those things whose
+  string representation matches the regex specified by regex-str.  Note
+  regex-str is a string, such as \"^:a.*\", not a regex, such as #\"^:a.*\"." 
+  [regex-str xs]
+  (letfn [(match-to-idx [idx id]
+            (when (re-matches
+                    (re-pattern regex-str)
+                    (str id))
+              idx))]
+    (keep-indexed match-to-idx xs)))
 
 (defn extract-fn-name
   "Given a function, extracts the original function name from Clojure's
