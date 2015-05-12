@@ -5,7 +5,8 @@
 (ns sims.bali.collections
   (:require [sims.bali.propns :as p]
             [popco.nn.propn :as pn]
-            [popco.nn.analogy :as an]))
+            [popco.nn.analogy :as an]
+            [utils.string :as us]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Convenient collections
@@ -20,7 +21,7 @@
 
 ;; collections of propositions:
 
-(def spiritual-propns (seq (concat spiritual-brahmanic-propns spiritual-peasant-propns))) ; seq + set to remove dupe shared propns
+(def spiritual-propns (seq (concat spiritual-brahmanic-propns spiritual-peasant-propns))) 
 (def worldly-propns (seq (concat worldly-brahmanic-propns worldly-peasant-propns)))
 (def all-propns (seq (concat spiritual-propns worldly-propns)))
 
@@ -29,13 +30,28 @@
 
 (def spiritual-brahmanic-propn-ids (map :id spiritual-brahmanic-propns)) 
 (def spiritual-peasant-propn-ids (map :id spiritual-peasant-propns))
-(def spiritual-propn-ids (seq (concat spiritual-brahmanic-propn-ids spiritual-peasant-propn-ids))) ; seq + set to remove dupe shared propn-ids
+(def spiritual-propn-ids (seq (concat spiritual-brahmanic-propn-ids spiritual-peasant-propn-ids))) 
 
 (def worldly-brahmanic-propn-ids (map :id worldly-brahmanic-propns)) 
 (def worldly-peasant-propn-ids (map :id worldly-peasant-propns))
 (def worldly-propn-ids (seq (concat worldly-brahmanic-propn-ids worldly-peasant-propn-ids)))
 
 (def all-propn-ids (seq (concat spiritual-propn-ids worldly-propn-ids)))
+
+
+;; collections of indexs into propn-net activation vectors defined by all-propn-ids:
+
+;; Note that the first spot in the vector is the SALIENT node, so we inc the indexes into all-propn ids:
+(def spiritual-brahmanic-propn-idxs (map inc (us/re-matching-idxs "^:SB-.*" all-propn-ids)))
+(def spiritual-peasant-propn-idxs   (map inc (us/re-matching-idxs "^:SP-.*" all-propn-ids)))
+(def spiritual-propn-idxs (concat spiritual-brahmanic-propn-idxs spiritual-peasant-propn-idxs))
+
+(def worldly-brahmanic-propn-idxs   (map inc (us/re-matching-idxs "^:WB-.*" all-propn-ids)))
+(def worldly-peasant-propn-idxs     (map inc (us/re-matching-idxs "^:WP-.*" all-propn-ids)))
+(def worldly-propn-idxs (concat worldly-brahmanic-propn-idxs worldly-peasant-propn-idxs))
+
+(def brahmanic-propn-idxs (concat spiritual-brahmanic-propn-idxs worldly-brahmanic-propn-idxs))
+(def peasant-propn-idxs (concat spiritual-peasant-propn-idxs worldly-peasant-propn-idxs))
 
 
 ;; collections of specifications that certain propns should be "perceived", i.e. have a fully positive link to SALIENT:
