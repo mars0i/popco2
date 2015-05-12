@@ -20,41 +20,41 @@
 
 ;; collections of propositions:
 
-(def spiritual-propns (seq (set (concat spiritual-brahmanic-propns spiritual-peasant-propns)))) ; seq + set to remove dupe shared propns
-(def worldly-propns (seq (set (concat worldly-brahmanic-propns worldly-peasant-propns))))
-(def all-propns (seq (set (concat spiritual-propns worldly-propns))))
+(def spiritual-propns (seq (concat spiritual-brahmanic-propns spiritual-peasant-propns))) ; seq + set to remove dupe shared propns
+(def worldly-propns (seq (concat worldly-brahmanic-propns worldly-peasant-propns)))
+(def all-propns (seq (concat spiritual-propns worldly-propns)))
 
 
 ;; collections of proposition ids:
 
 (def spiritual-brahmanic-propn-ids (map :id spiritual-brahmanic-propns)) 
 (def spiritual-peasant-propn-ids (map :id spiritual-peasant-propns))
-(def spiritual-propn-ids (seq (set (concat spiritual-brahmanic-propn-ids spiritual-peasant-propn-ids)))) ; seq + set to remove dupe shared propn-ids
+(def spiritual-propn-ids (seq (concat spiritual-brahmanic-propn-ids spiritual-peasant-propn-ids))) ; seq + set to remove dupe shared propn-ids
 
 (def worldly-brahmanic-propn-ids (map :id worldly-brahmanic-propns)) 
 (def worldly-peasant-propn-ids (map :id worldly-peasant-propns))
-(def worldly-propn-ids (seq (set (concat worldly-brahmanic-propn-ids worldly-peasant-propn-ids))))
+(def worldly-propn-ids (seq (concat worldly-brahmanic-propn-ids worldly-peasant-propn-ids)))
 
-(def all-propn-ids (seq (set (concat spiritual-propn-ids worldly-propn-ids))))
+(def all-propn-ids (seq (concat spiritual-propn-ids worldly-propn-ids)))
 
 
 ;; collections of specifications that certain propns should be "perceived", i.e. have a fully positive link to SALIENT:
 
 (def spiritual-brahmanic-perception-ifs (map #(vector 1.0 % :SALIENT) spiritual-brahmanic-propn-ids))
 (def spiritual-peasant-perception-ifs (map #(vector 1.0 % :SALIENT) spiritual-peasant-propn-ids))
-(def spiritual-perception-ifs (seq (set (concat spiritual-brahmanic-perception-ifs spiritual-peasant-perception-ifs))))
+(def spiritual-perception-ifs (seq (concat spiritual-brahmanic-perception-ifs spiritual-peasant-perception-ifs)))
 
 (def worldly-brahmanic-perception-ifs (map #(vector 1.0 % :SALIENT) worldly-brahmanic-propn-ids))
 (def worldly-peasant-perception-ifs (map #(vector 1.0 % :SALIENT) worldly-peasant-propn-ids))
-(def worldly-perception-ifs (seq (set (concat worldly-brahmanic-perception-ifs worldly-peasant-perception-ifs))))
+(def worldly-perception-ifs (seq (concat worldly-brahmanic-perception-ifs worldly-peasant-perception-ifs)))
 
 (def spiritual-brahmanic-neg-perception-ifs (map #(vector -1.0 % :SALIENT) spiritual-brahmanic-propn-ids))
 (def spiritual-peasant-neg-perception-ifs (map #(vector -1.0 % :SALIENT) spiritual-peasant-propn-ids))
-(def spiritual-neg-perception-ifs (seq (set (concat spiritual-brahmanic-neg-perception-ifs spiritual-peasant-neg-perception-ifs))))
+(def spiritual-neg-perception-ifs (seq (concat spiritual-brahmanic-neg-perception-ifs spiritual-peasant-neg-perception-ifs)))
 
 (def worldly-brahmanic-neg-perception-ifs (map #(vector -1.0 % :SALIENT) worldly-brahmanic-propn-ids))
 (def worldly-peasant-neg-perception-ifs (map #(vector -1.0 % :SALIENT) worldly-peasant-propn-ids))
-(def worldly-neg-perception-ifs (seq (set (concat worldly-brahmanic-neg-perception-ifs worldly-peasant-neg-perception-ifs))))
+(def worldly-neg-perception-ifs (seq (concat worldly-brahmanic-neg-perception-ifs worldly-peasant-neg-perception-ifs)))
 
 
 ;; Proposition nets (templates for individual nets--i.e. clone from these rather than using them directly):
