@@ -14,11 +14,11 @@
             [popco.nn.analogy :as an]))
 
 ;; PROPOSITION NAMING CONVENTIONS:
-;; Brahmanic propns start with "B".
-;; Peasant/subak propns start with "P".
-;; Spiritual propns start with "BS" or "PS".
-;; Worldly propns start with "BW" or "PW".
-;; Propns shared between Brahmanic and peasant domains start with "XS" or "XW".
+;; Spiritual propns start with "SB" or "SP".
+;; Worldly propns start with "WB" or "WP".
+;; Brahmanic propns include "B" in prefix.
+;; peasant/subak propns include "P" in prefix.
+;; Propns shared between Brahmanic and peasant domains would start with "SX" or "WX" (but there are none).
 
 (defpred Causal-if)
 (defpred Ceases)
