@@ -16,13 +16,13 @@
       all-but-SP-anet (an/make-analogy-net c/spiritual-brahmanic-propns c/worldly-propns c/conceptual-relats)
 
       ;; define function that repeats a group so that its members are more likely to be talked to:
-      talk-to-group-repeat 9 ; how many times to repeat talk-to groups to give them an advantage in communication over arbitrary members of the pop
+      talk-to-group-repeat 20 ; how many times to repeat talk-to groups to give them an advantage in communication over arbitrary members of the pop
       make-t2g (fn [repeating-group & other-groups] (vec (concat other-groups (repeat talk-to-group-repeat repeating-group))))
 
 ;; args:                        ID     UNMASKED           PROPN-NET                 ANALOGY-NET     UTTERABLE-IDS         GROUPS                TALK-TO-GROUPS                 MAX-TALK-TO BIAS-FILTER QUALITY-FN
       aat      (prs/make-person :aat   c/spiritual-propns c/spiritual-perc-pnet     c/anet          c/spiritual-propn-ids [:pundits]            [:peasants]                    1           nil         prs/constantly1)
       aaf      (prs/make-person :aaf   c/spiritual-propns c/spiritual-neg-perc-pnet c/anet          c/spiritual-propn-ids [:pundits]            [:peasants]                    1           nil         prs/constantly1)
-      ;; talk-to-groups: members of my group are 10X more likely to be spoken to (total # = 180 = 9*9 + 99):
+      ;; talk-to-groups: members of my group are take-to-group-repeat times more likely to be spoken to:
       peasant0 (prs/make-person :peas0 all-but-SP-propns  c/no-perc-pnet            all-but-SP-anet c/spiritual-propn-ids [:masceti0 :peasants] (make-t2g :masceti0 :peasants) 1           nil         prs/constantly1)
       peasant1 (prs/make-person :peas1 all-but-SP-propns  c/no-perc-pnet            all-but-SP-anet c/spiritual-propn-ids [:masceti1 :peasants] (make-t2g :masceti1 :peasants) 1           nil         prs/constantly1)
       peasant2 (prs/make-person :peas2 all-but-SP-propns  c/no-perc-pnet            all-but-SP-anet c/spiritual-propn-ids [:masceti2 :peasants] (make-t2g :masceti2 :peasants) 1           nil         prs/constantly1)
