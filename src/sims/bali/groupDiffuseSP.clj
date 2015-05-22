@@ -16,7 +16,7 @@
       all-but-SP-anet (an/make-analogy-net c/spiritual-brahmanic-propns c/worldly-propns c/conceptual-relats)
 
       ;; define function that repeats a group so that its members are more likely to be talked to:
-      talk-to-group-repeat 20 ; how many times to repeat talk-to groups to give them an advantage in communication over arbitrary members of the pop
+      talk-to-group-repeat 19 ; how many times to repeat talk-to groups to give them an advantage in communication over arbitrary members of the pop
       make-t2g (fn [repeating-group & other-groups] (vec (concat other-groups (repeat talk-to-group-repeat repeating-group))))
 
 ;; args:                        ID     UNMASKED           PROPN-NET                 ANALOGY-NET     UTTERABLE-IDS         GROUPS                TALK-TO-GROUPS                 MAX-TALK-TO BIAS-FILTER QUALITY-FN
