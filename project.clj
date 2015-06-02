@@ -21,8 +21,10 @@
                                   [org.clojure/data.xml "0.0.8"]
                                   [org.clojure/tools.cli "0.3.1"]
                                   ;[incanter/incanter-core "1.5.5"]
-                                  [criterium/criterium "0.4.3"]]
+                                  [criterium/criterium "0.4.3"]
+                                  [io.aviso/pretty "0.1.18"]]
                    }}
+  :repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]} 
   :jvm-opts ["-Xmx2g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
   :main popco.core.popco
   :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
