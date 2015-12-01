@@ -1,4 +1,4 @@
-(defproject popco2 "0.9.1-SNAPSHOT"
+(defproject popco2 "1.0.0"
   :url "https://github.com/mars0i/popco2"
   :license {:name "Gnu General Public License version 3.0"
             :url "http://www.gnu.org/copyleft/gpl.html"}
