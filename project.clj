@@ -1,23 +1,22 @@
-(defproject popco2 "0.9.1-SNAPSHOT"
+(defproject popco2 "1.0.0"
   :url "https://github.com/mars0i/popco2"
   :license {:name "Gnu General Public License version 3.0"
             :url "http://www.gnu.org/copyleft/gpl.html"}
   :source-paths ["src"]
   :java-source-paths ["src/java"]
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 ;[net.mikera/core.matrix "0.33.1"]
-                 [net.mikera/core.matrix "0.34.1-SNAPSHOT"]
-                 [net.mikera/vectorz-clj "0.26.2"]
+                 [net.mikera/core.matrix "0.36.1"]
+                 [net.mikera/vectorz-clj "0.30.1"]
                  [org.clojure/algo.generic "0.1.1"]
                  [org.clojure/math.numeric-tower "0.0.4"]
-                 [org.clojure/data.csv "0.1.2"]
+                 [org.clojure/data.csv "0.1.3"]
                  [org.clojure/data.xml "0.0.8"]
                  [org.clojure/tools.cli "0.3.1"]]
   :plugins [[lein-exec "0.3.4"]] ; allows passing expressions to eval on commandline with -e, etc. see lein help exec.
-  :profiles {:dev {:dependencies [[net.mikera/core.matrix "0.34.0"]
-                                  [net.mikera/vectorz-clj "0.29.0"]
+  :profiles {:dev {:dependencies [[net.mikera/core.matrix "0.36.1"]
+                                  [net.mikera/vectorz-clj "0.30.1"]
                                   [org.clojure/algo.generic "0.1.1"]
-                                  [org.clojure/data.csv "0.1.2"]
+                                  [org.clojure/data.csv "0.1.3"]
                                   [org.clojure/data.xml "0.0.8"]
                                   [org.clojure/tools.cli "0.3.1"]
                                   ;[incanter/incanter-core "1.5.5"]

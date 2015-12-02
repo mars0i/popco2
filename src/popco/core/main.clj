@@ -15,8 +15,6 @@
 ;; SEE src/popco/start.md and src/popco/core/main.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn netlogo-test "Temporary." [subak-ids] (println subak-ids))
-
 (declare once many-times unparalleled-many-times ticker inc-tick)
 
 (defn many-times
