@@ -18,6 +18,11 @@
 (defn nlogotest 
   "Temporary for testing NetLogo extension." 
   [subak-ids]
+  (println "Received in clojure: " subak-ids)
+  (println (reverse subak-ids))
+  (println (apply + subak-ids))
+  (println (class subak-ids))
+  (println (map class subak-ids))
   (to-array (reverse subak-ids)))
 
 
