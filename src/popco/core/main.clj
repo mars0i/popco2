@@ -70,8 +70,9 @@
      a. partially settling the analogy net
      b. updating proposition link weights from proposition map nodes in analogy net
      c. partially settling the proposition net
-  2. Persons create utterances for listeners: ...communic.speak/speaker-plus-utterances.
-  3. Send utterances to designated listeners: ...communic.listen/receive-utterances.
+  2. Update each person's \"quality\" which may affect communication bias.
+  3. Persons create utterances for listeners: ...communic.speak/speaker-plus-utterances.
+  4. Send utterances to designated listeners: ...communic.listen/receive-utterances.
      This can cause changes to both the proposition net and the analogy net."
   ([popn] (once pmap popn))
   ([mapfn popn]
