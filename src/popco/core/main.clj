@@ -18,7 +18,7 @@
 (defn nlogotest 
   "Temporary for testing NetLogo extension." 
   [subak-ids]
-  (reverse subak-ids))
+  (to-array (reverse subak-ids)))
 
 
 (declare once many-times unparalleled-many-times ticker inc-tick)
