@@ -7,6 +7,7 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [net.mikera/core.matrix "0.36.1"]
                  [net.mikera/vectorz-clj "0.30.1"]
+                 [net.mikera/clojure-utils "0.5.0"] ; only for BaliPlus
                  [org.clojure/algo.generic "0.1.1"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/data.csv "0.1.3"]
@@ -15,6 +16,7 @@
   :plugins [[lein-exec "0.3.4"]] ; allows passing expressions to eval on commandline with -e, etc. see lein help exec.
   :profiles {:dev {:dependencies [[net.mikera/core.matrix "0.36.1"]
                                   [net.mikera/vectorz-clj "0.30.1"]
+                                  [net.mikera/clojure-utils "0.5.0"] ; only for BaliPlus
                                   [org.clojure/algo.generic "0.1.1"]
                                   [org.clojure/data.csv "0.1.3"]
                                   [org.clojure/data.xml "0.0.8"]
