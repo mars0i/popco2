@@ -15,17 +15,6 @@
 ;; SEE src/popco/start.md and src/popco/core/main.md for notes. ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn nlogotest 
-  "Temporary for testing NetLogo extension." 
-  [subak-ids]
-  (println "Received in clojure: " subak-ids)
-  (println (reverse subak-ids))
-  (println (apply + subak-ids))
-  (println (class subak-ids))
-  (println (map class subak-ids))
-  (reverse subak-ids))
-
-
 (declare once many-times unparalleled-many-times ticker inc-tick)
 
 (defn many-times
