@@ -5,6 +5,9 @@
 (ns sims.bali.netlogo
   (:require [popco.core.main :as mn]))
 
+(def *popn* (atom nil))
+
+
 (defn bali-init
   "Initialize population of 172 popco persons, which represent subaks."
   []
