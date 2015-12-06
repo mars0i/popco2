@@ -32,9 +32,10 @@
 (def edge-weight 10) ; i.e. GEXF weight property, = thickness/weight for e.g. Gephi
 
 ;; Generate unique GEXF id numbers for nodes and edges.  More convenient than label-based ids for incorporating multiple persons into one graph.
-(def node-id-num (atom 0))
-(def edge-id-num (atom 0))
-(def popco-to-gexf-node-id (atom {})) ; store relationship between popco ids and gexf node ids so I can look them up to provide source/target ids for edges
+;; Convention: variables containing atoms have a trailing ampersand:
+(def node-id-num& (atom 0))
+(def edge-id-num& (atom 0))
+(def popco-to-gexf-node-id& (atom {})) ; store relationship between popco ids and gexf node ids so I can look them up to provide source/target ids for edges
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; FUNCTIONS TO ADD TICKS TO NEURAL NET STRUCTURES
@@ -159,13 +160,13 @@
   "Expects one hashmap entry from node-data."
   [dynamic? [k tick-data-entries] & size-s] ; size-s is a hack so that you can special-case size for some nodes
 
-  (swap! popco-to-gexf-node-id ug/assoc-if-new k (swap! node-id-num inc)) ; update popco-id to id-num hashmap
+  (swap! popco-to-gexf-node-id& ug/assoc-if-new k (swap! node-id-num& inc)) ; update popco-id to id-num hashmap
 
   (let [first-tick (ffirst tick-data-entries) ; if tick, i.e. first element of first entry is nil, assume that they're all nil.
         size (or (first size-s) node-size)
         node-name (name (first k))
         person-name (name (second k))
-        node-spec {:id (str @node-id-num)  ; i.e. gexf id is a number. label stores the popco id.
+        node-spec {:id (str @node-id-num&)  ; i.e. gexf id is a number. label stores the popco id.
                    :label (str person-name ":" node-name)
                    :popco-node node-name
                    :person person-name}
@@ -188,9 +189,9 @@
         [id-set person] k
         [node1-id node2-id] (vec id-set)  ; each key is a seq containing :id, :person
         size (or (first size-s) node-size)
-        edge-spec {:id (str (swap! edge-id-num inc))
-                   :source (str (get @popco-to-gexf-node-id [node1-id person]))
-                   :target (str (get @popco-to-gexf-node-id [node2-id person]))
+        edge-spec {:id (str (swap! edge-id-num& inc))
+                   :source (str (get @popco-to-gexf-node-id& [node1-id person]))
+                   :target (str (get @popco-to-gexf-node-id& [node2-id person]))
                    :label (str (name person) ":" (name node1-id) "<->" (name node2-id))}
         make-tick-data-attr (fn [[tick wt]]
                               (let [wt-spec {:for "popco-wt" :value (str wt)}]
@@ -236,9 +237,9 @@
                          ]])))
 
 (defn reset-id-nums! []
-  (reset! node-id-num 0)
-  (reset! edge-id-num 0)
-  (reset! popco-to-gexf-node-id {}))
+  (reset! node-id-num& 0)
+  (reset! edge-id-num& 0)
+  (reset! popco-to-gexf-node-id& {}))
 
 (defn gexf-graph
   "Return GEXF graph data structure suitable for use by clojure.data.xml's
@@ -249,9 +250,9 @@
   Tip: When generating graphs for a single tick, the population at that tick 
   must be wrapped in a sequence, e.g.: [(nth (many-times popn) 1000)]."
   [person-ids net-keys popns]
-  (reset! node-id-num 0) ; TODO Is this necessary? Desirable?
-  (reset! edge-id-num 0) ; TODO Is this necessary? Desirable?
-  (reset! popco-to-gexf-node-id {}) ; This one is needed in any event.
+  (reset! node-id-num& 0) ; TODO Is this necessary? Desirable?
+  (reset! edge-id-num& 0) ; TODO Is this necessary? Desirable?
+  (reset! popco-to-gexf-node-id& {}) ; This one is needed in any event.
   (let [nets (apply concat
                     (for [person-id person-ids
                           net-key net-keys]
