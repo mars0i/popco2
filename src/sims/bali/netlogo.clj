@@ -18,14 +18,25 @@
 (defn bali-init 
   "Create a population of popco persons representing subaks, storing it in popn&."
   []
-               ;;               ID   UNMASKED   PROPN-NET      ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER QUALITY-FN
-  (let [subak (prs/make-person :temp all-propns c/no-perc-pnet c/anet      c/spiritual-propn-ids ["ignored"] ["ignored"]    num-subaks  nil         prs/constantly1)]
+               ;;               ID   UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER QUALITY-FN
+  (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
+        aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
+        subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["ignored"]    num-subaks  nil         prs/constantly1)]
     (reset! popn&
-            (map (partial prs/new-person-from-old subak)
-                 (map double (range num-subaks)))))) ; subak ids: Doubles from 0 to num-subaks. that's what NetLogo will send.
+            (concat [aat aaf]
+                    (map (partial prs/new-person-from-old subak)
+                         (map double (range num-subaks))))))) ; subak ids: Doubles from 0 to num-subaks. that's what NetLogo will send.
+
+(defn update-talk-to-persons
+  [popn subak-id-pairs]
+  )
+
+(defn avg-worldly-activns
+  [popn]
+  )
 
 (defn bali-once
-  [subak-ids]
-  ;; (swap! popn& <set talk-to-persons from input, run one tick>)
-  ;; return per-subak average worldly activn vals
-  (reverse subak-ids)) ; for testing only
+  [subak-id-pairs]
+  (swap! popn& (mn/once (update-talk-to-persons @popn& subak-id-pairs)))
+  (avg-worldly-activns @popn&) ;; return per-subak average worldly activn vals
+  (reverse subak-ids)) ; for testing only - delete
