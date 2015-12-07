@@ -27,6 +27,27 @@
                     (map (partial prs/new-person-from-old subak)
                          (map double (range num-subaks))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
 
+;; NOTE RE THE ZIPMAP from two sequences:
+;; Maybe I can construct the map in NetLogo. ??
+;; The NetLogo table extension makes tables, which extends java.util.LinkedHashMap,
+;; which implements interface java.util.Map, as do clojure.lang.PersistentHashMap
+;; and clojure.lang.PersistentArrayMap.  So ... I wonder whether I might be able to
+;; just pass the NetLogo table over to Clojure....  Which would be cool.
+;; Note the official main interface for these guys in Clojure is IPersistentMap,
+;; which doesn't directly/indirectly extend java.util.map.
+;; cf. http://david-mcneil.com/post/16535755677/clojure-custom-map
+;; OH MAN see this:
+;; http://stackoverflow.com/a/1666053/1455243
+;; i.e. even though the Java maps are not directly usable as if they were 
+;; Clojure maps, you easily can make one into the other using `(into {} <a java.util.HashMap)` 
+;; and `(java.util.HashMap. {:a 1 :b 2})`.
+;; SO I SHOULD TRY SIMPLY PASSING A NETLOGO TABLE INTO CLOJURE, AND THEN MAKING
+;; A CLOJURE MAP USING into.  (Question: Is that faster or slower then the whole
+;; zipmap version passing sequences?  Note that either way, I'm building a new
+;; table every 12 NetLogo ticks.  It's just a question of whether I build it in
+;; NetLogo or Clojure.  Well, also, either way I'm creating a new data structure
+;; in both places.  Either sequences in NetLogo, and then a map in Clojure,
+;; or a HashMap in NetLogo, and then converting it to a Clojure map.
 (defn update-talk-to-persons
   "Update talk-to-persons fields in persons in popn based on args:
   speaker-ids and listener-id-seqs are sequences of the same length.  Each
