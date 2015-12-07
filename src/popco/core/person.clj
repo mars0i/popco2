@@ -34,8 +34,8 @@
                       which someone might talk to the person. (popco1: groups)
    :talk-to-groups  - Groups whose members this person is willing to talk to.
                       (popco1: talks-to)
-   :talk-to-persons - Other persons that this person talks to, determined by the
-                      specification, at initalization, of the groups that this
+   :talk-to-persons - Other persons that this person talks to, usually determined by
+                      the specification, at initalization, of the groups that this
                       person talks to.  i.e. this contains all members of the
                       groups in talk-to-groups. (no equivalent in popco1)
    :max-talk-to     - Maximum number of people that this person will talk to in
@@ -148,10 +148,11 @@
               (mx/zero-matrix num-nodes num-nodes))))
 
 (defn update-talk-to-persons
-  "Fill person's talk-to-persons field based on its talk-to-groups field
-  and the map group-to-persons that maps groups to their members.  [NOTE:
-  5/2015 changed behavior: Duplicate persons are no longer removed, so
-  that the resulting sequence of persons is a bag rather than a set.]"
+  "Fill person's talk-to-persons field with person ids based on its 
+  talk-to-groups field and the map group-to-persons that maps groups 
+  to their members.  [NOTE: 5/2015 changed behavior: Duplicate persons
+  are no longer removed, so that the resulting sequence of persons is 
+  a bag rather than a set.]"
   [group-to-persons pers]
   (assoc pers 
          :talk-to-persons
