@@ -28,15 +28,26 @@
                          (map double (range num-subaks))))))) ; subak ids: Doubles from 0 to num-subaks. that's what NetLogo will send.
 
 (defn update-talk-to-persons
-  [popn subak-id-pairs]
-  )
+  [popn speaker-ids listener-id-seqs]
+  (let [subak-id-map (zipmap speaker-ids listener-ids)] ; can I make this in the NetLogo extension?? can I avoid making it?
+    (assoc popn
+           :persons 
+           (map 
+             #(assoc % :talk-to-persons (vec (subak-id-map (:id %)))) ; map first, then id, since these ids are Doubles
+             (:persons popn)))))
 
 (defn avg-worldly-activns
   [popn]
   )
 
 (defn bali-once
-  [subak-id-pairs]
-  (swap! popn& (mn/once (update-talk-to-persons @popn& subak-id-pairs)))
+  "Run once on population after updating its members talk-to-persons fields.
+  speaker-ids and listener-id-seqs are sequences of the same length.  Each
+  sequence of speaker ids in listener-id-seqs provides the ids to be used to
+  fill talk-to-persons in the person with the corresponding id in speaker-ids."
+  [speaker-ids listener-id-seqs]
+  (swap! popn& 
+         (mn/once 
+           (update-talk-to-persons @popn& speaker-ids listener-id-seqs)))
   (avg-worldly-activns @popn&) ;; return per-subak average worldly activn vals
   (reverse subak-ids)) ; for testing only - delete
