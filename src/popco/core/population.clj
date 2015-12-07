@@ -12,6 +12,7 @@
 (defrecord Population [tick 
                        persons
                        groups
+                       id-to-person    ; hash map to allow lookup of persons by their ids
                        utterance-map])
 
 (us/add-to-docstr ->Population
@@ -24,13 +25,17 @@
 ;; non-lazy
 ;; utterance-map left empty at first
 (defn make-population
+  "Make a population containing the persons in members, after updating
+  their talk-to-persons fields.  Also fills other fields of the population,
+  except for utterance-map, which is initially nil."
   [members]
   (let [person-to-groups (apply hash-map 
                                 (mapcat #(vector (:id %) (:groups %))
                                         members))
         groups (ug/invert-coll-map person-to-groups)
-        updated-members (vec (map (partial pers/update-talk-to-persons groups) members))] ; vec: simply to constrain the dimensions of laziness in popco2
-    (->Population 0 updated-members groups nil)))  ; utterance-map empty at first
+        updated-members (vec (map (partial pers/update-talk-to-persons groups) members)) ; vec: to constrain dimensions of laziness
+        id-to-person (zipmap (map :id updated-members) updated-members)]
+    (->Population 0 updated-members groups id-to-person nil)))  ; utterance-map empty at first
 
 (defn person-ids
   "List IDs of persons in popn."
