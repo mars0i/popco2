@@ -53,7 +53,8 @@
   speaker-ids and listener-id-seqs are sequences of the same length.  Each
   sequence of speaker ids in listener-id-seqs provides the ids to be used to
   fill talk-to-persons in the person with the corresponding id in speaker-ids."
-  [popn speaker-ids listener-id-seqs]
+  [popn speaker-ids]
+  ;; FIXME:
   (let [subak-id-map (zipmap speaker-ids listener-ids)] ; can I make this in the NetLogo extension?? can I avoid making it?
     (assoc popn :persons 
            (map 
@@ -70,9 +71,9 @@
   speaker-ids and listener-id-seqs are sequences of the same length.  Each
   sequence of speaker ids in listener-id-seqs provides the ids to be used to
   fill talk-to-persons in the person with the corresponding id in speaker-ids."
-  [speaker-ids listener-id-seqs]
+  [speaker-ids]
   (swap! popn& 
          (mn/once 
-           (update-talk-to-persons @popn& speaker-ids listener-id-seqs)))
+           (update-talk-to-persons @popn& speaker-ids)))
   (avg-worldly-activns @popn&) ;; return per-subak average worldly activn vals
   (reverse subak-ids)) ; for testing only - delete this line
