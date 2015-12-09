@@ -13,21 +13,18 @@
 (def num-subaks 172)
 
 ;; I adopt the convention of naming variables containing atoms with a trailing ampersand:
-(def popn& (atom "not-yet-defined"))
-
-(defn bali-init 
-  "Create a population of popco persons representing subaks, storing it in popn&."
-  []
-               ;;               ID   UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER QUALITY-FN
+(def popn&
+  ;;               ID   UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER QUALITY-FN
   (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
         aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
         subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["ignored"]    num-subaks  nil         prs/constantly1)]
-    (reset! popn&
-            (concat [aat aaf]
-                    (map (partial prs/new-person-from-old subak)
-                         (map double (range num-subaks))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
+    (atom 
+      (pp/make-population
+        (vec (concat [aat aaf]
+                     (map (partial prs/new-person-from-old subak)
+                          (map double (range num-subaks))))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
 
-;; NOTE RE THE ZIPMAP from two sequences:
+    ;; NOTE RE THE ZIPMAP from two sequences:
 ;; Maybe I can construct the map in NetLogo. ??
 ;; The NetLogo table extension makes tables, which extends java.util.LinkedHashMap,
 ;; which implements interface java.util.Map, as do clojure.lang.PersistentHashMap
