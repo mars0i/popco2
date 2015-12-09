@@ -53,27 +53,23 @@
   speaker-ids and listener-id-seqs are sequences of the same length.  Each
   sequence of speaker ids in listener-id-seqs provides the ids to be used to
   fill talk-to-persons in the person with the corresponding id in speaker-ids."
-  [popn speaker-ids]
-  ;; FIXME:
-  (let [subak-id-map (zipmap speaker-ids listener-ids)] ; can I make this in the NetLogo extension?? can I avoid making it?
-    (assoc popn :persons 
-           (map 
-             #(assoc % :talk-to-persons 
-                     (vec (subak-id-map (:id %)))) ; map then id, since subak ids are Doubles. note result is [] if speaker-id missing
-             (:persons popn)))))
+  [popn speaker-listener-map]
+  (assoc popn :persons  ; replace persons in popn
+         (map #(assoc % :talk-to-persons (speaker-listener-map (:id %))) ; with old persons but with talk-to-persons updated from appropriate value in speaker-listener-map
+              (:persons popn))))
 
 (defn avg-worldly-activns
   [popn]
   )
 
 (defn bali-once
-  "Run once on population after updating its members talk-to-persons fields.
-  speaker-ids and listener-id-seqs are sequences of the same length.  Each
-  sequence of speaker ids in listener-id-seqs provides the ids to be used to
-  fill talk-to-persons in the person with the corresponding id in speaker-ids."
-  [speaker-ids]
+  "Run once on population after updating its members' talk-to-persons fields.
+  speaker-listener-hashtable is a java.util.HashTable in which keys are person
+  ids and values are sequences of ids of persons to talk to."
+  [speaker-listener-hashtable]
+  (let [speaker-listener-map (into {} speaker-listener-hashtable)]
   (swap! popn& 
          (mn/once 
-           (update-talk-to-persons @popn& speaker-ids)))
+           (update-talk-to-persons @popn& speaker-listener-map)))
   (avg-worldly-activns @popn&) ;; return per-subak average worldly activn vals
   (reverse subak-ids)) ; for testing only - delete this line
