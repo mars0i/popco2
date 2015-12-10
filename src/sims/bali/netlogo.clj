@@ -21,7 +21,7 @@
         subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["ignored"]    num-subaks  nil         prs/constantly1)]
     (atom 
       (pp/make-population
-        (vec (concat [aat aaf]
+        (vec (concat [aat aaf] ; TODO adjust below if number of pundits changes
                      (map (partial prs/new-person-from-old subak)
                           (map double (range num-subaks))))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
 
@@ -49,7 +49,7 @@
   "Returns sequence of mean activations of worldly-peasant propns for each subak."
   [popn]
   (map avg-worldly-peasant-activn 
-       (drop 2                  ; skip pundits
+       (drop 2                  ; skip pundits TODO ADJUST IF PUNDITS CHANGE
              (:persons popn))))
 
 (defn bali-once
