@@ -13,6 +13,8 @@
                  [org.clojure/data.xml "0.0.8"]
                  [org.clojure/tools.cli "0.3.1"]]
   :plugins [[lein-exec "0.3.4"]] ; allows passing expressions to eval on commandline with -e, etc. see lein help exec.
+  :main popco.core.popco
+  :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
   :profiles {:dev {:dependencies 
                    [[net.mikera/core.matrix "0.36.1"]
                     [net.mikera/vectorz-clj "0.30.1"]
@@ -23,7 +25,9 @@
                     ;[incanter/incanter-core "1.5.5"]
                     [criterium/criterium "0.4.3"]
                     [io.aviso/pretty "0.1.18"]]}
-             :bali-netlogo {:aot [popco.core.main   ; precompile ns's used
+             ; re "leaky": http://librelist.com/browser//leiningen/2014/9/25/wrong-clojure-release-when-compiling-if-with-profile-and-uberjar-is-used/#db9a114b3b07b9ad6d4c291a9f0cb8d6
+             :bali-netlogo ^:leaky {:aot [popco.core.popco
+                                  popco.core.main   ; precompile ns's used
                                   popco.core.person ; explicitly in netlogo.clj
                                   popco.core.population 
                                   popco.nn.analogy
@@ -39,8 +43,6 @@
              }
   :repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]} 
   :jvm-opts ["-Xmx2g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
-  :main popco.core.popco
-  :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
 )
 
                                   ;[slingshot "0.10.3"][org.jblas/jblas "1.2.3"][mars0i/clatrix "0.4.0-SNAPSHOT"]
