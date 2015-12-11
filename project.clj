@@ -23,7 +23,12 @@
                     ;[incanter/incanter-core "1.5.5"]
                     [criterium/criterium "0.4.3"]
                     [io.aviso/pretty "0.1.18"]]}
-             :bali-netlogo {:aot [sims.bali.netlogo]
+             :bali-netlogo {:aot [popco.core.main   ; precompile ns's used
+                                  popco.core.person ; explicitly in netlogo.clj
+                                  popco.core.population 
+                                  popco.nn.analogy
+                                  sims.bali.netlogo
+                                  sims.bali.collections]
                             :dependencies [[net.mikera/clojure-utils "0.5.0"]
                                            [net.mikera/core.matrix "0.36.1"]
                                            [net.mikera/vectorz-clj "0.30.1"]

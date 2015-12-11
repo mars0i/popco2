@@ -6,10 +6,9 @@
   (:require [popco.core.main :as mn]
             [popco.core.person :as prs]
             [popco.core.population :as pp]
-            ;[popco.communic.listen :as cl]
             [popco.nn.analogy :as an]
-            [clojure.core.matrix :as mx]
-            [sims.bali.collections :as c]))
+            [sims.bali.collections :as c]
+            [clojure.core.matrix :as mx]))
 
 (def num-subaks 172)
 
@@ -61,4 +60,4 @@
     (swap! popn& 
            (mn/once 
              (update-talk-to-persons @popn& speaker-listener-map)))
-    (avg-worldly-activns @popn&))) ;; return per-subak average worldly activn vals
+    (avg-worldly-peasant-activns @popn&))) ;; return per-subak average worldly activn vals
