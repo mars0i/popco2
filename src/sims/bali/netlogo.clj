@@ -31,8 +31,8 @@
   sequence of speaker ids in listener-id-seqs provides the ids to be used to
   fill talk-to-persons in the person with the corresponding id in speaker-ids."
   [popn speaker-listener-map]
-  (assoc popn :persons  ; replace persons in popn
-         (map #(assoc % :talk-to-persons (speaker-listener-map (:id %))) ; with old persons but with talk-to-persons updated from appropriate value in speaker-listener-map
+  (assoc popn :persons                                                   ; replace persons in popn with
+         (map #(assoc % :talk-to-persons (speaker-listener-map (:id %))) ; old persons but w/ talk-to-persons updated from speaker-listener-map
               (:persons popn))))
 
 (def num-worldly-peasant-propns (count c/worldly-peasant-propn-idxs))
