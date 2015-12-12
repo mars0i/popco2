@@ -5,7 +5,7 @@
 ;; Definition of person and related functions
 (ns popco.core.person
   (:require [utils.string :as us]
-            [utils.random :as ur]
+            [utils.random :as ran]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
             [popco.core.constants :as cn]
@@ -79,7 +79,7 @@
                         (vec talk-to-groups)
                         nil  ; talk-to-persons will get filled when make-population calls update-talk-to-persons
                         max-talk-to
-                        (ur/make-rng (ur/next-long cn/initial-rng))
+                        (ran/make-rng (ran/next-long cn/initial-rng))
                         bias-filter ; defaults to nil (see param lists above)
                         quality-fn  ; defaults to nil (see param lists above)
                         nil)] ; quality: should be filled by quality-fn before being transmitted to bias-filter through utterances
@@ -116,7 +116,7 @@
             talk-to-groups             ;  they'll have to be replaced anyway.           
             talk-to-persons
             max-talk-to  ; an integer
-            (ur/make-rng (ur/next-long cn/initial-rng))
+            (ran/make-rng (ran/next-long cn/initial-rng))
             bias-filter
             quality-fn
             nil))
