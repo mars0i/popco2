@@ -15,6 +15,8 @@
   :plugins [[lein-exec "0.3.4"]] ; allows passing expressions to eval on commandline with -e, etc. see lein help exec.
   :main popco.core.popco
   :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
+  :repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]} 
+  :jvm-opts ["-Xmx2g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
   :profiles {:dev {:dependencies 
                    [[net.mikera/core.matrix "0.36.1"]
                     [net.mikera/vectorz-clj "0.30.1"]
@@ -31,8 +33,10 @@
                                           popco.core.person ; explicitly in netlogo.clj
                                           popco.core.population 
                                           popco.nn.analogy
+                                          utils.random
                                           sims.bali.netlogo
                                           sims.bali.collections]
+                                    :javac-opts ["-source 1.6" "-target 1.6"] ; because NetLogo 5.2 was compiled with java 1.6
                                     ;:exclusions [ec.util.MersenneTwisterFast]
                                     ;:uberjar-exclusions [#"(?:^|/)java/ec/util/MersenneTwisterFast*"]
                                     ;:uberjar-exclusions [#"ec/util/MersenneTwisterFast.class"]
@@ -44,8 +48,6 @@
                                                    [org.clojure/data.xml "0.0.8"]
                                                    [org.clojure/tools.cli "0.3.1"]]}
              }
-  :repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]} 
-  :jvm-opts ["-Xmx2g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
 )
 
                                   ;[slingshot "0.10.3"][org.jblas/jblas "1.2.3"][mars0i/clatrix "0.4.0-SNAPSHOT"]
