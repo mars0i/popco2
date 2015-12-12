@@ -27,19 +27,21 @@
                     [io.aviso/pretty "0.1.18"]]}
              ; re "leaky": http://librelist.com/browser//leiningen/2014/9/25/wrong-clojure-release-when-compiling-if-with-profile-and-uberjar-is-used/#db9a114b3b07b9ad6d4c291a9f0cb8d6
              :bali-netlogo ^:leaky {:aot [popco.core.popco
-                                  popco.core.main   ; precompile ns's used
-                                  popco.core.person ; explicitly in netlogo.clj
-                                  popco.core.population 
-                                  popco.nn.analogy
-                                  sims.bali.netlogo
-                                  sims.bali.collections]
-                            :dependencies [[net.mikera/clojure-utils "0.5.0"]
-                                           [net.mikera/core.matrix "0.36.1"]
-                                           [net.mikera/vectorz-clj "0.30.1"]
-                                           [org.clojure/algo.generic "0.1.1"]
-                                           [org.clojure/data.csv "0.1.3"]
-                                           [org.clojure/data.xml "0.0.8"]
-                                           [org.clojure/tools.cli "0.3.1"]]}
+                                          popco.core.main   ; precompile ns's used
+                                          popco.core.person ; explicitly in netlogo.clj
+                                          popco.core.population 
+                                          popco.nn.analogy
+                                          sims.bali.netlogo
+                                          sims.bali.collections]
+                                    ;:exclusions [ec.util.MersenneTwisterFast]
+                                    ;:uberjar-exclusions [#"(?:^|/)java/ec/util/MersenneTwisterFast*"]
+                                    :dependencies [[net.mikera/clojure-utils "0.5.0"]
+                                                   [net.mikera/core.matrix "0.36.1"]
+                                                   [net.mikera/vectorz-clj "0.30.1"]
+                                                   [org.clojure/algo.generic "0.1.1"]
+                                                   [org.clojure/data.csv "0.1.3"]
+                                                   [org.clojure/data.xml "0.0.8"]
+                                                   [org.clojure/tools.cli "0.3.1"]]}
              }
   :repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]} 
   :jvm-opts ["-Xmx2g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
