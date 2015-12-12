@@ -35,6 +35,7 @@
                                           sims.bali.collections]
                                     ;:exclusions [ec.util.MersenneTwisterFast]
                                     ;:uberjar-exclusions [#"(?:^|/)java/ec/util/MersenneTwisterFast*"]
+                                    ;:uberjar-exclusions [#"ec/util/MersenneTwisterFast.class"]
                                     :dependencies [[net.mikera/clojure-utils "0.5.0"]
                                                    [net.mikera/core.matrix "0.36.1"]
                                                    [net.mikera/vectorz-clj "0.30.1"]
