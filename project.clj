@@ -36,7 +36,7 @@
                                           utils.random
                                           sims.bali.netlogo
                                           sims.bali.collections]
-                                    :javac-opts ["-source 1.6" "-target 1.6"] ; because NetLogo 5.2 was compiled with java 1.6
+                                    ;:javac-options ["-source" "1.8" "-target" "1.6"] ; because NetLogo 5.2 was compiled with java 1.6
                                     ;:exclusions [ec.util.MersenneTwisterFast]
                                     ;:uberjar-exclusions [#"(?:^|/)java/ec/util/MersenneTwisterFast*"]
                                     ;:uberjar-exclusions [#"ec/util/MersenneTwisterFast.class"]
