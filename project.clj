@@ -28,13 +28,13 @@
                     [criterium/criterium "0.4.3"]
                     [io.aviso/pretty "0.1.18"]]}
              ; re "leaky": http://librelist.com/browser//leiningen/2014/9/25/wrong-clojure-release-when-compiling-if-with-profile-and-uberjar-is-used/#db9a114b3b07b9ad6d4c291a9f0cb8d6
-             :bali-netlogo ^:leaky {:aot [popco.core.popco
-                                          popco.core.main   ; precompile ns's used
-                                          popco.core.person ; explicitly in netlogo.clj
-                                          popco.core.population 
-                                          popco.nn.analogy
-                                          utils.random
-                                          sims.bali.collections
+             :bali-netlogo ^:leaky {:aot [;popco.core.popco
+                                          ;popco.core.main   ; precompile ns's used
+                                          ;popco.core.person ; explicitly in netlogo.clj
+                                          ;popco.core.population 
+                                          ;popco.nn.analogy
+                                          ;utils.random
+                                          ;sims.bali.collections
                                           sims.bali.netlogo]
                                     ;:javac-options ["-source" "1.8" "-target" "1.6"] ; because NetLogo 5.2 was compiled with java 1.6
                                     ;:exclusions [ec.util.MersenneTwisterFast]
