@@ -27,16 +27,6 @@
 ;; coordinate this with def of popn&:
 (def num-pundits 2)
 
-(defn update-talk-to-persons
-  "Update talk-to-persons fields in persons in popn based on args:
-  speaker-ids and listener-id-seqs are sequences of the same length.  Each
-  sequence of speaker ids in listener-id-seqs provides the ids to be used to
-  fill talk-to-persons in the person with the corresponding id in speaker-ids."
-  [popn speaker-listener-map]
-  (assoc popn :persons                                                   ; replace persons in popn with
-         (map #(assoc % :talk-to-persons (speaker-listener-map (:id %))) ; old persons but w/ talk-to-persons updated from speaker-listener-map
-              (:persons popn))))
-
 (def num-worldly-peasant-propns (count c/worldly-peasant-propn-idxs))
 
 (defn avg-worldly-peasant-activn
@@ -54,6 +44,16 @@
        (drop num-pundits
              (:persons popn))))
 
+(defn update-talk-to-persons
+  "Update talk-to-persons fields in persons in popn based on args:
+  speaker-ids and listener-id-seqs are sequences of the same length.  Each
+  sequence of speaker ids in listener-id-seqs provides the ids to be used to
+  fill talk-to-persons in the person with the corresponding id in speaker-ids."
+  [popn speaker-listener-map]
+  (assoc popn :persons                                                   ; replace persons in popn with
+         (map #(assoc % :talk-to-persons (speaker-listener-map (:id %))) ; old persons but w/ talk-to-persons updated from speaker-listener-map
+              (:persons popn))))
+
 (defn bali-once
   "Run once on population after updating its members' talk-to-persons fields.
   speaker-listener-hashtable is a java.util.HashTable in which keys are person
@@ -61,6 +61,5 @@
   [speaker-listener-hashtable]
   (let [speaker-listener-map (into {} speaker-listener-hashtable)]
     (swap! popn& 
-           (mn/once 
-             (update-talk-to-persons @popn& speaker-listener-map)))
+           #(mn/once (update-talk-to-persons % speaker-listener-map)))
     (avg-worldly-peasant-activns @popn&))) ;; return per-subak average worldly activn vals
