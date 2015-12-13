@@ -13,18 +13,19 @@
 (def num-subaks 172)
 
 ;; I adopt the convention of naming variables containing atoms with a trailing ampersand:
-(def popn&
-  ;;               ID   UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER QUALITY-FN
+(def initial-popn
+  ;;                           ID    UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER QUALITY-FN
   (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
         aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
         subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["ignored"]    num-subaks  nil         prs/constantly1)]
-    (atom 
-      (pp/make-population
-        (vec (concat [aat aaf]
-                     (map (partial prs/new-person-from-old subak)
-                          (map double (range num-subaks))))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
+    (pp/make-population
+      (vec (concat [aat aaf]
+                   (map (partial prs/new-person-from-old subak)
+                        (map double (range num-subaks)))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
 
-;; coordinate this with def of popn&:
+(def current-popn (atom initial-popn))
+
+;; coordinate this with def of initial-popn
 (def num-pundits 2)
 
 (def num-worldly-peasant-propns (count c/worldly-peasant-propn-idxs))
@@ -55,11 +56,14 @@
               (:persons popn))))
 
 (defn bali-once
-  "Run once on population after updating its members' talk-to-persons fields.
-  speaker-listener-hashtable is a java.util.HashTable in which keys are person
-  ids and values are sequences of ids of persons to talk to."
+  "Run popco.core.main/once on population, after updating its members'
+  talk-to-persons fields from speaker-listener-hashtable, which is a
+  java.util.HashTable in which keys are person ids and values are sequences
+  of ids of persons the key person should talk to.  Returns a sequence of
+  per-subak average activations (currently of worldly peasant propns only)
+  that will be used in place of relig-type in BaliPlus.nlogo."
   [speaker-listener-hashtable]
   (let [speaker-listener-map (into {} speaker-listener-hashtable)]
-    (swap! popn& 
-           #(mn/once (update-talk-to-persons % speaker-listener-map)))
-    (avg-worldly-peasant-activns @popn&))) ;; return per-subak average worldly activn vals
+    (avg-worldly-peasant-activns  ; return per-subak average worldly activn vals
+      (swap! current-popn 
+             #(mn/once (update-talk-to-persons % speaker-listener-map))))))
