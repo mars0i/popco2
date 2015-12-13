@@ -10,9 +10,10 @@
             [sims.bali.collections :as c]
             [clojure.core.matrix :as mx]))
 
+;; NOTE: I adopt the convention of naming variables containing atoms with a trailing ampersand.
+
 (def num-subaks 172)
 
-;; I adopt the convention of naming variables containing atoms with a trailing ampersand:
 (def initial-popn
   ;;                           ID    UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER QUALITY-FN
   (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
@@ -23,7 +24,7 @@
                    (map (partial prs/new-person-from-old subak)
                         (map double (range num-subaks)))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
 
-(def current-popn (atom initial-popn))
+(def current-popn& (atom initial-popn))
 
 ;; coordinate this with def of initial-popn
 (def num-pundits 2)
@@ -31,8 +32,9 @@
 (def num-worldly-peasant-propns (count c/worldly-peasant-propn-idxs))
 
 (defn avg-worldly-peasant-activn
-  "Computes mean of activations of worldly-peasant propns."
+  "Computes mean of activations of worldly-peasant propns in person pers."
   [pers]
+  ;(println (:activns (:propn-net pers)))  ; DEBUG
   (/ (mx/esum
        (mx/select (:activns (:propn-net pers)) 
                   c/worldly-peasant-propn-idxs))
@@ -63,7 +65,9 @@
   per-subak average activations (currently of worldly peasant propns only)
   that will be used in place of relig-type in BaliPlus.nlogo."
   [speaker-listener-hashtable]
-  (let [speaker-listener-map (into {} speaker-listener-hashtable)]
+  (let [speaker-listener-map (into {} speaker-listener-hashtable)] ; values are org.nlogo.api.LogoLists, but those are java.util.Collections, so OK
+    ;(println speaker-listener-map) ; DEBUG
+    ;(println (:utterance-map current-popn&)) ; DEBUG
     (avg-worldly-peasant-activns  ; return per-subak average worldly activn vals
-      (swap! current-popn 
+      (swap! current-popn& 
              #(mn/once (update-talk-to-persons % speaker-listener-map))))))
