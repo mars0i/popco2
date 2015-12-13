@@ -34,8 +34,8 @@
                                           popco.core.population 
                                           popco.nn.analogy
                                           utils.random
-                                          sims.bali.netlogo
-                                          sims.bali.collections]
+                                          sims.bali.collections
+                                          sims.bali.netlogo]
                                     ;:javac-options ["-source" "1.8" "-target" "1.6"] ; because NetLogo 5.2 was compiled with java 1.6
                                     ;:exclusions [ec.util.MersenneTwisterFast]
                                     ;:uberjar-exclusions [#"(?:^|/)java/ec/util/MersenneTwisterFast*"]
