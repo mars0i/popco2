@@ -6,7 +6,11 @@
   (:require [sims.bali.propns :as p]
             [popco.nn.propn :as pn]
             [popco.nn.analogy :as an]
-            [utils.string :as us]))
+            [utils.string :as us]
+            [clojure.core.matrix :as mx]))
+
+;; normally set in popco.core.popco; better here if I run e.g. from NetLogo:
+(mx/set-current-implementation :vectorz)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Convenient collections
