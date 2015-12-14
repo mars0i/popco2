@@ -61,8 +61,7 @@
   fill talk-to-persons in the person with the corresponding id in speaker-ids."
   [popn speaker-listener-map]
   (let [persons (:persons popn)
-        replace-ttp (fn [pers] (assoc pers :talk-to-persons
-                                      (speaker-listener-map (:id pers))))]
+        replace-ttp (fn [pers] (assoc pers :talk-to-persons (speaker-listener-map (:id pers))))]
     (assoc popn :persons
            (concat (take num-pundits persons) ; leave pundits as is
                    (map replace-ttp (drop num-pundits persons)))))) ; replace subaks' talk-to-persons from speaker-listener-map
