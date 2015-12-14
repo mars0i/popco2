@@ -50,6 +50,7 @@
 (defn avg-worldly-peasant-activns
   "Returns sequence of mean activations of worldly-peasant propns for each subak."
   [popn]
+  (println "TODO: Scale avg activns to lie in [0,1].")
   (map avg-worldly-peasant-activn 
        (drop num-pundits
              (:persons popn))))
