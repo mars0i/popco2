@@ -54,24 +54,18 @@
        (drop num-pundits
              (:persons popn))))
 
-(defn maybe-replace-talk-to-persons
-  "Replaces talk-to-persons if pers is a non-upndit:  Given a speaker-listener
-  map and an index, if idx is >= num-pundits, replaces pers's talk-to-persons
-  field with the value in speaker-listener-map corresponding to its id."
-  [speaker-listener-map idx pers]
-  (if (< idx num-pundits)
-    pers    ; pundits passed through unchanged
-    (assoc pers :talk-to-persons (speaker-listener-map (:id pers))))) ; old persons but w/ talk-to-persons updated from speaker-listener-map
-
 (defn replace-subaks-talk-to-persons
-  "Update talk-to-persons fields in persons in popn based on args:
+  "Replace talk-to-persons fields in persons in popn based on args:
   speaker-ids and listener-id-seqs are sequences of the same length.  Each
   sequence of speaker ids in listener-id-seqs provides the ids to be used to
   fill talk-to-persons in the person with the corresponding id in speaker-ids."
   [popn speaker-listener-map]
-  (assoc popn :persons                                                   ; replace persons in popn with
-         (map-indexed (partial maybe-replace-talk-to-persons speaker-listener-map)
-                      (:persons popn))))
+  (let [persons (:persons popn)
+        replace-ttp (fn [pers] (assoc pers :talk-to-persons
+                                      (speaker-listener-map (:id pers))))]
+    (assoc popn :persons
+           (concat (take num-pundits persons) ; leave pundits as is
+                   (map replace-ttp (drop num-pundits persons)))))) ; replace subaks' talk-to-persons from speaker-listener-map
 
 (defn bali-once
   "Run popco.core.main/once on population, after updating its members'
