@@ -14,6 +14,12 @@
 
 (def num-subaks 172)
 
+(defn add-id-as-group
+  "Returns a person that's just like pers, but with an additional group identity
+  whose name is identical to pers's id."
+  [pers]
+  (update pers :groups conj (:id pers)))
+
 (def initial-popn
   ;;                           ID    UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER QUALITY-FN
   (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
@@ -21,8 +27,9 @@
         subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["ignored"]    num-subaks  nil         prs/constantly1)]
     (pp/make-population
       (vec (concat [aat aaf]
-                   (map (partial prs/new-person-from-old subak)
-                        (map double (range num-subaks)))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
+                   (map add-id-as-group
+                        (map (partial prs/new-person-from-old subak)
+                             (map double (range num-subaks))))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
 
 (def current-popn& (atom initial-popn))
 
