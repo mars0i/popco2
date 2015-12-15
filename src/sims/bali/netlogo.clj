@@ -36,22 +36,24 @@
 
 (def current-popn& (atom initial-popn))
 
-(def num-worldly-peasant-propns (count c/worldly-peasant-propn-idxs))
+;; To get the mean, we divide by num propns; to scale result from [-1,1] to [-0.5,0.5], we also divide by 2.
+(def num-worldly-peasant-propns-2x (* 2 (count c/worldly-peasant-propn-idxs)))
 
-(defn avg-worldly-peasant-activn
-  "Computes mean of activations of worldly-peasant propns in person pers."
+(defn scaled-worldly-peasant-activn
+  "Computes mean of activations of worldly-peasant propns in person pers and scales
+  the result lie in [0,1]."
   [pers]
   ;(println (matrix :persistent-vector (:activns (:propn-net pers))))  ; DEBUG
-  (/ (mx/esum
-       (mx/select (:activns (:propn-net pers)) 
-                  c/worldly-peasant-propn-idxs))
-     num-worldly-peasant-propns))
+  (+ 0.5    ; shift [-0.5,0.5] to [0,1]
+     (/ (mx/esum
+          (mx/select (:activns (:propn-net pers)) 
+                     c/worldly-peasant-propn-idxs))
+        num-worldly-peasant-propns-2x))) ; to get the mean, we divide by num propns; to scale result from [-1,1] to [-0.5,0.5], we also divide by 2
 
-(defn avg-worldly-peasant-activns
+(defn scaled-worldly-peasant-activns
   "Returns sequence of mean activations of worldly-peasant propns for each subak."
   [popn]
-  (println "TODO: Scale avg activns to lie in [0,1].")
-  (map avg-worldly-peasant-activn 
+  (map scaled-worldly-peasant-activn 
        (drop num-pundits
              (:persons popn))))
 
@@ -79,6 +81,6 @@
     ;(println speaker-listener-map) ; DEBUG
     ;(println (:utterance-map current-popn&)) ; DEBUG
     ;(println (map :talk-to-persons (:persons @current-popn&))) ; DEBUG
-    (avg-worldly-peasant-activns  ; return per-subak average worldly activn vals
+    (scaled-worldly-peasant-activns  ; return per-subak average worldly activn vals
       (swap! current-popn& 
              #(mn/once (replace-subaks-talk-to-persons % speaker-listener-map))))))
