@@ -51,7 +51,8 @@
         num-worldly-peasant-propns-2x))) ; to get the mean, we divide by num propns; to scale result from [-1,1] to [-0.5,0.5], we also divide by 2
 
 (defn scaled-worldly-peasant-activns
-  "Returns sequence of mean activations of worldly-peasant propns for each subak."
+  "Returns sequence of mean activations of worldly-peasant propns for each subak,
+  in the order in which subaks appear in (:persons popn)."
   [popn]
   (map scaled-worldly-peasant-activn 
        (drop num-pundits
@@ -75,7 +76,8 @@
   java.util.HashTable in which keys are person ids and values are sequences
   of ids of persons the key person should talk to.  Returns a sequence of
   per-subak average activations (currently of worldly peasant propns only)
-  that will be used in place of relig-type in BaliPlus.nlogo."
+  that will be used in place of relig-type in BaliPlus.nlogo.  Values in this
+  sequence are in subak order, i.e. the order in (:persons @current-popn&)."
   [speaker-listener-hashtable]
   (let [speaker-listener-map (into {} speaker-listener-hashtable)] ; values are org.nlogo.api.LogoLists, but those are java.util.Collections, so OK
     ;(println speaker-listener-map) ; DEBUG
