@@ -7,6 +7,7 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [net.mikera/core.matrix "0.36.1"]
                  [net.mikera/vectorz-clj "0.30.1"]
+                 [incanter/incanter-core "1.5.6"]
                  [org.clojure/algo.generic "0.1.1"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/data.csv "0.1.3"]
@@ -24,7 +25,7 @@
                     [org.clojure/data.csv "0.1.3"]
                     [org.clojure/data.xml "0.0.8"]
                     [org.clojure/tools.cli "0.3.1"]
-                    ;[incanter/incanter-core "1.5.5"]
+                    ;[incanter/incanter-core "1.5.6"]
                     [criterium/criterium "0.4.3"]
                     [io.aviso/pretty "0.1.18"]]}
              ; re "leaky": http://librelist.com/browser//leiningen/2014/9/25/wrong-clojure-release-when-compiling-if-with-profile-and-uberjar-is-used/#db9a114b3b07b9ad6d4c291a9f0cb8d6
@@ -43,6 +44,7 @@
                                     :dependencies [[net.mikera/clojure-utils "0.5.0"]
                                                    [net.mikera/core.matrix "0.36.1"]
                                                    [net.mikera/vectorz-clj "0.30.1"]
+                                                   ;[incanter/incanter-core "1.5.6"]
                                                    [org.clojure/algo.generic "0.1.1"]
                                                    [org.clojure/data.csv "0.1.3"]
                                                    [org.clojure/data.xml "0.0.8"]
