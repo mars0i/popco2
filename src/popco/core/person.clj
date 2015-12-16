@@ -13,6 +13,7 @@
             [popco.nn.nets :as nn]
             [popco.nn.propn :as pn]
             [popco.nn.analogy :as an]
+            ;[incanter.stats :as is]
             [clojure.core.matrix :as mx]))
 
 
@@ -138,7 +139,7 @@
                         (repeat old-name) (range))]
      (map (partial new-person-from-old pers) new-names))))
 
-(defn propn-net-zeroed
+(defn zero-propn-net
   "Accepts a single argument, a person pers, and returns a person containing
   a fresh, zeroed proposition network.  (Useful e.g. for updating pers's
   proposition network as a function of analogy net activations.)"
@@ -148,7 +149,7 @@
     (assoc-in pers [:propn-net :all-wt-mat]
               (mx/zero-matrix num-nodes num-nodes))))
 
-(defn propn-activns-randomized
+(defn randomize-unif-propn-activns
   "Accepts a single argument, a person pers, and returns a person containing
   a fresh proposition network with random activation values."
   [pers]
