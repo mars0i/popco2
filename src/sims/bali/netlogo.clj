@@ -30,9 +30,12 @@
         subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["bypassed"]   num-subaks  nil         prs/constantly1)]
     (pp/make-population
       (vec (concat [aat aaf] ; pundits are first 
-                   (map add-id-as-group
-                        (map (partial prs/new-person-from-old subak)
-                             (map double (range num-subaks))))))))) ; subak ids: Doubles from 0 to num-subaks-1. that's what NetLogo will send.
+                   (map (comp prs/propn-activns-randomized ; EXPERIMENT: uniform random propn activns (should it be e.g. Gaussian?)
+                              add-id-as-group              ; give it a group name identical to its id
+                              (partial prs/new-person-from-old subak))
+                        (map double (range num-subaks)))))))) ; subak ids are doubles from 0 to num-subaks-1. (That's what NetLogo will send.)
+
+
 
 (def current-popn& (atom initial-popn))
 
