@@ -6,6 +6,12 @@
   (require [clojure.core.matrix :as mx]))
 ;; matrix utility functions
 
+(defn vec-count
+  "Given a core.matrix vector (i.e. a true 1-D structure,
+  not a 1xn or nx1 matrix), returns its number of elements."
+  [cm-vec]
+  (first (mx/shape cm-vec)))
+
 (defn square-from-row
   "Make a symmetric matrix by multiplying a row matrix by itself.
   row-mat must be a *matrix* not a vector, i.e. it must be 2D 
