@@ -147,6 +147,15 @@
     (assoc-in pers [:propn-net :all-wt-mat]
               (mx/zero-matrix num-nodes num-nodes))))
 
+(defn propn-activns-randomized
+  "Accepts a single argument, a person pers, and returns a person containing
+  a fresh proposition network with random activation values."
+  [pers]
+  (let [p-net (:propn-net pers)
+        num-nodes (count (:node-seq p-net))]
+    (assoc-in pers [:propn-net :activns]
+              (nn/rand-node-vec (:rng pers) num-nodes ))))
+
 (defn update-talk-to-persons
   "Fill person's talk-to-persons field with person ids based on its 
   talk-to-groups field and the map group-to-persons that maps groups 
