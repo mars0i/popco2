@@ -6,6 +6,7 @@
 (ns popco.core.person
   (:require [utils.string :as us]
             [utils.random :as ran]
+            [popco.nn.matrix :as px]
             [popco.communic.listen :as cl]
             [popco.communic.speak :as cs]
             [popco.core.constants :as cn]
@@ -151,10 +152,9 @@
   "Accepts a single argument, a person pers, and returns a person containing
   a fresh proposition network with random activation values."
   [pers]
-  (let [p-net (:propn-net pers)
-        num-nodes (count (:node-seq p-net))]
+  (let [num-nodes (px/vec-count (:activns (:propn-net pers)))]
     (assoc-in pers [:propn-net :activns]
-              (nn/rand-node-vec (:rng pers) num-nodes ))))
+              (nn/rand-node-vec (:rng pers) num-nodes))))
 
 (defn update-talk-to-persons
   "Fill person's talk-to-persons field with person ids based on its 
