@@ -5,6 +5,7 @@
   :source-paths ["src"]
   :java-source-paths ["src/java"]
   :dependencies [[org.clojure/clojure "1.7.0"]
+                 ;[org.clojure/clojure "1.8.0-RC4"]
                  [net.mikera/core.matrix "0.36.1"]
                  [net.mikera/vectorz-clj "0.30.1"]
                  [incanter/incanter-core "1.5.6"]
