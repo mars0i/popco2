@@ -62,10 +62,9 @@
              (:persons popn))))
 
 (defn replace-subaks-talk-to-persons
-  "Replace talk-to-persons fields in persons in popn based on args:
-  speaker-ids and listener-id-seqs are sequences of the same length.  Each
-  sequence of speaker ids in listener-id-seqs provides the ids to be used to
-  fill talk-to-persons in the person with the corresponding id in speaker-ids."
+  "Replace talk-to-persons fields in persons in popn speaker-listener-map,
+  in which keys are person ids and values are sequences of ids of persons 
+  the key person should talk to."
   [popn speaker-listener-map]
   (let [persons (:persons popn)
         replace-ttp (fn [pers] (assoc pers :talk-to-persons (speaker-listener-map (:id pers))))]
