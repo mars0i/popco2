@@ -59,6 +59,30 @@
   [rng]
   (.nextDouble rng))
 
+(defn next-gaussian
+  "Returns a random double from a Gaussian distribution.  If mean and sd aren't
+  supplied, uses a standard Gaussian distribution with mean = 0 and sd = 1,
+  otherwise uses the supplied mean and standard deviation.  If left and right
+  are also provided, samples from a truncated normal distribution, truncated
+  so that values will in the interval [left, right].  (Truncation might not be 
+  particular efficient; it simply throws out values outside the interval, and
+  tries again.)"
+  ([rng] (.nextGaussian rng))
+  ([rng mean sd]
+   (+ mean (* sd (next-gaussian rng)))))
+
+(defn truncate
+  "Given a function of no arguments that returns a random number, returns 
+  a random number from its distribution that is truncated to lie within 
+  [left, right].
+  Example:
+  (truncate (fn [] (next-gaussian (MersenneTwisterFast. 42))) -0.5 0.5)"
+  [rand-fn left right]
+  (loop [candidate (rand-fn)]
+    (if (and (>= candidate left) (<= candidate right))
+      candidate
+      (recur (rand-fn)))))
+
 ;; lazy
 ;; This version repeatedly calls nth coll with a new random index each time.
 ;(defn sample-with-repl-1
