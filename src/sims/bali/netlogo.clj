@@ -6,13 +6,42 @@
   (:require [popco.core.main :as mn]
             [popco.core.person :as prs]
             [popco.core.population :as pp]
-            [popco.nn.analogy :as an]
+            [popco.nn.matrix :as px]
+            [utils.random :as ran]
             [sims.bali.collections :as c]
             [clojure.core.matrix :as mx]))
 
 ;; NOTE: I adopt the convention of naming variables containing atoms with a trailing ampersand.
 
 (def num-subaks 172)
+
+(def current-popn& (atom nil)) ; filled in later
+
+;; EXPERIMENTAL
+(def person-sd 0.02)
+
+;; EXPERIMENTAL
+(defn rand-activn
+  [rng mean sd]
+  (ran/truncate -1.0 1.0 ran/next-gaussian rng mean sd))
+
+;; EXPERIMENTAL
+(defn rand-node-vec
+  "Returns a node vector of length n with activations initialized to
+  random values from random number generator rng."
+  [rng mean sd n]
+  (mx/matrix (repeatedly n #(rand-activn rng mean sd))))
+
+;; EXPERIMENTAL
+(defn randomize-propn-activns
+  "Accepts a single argument, a person pers, and returns a person containing
+  a fresh proposition network with random activation values."
+  [pers]
+  (let [rng (:rng pers)
+        num-nodes (px/vec-count (:activns (:propn-net pers)))
+        person-mean (- (* (ran/next-double rng) 2.0) 1.0)] ; a double in [-1,1.0). (person-sd from global.)
+    (assoc-in pers [:propn-net :activns]
+              (rand-node-vec rng person-mean person-sd num-nodes))))
 
 (defn add-id-as-group
   "Returns a person that's just like pers, but with an additional group identity
@@ -30,14 +59,12 @@
         subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["bypassed"]   num-subaks  nil         prs/constantly1)]
     (pp/make-population
       (vec (concat [aat aaf] ; pundits are first 
-                   (map (comp prs/randomize-unif-propn-activns ; EXPERIMENT: uniform random propn activns (should it be e.g. Gaussian?)
+                   (map (comp randomize-propn-activns ; EXPERIMENT: uniform random propn activns (should it be e.g. Gaussian?)
                               add-id-as-group              ; give it a group name identical to its id
                               (partial prs/new-person-from-old subak))
                         (map double (range num-subaks)))))))) ; subak ids are doubles from 0 to num-subaks-1. (That's what NetLogo will send.)
 
-
-
-(def current-popn& (atom initial-popn))
+(reset! current-popn& initial-popn)
 
 ;; To get the mean, we divide by num propns; to scale result from [-1,1] to [-0.5,0.5], we also divide by 2.
 (def num-worldly-peasant-propns-2x (* 2 (count c/worldly-peasant-propn-idxs)))
