@@ -312,14 +312,14 @@
   (zipmap (:id-vec net)
           (mx/matrix :persistent-vector (:activns net))))
 
-(defn rand-activn
+(defn rand-unif-activn
   "Returns a number in the half-open range [-1.0,1.0), which can be used as
   an activation value.."
   [rng]
   (- (* (ran/next-double rng) 2.0) 1.0))
 
-(defn rand-node-vec
+(defn rand-unif-node-vec
   "Returns a node vector of length n with activations initialized to
   random values from random number generator rng."
   [rng n]
-  (mx/matrix (repeatedly n #(rand-activn rng))))
+  (mx/matrix (repeatedly n #(rand-unif-activn rng))))

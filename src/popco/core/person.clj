@@ -155,7 +155,7 @@
   [pers]
   (let [num-nodes (px/vec-count (:activns (:propn-net pers)))]
     (assoc-in pers [:propn-net :activns]
-              (nn/rand-node-vec (:rng pers) num-nodes))))
+              (nn/rand-unif-node-vec (:rng pers) num-nodes))))
 
 (defn update-talk-to-persons
   "Fill person's talk-to-persons field with person ids based on its 
