@@ -72,16 +72,14 @@
    (+ mean (* sd (next-gaussian rng)))))
 
 (defn truncate
-  "Given a function of no arguments that returns a random number, returns 
-  a random number from its distribution that is truncated to lie within 
-  [left, right].
-  Example:
-  (truncate (fn [] (next-gaussian (MersenneTwisterFast. 42))) -0.5 0.5)"
-  [rand-fn left right]
-  (loop [candidate (rand-fn)]
+  "Given an a function and arguments that generate random samples, returns a 
+  random number generated with that function, but constrained to to lie within 
+  [left, right].  Example: (truncate -1 1 next-gaussian rng 0 0.5)"
+  [left right rand-fn & addl-args]
+  (loop [candidate (apply rand-fn addl-args)]
     (if (and (>= candidate left) (<= candidate right))
       candidate
-      (recur (rand-fn)))))
+      (recur (apply rand-fn addl-args)))))
 
 ;; lazy
 ;; This version repeatedly calls nth coll with a new random index each time.
