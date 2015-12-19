@@ -74,7 +74,8 @@
 (defn truncate
   "Given an a function and arguments that generate random samples, returns a 
   random number generated with that function, but constrained to to lie within 
-  [left, right].  Example: (truncate -1 1 next-gaussian rng 0 0.5)"
+  [left,right].  Might not be particularly efficient--better for initialization
+  than runtime?  Example: (truncate -1 1 next-gaussian rng 0 0.5)"
   [left right rand-fn & addl-args]
   (loop [candidate (apply rand-fn addl-args)]
     (if (and (>= candidate left) (<= candidate right))
