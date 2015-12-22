@@ -11,9 +11,12 @@
             [sims.bali.collections :as c]
             [clojure.core.matrix :as mx]))
 
-;; NOTE: I adopt the convention of naming variables containing atoms with a trailing ampersand.
+;; NOTE: I adopt the convention of naming variables containing atoms with a trailing ampersand,
+;; and naming namespace-global variables that don't contain atoms with a trailing $.
+;; (Elsewhere I used initial and terminal stars, but that actually has a more specific meaning.)
 
-(def num-subaks 172)
+(def num-subaks$ 172)
+(def ticks-per-year$ 5) ; number of popco ticks every time NetLogo calls, which should be once per year, i.e every 12 NetLogo ticks
 
 (def current-popn& (atom nil)) ; filled in later
 
@@ -52,26 +55,25 @@
 
 ;; PUNDITS MUST BE FIRST
 (def num-pundits 2) ; used in defs below to treat pundits and subaks differently.
-(def initial-popn
-  ;;                           ID    UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO BIAS-FILTER QUALITY-FN
-  (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
-        aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1           nil         prs/constantly1)
-        subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["bypassed"]   num-subaks  nil         prs/constantly1)]
+
+(reset! current-popn&
+  ;;                           ID    UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO  BIAS-FILTER QUALITY-FN
+  (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1            nil         prs/constantly1)
+        aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1            nil         prs/constantly1)
+        subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["bypassed"]   num-subaks$  nil         prs/constantly1)]
     (pp/make-population
       (vec (concat [aat aaf] ; pundits are first 
-                   (map (comp randomize-propn-activns ; EXPERIMENT: uniform random propn activns (should it be e.g. Gaussian?)
-                              add-id-as-group              ; give it a group name identical to its id
+                   (map (comp randomize-propn-activns ; EXPERIMENT
+                              add-id-as-group         ; give it a group name identical to its id
                               (partial prs/new-person-from-old subak))
-                        (map double (range num-subaks)))))))) ; subak ids are doubles from 0 to num-subaks-1. (That's what NetLogo will send.)
-
-(reset! current-popn& initial-popn)
+                        (map double (range num-subaks$)))))))) ; subak ids are doubles from 0 to num-subaks$ - 1. (That's what NetLogo will send.)
 
 ;; To get the mean, we divide by num propns; to scale result from [-1,1] to [-0.5,0.5], we also divide by 2.
 (def num-worldly-peasant-propns-2x (* 2 (count c/worldly-peasant-propn-idxs)))
 
 (defn scaled-worldly-peasant-activn
   "Computes mean of activations of worldly-peasant propns in person pers and scales
-  the result lie in [0,1]."
+  the result to lie in [0,1]."
   [pers]
   ;(println (matrix :persistent-vector (:activns (:propn-net pers))))  ; DEBUG
   (+ 0.5    ; shift [-0.5,0.5] to [0,1]
@@ -99,7 +101,7 @@
            (concat (take num-pundits persons) ; leave pundits as is
                    (map replace-ttp (drop num-pundits persons)))))) ; replace subaks' talk-to-persons from speaker-listener-map
 
-(defn bali-once
+(defn talk
   "Run popco.core.main/once on population, after updating its members'
   talk-to-persons fields from speaker-listener-hashtable, which is a
   java.util.HashTable in which keys are person ids and values are sequences
@@ -108,10 +110,8 @@
   that will be used in place of relig-type in BaliPlus.nlogo.  Values in this
   sequence are in subak order, i.e. the order in (:persons @current-popn&)."
   [speaker-listener-hashtable]
-  (let [speaker-listener-map (into {} speaker-listener-hashtable)] ; values are org.nlogo.api.LogoLists, but those are java.util.Collections, so OK
-    ;(println speaker-listener-map) ; DEBUG
-    ;(println (:utterance-map current-popn&)) ; DEBUG
-    ;(println (map :talk-to-persons (:persons @current-popn&))) ; DEBUG
-    (scaled-worldly-peasant-activns  ; return per-subak average worldly activn vals
-      (swap! current-popn& 
-             #(mn/once (replace-subaks-talk-to-persons % speaker-listener-map))))))
+  (let [speaker-listener-map (into {} speaker-listener-hashtable) ; values are org.nlogo.api.LogoLists, but those are java.util.Collections, so OK
+        next-popn-fn (fn [popn] (nth (mn/many-times
+                                       (replace-subaks-talk-to-persons popn speaker-listener-map))
+                                     ticks-per-year$))]
+    (scaled-worldly-peasant-activns (swap! current-popn& next-popn-fn))))
