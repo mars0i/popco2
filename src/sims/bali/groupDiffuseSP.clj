@@ -8,7 +8,7 @@
             [popco.nn.analogy :as an]
             [sims.bali.collections :as c]))
 
-;; The many indiv bindings below allow adding individual SP propns to prons.
+;; The many indiv bindings below allow adding individual SP propns to persons.
 ;; Maybe in future use a macro or something to define all of this stuff automatically.
 
 (let [;; structures with all propns except SP propns
