@@ -65,10 +65,10 @@
 (def num-pundits 2) ; used in defs below to treat pundits and subaks differently.
 
 (reset! current-popn&
-  ;;                           ID    UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS MAX-TALK-TO  BIAS-FILTER QUALITY-FN
-  (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1            nil         prs/constantly1)
-        aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]      1            nil         prs/constantly1)
-        subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["bypassed"]   num-subaks$  nil         prs/constantly1)]
+  ;;                           ID    UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS           MAX-TALK-TO  BIAS-FILTER QUALITY-FN
+  (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]                1            nil         prs/constantly1)
+        aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/worldly-propn-ids   [:pundits]  [:subaks]                1            nil         prs/constantly1)
+        subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["runtime from NetLogo"] num-subaks$  nil         prs/constantly1)]
     (pp/make-population
       (vec (concat [aat aaf] ; pundits are first 
                    (map (comp randomize-propn-activns
