@@ -36,15 +36,23 @@
   (mx/matrix (repeatedly n #(rand-activn rng mean sd))))
 
 ;; EXPERIMENTAL
-(defn randomize-propn-activns
+(defn double-randomize-propn-activns
   "Accepts a single argument, a person pers, and returns a person containing
-  a fresh proposition network with random activation values."
+  a fresh proposition network with random activation values.  
+  THIS EXPERIMENTAL VERSION ARRANGES NORMALLY DISTRIBUTED ACTIVNS IN A PERSON 
+  AROUND THE SAME RANDOM MEAN, WITH A UNIFORMLY DISTRIBUTED DIFFERENT MEAN IN 
+  EACH PERSON THE NORMALLY DISTRIBUTED ACTIVNS ARE TRUNCATED to [-1,1]. 
+  (THEIR MEANS ARE CLOSER TO 0 THAN THEIR MODES.)"
   [pers]
   (let [rng (:rng pers)
-        num-nodes (px/vec-count (:activns (:propn-net pers)))
-        person-mean (- (* (ran/next-double rng) 2.0) 1.0)] ; a double in [-1,1.0). (person-sd from global.)
+        num-nodes (px/vec-count (:activns (:propn-net pers))) ; redundant to do every time, but ok for initialization
+        person-mean (- (* (ran/next-double rng) 2.0) 1.0)] ; a double in [-1,1.0)
     (assoc-in pers [:propn-net :activns]
-              (rand-node-vec rng person-mean person-sd num-nodes))))
+              (rand-node-vec rng person-mean person-sd num-nodes)))) ;  person-sd is from global
+
+;(def randomize-propn-activns double-randomize-propn-activns)
+(def randomize-propn-activns prs/randomize-unif-propn-activns)
+
 
 (defn add-id-as-group
   "Returns a person that's just like pers, but with an additional group identity
@@ -63,7 +71,7 @@
         subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["bypassed"]   num-subaks$  nil         prs/constantly1)]
     (pp/make-population
       (vec (concat [aat aaf] ; pundits are first 
-                   (map (comp randomize-propn-activns ; EXPERIMENT
+                   (map (comp randomize-propn-activns
                               add-id-as-group         ; give it a group name identical to its id
                               (partial prs/new-person-from-old subak))
                         (map double (range num-subaks$)))))))) ; subak ids are doubles from 0 to num-subaks$ - 1. (That's what NetLogo will send.)
