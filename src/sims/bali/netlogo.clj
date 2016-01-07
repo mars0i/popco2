@@ -9,14 +9,15 @@
             [popco.nn.matrix :as px]
             [utils.random :as ran]
             [sims.bali.collections :as c]
-            [clojure.core.matrix :as mx]))
+            [clojure.core.matrix :as mx]
+            [clojure.algo.generic.functor :as gf]))
 
 ;; NOTE: I adopt the convention of naming variables containing atoms with a trailing ampersand,
 ;; and naming namespace-global variables that don't contain atoms with a trailing $.
 ;; (Elsewhere I used initial and terminal stars, but that actually has a more specific meaning.)
 
 (def num-subaks$ 172)
-(def ticks-per-year$ 5) ; number of popco ticks every time NetLogo calls, which should be once per year, i.e every 12 NetLogo ticks
+(def ticks-per-year$ 1) ; number of popco ticks every time NetLogo calls, which should be once per year, i.e every 12 NetLogo ticks
 
 (def current-popn& (atom nil)) ; filled in later
 
@@ -66,9 +67,11 @@
 
 (reset! current-popn&
   ;;                           ID    UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS                  MAX-TALK-TO  BIAS-FILTER QUALITY-FN
-  (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/spiritual-propn-ids   [:pundits]  [:subaks]                       1            nil         prs/constantly1)
-        aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/spiritual-propn-ids   [:pundits]  [:subaks]                       1            nil         prs/constantly1)
-        subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["set at runtime from NetLogo"] num-subaks$  nil         prs/constantly1)]
+  (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/spiritual-propn-ids [:pundits]  [:subaks]                       1            nil         prs/constantly1)
+        aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/spiritual-propn-ids [:pundits]  [:subaks]                       1            nil         prs/constantly1)
+        subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["set at runtime from NetLogo"] 
+                               1 ;num-subaks$   ;; FIXME TEMPORARY EXPERIMENT
+                               nil         prs/constantly1)]
     (pp/make-population
       (vec (concat [aat aaf] ; pundits are first 
                    (map (comp randomize-propn-activns
@@ -118,7 +121,9 @@
   that will be used in place of relig-type in BaliPlus.nlogo.  Values in this
   sequence are in subak order, i.e. the order in (:persons @current-popn&)."
   [speaker-listener-hashtable]
-  (let [speaker-listener-map (into {} speaker-listener-hashtable) ; values are org.nlogo.api.LogoLists, but those are java.util.Collections, so OK
+  (let [speaker-listener-map 
+        (gf/fmap (partial into [])  ; values are org.nlogo.api.LogoLists, which are Collections, but we need also nth in random.clj via speak.clj, so make vecs
+                 (into {} speaker-listener-hashtable))
         next-popn-fn (fn [popn] (nth (mn/many-times
                                        (replace-subaks-talk-to-persons popn speaker-listener-map))
                                      ticks-per-year$))]
