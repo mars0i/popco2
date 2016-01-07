@@ -9,7 +9,7 @@
                  [net.mikera/core.matrix "0.36.1"]
                  [net.mikera/vectorz-clj "0.30.1"]
                  [incanter/incanter-core "1.5.6"]
-                 [org.clojure/algo.generic "0.1.1"]
+                 [org.clojure/algo.generic "0.1.2"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/data.csv "0.1.3"]
                  [org.clojure/data.xml "0.0.8"]
@@ -22,7 +22,7 @@
   :profiles {:dev {:dependencies 
                    [[net.mikera/core.matrix "0.36.1"]
                     [net.mikera/vectorz-clj "0.30.1"]
-                    [org.clojure/algo.generic "0.1.1"]
+                    [org.clojure/algo.generic "0.1.2"]
                     [org.clojure/data.csv "0.1.3"]
                     [org.clojure/data.xml "0.0.8"]
                     [org.clojure/tools.cli "0.3.1"]
@@ -30,14 +30,14 @@
                     [criterium/criterium "0.4.3"]
                     [io.aviso/pretty "0.1.18"]]}
              ; re "leaky": http://librelist.com/browser//leiningen/2014/9/25/wrong-clojure-release-when-compiling-if-with-profile-and-uberjar-is-used/#db9a114b3b07b9ad6d4c291a9f0cb8d6
-             :bali-netlogo ^:leaky {;:aot [;popco.core.popco
+             :bali-netlogo ^:leaky {:aot [;popco.core.popco
                                           ;popco.core.main   ; precompile ns's used
                                           ;popco.core.person ; explicitly in netlogo.clj
                                           ;popco.core.population 
                                           ;popco.nn.analogy
                                           ;utils.random
                                           ;sims.bali.collections
-                                    ;     sims.bali.netlogo]
+                                          sims.bali.netlogo]
                                     ;:javac-options ["-source" "1.8" "-target" "1.6"] ; because NetLogo 5.2 was compiled with java 1.6
                                     ;:exclusions [ec.util.MersenneTwisterFast]
                                     ;:uberjar-exclusions [#"(?:^|/)java/ec/util/MersenneTwisterFast*"]
@@ -46,7 +46,7 @@
                                                    [net.mikera/core.matrix "0.36.1"]
                                                    [net.mikera/vectorz-clj "0.30.1"]
                                                    ;[incanter/incanter-core "1.5.6"]
-                                                   [org.clojure/algo.generic "0.1.1"]
+                                                   [org.clojure/algo.generic "0.1.2"]
                                                    [org.clojure/data.csv "0.1.3"]
                                                    [org.clojure/data.xml "0.0.8"]
                                                    [org.clojure/tools.cli "0.3.1"]]}
