@@ -70,7 +70,7 @@
   (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/spiritual-propn-ids [:pundits]  [:subaks]                       1            nil         prs/constantly1)
         aaf   (prs/make-person :aaf  c/worldly-propns c/worldly-neg-perc-pnet c/anet      c/spiritual-propn-ids [:pundits]  [:subaks]                       1            nil         prs/constantly1)
         subak (prs/make-person :temp c/all-propns     c/no-perc-pnet          c/anet      c/spiritual-propn-ids [:subaks]   ["set at runtime from NetLogo"] 
-                               1 ;num-subaks$   ;; FIXME TEMPORARY EXPERIMENT
+                               num-subaks$
                                nil         prs/constantly1)]
     (pp/make-population
       (vec (concat [aat aaf] ; pundits are first 
