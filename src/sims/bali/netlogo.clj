@@ -78,6 +78,7 @@
                               add-id-as-group         ; give it a group name identical to its id
                               (partial prs/new-person-from-old subak))
                         (map double (range num-subaks$)))))))) ; subak ids are doubles from 0 to num-subaks$ - 1. (That's what NetLogo will send.)
+;; TODO FIXME the doubles are causing trouble in the csv-writing.  keywords or strings work.  e.g. map str or map (comp keyword str).
 
 ;; To get the mean, we divide by num propns; to scale result from [-1,1] to [-0.5,0.5], we also divide by 2.
 (def num-worldly-peasant-propns-2x (* 2 (count c/worldly-peasant-propn-idxs)))
