@@ -119,21 +119,23 @@
   of ids of persons the key person should talk to.  Returns a sequence of
   per-subak average activations (currently of worldly peasant propns only)
   that will be used in place of relig-type in BaliPlus.nlogo.  Values in this
-  sequence are in subak order, i.e. the order in (:persons @current-popn&)."
-  [speaker-listener-hashtable]
-  (let [speaker-listener-map 
-        (gf/fmap (partial into [])  ; values are org.nlogo.api.LogoLists, which are Collections, but we need also nth in random.clj via speak.clj, so make vecs
-                 (into {} speaker-listener-hashtable))
-        next-popn-fn (fn [popn] (nth (mn/many-times
-                                       (replace-subaks-talk-to-persons popn speaker-listener-map))
-                                     ticks-per-year$))]
-    (scaled-worldly-peasant-activns (swap! current-popn& next-popn-fn))))
+  sequence are in subak order, i.e. the order in (:persons @current-popn&).
+  (Additional args are designed for experimentation at the repl.)"
+  ([speaker-listener-hashtable] (talk speaker-listener-hashtable ticks-per-year$))
+  ([speaker-listener-hashtable ticks]
+   (let [speaker-listener-map 
+         (gf/fmap (partial into [])  ; values are org.nlogo.api.LogoLists, which are Collections, but we need also nth in random.clj via speak.clj, so make vecs
+                  (into {} speaker-listener-hashtable))
+         next-popn-fn (fn [popn] (nth 
+                                   (mn/many-times (replace-subaks-talk-to-persons popn speaker-listener-map))
+                                   ticks))]
+     (scaled-worldly-peasant-activns (swap! current-popn& next-popn-fn)))))
 
 
-(def local-speaker-listener-hashtable
-  "Defines a speaker-listener hashtable that encodes all and only those
-  relationships specified by pest and imitation links (green lines) in
-  the NetLogo simulation BaliPlus (based on Janssen's version of the
+(def local-speaker-listener-map
+  "Defines a speaker-listener map (hashtable) that encodes all and only 
+  those relationships specified by pest and imitation links (green lines)
+  in the NetLogo simulation BaliPlus (based on Janssen's version of the
   Lansing-Kremer model). The data comes from subaksubakdata.txt
   in bali/src/LKJplus."
   (sort ; sort for programmer's convenience
