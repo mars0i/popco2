@@ -3,7 +3,8 @@
 ;;; specified in the file LICENSE.
 
 (ns popco.io.propncsv
-  (:require [popco.core.constants :as cn]
+  (:require [utils.string :as us]
+            [popco.core.constants :as cn]
             [clojure.data.csv :as csv]
             [clojure.java.io :as io]
             [clojure.string :as st]
@@ -92,7 +93,7 @@
   ([popn] (column-names popn identity))
   ([popn name-cooker]
    (let [persons (:persons popn)
-         name-strs (map (comp name :id) persons)
+         name-strs (map (comp us/name* :id) persons) ; name* handles person ids that are raw numbers
          id-strs (map name (rest (:id-vec (:propn-net (first persons)))))]
      (for [name-str name-strs
            id-str id-strs]

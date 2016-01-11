@@ -6,6 +6,13 @@
 (ns utils.string
   (:require [clojure.pprint :only [*print-right-margin*]]))
 
+(defn name*
+  [x]
+  "Returns the name String of a string, symbol or keyword, or the string
+  representation of a number.  (Like the built-in Clojure function name,
+  but also handles numbers.)"
+  (let [x' (if (number? x) (str x) x)]
+    (name x')))
 
 (defn re-matching-idxs
   "Given a sequence xs of things, returns the indexes of those things whose
