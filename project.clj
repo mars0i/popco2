@@ -18,7 +18,7 @@
   :main popco.core.popco
   :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
   :repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]} 
-  :jvm-opts ["-Xmx2g" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
+  :jvm-opts ["-Xmx3g" "-XX:-UseConcMarkSweepGC" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
   :profiles {:dev {:dependencies 
                    [[net.mikera/core.matrix "0.36.1"]
                     [net.mikera/vectorz-clj "0.30.1"]
