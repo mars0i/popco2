@@ -5,23 +5,24 @@
   :source-paths ["src"]
   :java-source-paths ["src/java"]
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 ;[org.clojure/clojure "1.8.0-RC4"]
-                 [net.mikera/core.matrix "0.36.1"]
-                 [net.mikera/vectorz-clj "0.30.1"]
+                 ;[org.clojure/clojure "1.6.0"]
+                 ;[org.clojure/clojure "1.8.0-RC5"]
+                 [net.mikera/core.matrix "0.49.0"]
+                 [net.mikera/vectorz-clj "0.41.0"]
                  [incanter/incanter-core "1.5.6"]
                  [org.clojure/algo.generic "0.1.2"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/data.csv "0.1.3"]
                  [org.clojure/data.xml "0.0.8"]
-                 [org.clojure/tools.cli "0.3.1"]]
+                 [org.clojure/tools.cli "0.3.3"]]
   :plugins [[lein-exec "0.3.4"]] ; allows passing expressions to eval on commandline with -e, etc. see lein help exec.
   :main popco.core.popco
   :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
   :repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]} 
   :jvm-opts ["-Xmx3g" "-XX:-UseConcMarkSweepGC" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
   :profiles {:dev {:dependencies 
-                   [[net.mikera/core.matrix "0.36.1"]
-                    [net.mikera/vectorz-clj "0.30.1"]
+                   [[net.mikera/core.matrix "0.49.0"]
+                    [net.mikera/vectorz-clj "0.41.0"]
                     [org.clojure/algo.generic "0.1.2"]
                     [org.clojure/data.csv "0.1.3"]
                     [org.clojure/data.xml "0.0.8"]
@@ -42,14 +43,14 @@
                                     ;:exclusions [ec.util.MersenneTwisterFast]
                                     ;:uberjar-exclusions [#"(?:^|/)java/ec/util/MersenneTwisterFast*"]
                                     ;:uberjar-exclusions [#"ec/util/MersenneTwisterFast.class"]
-                                    :dependencies [[net.mikera/clojure-utils "0.5.0"]
-                                                   [net.mikera/core.matrix "0.36.1"]
-                                                   [net.mikera/vectorz-clj "0.30.1"]
+                                    :dependencies [;[net.mikera/clojure-utils "0.5.0"]
+                                                   [net.mikera/core.matrix "0.49.0"]
+                                                   [net.mikera/vectorz-clj "0.41.0"]
                                                    ;[incanter/incanter-core "1.5.6"]
                                                    [org.clojure/algo.generic "0.1.2"]
                                                    [org.clojure/data.csv "0.1.3"]
                                                    [org.clojure/data.xml "0.0.8"]
-                                                   [org.clojure/tools.cli "0.3.1"]]}
+                                                   [org.clojure/tools.cli "0.3.3"]]}
              }
 )
 
