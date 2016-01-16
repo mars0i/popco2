@@ -20,6 +20,7 @@
   :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
   :repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]} 
   :jvm-opts ["-Xmx3g" "-XX:-UseConcMarkSweepGC" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
+  ; consider adding:  -XX:-UseGCOverheadLimit 
   :profiles {:dev {:dependencies 
                    [[net.mikera/core.matrix "0.49.0"]
                     [net.mikera/vectorz-clj "0.41.0"]
