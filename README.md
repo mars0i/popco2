@@ -18,7 +18,7 @@ coherence (see references below). For the motivation of this project,
 an illustration of its use, and the primary documentation of how the
 software works, see the open access article described below.
 
-This software is copyright 2013, 2014, 2015 by [Marshall
+This software is copyright 2013, 2014, 2015, 2016 by [Marshall
 Abrams](http://members.logical.net/~marshall/), and is distributed
 under the [Gnu General Public License version
 3.0](http://www.gnu.org/copyleft/gpl.html) as specified in the file
