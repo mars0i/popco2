@@ -4,9 +4,9 @@
             :url "http://www.gnu.org/copyleft/gpl.html"}
   :source-paths ["src"]
   :java-source-paths ["src/java"]
-  :dependencies [[org.clojure/clojure "1.7.0"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 ;[org.clojure/clojure "1.7.0"]
                  ;[org.clojure/clojure "1.6.0"]
-                 ;[org.clojure/clojure "1.8.0-RC5"]
                  [net.mikera/core.matrix "0.49.0"]
                  [net.mikera/vectorz-clj "0.41.0"]
                  [incanter/incanter-core "1.5.6"]
