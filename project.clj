@@ -7,7 +7,6 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [net.mikera/core.matrix "0.49.0"]
                  [net.mikera/vectorz-clj "0.41.0"]
-                 ;[incanter/incanter-core "1.5.6"]
                  [org.clojure/algo.generic "0.1.2"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/data.csv "0.1.3"]
@@ -21,6 +20,7 @@
   ;; The :dev profile is merged into the top-level dependencies unless 'with-profile' is used:
   :profiles {:dev {:repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]}
                    :dependencies [[criterium/criterium "0.4.3"]
+                                  ;[incanter/incanter-core "1.5.6"]
                                   [io.aviso/pretty "0.1.18"]]}
              ; re "leaky": http://librelist.com/browser//leiningen/2014/9/25/wrong-clojure-release-when-compiling-if-with-profile-and-uberjar-is-used/#db9a114b3b07b9ad6d4c291a9f0cb8d6
              :bali-netlogo ^:leaky {:aot [;popco.core.popco
