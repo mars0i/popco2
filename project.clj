@@ -16,10 +16,10 @@
   :plugins [[lein-exec "0.3.4"]] ; allows passing expressions to eval on commandline with -e, etc. see lein help exec.
   :main popco.core.popco
   :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
-  :repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]} 
   :jvm-opts ["-Xmx3g" "-XX:-UseConcMarkSweepGC" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
   ; consider adding:  -XX:-UseGCOverheadLimit 
-  :profiles {:dev {:dependencies ; :dev merged into the top-level dependencies unless 'with-profile' used
+  :profiles {:dev {:repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]}
+                   :dependencies ; :dev merged into the top-level dependencies unless 'with-profile' used
                    [[criterium/criterium "0.4.3"]
                     [io.aviso/pretty "0.1.18"]]}
              ; re "leaky": http://librelist.com/browser//leiningen/2014/9/25/wrong-clojure-release-when-compiling-if-with-profile-and-uberjar-is-used/#db9a114b3b07b9ad6d4c291a9f0cb8d6
