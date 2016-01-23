@@ -7,7 +7,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [net.mikera/core.matrix "0.49.0"]
                  [net.mikera/vectorz-clj "0.41.0"]
-                 [incanter/incanter-core "1.5.6"]
+                 ;[incanter/incanter-core "1.5.6"]
                  [org.clojure/algo.generic "0.1.2"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [org.clojure/data.csv "0.1.3"]
@@ -18,10 +18,10 @@
   :aot [popco.core.popco] ; for lein uberjar (causes popco.clj to be compiled, if changed, before anything else)
   :jvm-opts ["-Xmx3g" "-XX:-UseConcMarkSweepGC" "-Dclojure.compiler.disable-locals-clearing=true" "-Djava.awt.headless=true"]
   ; consider adding:  -XX:-UseGCOverheadLimit 
+  ;; The :dev profile is merged into the top-level dependencies unless 'with-profile' is used:
   :profiles {:dev {:repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]}
-                   :dependencies ; :dev merged into the top-level dependencies unless 'with-profile' used
-                   [[criterium/criterium "0.4.3"]
-                    [io.aviso/pretty "0.1.18"]]}
+                   :dependencies [[criterium/criterium "0.4.3"]
+                                  [io.aviso/pretty "0.1.18"]]}
              ; re "leaky": http://librelist.com/browser//leiningen/2014/9/25/wrong-clojure-release-when-compiling-if-with-profile-and-uberjar-is-used/#db9a114b3b07b9ad6d4c291a9f0cb8d6
              :bali-netlogo ^:leaky {:aot [;popco.core.popco
                                           ;popco.core.main   ; precompile ns's used
@@ -35,14 +35,15 @@
                                     ;:exclusions [ec.util.MersenneTwisterFast]
                                     ;:uberjar-exclusions [#"(?:^|/)java/ec/util/MersenneTwisterFast*"]
                                     ;:uberjar-exclusions [#"ec/util/MersenneTwisterFast.class"]
-                                    :dependencies [;[net.mikera/clojure-utils "0.5.0"]
-                                                   [net.mikera/core.matrix "0.49.0"]
-                                                   [net.mikera/vectorz-clj "0.41.0"]
+                                    ;:dependencies [;[net.mikera/clojure-utils "0.5.0"]
+                                                   ;[net.mikera/core.matrix "0.49.0"]
+                                                   ;[net.mikera/vectorz-clj "0.41.0"]
                                                    ;[incanter/incanter-core "1.5.6"]
-                                                   [org.clojure/algo.generic "0.1.2"]
-                                                   [org.clojure/data.csv "0.1.3"]
-                                                   [org.clojure/data.xml "0.0.8"]
-                                                   [org.clojure/tools.cli "0.3.3"]]}
+                                                   ;[org.clojure/algo.generic "0.1.2"]
+                                                   ;[org.clojure/data.csv "0.1.3"]
+                                                   ;[org.clojure/data.xml "0.0.8"]
+                                                   ;[org.clojure/tools.cli "0.3.3"]]
+                                    }
              }
 )
 
