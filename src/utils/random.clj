@@ -102,7 +102,9 @@
 ;         (repeatedly num-samples #(rand-idx rng size)))))
 
 ;; lazy
-(defn sample-with-repl-3
+;(def sample-with-repl sample-with-repl-3) ; see samplingtests2.xlsx
+(defn sample-with-repl
+  "Return num-samples from coll, sampled with replacement."
   [rng num-samples coll]
   (let [size (count coll)]
     (for [_ (range num-samples)]
@@ -118,7 +120,6 @@
 ;                                     (nth coll (rand-idx rng size))))
 ;        result))))
 
-(def sample-with-repl sample-with-repl-3) ; see samplingtests2.xlsx
 
 
 ;; lazy if more than one sample
