@@ -54,10 +54,10 @@
       (propn-id-vec i))))
 
 (defn choose-propn-ids-to-say
-  "FIX DOCSTRING: Given a converser-pair, a map with keys :speaker and 
-  :listener, chooses a proposition from speaker's beliefs to communicate to 
-  listener, and returns a conversation, i.e. a map with the proposition assoc'ed
-  into the converser-pair map, with new key :propn"
+  "Given a speaker and a number of utterances, chooses propositions worth
+  sayping, and then randomly samples (with replacement) num-utterances of
+  those propositions, returning their ids or nil if there are no utterances
+  to return."
   [speaker num-utterances]
   (if (pos? num-utterances)
     (if-let [poss-utterance-ids (seq (worth-saying-ids speaker))]  ; since sample throws exception on empty coll
