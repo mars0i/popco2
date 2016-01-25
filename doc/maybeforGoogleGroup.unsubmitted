@@ -1,0 +1,15 @@
+I have a Clojure application that runs well in Clojure 1.6.0, but seems to have a memory leak in 1.7.0 and 1.8.0.  That is, I get this error in the more recent versions, but not in 1.6.0:
+
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+
+Very weird. I had no idea what the source of the problem was. 
+
+One difference between 1.6.0 and 1.7.0 is that a new function 'update' was introduced.  I have a namespace named "update" (popco.nn.update), in a file named update.clj, of course.  It seemed unlikely that a name conflict between these two objects could be the source of the problem, but just to be sure,  I renamed the namespace and the source file to something other than "update", fixed references to the namespace elsewhere, etc.
+
+To my surprise, it worked!  The memory leak went away in Clojure 1.8.0.
+
+Is this a known problem?  I've looked for it on the web and in the Jira tickets, but it's not easy to search for.
+
+If it's forbidden to give a namespace the same name (in it's last component) as a the name of a function, note that this doesn't cause immediate failure; my program runs with the name clash and produces correct results until it runs out of memory.  This is not ideal.  It's a pretty easy problem to avoid in small programs, but maybe not in large projects.  It's also disturbing that a new release of Clojure that adds a new name can cause this problem.
+
+(My code doesn't use the new 'update' function.)
