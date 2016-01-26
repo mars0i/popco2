@@ -16,6 +16,8 @@
 ;; and naming namespace-global variables that don't contain atoms with a trailing $.
 ;; (Elsewhere I used initial and terminal stars, but that actually has a more specific meaning.)
 
+(declare pest-neighbor-map)
+
 (def num-subaks$ 172)
 (def ticks-per-year$ 1) ; number of popco ticks every time NetLogo calls, which should be once per year, i.e every 12 NetLogo ticks
 
@@ -99,12 +101,20 @@
   "Replace talk-to-persons fields in persons in popn speaker-listener-map,
   in which keys are person ids and values are sequences of ids of persons 
   the key person should talk to."
-  [popn speaker-listener-map]
+  [speaker-listener-map popn]
   (let [persons (:persons popn)
         replace-ttp (fn [pers] (assoc pers :talk-to-persons (speaker-listener-map (:id pers))))]
     (assoc popn :persons
            (concat (take num-pundits persons) ; leave pundits as is
                    (map replace-ttp (drop num-pundits persons)))))) ; replace subaks' talk-to-persons from speaker-listener-map
+
+(defn many-times-repl-ttp
+  "Run many-times on popn (@current-popn& by default) after calling 
+  replace-subaks-talk-to-persons on it with speaker-listener-map."
+  ([] (many-times-repl-ttp pest-neighbor-map @current-popn&))
+  ([speaker-listener-map] (many-times-repl-ttp speaker-listener-map @current-popn&))
+  ([speaker-listener-map popn]
+   (mn/many-times (replace-subaks-talk-to-persons speaker-listener-map popn))))
 
 (defn talk
   "Run popco.core.main/once on population, after updating its members'
@@ -121,12 +131,11 @@
          (gf/fmap (partial into [])  ; values are org.nlogo.api.LogoLists, which are Collections, but we need also nth in random.clj via speak.clj, so make vecs
                   (into {} speaker-listener-hashtable))
          next-popn-fn (fn [popn] (nth 
-                                   (mn/many-times (replace-subaks-talk-to-persons popn speaker-listener-map))
+                                   (many-times-repl-ttp speaker-listener-map popn)
                                    ticks))]
      (scaled-worldly-peasant-activns (swap! current-popn& next-popn-fn)))))
 
-
-(def local-speaker-listener-map
+(def pest-neighbor-map
   "Defines a speaker-listener map (hashtable) that encodes all and only 
   those relationships specified by pest and imitation links (green lines)
   in the NetLogo simulation BaliPlus (based on Janssen's version of the
