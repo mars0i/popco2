@@ -4,7 +4,7 @@
             :url "http://www.gnu.org/copyleft/gpl.html"}
   :source-paths ["src"]
   :java-source-paths ["src/java"]
-  :dependencies [[org.clojure/clojure "1.7.0"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
                  [net.mikera/core.matrix "0.49.0"]
                  [net.mikera/vectorz-clj "0.41.0"]
                  [org.clojure/algo.generic "0.1.2"]
@@ -15,8 +15,7 @@
   :plugins [[lein-exec "0.3.4"]] ; allows passing expressions to eval on commandline with -e, etc. see lein help exec.
   :main popco.core.popco
   :aot [popco.core.popco]
-  :jvm-opts ["-Xmx2g" "-XX:-UseConcMarkSweepGC" "-Djava.awt.headless=true"] ; consider adding:  -XX:-UseGCOverheadLimit 
-  ;; "-Dclojure.compiler.disable-locals-clearing=true" causes memory leak for me in >= Clojure 1.7.0 
+  :jvm-opts ["-Xmx2g" "-XX:-UseConcMarkSweepGC" "-Djava.awt.headless=true"] ;
   ;; The :dev profile is merged into the top-level dependencies unless 'with-profile' is used:
   :profiles {:dev {:repl-options {:nrepl-middleware [io.aviso.nrepl/pretty-middleware]}
                    :dependencies [[criterium/criterium "0.4.3"]
@@ -32,10 +31,12 @@
 
 ;; old options:
 
-;"-Djava.awt.headless=true" Keep Incanter's Swing libs from opening
+;; "-Dclojure.compiler.disable-locals-clearing=true" can cause a memory leak.  needed for debuggers maybe.
+;; ";-Djava.awt.headless=true" Keep Incanter's Swing libs from opening
 ;:jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"] ; FASTER, and may be useful to debuggers. see https://groups.google.com/forum/#!msg/clojure/8a1FjNvh-ZQ/DzqDz4oKMj0J
 ;:jvm-opts ["-XX:+TieredCompilation" "-XX:TieredStopAtLevel=1"] ; setting this to 1 will produce faster startup but will disable extra optimization of long-running processes
 ;:jvm-opts ["-XX:TieredStopAtLevel=4"] ; more optimization (?)
+;; consider adding:  -XX:-UseGCOverheadLimit 
 ;:jvm-opts ["-server"] ; more optimization, slower startup, but supposed to be on by default except in 32-bit Windows machines
 ;[net.mikera/core.matrix "0.22.1-OTHERZEROS"] ; my hack version that allows mmul to return numbers of the same kind as input
 ;[bigml/sampling "2.1.1"]
