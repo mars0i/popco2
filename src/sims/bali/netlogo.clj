@@ -16,53 +16,29 @@
 ;; and naming namespace-global variables that don't contain atoms with a trailing $.
 ;; (Elsewhere I used initial and terminal stars, but that actually has a more specific meaning.)
 
-(declare pest-neighbor-map)
+(declare pest-neighbor-map
+         rand-activn rand-node-vec double-randomize-propn-activns add-id-as-group scaled-worldly-peasant-activn scaled-worldly-peasant-activns
+         replace-subaks-talk-to-persons many-times-repl-ttp talk)
 
 (def num-subaks$ 172)
 (def ticks-per-year$ 1) ; number of popco ticks every time NetLogo calls, which should be once per year, i.e every 12 NetLogo ticks
 
 (def current-popn& (atom nil)) ; filled in later
 
-;; EXPERIMENTAL:
-(def person-sd 0.02)
-;; EXPERIMENTAL:
-(defn rand-activn
-  [rng mean sd]
-  (ran/truncate -1.0 1.0 ran/next-gaussian rng mean sd))
-;; EXPERIMENTAL:
-(defn rand-node-vec
-  "Returns a node vector of length n with activations initialized to
-  random values from random number generator rng."
-  [rng mean sd n]
-  (mx/matrix (repeatedly n #(rand-activn rng mean sd))))
-;; EXPERIMENTAL:
-(defn double-randomize-propn-activns
-  "Accepts a single argument, a person pers, and returns a person containing
-  a fresh proposition network with random activation values.  
-  THIS EXPERIMENTAL VERSION ARRANGES NORMALLY DISTRIBUTED ACTIVNS IN A PERSON 
-  AROUND THE SAME RANDOM MEAN, WITH A UNIFORMLY DISTRIBUTED DIFFERENT MEAN IN 
-  EACH PERSON THE NORMALLY DISTRIBUTED ACTIVNS ARE TRUNCATED to [-1,1]. 
-  (THEIR MEANS ARE CLOSER TO 0 THAN THEIR MODES.)"
-  [pers]
-  (let [rng (:rng pers)
-        num-nodes (px/vec-count (:activns (:propn-net pers))) ; redundant to do every time, but ok for initialization
-        person-mean (- (* (ran/next-double rng) 2.0) 1.0)] ; a double in [-1,1.0)
-    (assoc-in pers [:propn-net :activns]
-              (rand-node-vec rng person-mean person-sd num-nodes)))) ;  person-sd is from global
-
-;(def randomize-propn-activns double-randomize-propn-activns)
 (def randomize-propn-activns prs/randomize-unif-propn-activns)
 
-(defn add-id-as-group
-  "Returns a person that's just like pers, but with an additional group identity
-  whose name is identical to pers's id."
-  [pers]
-  (update pers :groups conj (:id pers)))
-
-
-;; PUNDITS MUST BE FIRST
 (def num-pundits 2) ; used in defs below to treat pundits and subaks differently.
 
+;; Both pundits only utter spiritual propns if we are adopting the hypothesis that religious patterns spread
+;; randomly, and were only selected through success bias.
+;; In addition, we could add in some worldly-peasant analogy bias.
+;; NOTE speakers only send a valence (-1 or 1), although whether uttered is random.
+;; Then there's a constant trust multiplier in listen.clj.  An option is to replace
+;; this with a normally distributed number.  Or maybe send more than just valence.
+;; Hmm.  This is different from the pure NetLogo version.  Then again, sending a bunch
+;; of propns is already noisy.  Not noisy enough, maybe, though.
+
+;; PUNDITS MUST BE FIRST
 (reset! current-popn&
   ;;                           ID    UNMASKED         PROPN-NET               ANALOGY-NET UTTERABLE-IDS         GROUPS      TALK-TO-GROUPS                  MAX-TALK-TO  BIAS-FILTER QUALITY-FN
   (let [aat   (prs/make-person :aat  c/worldly-propns c/worldly-perc-pnet     c/anet      c/spiritual-propn-ids [:pundits]  [:subaks]                       1            nil         prs/constantly1)
@@ -74,6 +50,12 @@
                               add-id-as-group         ; give it a group name identical to its id
                               (partial prs/new-person-from-old subak))
                         (map double (range num-subaks$)))))))) ; subak ids are doubles from 0 to num-subaks$ - 1. (That's what NetLogo will send.)
+
+(defn add-id-as-group
+  "Returns a person that's just like pers, but with an additional group identity
+  whose name is identical to pers's id."
+  [pers]
+  (update pers :groups conj (:id pers)))
 
 ;; To get the mean, we divide by num propns; to scale result from [-1,1] to [-0.5,0.5], we also divide by 2.
 (def num-worldly-peasant-propns-2x (* 2 (count c/worldly-peasant-propn-idxs)))
@@ -466,3 +448,35 @@
               {170.0 [169.0]}
               {170.0 [171.0]}
               {171.0 [170.0]}))
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; EXPERIMENTAL CODE
+(def person-sd 0.02)
+
+(defn rand-activn
+  [rng mean sd]
+  (ran/truncate -1.0 1.0 ran/next-gaussian rng mean sd))
+
+(defn rand-node-vec
+  "Returns a node vector of length n with activations initialized to
+  random values from random number generator rng."
+  [rng mean sd n]
+  (mx/matrix (repeatedly n #(rand-activn rng mean sd))))
+
+(defn double-randomize-propn-activns
+  "Accepts a single argument, a person pers, and returns a person containing
+  a fresh proposition network with random activation values.  
+  THIS EXPERIMENTAL VERSION ARRANGES NORMALLY DISTRIBUTED ACTIVNS IN A PERSON 
+  AROUND THE SAME RANDOM MEAN, WITH A UNIFORMLY DISTRIBUTED DIFFERENT MEAN IN 
+  EACH PERSON THE NORMALLY DISTRIBUTED ACTIVNS ARE TRUNCATED to [-1,1]. 
+  (THEIR MEANS ARE CLOSER TO 0 THAN THEIR MODES.)"
+  [pers]
+  (let [rng (:rng pers)
+        num-nodes (px/vec-count (:activns (:propn-net pers))) ; redundant to do every time, but ok for initialization
+        person-mean (- (* (ran/next-double rng) 2.0) 1.0)] ; a double in [-1,1.0)
+    (assoc-in pers [:propn-net :activns]
+              (rand-node-vec rng person-mean person-sd num-nodes)))) ;  person-sd is from global
+
+;(def randomize-propn-activns double-randomize-propn-activns)
+;; END EXPERIMENTAL CODE
+;;;;;;;;;;;;;;;;;;;;;;;;
