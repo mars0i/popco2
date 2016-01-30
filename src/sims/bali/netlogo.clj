@@ -29,6 +29,7 @@
 
 (def num-pundits 2) ; used in defs below to treat pundits and subaks differently.
 
+;; NOTES
 ;; Both pundits only utter spiritual propns if we are adopting the hypothesis that religious patterns spread
 ;; randomly, and were only selected through success bias.
 ;; In addition, we could add in some worldly-peasant analogy bias.
@@ -37,6 +38,19 @@
 ;; this with a normally distributed number.  Or maybe send more than just valence.
 ;; Hmm.  This is different from the pure NetLogo version.  Then again, sending a bunch
 ;; of propns is already noisy.  Not noisy enough, maybe, though.
+;; 
+;; The only place that I use random numbers in popco, after initialization, is in speak.clj:
+;; Randomness is used to decide who speaks to whom, which propns are worth saying, and which
+;; of them get uttered to whom.
+;; 
+;; What's transmitted from speaker to listener as the value of a proposition is only a valence,
+;; i.e. 1 or -1, along with (possibly) a speaker-quality value.
+;; The speaker quality is at present a simple value stored in the speaker; it's not
+;; calculated during speaking.
+;; Speaker quality is intended for listeners to decide who to listen to using success bias, etc.
+;;
+;; The valence is used in listen.clj to produce the numeric effect on the listener's propn
+;; using a fixed trust multiplier.  i.e. this is not randomized in any way.  At present.
 
 ;; PUNDITS MUST BE FIRST
 (reset! current-popn&
