@@ -27,10 +27,7 @@
   in the sequence.  Note that the contents of field :utterance-map contains the 
   utterances that have been received by the persons in the :persons field, but that 
   these utterances won't have their full effects on each person's internal networks 
-  until the next tick.  If the function more is present, it should be a function that
-  takes a population as an argument and returns a population.  This function can be
-  used, for example, to modify or add information to persons in the population,
-  without having to modify the core communication processes of popco."
+  until the next tick."
   [popn]
   (iterate once popn))
 
@@ -78,8 +75,6 @@
             :tick (inc (:tick popn))
             :persons post-communic-persons
             :utterance-map utterance-map))))
-
- ; Combine firsts, seconds from [pers, utterance-map] pairs produced by speaker-plus-utterances.
 
 (defn ticker
   "Prints tick number to console, erasing previous tick number, and returns
