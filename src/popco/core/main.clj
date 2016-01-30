@@ -44,6 +44,10 @@
   [popn]
   (iterate (partial once map) popn))
 
+;; Note: The crossover step could be avoided in a sense, I think, if instead of each cycle being:
+;;   update nets, speak, listen
+;; it was:
+;;   listen, update nets, speak
 (defn once
   "Implements a single timestep's (tick's) worth of evolution of the population.
   Returns the population in its new state.  popn contains the state before applying
