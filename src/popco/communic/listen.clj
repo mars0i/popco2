@@ -63,6 +63,13 @@
     (update-propn-net-from-utterances new-listener utterances)))   ; now update links to SALIENT (both for new and old propositions)
 
 
+(defn trust-mult
+  "Calculates an increment to add to an activn by multiplying
+  the utterance's valence by a constant.  listener is ignored."
+  [listener utterance]
+  (* cn/trust (:valence utterance)))
+
+
 ;; Note: This function is purely functional despite calling mutational functions
 ;; Question: Do I have to reapply semantic-iffs here?
 ;; Answer:   No. That's done by adding into linger-wt-mat rather than overwriting it.
@@ -85,7 +92,7 @@
       ; TODO next line clips to extrema, but that will happen elsewhere in this file.  Is that redundant?
       (nn/add-from-feeder-node! linger-wt-mat
                                 (id-to-idx (:propn-id utterance))
-                                (* cn/trust (:valence utterance)))) ; future option: replace +trust+ with a function of listener and speaker
+                                (trust-mult listener utterance)))
     ;; TODO can I do this with assoc-in or update-in?
     (assoc listener
            :propn-net (assoc propn-net
