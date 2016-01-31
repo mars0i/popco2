@@ -63,7 +63,7 @@
     (update-propn-net-from-utterances new-listener utterances)))   ; now update links to SALIENT (both for new and old propositions)
 
 
-(defn trust-mult
+(defn trust
   "Calculates an increment to add to an activn by multiplying
   the utterance's valence by a constant.  listener is ignored."
   [listener utterance]
@@ -92,8 +92,7 @@
       ; TODO next line clips to extrema, but that will happen elsewhere in this file.  Is that redundant?
       (nn/add-from-feeder-node! linger-wt-mat
                                 (id-to-idx (:propn-id utterance))
-                                (trust-mult listener utterance)))
-    ;; TODO can I do this with assoc-in or update-in?
+                                (trust listener utterance)))
     (assoc listener
            :propn-net (assoc propn-net
                              :linger-wt-mat linger-wt-mat))))
