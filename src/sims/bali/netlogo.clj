@@ -20,6 +20,10 @@
          rand-activn rand-node-vec double-randomize-propn-activns add-id-as-group scaled-worldly-peasant-activn scaled-worldly-peasant-activns
          replace-subaks-talk-to-persons many-times-repl-ttp talk)
 
+;; Override definition of trust in popco.core.constants.  Why it's OK during init, what to watch out for: http://stackoverflow.com/questions/5181367/is-defn-thread-safe .
+(in-ns 'popco.core.constants) (def trust 0.025) (in-ns 'sims.bali.netlogo)
+(println "popco.core.constants/trust now =" popco.core.constants/trust)
+
 (def num-subaks$ 172)
 (def ticks-per-year$ 1) ; number of popco ticks every time NetLogo calls, which should be once per year, i.e every 12 NetLogo ticks
 
