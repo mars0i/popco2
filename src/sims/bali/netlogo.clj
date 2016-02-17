@@ -20,26 +20,6 @@
          rand-activn rand-node-vec double-randomize-propn-activns add-id-as-group scaled-worldly-peasant-activn scaled-worldly-peasant-activns
          replace-subaks-talk-to-persons many-times-repl-ttp talk)
 
-;; Override definition of trust in popco.core.constants.  Why it's OK during init, what to watch out for: http://stackoverflow.com/questions/5181367/is-defn-thread-safe .
-(in-ns 'popco.core.constants) (def trust 0.025) (in-ns 'sims.bali.netlogo)
-(println "popco.core.constants/trust now =" popco.core.constants/trust)
-
-(def num-subaks$ 172)
-(def ticks-per-year$ 1) ; number of popco ticks every time NetLogo calls, which should be once per year, i.e every 12 NetLogo ticks
-
-(def current-popn& (atom nil)) ; filled in later
-
-(def randomize-propn-activns prs/randomize-unif-propn-activns)
-
-(def num-pundits 2) ; used in defs below to treat pundits and subaks differently.
-
-;; not sure why this has to be defined before its used even though in declare above
-(defn add-id-as-group
-  "Returns a person that's just like pers, but with an additional group identity
-  whose name is identical to pers's id."
-  [pers]
-  (update pers :groups conj (:id pers)))
-
 ;; NOTES
 ;; Both pundits only utter spiritual propns if we are adopting the hypothesis that religious patterns spread
 ;; randomly, and were only selected through success bias.
@@ -62,6 +42,26 @@
 ;;
 ;; The valence is used in listen.clj to produce the numeric effect on the listener's propn
 ;; using a fixed trust multiplier.  i.e. this is not randomized in any way.  At present.
+
+;; Override definition of trust in popco.core.constants.  Why it's OK during init, what to watch out for: http://stackoverflow.com/questions/5181367/is-defn-thread-safe .
+(in-ns 'popco.core.constants) (def trust 1.0) (in-ns 'sims.bali.netlogo)
+(println "popco.core.constants/trust now =" popco.core.constants/trust)
+
+(def num-subaks$ 172)
+(def ticks-per-year$ 1) ; number of popco ticks every time NetLogo calls, which should be once per year, i.e every 12 NetLogo ticks
+
+(def current-popn& (atom nil)) ; filled in later
+
+(def randomize-propn-activns prs/randomize-unif-propn-activns)
+
+(def num-pundits 2) ; used in defs below to treat pundits and subaks differently.
+
+;; not sure why this has to be defined before its used even though in declare above
+(defn add-id-as-group
+  "Returns a person that's just like pers, but with an additional group identity
+  whose name is identical to pers's id."
+  [pers]
+  (update pers :groups conj (:id pers)))
 
 ;; PUNDITS MUST BE FIRST
 (reset! current-popn&
