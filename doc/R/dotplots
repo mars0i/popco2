@@ -1,0 +1,12 @@
+
+# dotplot example
+
+dotplot(reorder(person, spmean) ~ spmean,    # person is y, spmean is x
+        data=spmeans5kTrust1.0spPercPund.df, # but sort person on spmean
+	scales=list(cex=0.3), # make person names small
+	pch="o")              # use little o's as data points
+
+# To turn off grid lines, do this first:
+d1 <- trellis.par.get("dot.line")
+d1$lwd <- 0  
+trellis.par.set("dot.line",d1)
