@@ -113,8 +113,8 @@
   "Run many-times on popn (@current-popn& by default) after calling 
   replace-subaks-talk-to-persons on it with speaker-listener-map."
   ([] 
-   (println "Using 'fake NetLogo' all-clojure pest-neighbor-map to set talk-to relationships.")
-   (many-times-repl-ttp pest-neighbor-map @current-popn&))
+   (println "Using 'fake NetLogo' all-clojure pest-neighbor-map to set talk-to relationships.") ; This case is just for convenience during testing;
+   (many-times-repl-ttp pest-neighbor-map @current-popn&))                                      ; it should be flagged as such to user (me).
   ([speaker-listener-map] (many-times-repl-ttp speaker-listener-map @current-popn&))
   ([speaker-listener-map popn]
    (mn/many-times (replace-subaks-talk-to-persons speaker-listener-map popn))))
