@@ -9,7 +9,7 @@ of analogy recognition.   This is a rewrite of
 data structures, algorithms, etc., but with the same functionality
 except for some peripheral details.
 
-popco2 is a framework for agent-based simulations in which agents'
+popco2 is a framework for agent-based simulations<a href="#WhatsABMnote" id="WhatsABMref"><sup>1</sup></a> in which agents'
 communication of their simulated beliefs depends how those beliefs do,
 or do not, fit into analogies.  It involves "coherence" in two senses:
 (a) it often tends to generate agreement between agents, and (b) the
@@ -103,3 +103,11 @@ Massachusetts: MIT Press.
 
 For additional relevant sources, see the article in *Complex Adaptive
 Systems Modeling* that's described above.
+
+<a id="WhatsABMnote" href="#WhatsABMref"><sup>1</sup></a> "Agent-based" here refers to the loose class of <a href="https://en.wikipedia.org/wiki/Agent-based_model">simulations</a>
+in which outcomes of interest come from interactions between many
+semi-independent entities--*agents*--which often model behaviors or
+interactions between people, organisms, companies, etc.  "Agent-based"
+does *not* refer to various ways of dealing with concurrency, as for
+example with Clojure's <a href="https://clojure.org/reference/agents">agent</a> data structure.
+
